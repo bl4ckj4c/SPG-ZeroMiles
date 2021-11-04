@@ -1,0 +1,6 @@
+/* Fisso la dimensione del meme a 500px per schermi piu' grandi di 768px*/
+@media (min-width: 768px){
+    .card {
+        width:300px;
+    }
+}
