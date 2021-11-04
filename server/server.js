@@ -1,7 +1,12 @@
 'use strict';
 
+const firebasefunctions = require('firebase-functions');
+const firebase = require('firebase-admin');
+const {firebaseconf} = require('./firebase-server/config.js');
+
 const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
 const Dao = require('./dao');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
@@ -9,14 +14,51 @@ const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
 
-
 // init express
 const app = express();
 const port = 3001;
+//app.use(cors({origin: true}));
 
 // set-up the middlewares
 app.use(morgan('dev'));
 app.use(express.json());
+
+
+// *********************
+// ***** FIREBASE  *****
+// *********************
+
+
+/* init firebase app */
+
+const firebaseapp = firebase.initializeApp({
+    credential: firebase.credential.cert(firebaseconf),
+    databaseURL: "https://polito-se2-21-01-spg.europe-west1.firebasedatabase.app"
+});
+
+/* create a document in an existing collection */
+var db = firebase.firestore();
+(async()=>{
+    try{
+        await db.collection('Food').doc("/23/").create({item: "Onion"});
+        console.log("done.");
+    }catch(error){
+        console.log(error);
+    }
+})();
+
+
+/* firebase debug */
+
+// const firebaseApp = firebase.apps[0];
+// console.log(JSON.stringify(firebaseApp.options, null, 2));
+
+
+
+// *********************
+// ***** API *****
+// *********************
+
 
 app.get('/api/client', (req, res) => {
     Dao.listSelection()
