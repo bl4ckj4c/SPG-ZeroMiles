@@ -38,14 +38,14 @@ const firebaseapp = firebase.initializeApp({
 
 /* create a document in an existing collection */
 var db = firebase.firestore();
-(async()=>{
-    try{
-        await db.collection('Food').doc("/23/").create({item: "Onion"});
-        console.log("done.");
-    }catch(error){
-        console.log(error);
-    }
-})();
+// (async()=>{
+//     try{
+//         await db.collection('Food').doc("/23/").create({item: "Onion"});
+//         console.log("done.");
+//     }catch(error){
+//         console.log(error);
+//     }
+// })();
 
 
 /* firebase debug */
@@ -58,6 +58,82 @@ var db = firebase.firestore();
 // *********************
 // ***** API *****
 // *********************
+
+
+/* GET all products */
+
+(async()=>{
+    try{
+        const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if(products.empty){
+            console.log("No matching documents.");
+        }
+        else{
+            products.forEach(prod => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+            })
+        }
+    }catch(error){
+        console.log(error);
+    }
+})();
+
+/* GET all farmers */
+
+(async()=>{
+    try{
+        const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if(farmers.empty){
+            console.log("No matching documents.");
+        }
+        else{
+            farmers.forEach(farmer => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                console.log(farmer.data());  
+            })
+        }
+    }catch(error){
+        console.log(error);
+    }
+})();
+
+/* GET all products by farmers */
+
+(async()=>{
+    try{
+        const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if(productbyfarmer.empty){
+            console.log("No matching documents.");
+        }
+        else{
+            productbyfarmer.forEach(prodfarm => {
+                //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
+                const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
+                const farmerid = prodfarm.data().FarmerID;
+                console.log("Querying for " + productid + " and " + farmerid);
+                (async()=>{
+                    const product = await db.collection('Product').doc(""+productid).get();
+                    const farmer = await db.collection('Farmer').doc(""+farmerid).get();
+                    if(!product.exists){  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching products for " + productid);
+                    }
+                    if(!farmer.exists){
+                        console.log("No matching farmers for" + farmerid);
+                    }
+                    else{
+                        //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
+                        console.log(farmer.data().Name + " offers " + 
+                                    prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " + 
+                                    product.data().Name);
+                    }
+                })();
+            })
+        }
+    }catch(error){
+        console.log(error);
+    }
+})();
 
 
 app.get('/api/client', (req, res) => {
