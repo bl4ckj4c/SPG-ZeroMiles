@@ -323,7 +323,7 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
 }*/
 
 
-async function getProduct(counterID) {
+async function getProductByFarmer(counterID) {
 
     const response = await fetch(BASEURL + '/Product');
     const responseBody = await response.json();
@@ -344,6 +344,7 @@ const API = {
     getStatisticsForServicetype,
     getStatisticsForServiceTypeNEW,
     getNextCustomer,
-    getStatisticsForAllCounter
+    getStatisticsForAllCounter,
+    getProductByFarmer
 };
 export default API;
