@@ -1,3 +1,5 @@
+import { ProductByFarmer } from './Products/Products.js';
+
 /**
  * All the API calls
  */
@@ -55,11 +57,11 @@ async function getTicket(serviceType) {
                         reject(message);
                     }) // error message in the response body
                     .catch(() => {
-                        reject({error: "Cannot parse server response."})
+                        reject({ error: "Cannot parse server response." })
                     }); // something else
             }
         }).catch(() => {
-            reject({error: "Cannot communicate with the server."})
+            reject({ error: "Cannot communicate with the server." })
         }); // connection errors
     });
 
@@ -101,7 +103,7 @@ async function getNextCustomer(counterID) {
 }
 
 async function getStatisticsForCounter(startDate, endDate, counterID) { //counterID can be null if manager asks for all counters
-                                                                        //JSON sent to backend
+    //JSON sent to backend
     /*   console.log(JSON.stringify({typeOfRequest: "manager", ID: counterID, serviceType: "", startDate: startDate, endDate: endDate}));
       return new Promise((resolve, reject) => {
         fetch(BASEURL , {
@@ -179,11 +181,11 @@ async function getStatisticsForAllCounter(startDate, endDate) {
                         reject(message);
                     }) // error message in the response body
                     .catch(() => {
-                        reject({error: "Cannot parse server response."})
+                        reject({ error: "Cannot parse server response." })
                     }); // something else
             }
         }).catch(() => {
-            reject({error: "Cannot communicate with the server."})
+            reject({ error: "Cannot communicate with the server." })
         }); // connection errors
     });
 
@@ -223,11 +225,11 @@ async function getStatisticsForServiceTypeNEW(startDate, endDate) {
                         reject(message);
                     }) // error message in the response body
                     .catch(() => {
-                        reject({error: "Cannot parse server response."})
+                        reject({ error: "Cannot parse server response." })
                     }); // something else
             }
         }).catch(() => {
-            reject({error: "Cannot communicate with the server."})
+            reject({ error: "Cannot communicate with the server." })
         }); // connection errors
     });
 
@@ -235,7 +237,7 @@ async function getStatisticsForServiceTypeNEW(startDate, endDate) {
 
 
 async function getStatisticsForServicetype(startDate, endDate, serviceType) { //counterID can be null if manager asks for all services
-                                                                              //JSON sent to backend
+    //JSON sent to backend
     console.log(JSON.stringify({
         typeOfRequest: "manager",
         ID: "",
@@ -266,11 +268,11 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
                         reject(message);
                     }) // error message in the response body
                     .catch(() => {
-                        reject({error: "Cannot parse server response."})
+                        reject({ error: "Cannot parse server response." })
                     }); // something else
             }
         }).catch(() => {
-            reject({error: "Cannot communicate with the server."})
+            reject({ error: "Cannot communicate with the server." })
         }); // connection errors
     });
 
@@ -323,17 +325,32 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
 }*/
 
 
-async function getProductByFarmer(counterID) {
+async function getProductByFarmer() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/productByFarmer', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((pbf) => new ProductByFarmer(...Object.values(pbf)));
+}
 
+/*
+async function getProductByFarmer(counterID) {
     const response = await fetch(BASEURL + '/productByFarmer');
     const responseBody = await response.json();
     if (response.ok) {
         return responseBody;
-        ;}
-     else {
+        ;
+    }
+    else {
         throw responseBody;
     }
-}
+} */
 
 
 
