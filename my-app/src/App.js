@@ -11,12 +11,15 @@ import Officer from './Components/Officer.js';
 import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
 import Main from './main.js';
+import ProductTable from './Components/ProductTable.js'
 
 function App() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [productByFarmerList, setProductByFarmerList] = useState([]);
   const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [farmerList, setFarmerList] = useState([]);
+  const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
 
 
   useEffect(() => {
@@ -26,30 +29,51 @@ function App() {
     API.getProductByFarmer()
       .then(productByFarmer => {
         setProductByFarmerList(productByFarmer);
-        console.log("Pippo due punti");
-        console.log(productByFarmer);
         setProductByFarmerListUpdated(false);
-        setLoading(false);
       }).catch(pbf => handleErrors(pbf));
-  }, [productByFarmerListUpdated]);
+
+    API.getFarmer()
+    .then(farmer => {
+      setFarmerList(farmer);
+      setFarmerListUpdated(false);
+    }).catch(f => handleErrors(f));
+
+    setLoading(false);
+  }, [productByFarmerListUpdated, farmerListUpdated]);
 
   //Gestione di eventuali errori in risposta alle API
-    const handleErrors = (err) => {
-      setMessage({ msg: err.error, type: 'danger' });
-      console.log(err);
-    }
+  const handleErrors = (err) => {
+    setMessage({ msg: err.error, type: 'danger' });
+    console.log(err);
+  }
 
   return (
     <>
       <Router>
+
+        {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
+        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
+          <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+
         <Switch>
 
           <Route exact path="/">
             <Main></Main>
           </Route>
 
-          <Route exact path="/manager">
-            <Manager></Manager>
+          <Route exact path="/productsbyfarmer">
+            <Row className="page">
+              <Col as="main">
+
+                {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
+                {loading ? <Row className="justify-content-center mt-5">
+                  <Spinner animation="border" size="xl" variant="primary" />
+                </Row> :
+                  <ProductTable productByFarmer={productByFarmerList} farmer={farmerList}/>}
+
+              </Col>
+            </Row>
           </Route>
 
           <Route exact path="/officer">

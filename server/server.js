@@ -80,23 +80,35 @@ var db = firebase.firestore();
 })();
 
 /* GET all farmers */
-
-(async () => {
+app.get('/api/farmers', async (req,res) => {
     try {
         const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (farmers.empty) {
             console.log("No matching documents.");
         }
         else {
+            const result=[];
             farmers.forEach(farmer => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                console.log(farmer.data());
+                //console.log(farmer.data());
+                result.push({
+                    Name: farmer.data().Name,
+                    Surname: farmer.data().Surname,
+                    FarmerID: farmer.ID,
+                    Email: farmer.data().Email,
+                    Phoneno: farmer.data().Phoneno,
+                    Address: farmer.data().Address,
+                    State: farmer.data().State,
+                    Zipcode: farmer.data().Zipcode
+                });
             })
+            res.json({result});
         }
     } catch (error) {
         console.log(error);
+        res.json(error);
     }
-})();
+});
 
 /* GET all products by farmers */
 app.get('/api/productByFarmer', async (req, res) => {
