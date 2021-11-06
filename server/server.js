@@ -125,10 +125,25 @@ app.get('/api/productByFarmer', async (req, res) => {
                     } else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
+                            // Farmer
+                            FarmerID: prodfarm.data().FarmerID,
                             Name: farmer.data().Name,
+                            Surname: farmer.data().Surname,
+                            Company: farmer.data().Company,
+                            Email: farmer.data().Email,
+                            Phoneno: farmer.data().Phoneno,
+                            Address: farmer.data().Address,
+                            State: farmer.data().State,
+                            Zipcode: farmer.data().Zipcode,
+                            // Product
+                            ProductID: prodfarm.data().ProductID,
+                            NameProduct: product.data().Name,
+                            Description: product.data().Description,
+                            ImageID: product.data().ImageID,
+                            // Product by farmer
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
-                            NameProduct: product.data().Name
+                            Price: prodfarm.data().Price
                         });
 
                         //  console.log(farmer.data().Name + " offers " +

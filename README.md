@@ -16,22 +16,43 @@
   - **response body content**: array of objects, each describing a product by a farmer
     
     ```json5
-    [{
-        Name: "farmer1",
-        Quantity: 2,
-        UnitOfMeasurement: "kg",
-        NameProduct: "product1"
-    },{
-        Name: "farmer1",
-        Quantity: 500,
-        UnitOfMeasurement: "g",
-        NameProduct: "product2"
-    },{
-        Name: "farmer2",
-        Quantity: 500,
-        UnitOfMeasurement: "g",
-        NameProduct: "product1"
+    
+    {
+        "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
+        "Name": "Pippo",
+        "Surname": "Paperino",
+        "Company": "Azienda 1",
+        "Email": "pippo@hotmail.com",
+        "Phoneno": "4125364789",
+        "Address": "via Garibaldi ",
+        "State": "Rome",
+        "Zipcode": "01578",
+        "ProductID": "MUQoYddzRZSmHQliVfkA",
+        "NameProduct": "Banana",
+        "Description": "yellow banana",
+        "ImageID": "0",
+        "Quantity": "20",
+        "UnitOfMeasurement": "kg",
+        "Price": "25"
     },
+    {
+        "FarmerID": "lMeqm2RmkDtBURW4AeUy",
+        "Name": "Ciccio",
+        "Surname": "Franco",
+        "Company": "Azienda 2",
+        "Email": "cicio@hotmail.com",
+        "Phoneno": "9874515888",
+        "Address": "via Giuseppe Verdi",
+        "State": "Torino",
+        "Zipcode": "10138",
+        "ProductID": "jppCV62HMquGu2JP01Eu",
+        "NameProduct": "Mela",
+        "Description": "red apple",
+        "ImageID": "1",
+        "Quantity": "2",
+        "UnitOfMeasurement": "bag",
+        "Price": "5"
+    }
     ...
     ]
     ```
