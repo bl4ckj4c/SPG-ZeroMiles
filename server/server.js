@@ -119,41 +119,39 @@ app.get('/api/productByFarmer', async (req, res) => {
             res.status(404).json({error: "No matching documents."});
         }
         else {
-            const result=[];
-            productbyfarmer.forEach(prodfarm => {
+            let result = [];
+            productbyfarmer.forEach((prodfarm) => {
                 //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
                 const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
                 const farmerid = prodfarm.data().FarmerID;
                 console.log("Querying for " + productid + " and " + farmerid);
-                (async () => {
+
+                result.push(new Promise(async (resolve, reject) => {
                     const product = await db.collection('Product').doc("" + productid).get();
                     const farmer = await db.collection('Farmer').doc("" + farmerid).get();
                     if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
-                        
                         console.log("No matching products for " + productid);
-                        
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
-                    
-                    }
-                    else {
+                    } else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
-                        result.push({
+                        resolve({
                             Name: farmer.data().Name,
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
                             NameProduct: product.data().Name
                         });
-                        
-                        
-                        //  console.log(farmer.data().Name + " offers " + 
-                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " + 
+
+                        //  console.log(farmer.data().Name + " offers " +
+                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " +
                         //           product.data().Name);
                     }
-                })();
+                }));
             });
-            res.json({result});
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500));
         }
     } catch (error) {
         console.log(error);
