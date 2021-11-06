@@ -17,7 +17,7 @@
     
     ```json5
     
-    {
+    [{
         "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
         "Name": "Pippo",
         "Surname": "Paperino",
@@ -52,7 +52,7 @@
         "Quantity": "2",
         "UnitOfMeasurement": "bag",
         "Price": "5"
-    }
+    },
     ...
     ]
     ```

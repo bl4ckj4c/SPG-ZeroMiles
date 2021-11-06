@@ -12,6 +12,7 @@ import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
+import { Container, Row, Col, Toast, Spinner } from 'react-bootstrap';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -32,11 +33,12 @@ function App() {
         setProductByFarmerListUpdated(false);
       }).catch(pbf => handleErrors(pbf));
 
+      /*
     API.getFarmer()
     .then(farmer => {
       setFarmerList(farmer);
       setFarmerListUpdated(false);
-    }).catch(f => handleErrors(f));
+    }).catch(f => handleErrors(f)); */
 
     setLoading(false);
   }, [productByFarmerListUpdated, farmerListUpdated]);

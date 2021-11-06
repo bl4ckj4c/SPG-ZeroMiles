@@ -339,6 +339,20 @@ async function getProductByFarmer() {
     return data.map((pbf) => new ProductByFarmer(...Object.values(pbf)));
 }
 
+async function getFarmer() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/farmers', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((f) => new Farmer(...Object.values(f)));
+}
+
 /*
 async function getProductByFarmer(counterID) {
     const response = await fetch(BASEURL + '/productByFarmer');
