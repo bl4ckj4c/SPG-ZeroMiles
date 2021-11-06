@@ -9,9 +9,35 @@ import NavigationBar from './Components/Manager.js';
 import Customer from './Components/Customer.js';
 import Officer from './Components/Officer.js';
 import Manager from './Components/Manager.js';
+import { useState, useEffect } from 'react';
 import Main from './main.js';
 
 function App() {
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [productByFarmerList, setProductByFarmerList] = useState([]);
+  const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+
+
+  useEffect(() => {
+    //prima di chiamare le API avvio l'animazione di caricamento
+    setLoading(true);
+
+    API.getProductByFarmer()
+      .then(productByFarmer => {
+        setProductByFarmerList(productByFarmer);
+        console.log("Pippo due punti");
+        console.log(productByFarmer);
+        setProductByFarmerListUpdated(false);
+        setLoading(false);
+      }).catch(pbf => handleErrors(pbf));
+  }, [productByFarmerListUpdated]);
+
+  //Gestione di eventuali errori in risposta alle API
+    const handleErrors = (err) => {
+      setMessage({ msg: err.error, type: 'danger' });
+      console.log(err);
+    }
 
   return (
     <>

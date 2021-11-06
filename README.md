@@ -6,7 +6,7 @@
 
 ## API Server
 
-- GET `/api/Product`
+- GET `/api/productByFarmer`
   - **description**: get all products by farmers
   
   - **request parameters**: *none*

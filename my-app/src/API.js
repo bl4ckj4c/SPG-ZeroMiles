@@ -325,7 +325,7 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
 
 async function getProductByFarmer(counterID) {
 
-    const response = await fetch(BASEURL + '/Product');
+    const response = await fetch(BASEURL + '/productByFarmer');
     const responseBody = await response.json();
     if (response.ok) {
         return responseBody;
