@@ -87,22 +87,26 @@ app.get('/api/farmers', async (req,res) => {
             console.log("No matching documents.");
         }
         else {
-            const result=[];
+            let result = [];
             farmers.forEach(farmer => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
-                result.push({
-                    Name: farmer.data().Name,
-                    Surname: farmer.data().Surname,
-                    FarmerID: farmer.ID,
-                    Email: farmer.data().Email,
-                    Phoneno: farmer.data().Phoneno,
-                    Address: farmer.data().Address,
-                    State: farmer.data().State,
-                    Zipcode: farmer.data().Zipcode
-                });
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: farmer.data().Name,
+                        Surname: farmer.data().Surname,
+                        FarmerID: farmer.id,
+                        Email: farmer.data().Email,
+                        Phoneno: farmer.data().Phoneno,
+                        Address: farmer.data().Address,
+                        State: farmer.data().State,
+                        Zipcode: farmer.data().Zipcode
+                    });
+                }));
             })
-            res.json({result});
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500));
         }
     } catch (error) {
         console.log(error);
