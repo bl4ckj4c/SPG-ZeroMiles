@@ -2,14 +2,14 @@
 
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
-const {firebaseconf} = require('./firebase-server/config.js');
+const { firebaseconf } = require('./firebase-server/config.js');
 
-const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
+const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
 const Dao = require('./dao');
-const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
+const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
@@ -62,78 +62,92 @@ var db = firebase.firestore();
 
 /* GET all products */
 
-(async()=>{
-    try{
+(async () => {
+    try {
         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if(products.empty){
+        if (products.empty) {
             console.log("No matching documents.");
         }
-        else{
+        else {
             products.forEach(prod => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
             })
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 })();
 
 /* GET all farmers */
 
-(async()=>{
-    try{
+(async () => {
+    try {
         const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if(farmers.empty){
+        if (farmers.empty) {
             console.log("No matching documents.");
         }
-        else{
+        else {
             farmers.forEach(farmer => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                console.log(farmer.data());  
+                console.log(farmer.data());
             })
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 })();
 
 /* GET all products by farmers */
-
-(async()=>{
-    try{
+app.get('/api/Product', async (req, res) => {
+    try {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if(productbyfarmer.empty){
+        if (productbyfarmer.empty) {
             console.log("No matching documents.");
+            res.status(404).json({error: "No matching documents."});
         }
-        else{
+        else {
+            const result=[];
             productbyfarmer.forEach(prodfarm => {
                 //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
                 const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
                 const farmerid = prodfarm.data().FarmerID;
                 console.log("Querying for " + productid + " and " + farmerid);
-                (async()=>{
-                    const product = await db.collection('Product').doc(""+productid).get();
-                    const farmer = await db.collection('Farmer').doc(""+farmerid).get();
-                    if(!product.exists){  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                (async () => {
+                    const product = await db.collection('Product').doc("" + productid).get();
+                    const farmer = await db.collection('Farmer').doc("" + farmerid).get();
+                    if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        
                         console.log("No matching products for " + productid);
+                        
                     }
-                    if(!farmer.exists){
+                    if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
+                    
                     }
-                    else{
+                    else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
-                        console.log(farmer.data().Name + " offers " + 
-                                    prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " + 
-                                    product.data().Name);
+                        result.push({
+                            Name: farmer.data().Name,
+                            Quantity: prodfarm.data().Quantity,
+                            UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
+                            NameProduct: product.data().Name
+                        });
+                        
+                        
+                        //  console.log(farmer.data().Name + " offers " + 
+                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " + 
+                        //           product.data().Name);
                     }
                 })();
-            })
+            });
+            res.json({result});
         }
-    }catch(error){
+    } catch (error) {
         console.log(error);
+        res.json(error);
     }
-})();
+});
 
 
 app.get('/api/client', (req, res) => {
@@ -150,7 +164,7 @@ app.get('/api/client', (req, res) => {
 app.post('/api/manager/counters',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -163,7 +177,7 @@ app.post('/api/manager/counters',
         }),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -176,7 +190,7 @@ app.post('/api/manager/counters',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -226,7 +240,7 @@ app.post('/api/manager/counters',
 app.post('/api/manager/counter',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -239,13 +253,13 @@ app.post('/api/manager/counter',
         }),
     body('ID')
         // Check if the ID parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the ID parameter is a string
         .isString(),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -258,7 +272,7 @@ app.post('/api/manager/counter',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -307,7 +321,7 @@ app.post('/api/manager/counter',
 app.post('/api/manager/servicetypes',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -320,7 +334,7 @@ app.post('/api/manager/servicetypes',
         }),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -333,7 +347,7 @@ app.post('/api/manager/servicetypes',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -382,7 +396,7 @@ app.post('/api/manager/servicetypes',
 app.post('/api/manager/servicetype',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -395,13 +409,13 @@ app.post('/api/manager/servicetype',
         }),
     body('serviceType')
         // Check if the serviceType parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the serviceType parameter is a string
         .isString(),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -414,7 +428,7 @@ app.post('/api/manager/servicetype',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -471,7 +485,7 @@ app.post('/api/manager/servicetype',
 app.post('/api/customer/newticket',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -484,7 +498,7 @@ app.post('/api/customer/newticket',
         }),
     body('serviceType')
         // Check if the serviceType parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the serviceType parameter is a string
         .isString(),

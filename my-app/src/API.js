@@ -323,6 +323,20 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
 }*/
 
 
+async function getProduct(counterID) {
+
+    const response = await fetch(BASEURL + '/Product');
+    const responseBody = await response.json();
+    if (response.ok) {
+        return responseBody;
+        ;}
+     else {
+        throw responseBody;
+    }
+}
+
+
+
 const API = {
     getSelectedType,
     getTicket,
