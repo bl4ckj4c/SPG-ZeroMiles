@@ -12,7 +12,7 @@ The unit test of this method consists in sending the GET request to the server a
 | -------- | --------------------------------------------------- |
 | Name     | `^[a-zA-Z]+$`                                       |
 | Surname  | `^[a-zA-Z]+$`                                       |
-| FarmerID | `^.+$``                                             |
+| FarmerID | `^.+$`                                              |
 | Email    | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$` |
 | Phoneno  | `^(\+(\([0-9]{1,2}\))?)?[0-9]+$`                    |
 | Address  | `a-zA-Z\,\.0-9\t\n\r\f\v\s]+$`                      |
