@@ -13,6 +13,7 @@ const { toJSON } = require("express-session/session/cookie"); // module for acce
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
+const { v4: uuidv4 } = require('uuid');
 
 // init express
 const app = express();
@@ -58,6 +59,26 @@ var db = firebase.firestore();
 // *********************
 // ***** API *****
 // *********************
+
+app.post('/api/register', (req, res) => {
+    const newUUid = uuidv4()
+    let newUser = {}
+    newUser.name = req.body.name;
+    newUser.surname = req.body.lastName;
+    newUser.email = req.body.email;
+    newUser.address = req.body.address;
+    newUser.phone= req.body.phone;
+    newUser.city = req.body.city;
+    newUser.password = req.body.password;
+ (async()=>{
+    try{
+        await db.collection('User').doc(newUUid).create(newUser);
+        console.log("Done.");
+    }catch(error){
+        console.log("ERROR: ", error);
+    }
+})()
+});
 
 
 /* GET all products */

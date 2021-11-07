@@ -24,6 +24,16 @@ function Main() {
 
             <Row className="justify-content-center mt-3">
                 <Col></Col>
+                <Col>
+                    <Link to="/user">
+                        <Button size="lg" variant="secondary">Registration</Button>
+                    </Link>
+                </Col>
+                <Col></Col>
+            </Row>
+
+            <Row className="justify-content-center mt-3">
+                <Col></Col>
                     <Col>
                         <Link to="/officer">
                             <Button size="lg" variant="secondary">Officer</Button>

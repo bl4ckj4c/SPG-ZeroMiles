@@ -10,6 +10,7 @@ import Customer from './Components/Customer.js';
 import Officer from './Components/Officer.js';
 import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
+import User from './Components/userReqister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, Spinner } from 'react-bootstrap';
@@ -84,6 +85,9 @@ function App() {
 
           <Route exact path="/customer">
             <Customer></Customer>
+          </Route>
+          <Route exact path="/user">
+            <User></User>
           </Route>
 
         </Switch>
