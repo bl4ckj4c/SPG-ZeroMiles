@@ -1,4 +1,4 @@
-import { ProductByFarmer } from './Products/Products.js';
+import { ProductByFarmer, Farmer } from './Products/Products.js';
 
 /**
  * All the API calls
@@ -376,6 +376,7 @@ const API = {
     getStatisticsForServiceTypeNEW,
     getNextCustomer,
     getStatisticsForAllCounter,
-    getProductByFarmer
+    getProductByFarmer,
+    getFarmer
 };
 export default API;

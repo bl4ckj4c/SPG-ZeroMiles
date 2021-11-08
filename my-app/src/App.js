@@ -33,14 +33,14 @@ function App() {
         setProductByFarmerListUpdated(false);
       }).catch(pbf => handleErrors(pbf));
 
-      /*
     API.getFarmer()
     .then(farmer => {
       setFarmerList(farmer);
       setFarmerListUpdated(false);
-    }).catch(f => handleErrors(f)); */
+    }).catch(f => handleErrors(f)); 
 
     setLoading(false);
+
   }, [productByFarmerListUpdated, farmerListUpdated]);
 
   //Gestione di eventuali errori in risposta alle API
@@ -72,6 +72,7 @@ function App() {
                 {loading ? <Row className="justify-content-center mt-5">
                   <Spinner animation="border" size="xl" variant="primary" />
                 </Row> :
+                
                   <ProductTable productByFarmer={productByFarmerList} farmer={farmerList}/>}
 
               </Col>
