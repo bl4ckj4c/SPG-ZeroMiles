@@ -30,8 +30,8 @@ function FarmerRow(props) {
                             <th>Product Name</th>
                             <th>Description</th>
                             <th>Quantity</th>
-                            <th>Unit of measurement</th>
-                            <th>Price</th>
+                            <th>Unit</th>
+                            <th>Cost</th>
                         </tr>
                     </thead>
                     <tbody>
