@@ -26,30 +26,10 @@
         "State": "Rome",
         "Zipcode": "01578"
     },
-    {
-        "Name": "Ciccio",
-        "Surname": "Franco",
-        "FarmerID": "lMeqm2RmkDtBURW4AeUy",
-        "Email": "cicio@hotmail.com",
-        "Phoneno": "9874515888",
-        "Address": "via Giuseppe Verdi",
-        "State": "Torino",
-        "Zipcode": "10138"
-    },
-    {
-        "Name": "Franco",
-        "Surname": "Roberto",
-        "FarmerID": "zJbZkZDUPf9q91ZgS8ew",
-        "Email": "alessio@hotmail.it",
-        "Phoneno": "3400987654",
-        "Address": "via Cristoforo Colombo",
-        "State": "Cirella",
-        "Zipcode": "87023"
-    },
     ...
     ]
     ```
-
+  
 - GET `/api/productByFarmer`
     - **description**: get all products by farmers
 
@@ -79,36 +59,57 @@
           "UnitOfMeasurement": "kg",
           "Price": "25"
       },
-      {
-          "FarmerID": "lMeqm2RmkDtBURW4AeUy",
-          "Name": "Ciccio",
-          "Surname": "Franco",
-          "Company": "Azienda 2",
-          "Email": "cicio@hotmail.com",
-          "Phoneno": "9874515888",
-          "Address": "via Giuseppe Verdi",
-          "State": "Torino",
-          "Zipcode": "10138",
-          "ProductID": "jppCV62HMquGu2JP01Eu",
-          "NameProduct": "Mela",
-          "Description": "red apple",
-          "ImageID": "1",
-          "Quantity": "2",
-          "UnitOfMeasurement": "bag",
-          "Price": "5"
-      },
       ...
       ]
       ```
-
+      
       Error response `404`:
-
+      
       ```json
       {
           "error": "No matching documents."
       }
       ```
+    
+- POST `/api/register`
+  
+  - **description**: insert a new user into the database
+  
+  - **request parameters**: *none*
+  
+  - **request body**: object describing the new user
+  
+      ```json5
+      {
+          "name": "Teddy",
+          "lastName": "Agnez",
+          "email": "mario.rossi@gmail.com",
+          "address": "Via Bolivia",
+          "phone": "9938893232",
+          "city": "fi",
+          "password": "qwerty"
+      }
+      ```
       
+  - **response**: `201 Created` (success), `400 Bad Request` (error in passed parameters) or `500 Internal Server Error` (generic error)
+  
+  - **response body content**: *none* in case of success, error object in case of error
+  
+      ```json5
+      {
+          "info": "The server cannot process the request",
+          "errors": [
+              {
+                  "param": "name",
+                  "error": "Invalid value"
+              },
+              ...
+          ]
+      }
+      ```
+  
+      
+  
 ## Database Tables
 - Table `Farmer` is used to store farmer information and it contains the following fields and data:
 
@@ -133,6 +134,14 @@
    | S0F5R4D1xF16w5mJmkHM | JJeuoVa8fpl4wHGLK8FO | MUQoYddzRZSmHQliVfkA | 20       | kg                | 25    |
    | jSgQy72Db130XsqiB3GI | lMeqm2RmkDtBURW4AeUy | jppCV62HMquGu2JP01Eu | 2        | bag               | 5     |
 
+- Table `User` is used to store user information and it contains the following fields and data:
+
+   | ID                                   | name  | surname | email                 | address           | phone      | city | password |
+   | ------------------------------------ | ----- | ------- | --------------------- | ----------------- | ---------- | ---- | -------- |
+   | 37929302-bd1d-4364-99dc-b53ae22b38aa | maria | Rossa   | mariarossa@gmail.com  | via monginevro 21 | 9938893435 | ca   | qwerty   |
+   | aa8eb4f9-4822-4772-b7ad-128a8710ac07 | Teddy | Agnez   | mario.rossi@gmail.com | Via Bolivia       | 9938893232 | fi   | qwerty   |
+
+   
 
 ## Main React Components
 

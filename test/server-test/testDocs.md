@@ -13,9 +13,9 @@ The unit test of this method consists in sending the GET request to the server a
 | Name     | `^[a-zA-Z]+$`                                       |
 | Surname  | `^[a-zA-Z]+$`                                       |
 | FarmerID | `^.+$`                                              |
-| Email    | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$` |
+| Email    | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$`  |
 | Phoneno  | `^(\+(\([0-9]{1,2}\))?)?[0-9]+$`                    |
-| Address  | `a-zA-Z\,\.0-9\t\n\r\f\v\s]+$`                      |
+| Address  | `^[a-zA-Z\,\.0-9\t\n\r\f\v\s]+$`                    |
 | State    | `^[a-zA-Z]+$`                                       |
 | Zipcode  | `^[0-9]{5}`                                         |
 
@@ -59,7 +59,7 @@ The unit test of this method consists in sending the GET request to the server a
 | Name              | `^[a-zA-Z]+$`                                       |
 | Surname           | `^[a-zA-Z]+$`                                       |
 | Company           | `^[a-zA-Z\-\_\s0-9\.\,]+$`                          |
-| Email             | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$` |
+| Email             | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$`  |
 | Phoneno           | `^(\+(\([0-9]{1,2}\))?)?[0-9]+$`                    |
 | Address           | `^[a-zA-Z\,\.0-9\t\n\r\f\v\s]+$`                    |
 | State             | `^[a-zA-Z]+$`                                       |

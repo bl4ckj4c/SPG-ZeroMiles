@@ -2,18 +2,18 @@
 
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
-const { firebaseconf } = require('./firebase-server/config.js');
+const {firebaseconf} = require('./firebase-server/config.js');
 
-const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
+const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
 const Dao = require('./dao');
-const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
+const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 // init express
 const app = express();
@@ -55,30 +55,148 @@ var db = firebase.firestore();
 // console.log(JSON.stringify(firebaseApp.options, null, 2));
 
 
-
 // *********************
 // ***** API *****
 // *********************
 
-app.post('/api/register', (req, res) => {
-    const newUUid = uuidv4()
-    let newUser = {}
-    newUser.name = req.body.name;
-    newUser.surname = req.body.lastName;
-    newUser.email = req.body.email;
-    newUser.address = req.body.address;
-    newUser.phone= req.body.phone;
-    newUser.city = req.body.city;
-    newUser.password = req.body.password;
- (async()=>{
-    try{
-        await db.collection('User').doc(newUUid).create(newUser);
-        console.log("Done.");
-    }catch(error){
-        console.log("ERROR: ", error);
-    }
-})()
-});
+app.post('/api/register',
+    body('name')
+        // Check if the name parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the name parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the name parameter is a string
+        .isString()
+        // Check if the name parameter contains only letters
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z]+$/);
+            return regex.test(value);
+        }),
+    body('lastName')
+        // Check if the lastName parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the lastName parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the lastName parameter is a string
+        .isString()
+        // Check if the lastName parameter contains only letters
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z]+$/);
+            return regex.test(value);
+        }),
+    body('email')
+        // Check if the email parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the email parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the email parameter is a string
+        .isString()
+        // Check if the email parameter is a valid email
+        .custom((value, req) => {
+            let regex = new RegExp(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/);
+            return regex.test(value);
+        }),
+    body('address')
+        // Check if the address parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the address parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the address parameter is a string
+        .isString()
+        // Check if the address parameter is a valid address
+        .custom((value, req) => {
+            let regex = new RegExp(/^a-zA-Z\,\.0-9\t\n\r\f\v\s]+$/);
+            return regex.test(value);
+        }),
+    body('phone')
+        // Check if the phone parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the phone parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the phone parameter is a string
+        .isString()
+        // Check if the phone parameter is a valid phone number
+        .custom((value, req) => {
+            let regex = new RegExp(/^(\+(\([0-9]{1,2}\))?)?[0-9]+$/);
+            return regex.test(value);
+        }),
+    body('city')
+        // Check if the city parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the city parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the city parameter is a string
+        .isString()
+        // Check if the city parameter is a valid city
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z]+$/);
+            return regex.test(value);
+        }),
+    body('password')
+        // Check if the password parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the password parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the password parameter is a string
+        .isString(),
+    (req, res) => {
+        const result = validationResult(req);
+
+        // Validation error
+        if (!result.isEmpty()) {
+            let jsonArray = [];
+            for (let item of result.array())
+                jsonArray.push({
+                    param: item.param,
+                    error: item.msg,
+                    valueReceived: item.value
+                })
+            res.status(400).json({
+                info: "The server cannot process the request",
+                errors: jsonArray
+            });
+        }
+        // No error in validation
+        else {
+            const newUUid = uuidv4()
+            let newUser = {}
+            newUser.name = req.body.name;
+            newUser.surname = req.body.lastName;
+            newUser.email = req.body.email;
+            newUser.address = req.body.address;
+            newUser.phone = req.body.phone;
+            newUser.city = req.body.city;
+            newUser.password = req.body.password;
+
+            (async () => {
+                try {
+                    await db.collection('User').doc(newUUid).create(newUser);
+                    console.log("Done.");
+                    res.status(201).end();
+                } catch (error) {
+                    console.log("ERROR: ", error);
+                    res.status(500).json({
+                        info: "The server cannot process the request",
+                        error: error
+                    });
+                }
+            })()
+        }
+    });
 
 
 /* GET all products */
@@ -88,8 +206,7 @@ app.post('/api/register', (req, res) => {
         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (products.empty) {
             console.log("No matching documents.");
-        }
-        else {
+        } else {
             products.forEach(prod => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
@@ -101,13 +218,12 @@ app.post('/api/register', (req, res) => {
 })();
 
 /* GET all farmers */
-app.get('/api/farmers', async (req,res) => {
+app.get('/api/farmers', async (req, res) => {
     try {
         const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (farmers.empty) {
             console.log("No matching documents.");
-        }
-        else {
+        } else {
             let result = [];
             farmers.forEach(farmer => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
@@ -142,8 +258,7 @@ app.get('/api/productByFarmer', async (req, res) => {
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No matching documents."});
-        }
-        else {
+        } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
                 //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
@@ -214,7 +329,7 @@ app.get('/api/client', (req, res) => {
 app.post('/api/manager/counters',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -227,7 +342,7 @@ app.post('/api/manager/counters',
         }),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -240,7 +355,7 @@ app.post('/api/manager/counters',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -290,7 +405,7 @@ app.post('/api/manager/counters',
 app.post('/api/manager/counter',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -303,13 +418,13 @@ app.post('/api/manager/counter',
         }),
     body('ID')
         // Check if the ID parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the ID parameter is a string
         .isString(),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -322,7 +437,7 @@ app.post('/api/manager/counter',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -371,7 +486,7 @@ app.post('/api/manager/counter',
 app.post('/api/manager/servicetypes',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -384,7 +499,7 @@ app.post('/api/manager/servicetypes',
         }),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -397,7 +512,7 @@ app.post('/api/manager/servicetypes',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -446,7 +561,7 @@ app.post('/api/manager/servicetypes',
 app.post('/api/manager/servicetype',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -459,13 +574,13 @@ app.post('/api/manager/servicetype',
         }),
     body('serviceType')
         // Check if the serviceType parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the serviceType parameter is a string
         .isString(),
     body('startDate')
         // Check if the startDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the startDate parameter is not empty
         .notEmpty()
@@ -478,7 +593,7 @@ app.post('/api/manager/servicetype',
         }),
     body('endDate')
         // Check if the endDate parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the endDate parameter is not empty
         .notEmpty()
@@ -535,7 +650,7 @@ app.post('/api/manager/servicetype',
 app.post('/api/customer/newticket',
     body('typeOfRequest')
         // Check if the typeOfRequest parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the typeOfRequest parameter is not empty
         .notEmpty()
@@ -548,7 +663,7 @@ app.post('/api/customer/newticket',
         }),
     body('serviceType')
         // Check if the serviceType parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the serviceType parameter is a string
         .isString(),
