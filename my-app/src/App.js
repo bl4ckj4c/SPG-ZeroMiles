@@ -74,7 +74,7 @@ function App() {
                   <Spinner animation="border" size="xl" variant="primary" />
                 </Row> :
                 
-                  <ProductTable productByFarmer={productByFarmerList} farmer={farmerList}/>}
+                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList}/>}
 
               </Col>
             </Row>
