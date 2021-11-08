@@ -1,6 +1,7 @@
-import { Container, Row, Col, ListGroup, Table } from 'react-bootstrap';
+import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import {PersonFill, GeoAltFill} from 'react-bootstrap-icons';
 import { Image } from 'react-bootstrap';
+import {useState} from 'react';
 import "./ProductTable.css";
 
 function ProductTable(props) {
@@ -13,8 +14,9 @@ function ProductTable(props) {
                     )}
                 </tbody>
             </Table>
-        </Col>
+            <ProductsCounter/>
 
+        </Col>
     );
 };
 
@@ -43,6 +45,7 @@ function FarmerRow(props) {
                             <th>Quantity</th>
                             <th>Unit</th>
                             <th>Cost</th>
+                            <td></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,6 +58,7 @@ function FarmerRow(props) {
                                     <td>{p.Quantity}</td>
                                     <td>{p.UnitOfMeasurement}</td>
                                     <td>{p.Price}€</td>
+                                    <td><ProductsCounter quantity={p.Quantity}/></td>
                                 </tr>
                                 : '')}
 
@@ -65,4 +69,46 @@ function FarmerRow(props) {
     </>
     );
 };
+
+
+
+
+function ProductsCounter(props){
+    const [index, setIndex] = useState(0)
+
+    function updateIndex(sign){
+        if ((sign === -1 && index !== 0) || (sign === +1 && index < props.quantity))
+          setIndex (index + sign);
+         
+    }
+    return (
+     <ButtonGroup>
+
+      <ToggleButton style={{ minWidth : "2.5rem"}} variant='danger' onClick={ () => updateIndex(-1)}>{/* 
+        key={idx}
+        id={`radio-${idx}`}
+        type="radio"
+        variant={idx % 2 ? 'outline-success' : 'outline-danger'}
+        name="radio"
+        value="-"
+        checked={radioValue === radio.value}
+        onChange={(e) => setRadioValue(e.currentTarget.value)}
+      
+        {radio.name}
+
+ */}
+ -
+      </ToggleButton>      
+      <ToggleButton style={{ minWidth : "3rem"}} disabled variant="warning">
+          {index}
+      </ToggleButton>    
+        <ToggleButton style={{ minWidth : "2.5rem"}} variant="danger" onClick={ () => updateIndex(+1)}>
++
+      </ToggleButton>
+    
+  </ButtonGroup>
+
+    );
+
+}
 export default ProductTable;
