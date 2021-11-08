@@ -1,4 +1,5 @@
 import { Container, Row, Col, ListGroup, Table } from 'react-bootstrap';
+import {PersonFill, GeoAltFill} from 'react-bootstrap-icons';
 import { Image } from 'react-bootstrap';
 import "./ProductTable.css";
 
@@ -21,7 +22,17 @@ function FarmerRow(props) {
     return (<>
         <tr>
             <td className="producttable-col">
-                <h1 style={{ fontSize: 25 }} align={"left"}>{props.farmer.Surname}</h1>
+                <h1 style={{ fontSize: 25 }} align={"left"}>{props.farmer.Company}</h1>
+
+                <section className = "d-flex justify-content-between">
+                    <div> <PersonFill/><span>&nbsp;</span>
+                    {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
+                    </div>
+                    <div>
+                    <GeoAltFill className="ml-3"/><span>&nbsp;</span>
+                    {props.farmer.Address}
+                    </div>
+                </section>
 
                 <Table striped hover className="justify-content-center">
                     <thead>

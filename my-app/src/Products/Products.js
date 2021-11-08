@@ -18,9 +18,10 @@ function ProductByFarmer(FarmerID, Name, Surname, Company, Email, Phoneno, Addre
     this.Price = Price;
 }
 
-function Farmer(Name, Surname, FarmerID, Email, Phoneno, Address, State, Zipcode){
+function Farmer(Name, Surname, Company, FarmerID, Email, Phoneno, Address, State, Zipcode){
     this.Name = Name;
     this.Surname = Surname;
+    this.Company = Company;
     this.FarmerID = FarmerID;
     this.Email = Email;
     this.Phoneno = Phoneno;
