@@ -1,4 +1,6 @@
 import { Container, Row, Col, ListGroup, Table } from 'react-bootstrap';
+import { Image } from 'react-bootstrap';
+import "./ProductTable.css";
 
 function ProductTable(props) {
     return (
@@ -21,9 +23,10 @@ function FarmerRow(props) {
             <td className="producttable-col">
                 <h1 style={{ fontSize: 25 }} align={"left"}>{props.farmer.Surname}</h1>
 
-                <Table className="d-flex justify-content-center">
+                <Table striped hover className="justify-content-center">
                     <thead>
                         <tr>
+                            <th>Image</th>
                             <th>Product Name</th>
                             <th>Description</th>
                             <th>Quantity</th>
@@ -34,7 +37,8 @@ function FarmerRow(props) {
                     <tbody>
                         {props.productByFarmer.map(p =>
                             p.FarmerID === props.farmer.FarmerID ?
-                                <tr>
+                                <tr className="centrami">
+                                    <td><Image src="/images/placeholder.jpg" rounded width={"60px"} /></td>
                                     <td>{p.NameProduct}</td>
                                     <td>{p.Description}</td>
                                     <td>{p.Quantity}</td>

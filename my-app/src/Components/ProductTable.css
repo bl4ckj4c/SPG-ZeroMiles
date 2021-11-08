@@ -1,0 +1,12 @@
+.table-striped>tbody>tr:nth-child(odd)>td, 
+.table-striped>tbody>tr:nth-child(odd)>th {
+   background-color: #e1e2e1;
+ }
+
+ .bordo{
+     border-radius: 10px;
+ }
+
+ .centrami {
+    vertical-align: middle;
+ }

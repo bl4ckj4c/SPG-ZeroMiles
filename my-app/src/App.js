@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import User from './Components/userReqister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
-import { Container, Row, Col, Toast, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Toast, Spinner, Navbar } from 'react-bootstrap';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -35,10 +35,10 @@ function App() {
       }).catch(pbf => handleErrors(pbf));
 
     API.getFarmer()
-    .then(farmer => {
-      setFarmerList(farmer);
-      setFarmerListUpdated(false);
-    }).catch(f => handleErrors(f)); 
+      .then(farmer => {
+        setFarmerList(farmer);
+        setFarmerListUpdated(false);
+      }).catch(f => handleErrors(f));
 
     setLoading(false);
 
@@ -66,6 +66,11 @@ function App() {
           </Route>
 
           <Route exact path="/productsbyfarmer">
+            <Navbar bg="warning">
+              <Container>
+                <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
+              </Container>
+            </Navbar>
             <Row className="page">
               <Col as="main">
 
@@ -73,8 +78,8 @@ function App() {
                 {loading ? <Row className="justify-content-center mt-5">
                   <Spinner animation="border" size="xl" variant="primary" />
                 </Row> :
-                
-                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList}/>}
+
+                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} />}
 
               </Col>
             </Row>
