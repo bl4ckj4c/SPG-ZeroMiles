@@ -59,6 +59,8 @@ var db = firebase.firestore();
 // ***** API *****
 // *********************
 
+/* POST user registration (add user to database) */
+
 app.post('/api/register',
     body('name')
         // Check if the name parameter is not null
@@ -232,6 +234,7 @@ app.get('/api/farmers', async (req, res) => {
                     resolve({
                         Name: farmer.data().Name,
                         Surname: farmer.data().Surname,
+                        Company: farmer.data().Company,
                         FarmerID: farmer.id,
                         Email: farmer.data().Email,
                         Phoneno: farmer.data().Phoneno,
