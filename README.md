@@ -6,64 +6,109 @@
 
 ## API Server
 
-- GET `/api/productByFarmer`
-  - **description**: get all products by farmers
+- GET `/api/farmers`
+  - **description**: get all farmers
   
   - **request parameters**: *none*
   
-  - **response**: `200 OK` (success), `404 Not Found ` (empty table in Firebase) or `500 Internal Server Error` (generic error)
+  - **response**: `200 OK` (success) or `500 Internal Server Error` (generic error)
   
-  - **response body content**: array of objects, each describing a product by a farmer
+  - **response body content**: array of objects, each describing a farmer
     
     ```json5
-    
     [{
-        "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
         "Name": "Pippo",
         "Surname": "Paperino",
-        "Company": "Azienda 1",
+        "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
         "Email": "pippo@hotmail.com",
         "Phoneno": "4125364789",
         "Address": "via Garibaldi ",
         "State": "Rome",
-        "Zipcode": "01578",
-        "ProductID": "MUQoYddzRZSmHQliVfkA",
-        "NameProduct": "Banana",
-        "Description": "yellow banana",
-        "ImageID": "0",
-        "Quantity": "20",
-        "UnitOfMeasurement": "kg",
-        "Price": "25"
+        "Zipcode": "01578"
     },
     {
-        "FarmerID": "lMeqm2RmkDtBURW4AeUy",
         "Name": "Ciccio",
         "Surname": "Franco",
-        "Company": "Azienda 2",
+        "FarmerID": "lMeqm2RmkDtBURW4AeUy",
         "Email": "cicio@hotmail.com",
         "Phoneno": "9874515888",
         "Address": "via Giuseppe Verdi",
         "State": "Torino",
-        "Zipcode": "10138",
-        "ProductID": "jppCV62HMquGu2JP01Eu",
-        "NameProduct": "Mela",
-        "Description": "red apple",
-        "ImageID": "1",
-        "Quantity": "2",
-        "UnitOfMeasurement": "bag",
-        "Price": "5"
+        "Zipcode": "10138"
+    },
+    {
+        "Name": "Franco",
+        "Surname": "Roberto",
+        "FarmerID": "zJbZkZDUPf9q91ZgS8ew",
+        "Email": "alessio@hotmail.it",
+        "Phoneno": "3400987654",
+        "Address": "via Cristoforo Colombo",
+        "State": "Cirella",
+        "Zipcode": "87023"
     },
     ...
     ]
     ```
-    
-    Error response `404`:
-    
-    ```json
-    {
-        "error": "No matching documents."
-    }
-    ```
+
+- GET `/api/productByFarmer`
+    - **description**: get all products by farmers
+
+    - **request parameters**: *none*
+
+    - **response**: `200 OK` (success), `404 Not Found ` (empty table in Firebase) or `500 Internal Server Error` (generic error)
+
+    - **response body content**: array of objects, each describing a product by a farmer
+
+      ```json5
+      
+      [{
+          "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
+          "Name": "Pippo",
+          "Surname": "Paperino",
+          "Company": "Azienda 1",
+          "Email": "pippo@hotmail.com",
+          "Phoneno": "4125364789",
+          "Address": "via Garibaldi ",
+          "State": "Rome",
+          "Zipcode": "01578",
+          "ProductID": "MUQoYddzRZSmHQliVfkA",
+          "NameProduct": "Banana",
+          "Description": "yellow banana",
+          "ImageID": "0",
+          "Quantity": "20",
+          "UnitOfMeasurement": "kg",
+          "Price": "25"
+      },
+      {
+          "FarmerID": "lMeqm2RmkDtBURW4AeUy",
+          "Name": "Ciccio",
+          "Surname": "Franco",
+          "Company": "Azienda 2",
+          "Email": "cicio@hotmail.com",
+          "Phoneno": "9874515888",
+          "Address": "via Giuseppe Verdi",
+          "State": "Torino",
+          "Zipcode": "10138",
+          "ProductID": "jppCV62HMquGu2JP01Eu",
+          "NameProduct": "Mela",
+          "Description": "red apple",
+          "ImageID": "1",
+          "Quantity": "2",
+          "UnitOfMeasurement": "bag",
+          "Price": "5"
+      },
+      ...
+      ]
+      ```
+
+      Error response `404`:
+
+      ```json
+      {
+          "error": "No matching documents."
+      }
+      ```
+      
 ## Database Tables
 - Table `Farmer` is used to store farmer information and it contains the following fields and data:
 

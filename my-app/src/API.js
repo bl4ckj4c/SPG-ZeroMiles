@@ -350,7 +350,7 @@ async function getFarmer() {
     } catch (e) {
         throw new Error(e);
     }
-    return data.map((f) => new Farmer(...Object.values(f)));
+    // return data.map((f) => new Farmer(...Object.values(f)));
 }
 
 /*
