@@ -3,12 +3,63 @@ import unittest
 import json
 import re
 
+# Firebase management
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
+cred = credentials.Certificate(
+    "./polito-se2-21-01-spg-firebase-adminsdk-76fui-7b28269ea6.json")
+firebase_admin.initialize_app(cred, {
+    'projectId': 'polito-se2-21-01-spg'
+})
+db = firestore.client()
+
 
 def TestSuiteBackend():
     suite = unittest.TestSuite()
+    suite.addTest(TestStorySPG2('test_POST_correct_user'))
     suite.addTest(TestStorySPG3('test_GET_farmers'))
     suite.addTest(TestStorySPG3('test_GET_productsByFarmer'))
     return suite
+
+
+class TestStorySPG2(unittest.TestCase):
+
+    def test_POST_correct_user(self):
+        user = {
+            'name': 'UserTest',
+            'lastName': 'Correct',
+            'email': 'user.test@gmail.com',
+            'address': 'Via Test 404',
+            'phone': '1234567890',
+            'city': 'TestNet',
+            'password': 'supersecrettest'
+        }
+
+        # Request sent
+        r = requests.post(
+           'http://localhost:3001/api/register',
+           json=user
+        )
+
+        # Check the response status code
+        self.assertEqual(r.status_code, 201)
+
+        # If the insertion was successful, then remove the test user form Firebase
+        # Check if the new user is present in Firebase
+        # If yes, then remove the new user
+        users_ref = db.collection(u'User').where(u'name', u'==', u'UserTest')
+        docs = users_ref.stream()
+        flagUser = False
+            
+        for doc in docs:
+            print(f'Remove => {json.dumps(doc.to_dict(), indent=4)}')
+            db.collection(u'User').document(doc.id).delete()
+            flagUser = True          
+            
+        # otherwise prompt an error, beacuse the server didn't work properly
+        self.assertTrue(flagUser, 'The server didn\'t work properly, the test user is not present in Firebase.')
 
 
 class TestStorySPG3(unittest.TestCase):
@@ -22,7 +73,7 @@ class TestStorySPG3(unittest.TestCase):
         # Request sent
         r = requests.get('http://localhost:3001/api/farmers')
 
-        # Check the resposne status code
+        # Check the response status code
         self.assertEqual(r.status_code, 200)
 
         # Check if the JSON is well-formed
@@ -105,7 +156,7 @@ class TestStorySPG3(unittest.TestCase):
         # Request sent
         r = requests.get('http://localhost:3001/api/productByFarmer')
 
-        # Check the resposne status code
+        # Check the response status code
         self.assertEqual(r.status_code, 200)
 
         # Check if the JSON is well-formed

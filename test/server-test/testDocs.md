@@ -6,7 +6,7 @@ The unit tests for the back-end side are written using Python as language. This 
 
 ## GET all farmers
 
-The unit test of this method consists in sending the GET request to the server and check if the response is correct and the JSON is well-formed. The URL contacted is `/api/farmers`. The test method uses two arrays, one is for store the fields that need to be checked and the other contains the expected formatting in the form of regular expressions.<br/>The outer for loop checks every farmer retrieved by the server, while the inner loop checks that each object inside the array is well-formed, so all fields present and valid.
+The unit test of this method consists in sending the `GET` request to the server and check if the response is correct and the JSON is well-formed. The URL contacted is `/api/farmers`. The test method uses two arrays, one is for store the fields that need to be checked and the other contains the expected formatting in the form of regular expressions.<br/>The outer for loop checks every farmer retrieved by the server, while the inner loop checks that each object inside the array is well-formed, so all fields present and valid.
 
 | Field    | Regex                                               |
 | -------- | --------------------------------------------------- |
@@ -51,7 +51,7 @@ The output of the test is none if it passes, otherwise it's a JSON object contai
 
 ## GET all products by farmer
 
-The unit test of this method consists in sending the GET request to the server and check if the response is correct and the JSON is well-formed. The URL contacted is `/api/productByFarmer`. The test method uses two arrays, one is for store the fields that need to be checked and the other contains the expected formatting in the form of regular expressions.<br/>The outer for loop checks every product by farmer retrieved by the server, while the inner loop checks that each object inside the array is well-formed, so all fields present and valid.
+The unit test of this method consists in sending the `GET` request to the server and check if the response is correct and the JSON is well-formed. The URL contacted is `/api/productByFarmer`. The test method uses two arrays, one is for store the fields that need to be checked and the other contains the expected formatting in the form of regular expressions.<br/>The outer for loop checks every product by farmer retrieved by the server, while the inner loop checks that each object inside the array is well-formed, so all fields present and valid.
 
 | Field             | Regex                                               |
 | ----------------- | --------------------------------------------------- |
@@ -107,4 +107,24 @@ The output of the test is none if it passes, otherwise it's a JSON object contai
     ]
 }
 ```
+
+## POST for new user
+
+The unit tests of this method consists in sending the `POST` request to the server and check if the server detects a non well-formed JSON and checking the status code of the response. The URL contacted is `/api/register`. The test methods are more than one because there are both correct case and faulty cases to be verified.
+
+The body of the `POST` request is the following:
+
+```json5
+{
+	'name': 'UserTest',
+    'lastName': 'Correct',
+    'email': 'user.test@gmail.com',
+    'address': 'Via Test 404',
+    'phone': '1234567890',
+    'city': 'TestNet',
+    'password': 'supersecrettest'
+}
+```
+
+If the insertion worked correctly, then the test checks if the new user is actually present into Firebase. If yes, the test is passed and the test user is removed from the database.
 
