@@ -56,6 +56,11 @@ function App() {
         <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
           <Toast.Body>{message?.msg}</Toast.Body>
         </Toast>
+        <Navbar bg="warning">
+          <Container>
+            <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
+          </Container>
+        </Navbar>
 
         <Switch>
 
@@ -64,11 +69,6 @@ function App() {
           </Route>
 
           <Route exact path="/productsbyfarmer">
-            <Navbar bg="warning">
-              <Container>
-                <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
-              </Container>
-            </Navbar>
             <Row className="page">
               <Col as="main">
 
@@ -92,11 +92,6 @@ function App() {
           </Route>
 
           <Route exact path="/user">
-            <Navbar bg="warning">
-              <Container>
-                <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
-              </Container>
-            </Navbar>
             <User></User>
           </Route>
 
