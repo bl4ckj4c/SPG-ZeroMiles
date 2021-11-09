@@ -115,7 +115,7 @@ app.post('/api/register',
         .isString()
         // Check if the address parameter is a valid address
         .custom((value, req) => {
-            let regex = new RegExp(/^[a-zA-Z\,\.0-9\t\n\r\f\v\s]+$/);
+            let regex = new RegExp(/^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$/);
             return regex.test(value);
         }),
     body('phone')
