@@ -200,6 +200,42 @@ app.post('/api/register',
         }
     });
 
+/* GET all users */
+
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (users.empty) {
+            console.log("No matching documents.");
+        } else {
+            let result = [];
+            users.forEach(user => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(users.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: user.data().Name,
+                        Surname: user.data().Surname,
+                        Company: user.data().Company,
+                        FarmerID: user.id,
+                        Email: user.data().Email,
+                        Phoneno: user.data().Phoneno,
+                        Address: user.data().Address,
+                        State: user.data().State,
+                        Zipcode: user.data().Zipcode
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500));
+        }
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+});
+
 
 /* GET all products */
 
