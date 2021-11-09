@@ -51,9 +51,7 @@ function App() {
   }
 
   return (
-    <>
       <Router>
-
         {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
         <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
           <Toast.Body>{message?.msg}</Toast.Body>
@@ -92,18 +90,19 @@ function App() {
           <Route exact path="/customer">
             <Customer></Customer>
           </Route>
+
           <Route exact path="/user">
+            <Navbar bg="warning">
+              <Container>
+                <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
+              </Container>
+            </Navbar>
             <User></User>
           </Route>
 
         </Switch>
       </Router>
-
-    </>
   );
-
-
 }
-
 
 export default App;
