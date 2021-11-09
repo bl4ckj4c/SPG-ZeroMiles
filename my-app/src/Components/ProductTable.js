@@ -30,7 +30,7 @@ function FarmerRow(props) {
                     </div>
                     <div>
                     <GeoAltFill className="ml-3"/><span>&nbsp;</span>
-                    {props.farmer.Address}
+                    {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
                     </div>
                 </section>
 
