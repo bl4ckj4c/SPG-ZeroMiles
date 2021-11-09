@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import User from './Components/userReqister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
-import { Container, Row, Col, Toast, Spinner, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Toast, Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -58,7 +58,8 @@ function App() {
         </Toast>
         <Navbar bg="warning">
           <Container>
-            <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
+            <Navbar.Brand href="/">PoliFarmers</Navbar.Brand>
+            <Nav.Link href="/user">Register</Nav.Link>
           </Container>
         </Navbar>
 
