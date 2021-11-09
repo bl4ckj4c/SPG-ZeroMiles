@@ -32,11 +32,11 @@ function FarmerRow(props) {
                     </div>
                     <div>
                     <GeoAltFill className="ml-3"/><span>&nbsp;</span>
-                    {props.farmer.Address}
+                    {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
                     </div>
                 </section>
 
-                <Table striped hover className="justify-content-center">
+                <Table striped hover size="sm" className="justify-content-center">
                     <thead>
                         <tr>
                             <th>Image</th>
@@ -84,7 +84,7 @@ function ProductsCounter(props){
     return (
      <ButtonGroup>
 
-      <ToggleButton style={{ minWidth : "2.5rem"}} variant='danger' onClick={ () => updateIndex(-1)}>{/* 
+      <ToggleButton style={{ minWidth : "2.5rem"}} variant='secondary' onClick={ () => updateIndex(-1)}>{/* 
         key={idx}
         id={`radio-${idx}`}
         type="radio"
@@ -99,10 +99,10 @@ function ProductsCounter(props){
  */}
  -
       </ToggleButton>      
-      <ToggleButton style={{ minWidth : "3rem"}} disabled variant="warning">
+      <ToggleButton style={{ minWidth : "3rem"}} disabled variant="light">
           {index}
       </ToggleButton>    
-        <ToggleButton style={{ minWidth : "2.5rem"}} variant="danger" onClick={ () => updateIndex(+1)}>
+        <ToggleButton style={{ minWidth : "2.5rem"}} variant="secondary" onClick={ () => updateIndex(+1)}>
 +
       </ToggleButton>
     

@@ -13,7 +13,7 @@ import { useState, useEffect } from 'react';
 import User from './Components/userReqister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
-import { Container, Row, Col, Toast, Spinner, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, Toast, Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -51,13 +51,17 @@ function App() {
   }
 
   return (
-    <>
       <Router>
-
         {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
         <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
           <Toast.Body>{message?.msg}</Toast.Body>
         </Toast>
+        <Navbar bg="warning">
+          <Container>
+            <Navbar.Brand href="/">PoliFarmers</Navbar.Brand>
+            <Nav.Link href="/user">Register</Nav.Link>
+          </Container>
+        </Navbar>
 
         <Switch>
 
@@ -66,11 +70,6 @@ function App() {
           </Route>
 
           <Route exact path="/productsbyfarmer">
-            <Navbar bg="warning">
-              <Container>
-                <Navbar.Brand href="#home">PoliFarmers</Navbar.Brand>
-              </Container>
-            </Navbar>
             <Row className="page">
               <Col as="main">
 
@@ -92,18 +91,14 @@ function App() {
           <Route exact path="/customer">
             <Customer></Customer>
           </Route>
+
           <Route exact path="/user">
             <User></User>
           </Route>
 
         </Switch>
       </Router>
-
-    </>
   );
-
-
 }
-
 
 export default App;

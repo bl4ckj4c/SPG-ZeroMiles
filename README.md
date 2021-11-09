@@ -19,6 +19,7 @@
     [{
         "Name": "Pippo",
         "Surname": "Paperino",
+        "Company": "Azienda 1",
         "FarmerID": "JJeuoVa8fpl4wHGLK8FO",
         "Email": "pippo@hotmail.com",
         "Phoneno": "4125364789",
