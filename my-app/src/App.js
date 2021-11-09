@@ -17,7 +17,7 @@ import { Container, Row, Col, Toast, Spinner, Navbar, Nav, NavDropdown } from 'r
 
 function App() {
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [productByFarmerList, setProductByFarmerList] = useState([]);
   const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
   const [farmerList, setFarmerList] = useState([]);
@@ -26,8 +26,7 @@ function App() {
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
-    setLoading(true);
-
+console.log("ciao"); 
     API.getProductByFarmer()
       .then(productByFarmer => {
         setProductByFarmerList(productByFarmer);
@@ -42,7 +41,7 @@ function App() {
 
     setLoading(false);
 
-  }, [productByFarmerListUpdated, farmerListUpdated]);
+  }, []);
 
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {

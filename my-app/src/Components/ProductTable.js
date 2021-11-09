@@ -4,23 +4,43 @@ import { Image } from 'react-bootstrap';
 import {useState} from 'react';
 import "./ProductTable.css";
 
+
+
+
 function ProductTable(props) {
+// Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
+    let prodNum =[];
+    for (let i = 0 ; i < props.productByFarmer.length ; i++ ){
+        prodNum.push({"number" : 0, "pID" : props.productByFarmer[i].ProductID})
+    }
+    console.log(prodNum);
+
+//this function updates the number in the array, also allows to display the current number in the counter
+    function updateNumber(i, sign){
+        if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity)) {
+            prodNum[i].number+=sign;
+        }
+        return prodNum[i].number;
+    }
+
+   
+
     return (
         <Col>
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
                     {props.farmers.map(f =>
-                        <FarmerRow farmer={f} productByFarmer={props.productByFarmer} />
+                        <FarmerRow farmer={f} productByFarmer={props.productByFarmer} updateNumber={updateNumber} />
                     )}
                 </tbody>
             </Table>
-            <ProductsCounter/>
 
         </Col>
     );
 };
 
 function FarmerRow(props) {
+    console.log("quantirendeding");
     return (<>
         <tr>
             <td className="producttable-col">
@@ -49,7 +69,7 @@ function FarmerRow(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {props.productByFarmer.map(p =>
+                        {props.productByFarmer.map((p, idx) =>
                             p.FarmerID === props.farmer.FarmerID ?
                                 <tr className="centrami">
                                     <td><Image src="/images/placeholder.jpg" rounded width={"60px"} /></td>
@@ -58,7 +78,7 @@ function FarmerRow(props) {
                                     <td>{p.Quantity}</td>
                                     <td>{p.UnitOfMeasurement}</td>
                                     <td>{p.Price}€</td>
-                                    <td><ProductsCounter quantity={p.Quantity}/></td>
+                                    <td><ProductsCounter numIndex={idx} updateNumber={props.updateNumber}/></td>
                                 </tr>
                                 : '')}
 
@@ -74,41 +94,33 @@ function FarmerRow(props) {
 
 
 function ProductsCounter(props){
-    const [index, setIndex] = useState(0)
+    const [number, setNumber] = useState(0)
 
     function updateIndex(sign){
-        if ((sign === -1 && index !== 0) || (sign === +1 && index < props.quantity))
-          setIndex (index + sign);
-         
+       let i = props.updateNumber(props.numIndex,sign);
+       setNumber (i);
+       console.log(i);
+
     }
     return (
      <ButtonGroup>
 
-      <ToggleButton style={{ minWidth : "2.5rem"}} variant='secondary' onClick={ () => updateIndex(-1)}>{/* 
-        key={idx}
-        id={`radio-${idx}`}
-        type="radio"
-        variant={idx % 2 ? 'outline-success' : 'outline-danger'}
-        name="radio"
-        value="-"
-        checked={radioValue === radio.value}
-        onChange={(e) => setRadioValue(e.currentTarget.value)}
-      
-        {radio.name}
+      <ToggleButton style={{ minWidth : "2.5rem"}} variant='secondary' onClick={() => updateIndex(-1)}>{/*
 
  */}
  -
-      </ToggleButton>      
+      </ToggleButton>
       <ToggleButton style={{ minWidth : "3rem"}} disabled variant="light">
-          {index}
-      </ToggleButton>    
-        <ToggleButton style={{ minWidth : "2.5rem"}} variant="secondary" onClick={ () => updateIndex(+1)}>
+          {number}
+      </ToggleButton>
+        <ToggleButton style={{ minWidth : "2.5rem"}} variant="secondary" onClick={() => updateIndex(+1)} >
 +
       </ToggleButton>
-    
+
   </ButtonGroup>
 
     );
 
 }
+
 export default ProductTable;
