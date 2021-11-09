@@ -116,7 +116,7 @@ The body of the `POST` request is the following:
 
 ```json5
 {
-	'name': 'UserTest',
+    'name': 'UserTest',
     'lastName': 'Correct',
     'email': 'user.test@gmail.com',
     'address': 'Via Test 404',
