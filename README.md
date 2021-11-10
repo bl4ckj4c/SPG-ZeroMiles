@@ -191,10 +191,7 @@
 
 ## Screenshots
 
-![Mobile](screenshot/iphonese_portrait.png)
-![Tablet](screenshot/ipad_portrait.png)
-![Laptop](screenshot/macbookpro13.png)
-
-<img src="screenshot/iphonese_portrait.png" alt="Mobile" width="200"></img>
-<img src="./screenshot/ipad_portrait.png" alt="Tablet" width="200"></img>
-<img src="./screenshot/macbookpro13.png" alt="Laptop" width="200"></img>
+<img src="screenshot/iphonese_portrait.png" alt="Mobile" width="300"></img>
+<img src="./screenshot/ipad_portrait.png" alt="Tablet" width="600"></img>
+<br/>
+<img src="./screenshot/macbookpro13.png" alt="Laptop" width="1000"></img>
