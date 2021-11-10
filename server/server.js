@@ -354,6 +354,145 @@ app.get('/api/productByFarmer', async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
+
+
+/* GET all Order */
+
+/* GET all farmers */
+app.get('/api/orders', async (req, res) => {
+    try {
+        const orders = await db.collection('Order').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (orders.empty) {
+            console.log("No matching documents.");
+        } else {
+            let result = [];
+            orders.forEach(order => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        OrderID: order.data().OrderID,
+                        ClientID: order.data().ClientID,
+                        Timestamp: order.data().Timestamp,
+                        ProductinorderID: order.ProductinorderID,
+        
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500));
+        }
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+});
+
+(async () => {
+    try {
+        const orders = await db.collection('Order').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (orders.empty) {
+            console.log("No matching documents.");
+        } else {
+            orders.forEach(order => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                console.log(order.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})();
+
+
+/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
+
+
+
+/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
+
+
+/* GET all productinorder */
+
+/* GET all productinorder */
+app.get('/api/productinorder', async (req, res) => {
+    try {
+        const piOrders = await db.collection('ProductInOrder').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (piOrders.empty) {
+            console.log("No matching documents.");
+        } else {
+            let result = [];
+            piOrders.forEach(pio => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        ProductinorderID: pio.data().ProductinorderID,
+                        OrderID: pio.data().OrderID,
+                        ProductbyfarmerID: pio.data().ProductbyfarmerID,
+                        ProductName: pio.ProductName,
+                        Quantity: pio.Quantity
+        
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500));
+        }
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+    }
+});
+
+(async () => {
+    try {
+        const piOrders = await db.collection('ProductInOrder').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (piOrders.empty) {
+            console.log("No matching documents.");
+        } else {
+            piOrders.forEach(pio => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                console.log(pio.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})();
+
+
+/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 app.get('/api/client', (req, res) => {
     Dao.listSelection()
         .then(type => res.json(type))
@@ -749,6 +888,8 @@ app.get('/api/officer/nextclient', async (req, res) => {
         .catch(() => res.status(500).end());
 });
 
+
+
 // *******************
 // *** OFFICER end ***
 // *******************
@@ -758,3 +899,4 @@ app.get('/api/officer/nextclient', async (req, res) => {
 app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
+
