@@ -23,8 +23,6 @@ function ProductTable(props) {
         return prodNum[i].number;
     }
 
-
-
     return (
         <Col>
             <Table className="d-flex justify-content-center">
@@ -38,6 +36,7 @@ function ProductTable(props) {
         </Col>
     );
 };
+
 
 function FarmerRow(props) {
     console.log("quantirendeding");
@@ -78,11 +77,11 @@ function FarmerRow(props) {
                         p.FarmerID === props.farmer.FarmerID ? product.push(p) : ''
                     )}
 
-                    {splitEvery(product, 3).map(p => (
-                        <Row className = "mb-4">
+                    {splitEvery(product, 5).map(p => (
+                        <Row className="mb-4">
                             {p.map(pf => (
-                                <Col md>
-                                    <ProductCard></ProductCard>
+                                <Col xl className="mb-xl-4">
+                                    <ProductCard prodottoDelFarmer={pf} />
                                 </Col>
                             ))}
                         </Row>
@@ -98,23 +97,19 @@ function FarmerRow(props) {
 function ProductCard(props) {
     return (
 
-        <Card style={{ width: '11rem' }}>
+        <Card style={{ width: '9rem' }}>
             <Card.Img variant="top" src="/images/placeholder.jpg" />
             <Card.Body>
-                <Card.Title>Card Title</Card.Title>
-                <Card.Text>
-                    Some quick example text to build on the card title and make up the bulk of
-                    the card's content.
-                </Card.Text>
+                <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
+                <Card.Text>{props.prodottoDelFarmer.Description}</Card.Text>
             </Card.Body>
             <ListGroup className="list-group-flush">
-                <ListGroupItem>Cras justo odio</ListGroupItem>
-                <ListGroupItem>Dapibus ac facilisis in</ListGroupItem>
-                <ListGroupItem>Vestibulum at eros</ListGroupItem>
+                <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
+                <ListGroupItem>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</ListGroupItem>
+                <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-                <Card.Link href="#">Card Link</Card.Link>
-                <Card.Link href="#">Another Link</Card.Link>
+                <Card.Link href="#">- 0 +</Card.Link>
             </Card.Body>
         </Card>
     );
