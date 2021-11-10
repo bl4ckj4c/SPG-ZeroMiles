@@ -4,13 +4,6 @@ import { Image, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { useState } from 'react';
 import "./ProductTable.css";
 
-function manageSubmit(){
-
-
-
-
-}
-
 
 
 
@@ -40,9 +33,7 @@ function ProductTable(props) {
         return submitData;
     }
 
-    
-
-    return (
+        return (
         <Col>
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
@@ -78,7 +69,7 @@ function FarmerRow(props) {
 
                 <Container>
                     <Row>
-                        <h1 style={{ fontSize: 25 }} align={"left"}>{props.farmer.Company}</h1>
+                        <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
                     </Row>
                     <Row>
                         <section className="d-flex justify-content-between">
@@ -96,10 +87,10 @@ function FarmerRow(props) {
                         p.FarmerID === props.farmer.FarmerID ? product.push(p) : ''
                     )}
 
-                    {splitEvery(product, 5).map(p => (
-                        <Row className="mb-4">
+                    {splitEvery(product, 3).map(p => (
+                        <Row className="mb-xl-4">
                             {p.map(pf => (
-                                <Col xl className="mb-xl-4">
+                                <Col xl className="column-margin">
                                     <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber}/>
                                 </Col>
                             ))}
@@ -116,19 +107,19 @@ function FarmerRow(props) {
 function ProductCard(props) {
     return (
 
-        <Card style={{ width: '9rem' }}>
-            <Card.Img variant="top" src="/images/placeholder.jpg" />
+        <Card style={{ width: '21rem' }}>
+            <Card.Img variant="top" src="/images/placeholder2.jpg" />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>{props.prodottoDelFarmer.Description}</Card.Text>
             </Card.Body>
-            <ListGroup className="list-group-flush">
+            <ListGroup horizontal className="list-group-flush justify-content-center">
                 <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
                 <ListGroupItem>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</ListGroupItem>
                 <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-                <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber}/>
+            <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber}/>
             </Card.Body>
         </Card>
     );
@@ -166,3 +157,4 @@ function ProductsCounter(props) {
 }
 
 export default ProductTable;
+    
