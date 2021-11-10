@@ -15,13 +15,14 @@ function Main() {
             <Row className="justify-content-center mt-3">
                 <Col></Col>
                 <Col>
-                    <Link to="/customer">
-                        <Button size="lg" variant="secondary">Customer</Button>
+                    <Link to="/productsByFarmer">
+                        <Button size="lg" variant="secondary">LISTA DEI PRODOTTI</Button>
                     </Link>
                 </Col>
                 <Col></Col>
             </Row>
-
+ 
+ {/*
             <Row className="justify-content-center mt-3">
                 <Col></Col>
                     <Col>
@@ -41,6 +42,8 @@ function Main() {
                     </Col>
                 <Col></Col>
             </Row>
+
+*/}
 
         </Container>
     );
