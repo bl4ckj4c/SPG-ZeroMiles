@@ -16,10 +16,14 @@ function ProductTable(props) {
     console.log(prodNum);
 
     //this function updates the number in the array, also allows to display the current number in the counter
-    function updateNumber(i, sign) {
-        if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity)) {
+    function updateNumber(pID, sign) {
+        console.log(prodNum);
+        let i = props.productByFarmer.findIndex(p => p.ProductID === pID)
+        if (i === -1)
+            return 0;
+        else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
             prodNum[i].number += sign;
-        }
+
         return prodNum[i].number;
     }
 
@@ -81,7 +85,7 @@ function FarmerRow(props) {
                         <Row className="mb-4">
                             {p.map(pf => (
                                 <Col xl className="mb-xl-4">
-                                    <ProductCard prodottoDelFarmer={pf} />
+                                    <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber}/>
                                 </Col>
                             ))}
                         </Row>
@@ -109,7 +113,7 @@ function ProductCard(props) {
                 <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-                <Card.Link href="#">- 0 +</Card.Link>
+                <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber}/>
             </Card.Body>
         </Card>
     );
@@ -120,7 +124,7 @@ function ProductsCounter(props) {
     const [number, setNumber] = useState(0)
 
     function updateIndex(sign) {
-        let i = props.updateNumber(props.numIndex, sign);
+        let i = props.updateNumber(props.pID, sign);
         setNumber(i);
         console.log(i);
 
