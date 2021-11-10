@@ -4,9 +4,6 @@ import { Image, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { useState } from 'react';
 import "./ProductTable.css";
 
-
-
-
 function ProductTable(props) {
     // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
     let prodNum = [];
@@ -26,14 +23,12 @@ function ProductTable(props) {
         return prodNum[i].number;
     }
 
-
-
-    function filterSubmit(){ //deletes items not selected
-        let submitData = prodNum.filter( p => p.number !== 0);
+    function filterSubmit() { //deletes items not selected
+        let submitData = prodNum.filter(p => p.number !== 0);
         return submitData;
     }
 
-        return (
+    return (
         <Col>
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
@@ -63,15 +58,19 @@ function FarmerRow(props) {
             []
         );
 
+    props.productByFarmer.map(p => p.FarmerID === props.farmer.FarmerID ? product.push(p) : '')
+
     return (<>
         <tr>
             <td className="producttable-col">
 
                 <Container>
+
                     <Row>
                         <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
                     </Row>
-                    <Row>
+
+                    <Row className="mb-3">
                         <section className="d-flex justify-content-between">
                             <div> <PersonFill /><span>&nbsp;</span>
                                 {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
@@ -83,15 +82,11 @@ function FarmerRow(props) {
                         </section>
                     </Row>
 
-                    {props.productByFarmer.map(p =>
-                        p.FarmerID === props.farmer.FarmerID ? product.push(p) : ''
-                    )}
-
                     {splitEvery(product, 3).map(p => (
                         <Row className="mb-xl-4">
                             {p.map(pf => (
                                 <Col xl className="column-margin">
-                                    <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber}/>
+                                    <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber} />
                                 </Col>
                             ))}
                         </Row>
@@ -106,7 +101,6 @@ function FarmerRow(props) {
 
 function ProductCard(props) {
     return (
-
         <Card style={{ width: '21rem' }}>
             <Card.Img variant="top" src="/images/placeholder2.jpg" />
             <Card.Body>
@@ -119,7 +113,7 @@ function ProductCard(props) {
                 <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-            <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber}/>
+                <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber} />
             </Card.Body>
         </Card>
     );
@@ -133,28 +127,20 @@ function ProductsCounter(props) {
         let i = props.updateNumber(props.pID, sign);
         setNumber(i);
         console.log(i);
-
     }
     return (
         <ButtonGroup>
-
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant='secondary' onClick={() => updateIndex(-1)}>{/*
-
- */}
+            <ToggleButton style={{ minWidth: "2.5rem" }} variant='light' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
             <ToggleButton style={{ minWidth: "3rem" }} disabled variant="light">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant="secondary" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ minWidth: "2.5rem" }} variant="light" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
-
         </ButtonGroup>
-
     );
-
 }
 
 export default ProductTable;
-    
