@@ -4,6 +4,13 @@ import { Image, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { useState } from 'react';
 import "./ProductTable.css";
 
+function manageSubmit(){
+
+
+
+
+}
+
 
 
 
@@ -17,7 +24,6 @@ function ProductTable(props) {
 
     //this function updates the number in the array, also allows to display the current number in the counter
     function updateNumber(pID, sign) {
-        console.log(prodNum);
         let i = props.productByFarmer.findIndex(p => p.ProductID === pID)
         if (i === -1)
             return 0;
@@ -26,6 +32,15 @@ function ProductTable(props) {
 
         return prodNum[i].number;
     }
+
+
+
+    function filterSubmit(){ //deletes items not selected
+        let submitData = prodNum.filter( p => p.number !== 0);
+        return submitData;
+    }
+
+    
 
     return (
         <Col>
