@@ -66,7 +66,7 @@ function FarmerRow(props) {
 
                 <Container>
 
-                    <Row>
+                    <Row className="mt-2">
                         <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
                     </Row>
 
