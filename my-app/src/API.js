@@ -1,4 +1,5 @@
 import { ProductByFarmer, Farmer } from './Products/Products.js';
+import { ProductInOrder, Order } from './Orders/Orders.js';
 
 /**
  * All the API calls
@@ -324,6 +325,39 @@ async function getStatisticsForServicetype(startDate, endDate, serviceType) { //
   });
 }*/
 
+/*  sssssssssssssssssssssssssssssssssss */
+async function getProductInOrder() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/productinorder', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((pio) => new ProductInOrder(...Object.values(pio)));
+}
+
+
+async function getOrder() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/orders', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
+
+/*  sssssssssssssssssssssssssssssssssss */
+
 
 async function getProductByFarmer() {
     let data = [];
@@ -377,6 +411,10 @@ const API = {
     getNextCustomer,
     getStatisticsForAllCounter,
     getProductByFarmer,
-    getFarmer
+    getFarmer,
+
+
+    getOrder,
+    getProductInOrder
 };
 export default API;
