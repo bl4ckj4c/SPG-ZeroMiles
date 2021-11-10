@@ -214,15 +214,14 @@ app.get('/api/users', async (req, res) => {
                 //console.log(users.data());
                 result.push(new Promise(async (resolve, reject) => {
                     resolve({
-                        Name: user.data().Name,
-                        Surname: user.data().Surname,
-                        Company: user.data().Company,
-                        FarmerID: user.id,
-                        Email: user.data().Email,
-                        Phoneno: user.data().Phoneno,
-                        Address: user.data().Address,
-                        State: user.data().State,
-                        Zipcode: user.data().Zipcode
+                        Name: user.data().name,
+                        Surname: user.data().surname,
+                        UserID: user.id,
+                        Email: user.data().email,
+                        Phoneno: user.data().phone,
+                        Address: user.data().address,
+                        State: user.data().city,
+                        Zipcode: user.data().zipcode
                     });
                 }));
             })
