@@ -16,14 +16,24 @@ function ProductTable(props) {
     console.log(prodNum);
 
     //this function updates the number in the array, also allows to display the current number in the counter
-    function updateNumber(i, sign) {
-        if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity)) {
+    function updateNumber(pID, sign) {
+        let i = props.productByFarmer.findIndex(p => p.ProductID === pID)
+        if (i === -1)
+            return 0;
+        else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
             prodNum[i].number += sign;
-        }
+
         return prodNum[i].number;
     }
 
-    return (
+
+
+    function filterSubmit(){ //deletes items not selected
+        let submitData = prodNum.filter( p => p.number !== 0);
+        return submitData;
+    }
+
+        return (
         <Col>
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
@@ -59,7 +69,7 @@ function FarmerRow(props) {
 
                 <Container>
                     <Row>
-                        <h1 style={{ fontSize: 25 }} align={"left"}>{props.farmer.Company}</h1>
+                        <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
                     </Row>
                     <Row>
                         <section className="d-flex justify-content-between">
@@ -77,11 +87,11 @@ function FarmerRow(props) {
                         p.FarmerID === props.farmer.FarmerID ? product.push(p) : ''
                     )}
 
-                    {splitEvery(product, 5).map(p => (
-                        <Row className="mb-4">
+                    {splitEvery(product, 3).map(p => (
+                        <Row className="mb-xl-4">
                             {p.map(pf => (
-                                <Col xl className="mb-xl-4">
-                                    <ProductCard prodottoDelFarmer={pf} />
+                                <Col xl className="column-margin">
+                                    <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber}/>
                                 </Col>
                             ))}
                         </Row>
@@ -97,19 +107,19 @@ function FarmerRow(props) {
 function ProductCard(props) {
     return (
 
-        <Card style={{ width: '9rem' }}>
-            <Card.Img variant="top" src="/images/placeholder.jpg" />
+        <Card style={{ width: '21rem' }}>
+            <Card.Img variant="top" src="/images/placeholder2.jpg" />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>{props.prodottoDelFarmer.Description}</Card.Text>
             </Card.Body>
-            <ListGroup className="list-group-flush">
+            <ListGroup horizontal className="list-group-flush justify-content-center">
                 <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
                 <ListGroupItem>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</ListGroupItem>
                 <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-                <Card.Link href="#">- 0 +</Card.Link>
+            <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber}/>
             </Card.Body>
         </Card>
     );
@@ -120,7 +130,7 @@ function ProductsCounter(props) {
     const [number, setNumber] = useState(0)
 
     function updateIndex(sign) {
-        let i = props.updateNumber(props.numIndex, sign);
+        let i = props.updateNumber(props.pID, sign);
         setNumber(i);
         console.log(i);
 
@@ -147,3 +157,4 @@ function ProductsCounter(props) {
 }
 
 export default ProductTable;
+    
