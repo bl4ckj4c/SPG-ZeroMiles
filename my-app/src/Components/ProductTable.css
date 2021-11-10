@@ -10,3 +10,9 @@
  .centrami {
     vertical-align: middle;
  }
+
+ @media (max-width: 1200px) {
+   .column-margin {
+     margin: 10px 0;
+   }
+ }
