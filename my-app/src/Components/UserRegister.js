@@ -14,7 +14,7 @@ function User(props) {
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
-    const [zipCode, setZipCode] = useState('');
+    const [zipcode, setZipcode] = useState('');
 
     function validform(event) {
         var a = document.forms["my-form"]["name"].value;
@@ -59,7 +59,7 @@ function User(props) {
 
     async function sendRegister(event) {
         event.preventDefault();
-        let data = { name, lastname, email, address, phone, city, password, zipCode };
+        let data = { name, lastname, email, address, phone, city, password, zipcode };
         Axios.post('/api/register', data)
           .then((response) => {
               console.log(response);
@@ -187,7 +187,7 @@ function User(props) {
                                                                 class="form-control"
                                                                 placeholder="put the ZipCode"
                                                                 required
-                                                                onChange={(e) => setZipCode(e.target.value)}
+                                                                onChange={(e) => setZipcode(e.target.value)}
                                                             ></input>
                                                         </div>
                                                     </div>
