@@ -161,13 +161,13 @@
 
 - Table `User` is used to store user information and it contains the following fields and data:
 
-   | ID                                   | name       | surname | email                     | address                     | phone      | city | password | zipcode |
-   | ------------------------------------ | ---------- | ------- | ------------------------- | --------------------------- | ---------- | ---- | -------- | ------- |
-   | 11a9f103-d5fc-4612-bd38-0bf4a792486b | Policarpio | Perez   | poliperez@mail.com        | Via Capo del Mondo 1        | 3527163456 | vt   | 123456   | 12345   |
-   | 2d082c0e-9c43-49fc-bb65-cf8bae607f05 | willmar    | willmar | gillmar@protonmail.com    | Via Virtuale 1              | 3661375553 | ge   | q        | 10546   |
-   | 37929302-bd1d-4364-99dc-b53ae22b38aa | maria      | Rossa   | mariarossa@gmail.com      | via monginevro 21           | 9938893435 | ca   | qwerty   | 12876   |
-   | 37eaddec-f830-4bc3-a661-649a1867fbad | willmar    | rengifo | willmar.rengifo@gmail.com | Corso Duca degli Abruzzi 24 | 3661375554 | br   | 1234     | 90876   |
-   | aa8eb4f9-4822-4772-b7ad-128a8710ac07 | Teddy      | Agnez   | mario.rossi@gmail.com     | Via Bolivia 1               | 9938893232 | fi   | qwerty   | 45678   |
+   | ID                                   | Name      | Surname    | Email                       | Address                     | Phoneno    | City    | State | Zipcode | Password     |
+   | ------------------------------------ | --------- | ---------- | --------------------------- | --------------------------- | ---------- | ------- | ----- | ------- | ------------ |
+   | 2d082c0e-9c43-49fc-bb65-cf8bae607f05 | Mario     | Rossi      | mario.rossi@gmail.com       | Corso Duca degli Abruzzi 24 | 011789675  | Turin   | TO    | 10129   | supersecret1 |
+   | 1BM0UzyOXSs1MqSUDuBs                 | Maurizio  | Costanzo   | maurizio.costanzo@gmail.com | Corso Buenos Aires 33       | 3248967546 | Milan   | MI    | 20019   | supersecret2 |
+   | 4uiJeIxtoneCS9qJPksH                 | Eva       | Jobs       | eva.jobs@apple.com          | Via Nizza 40                | 2907654356 | Turin   | TO    | 10129   | supersecret3 |
+   | QWTh9AdamnVuHK2YcPgg                 | Guido     | Saracco    | guido.saracco@polito.it     | Corso Nizza 112             | 0171563452 | Cuneo   | CN    | 12100   | supersecret4 |
+   | heeHLjlZzK6GB93tLuhC                 | Cristiano | Malgioglio | cristiano.draghi@governo.it | Via Vinadio 45              | 0987867564 | Mesagne | BR    | 72023   | supersecret5 |
    
 - Table `Order` is used to store order information and it contains the following fields and data:
 
