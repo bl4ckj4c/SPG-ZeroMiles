@@ -56,6 +56,7 @@ class TestStorySPG2(unittest.TestCase):
                 'Email',
                 'Phoneno',
                 'Address',
+                'City',
                 'State',
                 'Zipcode'
             ]
@@ -66,6 +67,7 @@ class TestStorySPG2(unittest.TestCase):
                 r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
                 r'^(\+(\([0-9]{1,2}\))?)?[0-9]+$',
                 r'^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$',
+                r'^[a-zA-Z]+$',
                 r'^[a-zA-Z]+$',
                 r'^[0-9]{5}$'
             ]
