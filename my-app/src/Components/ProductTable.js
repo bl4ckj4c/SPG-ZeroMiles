@@ -1,11 +1,48 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { PersonFill, GeoAltFill, TypeH1 } from 'react-bootstrap-icons';
+import { Image, Card, ListGroup, ListGroupItem, Form } from 'react-bootstrap';
 import { useState } from 'react';
+import { Typeahead } from 'react-bootstrap-typeahead';
+import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
+
+
+function UserDropdown(props) {
+    const [selectedUser, setSelectedUser] = useState([]);
+
+    const filterByFields = ['Name', 'Surname'];
+
+    return (
+        <>
+            <Form.Group>
+                <Form.Label>Single Selection</Form.Label>
+                <Typeahead
+                    filterBy={filterByFields}
+                    id="basic-typeahead-single"
+                    labelKey={(option) => `${option.Name} ${option.Surname}`}
+                    onChange={setSelectedUser}
+                    options={props.users}
+                    placeholder="Choose a customer..."
+                    selected={selectedUser}
+                    renderMenuItemChildren={(option) => (
+                        <div>
+                            {option.Name + " " + option.Surname}
+                            <div>
+                                <small>{option.Address + " - " + option.City +", "+ option.State + " " + option.Zipcode} </small>
+                            </div>
+                        </div>
+                    )}
+                />
+            </Form.Group>
+        </>
+    );
+};
 
 function ProductTable(props) {
     // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
+
+
+
     let prodNum = [];
     for (let i = 0; i < props.productByFarmer.length; i++) {
         prodNum.push({ "number": 0, "pID": props.productByFarmer[i].ProductID })
@@ -30,6 +67,8 @@ function ProductTable(props) {
 
     return (
         <Col>
+            <UserDropdown users={props.users} />
+
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
                     {props.farmers.map(f =>

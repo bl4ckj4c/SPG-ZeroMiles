@@ -15,4 +15,17 @@ function Order(OrderID, ClientID, Timestamp, ProductinorderID){
   
 }
 
-export { ProductInOrder, Order };
+
+function User(Name, Surname, UserID, Email, Phoneno, Address, City, State, Zipcode){
+    this.Name = Name;
+    this.Surname = Surname;
+    this.UserID = UserID;
+    this.Email = Email;
+    this.Phoneno = Phoneno;
+    this.Address = Address;
+    this.City = City;
+    this.State = State;
+    this.Zipcode = Zipcode;
+}
+
+export { ProductInOrder, Order, User };

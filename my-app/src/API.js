@@ -1,5 +1,5 @@
 import { ProductByFarmer, Farmer } from './Products/Products.js';
-import { ProductInOrder, Order } from './Orders/Orders.js';
+import { ProductInOrder, Order, User } from './Orders/Orders.js';
 
 /**
  * All the API calls
@@ -387,6 +387,20 @@ async function getFarmer() {
     return data.map((f) => new Farmer(...Object.values(f)));
 }
 
+async function getAllUsers() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/users', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((f) => new User(...Object.values(f)));
+}
+
 /*
 async function getProductByFarmer(counterID) {
     const response = await fetch(BASEURL + '/productByFarmer');
@@ -415,6 +429,7 @@ const API = {
 
 
     getOrder,
-    getProductInOrder
+    getProductInOrder, 
+    getAllUsers
 };
 export default API;

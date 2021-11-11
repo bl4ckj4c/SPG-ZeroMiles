@@ -21,6 +21,7 @@ function App() {
   const [productByFarmerList, setProductByFarmerList] = useState([]);
   const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
   const [farmerList, setFarmerList] = useState([]);
+  const [userList, setUserList] = useState([]);
   const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
 
 
@@ -33,10 +34,15 @@ console.log("ciao");
         setProductByFarmerListUpdated(false);
       }).catch(pbf => handleErrors(pbf));
 
-    API.getFarmer()
+      API.getFarmer()
       .then(farmer => {
         setFarmerList(farmer);
         setFarmerListUpdated(false);
+      }).catch(f => handleErrors(f));
+      
+      API.getAllUsers()
+      .then(u => {
+        setUserList(u);
       }).catch(f => handleErrors(f));
 
     setLoading(false);
@@ -77,7 +83,7 @@ console.log("ciao");
                   <Spinner animation="border" size="xl" variant="primary" />
                 </Row> :
 
-                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} />}
+                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList}/>}
 
               </Col>
             </Row>
