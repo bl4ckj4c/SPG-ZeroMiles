@@ -53,7 +53,7 @@ function App() {
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
     {/*setMessage({ msg: err.error, type: 'danger' });*/ }
-    setMessage({ msg: "Errore generico, per favore gestiscimi", type: 'danger' });
+    setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
     console.log(err);
   }
 
@@ -63,7 +63,7 @@ function App() {
       <ToastContainer className="p-3" position="middle-center">
           <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
             <Toast.Header closeButton={false}>
-              <strong className="me-auto">Error</strong>
+              <strong className="me-auto">Error :(</strong>
             </Toast.Header>
             <Toast.Body>{message?.msg}</Toast.Body>
           </Toast>
