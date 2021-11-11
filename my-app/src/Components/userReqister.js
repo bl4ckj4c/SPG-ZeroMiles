@@ -1,59 +1,65 @@
 import { Col, Row, Container } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import SelectCity from './SelectCity.js';
 
 import Axios from 'axios'
 import "./user.css";
+// import { Grid } from 'react-bootstrap-icons';
 
 function User(props) {
-    const [name, setname] = useState('');
-    const [lastName, setLastname] = useState('');
+    const [name, setName] = useState('');
+    const [lastname, setlastname] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
+    const [zipCode, setZipCode] = useState('');
 
-    function validform(e) {
+    function validform(event) {
         var a = document.forms["my-form"]["name"].value;
-        var b = document.forms["my-form"]["lastName"].value;
+        var b = document.forms["my-form"]["surname"].value;
         var c = document.forms["my-form"]["email"].value;
         var d = document.forms["my-form"]["address"].value;
         var e = document.forms["my-form"]["city"].value;
         var f = document.forms["my-form"]["password"].value;
         var g = document.forms["my-form"]["confPassword"].value;
-        if (a==null || a=="") {
+        var h = document.forms["my-form"]["zipCode"].value;
+        if (a === null || a === "") {
             alert("Please Enter Your Full Name");
             return false;
-        } else if (b==null || b=="") {
+        } else if (b === null || b === "") {
             alert("Please Enter Your last Name");
             return false;
-        } else if (f==null || f=="") {
+        } else if (f === null || f === "") {
             alert("Please Enter Your password");
             return false;
-        } else if (g==null || g=="") {
+        } else if (g === null || g === "") {
             alert("Please Enter Your confirmation password");
             return false;
-        } else if ( !(f == g)) {
+        } else if ( !(f === g)) {
             alert("The password is not the same");
             return false;
-        } else if (c==null || c=="") {
+        } else if (c === null || c === "") {
             alert("Please Enter Your Email Address");
             return false;
-        } else if (d==null || d=="") {
+        } else if (d === null || d === "") {
             alert("Please Enter Your Address");
             return false;
-        } else if (e==null || e=="") {
+        } else if (e === null || e === "") {
             alert("Please Enter Your permanent city");
             return false;
+        } else if (h === null || h === "") {
+            alert("Please Enter Your zip code");
+            return false;
         } else {
-            sendRegister();
+            sendRegister(event);
         }
     }
 
-    async function sendRegister() {
-        let data = {name, lastName, email, address, phone, city, password };
+    async function sendRegister(event) {
+        event.preventDefault();
+        let data = { name, lastname, email, address, phone, city, password, zipCode };
         Axios.post('/api/register', data)
           .then((response) => {
               console.log(response);
@@ -72,7 +78,7 @@ function User(props) {
                                         <div class="card">
                                             <div class="card-header">Register</div>
                                             <div class="card-body">
-                                                <form name="my-form">
+                                                <form name="my-form" method="POST">
                                                     <div class="form-group row">
                                                         <label for="full_name" class="col-md-4 col-form-label text-md-right">Name</label>
                                                         <div class="col-md-8">
@@ -84,29 +90,28 @@ function User(props) {
                                                                 placeholder="Put the name"
                                                                 required
                                                                 value = { name }
-                                                                onChange={(e) => setname(e.target.value)}
+                                                                onChange={(e) => setName(e.target.value)}
                                                             ></input>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label for="last_name" class="col-md-4 col-form-label text-md-right">Last Name</label>
+                                                        <label for="surname" class="col-md-4 col-form-label text-md-right">Last Name</label>
                                                         <div class="col-md-8">
                                                         <input
                                                             type="text"
-                                                                id="lastName"
-                                                                name="username"
+                                                                id="surname"
+                                                                name="surname"
                                                                 class="form-control"
                                                                 placeholder="Put the last name"
                                                                 required
-                                                                value = { lastName }
-                                                                onChange={(e) => setLastname(e.target.value)}
+                                                                value = { lastname }
+                                                                onChange={(e) => setlastname(e.target.value)}
                                                             ></input>
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
                                                         <label for="email" class="col-md-4 col-form-label text-md-right">E-Mail</label>
-                                                        <div class="col-md-8">
-                                                    
+                                                        <div class="col-md-8">                                                    
                                                             <input
                                                             type="text"
                                                             class="form-control"
@@ -125,7 +130,7 @@ function User(props) {
                                                             type="password"
                                                             class="form-control"
                                                             name="password"
-                                                            id="passsword"
+                                                            id="password"
                                                             placeholder="put the password"
                                                             onChange={(e) => setPassword(e.target.value)}
                                                             required
@@ -172,6 +177,21 @@ function User(props) {
                                                             ></input>
                                                         </div>
                                                     </div>
+                                                    
+                                                    <div class="form-group row">
+                                                        <label for="ZipCode" class="col-md-4 col-form-label text-md-right">Zip code</label>
+                                                        <div class="col-md-8">
+                                                            <input
+                                                                type="text"
+                                                                id="zipCode"
+                                                                class="form-control"
+                                                                placeholder="put the ZipCode"
+                                                                required
+                                                                onChange={(e) => setZipCode(e.target.value)}
+                                                            ></input>
+                                                        </div>
+                                                    </div>
+
                                                     <div class="form-group row">
                                                         <label for="city" class="col-md-4 col-form-label text-md-right">City</label>
                                                         <div class="col-md-8">                                    
@@ -189,7 +209,7 @@ function User(props) {
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8 offset-md-4">
-                                                        <button variant="primary" onClick={(e) => validform("control 1")} class="btn btn-primary">
+                                                        <button variant="primary" onClick={(e) => validform(e)} class="btn btn-primary">
                                                         Register
                                                         </button>
                                                     </div>
@@ -200,9 +220,6 @@ function User(props) {
                             </div>
                         </div>
                     </main>
-                    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-                    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
                 </Col>
                 <Col xs lg="4"></Col>
             </Row>
@@ -213,19 +230,6 @@ function User(props) {
         </Container>
     )};
 
-function ShowTicketModal(props) {
-    return (
-        <Modal
-            show={props.show}
-            onHide={props.handleClose}
-            size="md"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
-            <Modal.Header className="text-center font-weight-bold" closeButton onClick={props.handleClose}>Dear customer, here's your ticket number: </Modal.Header>
-            <Modal.Body className="display-1 text-center font-weight-bold">{props.message.number}</Modal.Body>
-        </Modal>
-    );
-}
+    // TODO: Catch the server response to show a message with the status   
 
 export default User;
