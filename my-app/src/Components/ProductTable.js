@@ -6,9 +6,9 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 
+    let prodNum = [];
 
 function UserDropdown(props) {
-    const [selectedUser, setSelectedUser] = useState([]);
 
     const filterByFields = ['Name', 'Surname'];
 
@@ -20,10 +20,10 @@ function UserDropdown(props) {
                     filterBy={filterByFields}
                     id="basic-typeahead-single"
                     labelKey={(option) => `${option.Name} ${option.Surname}`}
-                    onChange={setSelectedUser}
+                    onChange={props.setSelectedUser}
                     options={props.users}
                     placeholder="Choose a customer..."
-                    selected={selectedUser}
+                    selected={props.selectedUser}
                     renderMenuItemChildren={(option) => (
                         <div>
                             {option.Name + " " + option.Surname}
@@ -41,17 +41,17 @@ function UserDropdown(props) {
 function ProductTable(props) {
     // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
 
+    const [selectedUser, setSelectedUser] = useState([]);
+    if(prodNum.length<= 0)
+        for (let i = 0; i < props.productByFarmer.length; i++) {
+            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID })
+        }
 
-
-    let prodNum = [];
-    for (let i = 0; i < props.productByFarmer.length; i++) {
-        prodNum.push({ "number": 0, "pID": props.productByFarmer[i].ProductID })
-    }
     console.log(prodNum);
 
     //this function updates the number in the array, also allows to display the current number in the counter
-    function updateNumber(pID, sign) {
-        let i = props.productByFarmer.findIndex(p => p.ProductID === pID)
+    function updateNumber(ProductId, sign) {
+        let i = props.productByFarmer.findIndex(p => p.ProductID === ProductId)
         if (i === -1)
             return 0;
         else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
@@ -65,9 +65,23 @@ function ProductTable(props) {
         return submitData;
     }
 
+    function submitOrder(){
+
+        let items = filterSubmit()
+        let object = {
+            "UserID" : selectedUser.UserID,
+            "Email" : selectedUser.Email, 
+            "items" : items
+        }
+
+        console.log(object);
+
+    }
+
     return (
         <Col>
-            <UserDropdown users={props.users} />
+            <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+            <Button onClick={submitOrder}>Submit Order</Button>
 
             <Table className="d-flex justify-content-center">
                 <tbody id="farmer-table" align="center">
@@ -142,9 +156,11 @@ function ProductCard(props) {
 
 const [open, setOpen]=useState(false);
 
+let newSrc = "https://filer.cdn-thefoodassembly.com/photo/"+props.prodottoDelFarmer.ImageID+"/view/medium"
+
     return (
         <Card style={{ width: '21rem' }}>
-            <Card.Img variant="top" src="/images/placeholder2.jpg" />
+            <Card.Img variant="top" src={newSrc} />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>
@@ -167,7 +183,7 @@ const [open, setOpen]=useState(false);
                 <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
             </ListGroup>
             <Card.Body>
-                <ProductsCounter pID={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber} />
+                <ProductsCounter ProductId={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber} />
             </Card.Body>
         </Card>
     );
@@ -178,7 +194,7 @@ function ProductsCounter(props) {
     const [number, setNumber] = useState(0)
 
     function updateIndex(sign) {
-        let i = props.updateNumber(props.pID, sign);
+        let i = props.updateNumber(props.ProductId, sign);
         setNumber(i);
         console.log(i);
     }
