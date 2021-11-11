@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, ListGroupItem, Form } from 'react-bootstrap';
+import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse } from 'react-bootstrap';
 import { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -139,12 +139,27 @@ function FarmerRow(props) {
 };
 
 function ProductCard(props) {
+
+const [open, setOpen]=useState(false);
+
     return (
         <Card style={{ width: '21rem' }}>
             <Card.Img variant="top" src="/images/placeholder2.jpg" />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
-                <Card.Text>{props.prodottoDelFarmer.Description}</Card.Text>
+                <Card.Text>
+
+                    <Button variant="light"
+                        onClick={() => setOpen(!open)}
+                        aria-controls="example-collapse-text"
+                        aria-expanded={open}>
+                        See Description
+                    </Button>
+                    <Collapse in={open}>
+                        <div id="example-collapse-text">{props.prodottoDelFarmer.Description}
+                        </div>
+                    </Collapse>
+                </Card.Text>
             </Card.Body>
             <ListGroup horizontal className="list-group-flush justify-content-center">
                 <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
