@@ -10,10 +10,11 @@ import Customer from './Components/Customer.js';
 import Officer from './Components/Officer.js';
 import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
-import User from './Components/userReqister.js';
+import User from './Components/UserRegister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
-import { Container, Row, Col, Toast, Spinner, Navbar, Nav, NavDropdown } from 'react-bootstrap';
+import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
+import "./App.css";
 
 function App() {
   const [message, setMessage] = useState('');
@@ -27,20 +28,20 @@ function App() {
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
-console.log("ciao"); 
+    setLoading(true);
     API.getProductByFarmer()
       .then(productByFarmer => {
         setProductByFarmerList(productByFarmer);
         setProductByFarmerListUpdated(false);
       }).catch(pbf => handleErrors(pbf));
 
-      API.getFarmer()
+    API.getFarmer()
       .then(farmer => {
         setFarmerList(farmer);
         setFarmerListUpdated(false);
       }).catch(f => handleErrors(f));
-      
-      API.getAllUsers()
+
+    API.getAllUsers()
       .then(u => {
         setUserList(u);
       }).catch(f => handleErrors(f));
@@ -51,58 +52,67 @@ console.log("ciao");
 
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
-    setMessage({ msg: err.error, type: 'danger' });
+    {/*setMessage({ msg: err.error, type: 'danger' });*/ }
+    setMessage({ msg: "Errore generico, per favore gestiscimi", type: 'danger' });
     console.log(err);
   }
 
   return (
-      <Router>
-        {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
-        <Toast show={message !== ''} onClose={() => setMessage('')} delay={3000} autohide>
-          <Toast.Body>{message?.msg}</Toast.Body>
-        </Toast>
-        <Navbar bg="warning">
-          <Container>
-            <Navbar.Brand href="/">PoliFarmers</Navbar.Brand>
-            <Nav.Link href="/user">Register</Nav.Link>
-          </Container>
-        </Navbar>
+    <Router>
+      {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
+      <ToastContainer className="p-3" position="middle-center">
+          <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
+            <Toast.Header closeButton={false}>
+              <strong className="me-auto">Error</strong>
+            </Toast.Header>
+            <Toast.Body>{message?.msg}</Toast.Body>
+          </Toast>
+        </ToastContainer>
 
-        <Switch>
+      <Navbar bg="warning">
+        <Container>
+          <Navbar.Brand href="/">
+            <Image id="logo" src="/images/logo.png" />
+          </Navbar.Brand>
+          <Nav.Link id="posizionamento" href="/user">Sign Up</Nav.Link>
+        </Container>
+      </Navbar>
 
-          <Route exact path="/">
-            <Main></Main>
-          </Route>
+      <Switch>
 
-          <Route exact path="/productsbyfarmer">
-            <Row className="page">
-              <Col as="main">
+        <Route exact path="/">
+          <Main></Main>
+        </Route>
 
-                {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
-                {loading ? <Row className="justify-content-center mt-5">
-                  <Spinner animation="border" size="xl" variant="primary" />
-                </Row> :
+        <Route exact path="/productsbyfarmer">
+          <Row className="page">
+            <Col as="main">
 
-                  <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList}/>}
+              {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
+              {loading ? <Row className="justify-content-center mt-5">
+                <Spinner animation="border" size="xl" variant="primary" />
+              </Row> :
 
-              </Col>
-            </Row>
-          </Route>
+                <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
 
-          <Route exact path="/officer">
-            <Officer></Officer>
-          </Route>
+            </Col>
+          </Row>
+        </Route>
 
-          <Route exact path="/customer">
-            <Customer></Customer>
-          </Route>
+        <Route exact path="/officer">
+          <Officer></Officer>
+        </Route>
 
-          <Route exact path="/user">
-            <User></User>
-          </Route>
+        <Route exact path="/customer">
+          <Customer></Customer>
+        </Route>
 
-        </Switch>
-      </Router>
+        <Route exact path="/user">
+          <User></User>
+        </Route>
+
+      </Switch>
+    </Router>
   );
 }
 

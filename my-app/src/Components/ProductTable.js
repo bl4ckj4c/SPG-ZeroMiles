@@ -6,7 +6,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 
-    let prodNum = [];
+let prodNum = [];
 
 function UserDropdown(props) {
 
@@ -15,7 +15,6 @@ function UserDropdown(props) {
     return (
         <>
             <Form.Group>
-                <Form.Label>Single Selection</Form.Label>
                 <Typeahead
                     filterBy={filterByFields}
                     id="basic-typeahead-single"
@@ -28,7 +27,7 @@ function UserDropdown(props) {
                         <div>
                             {option.Name + " " + option.Surname}
                             <div>
-                                <small>{option.Address + " - " + option.City +", "+ option.State + " " + option.Zipcode} </small>
+                                <small>{option.Address + " - " + option.City + ", " + option.State + " " + option.Zipcode} </small>
                             </div>
                         </div>
                     )}
@@ -42,7 +41,7 @@ function ProductTable(props) {
     // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
 
     const [selectedUser, setSelectedUser] = useState([]);
-    if(prodNum.length<= 0)
+    if (prodNum.length <= 0)
         for (let i = 0; i < props.productByFarmer.length; i++) {
             prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID })
         }
@@ -65,13 +64,13 @@ function ProductTable(props) {
         return submitData;
     }
 
-    function submitOrder(){
+    function submitOrder() {
 
         let items = filterSubmit()
         let object = {
-            "UserID" : selectedUser.UserID,
-            "Email" : selectedUser.Email, 
-            "items" : items
+            "UserID": selectedUser.UserID,
+            "Email": selectedUser.Email,
+            "items": items
         }
 
         console.log(object);
@@ -79,19 +78,28 @@ function ProductTable(props) {
     }
 
     return (
-        <Col>
-            <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-            <Button onClick={submitOrder}>Submit Order</Button>
+        <>
+            <Container>
+                <Row className="mt-3">
+                    <Col>
+                        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                    </Col>
+                    <Col>
+                        <Button onClick={submitOrder}>Submit</Button>
+                    </Col>
+                </Row>
+            </Container>
 
-            <Table className="d-flex justify-content-center">
-                <tbody id="farmer-table" align="center">
-                    {props.farmers.map(f =>
-                        <FarmerRow farmer={f} productByFarmer={props.productByFarmer} updateNumber={updateNumber} />
-                    )}
-                </tbody>
-            </Table>
-
-        </Col>
+            <Col className="justify-content-center">
+                <Table className="d-flex justify-content-center">
+                    <tbody id="farmer-table" align="center">
+                        {props.farmers.map(f =>
+                            <FarmerRow farmer={f} productByFarmer={props.productByFarmer} updateNumber={updateNumber} />
+                        )}
+                    </tbody>
+                </Table>
+            </Col>
+        </>
     );
 };
 
@@ -154,17 +162,16 @@ function FarmerRow(props) {
 
 function ProductCard(props) {
 
-const [open, setOpen]=useState(false);
+    const [open, setOpen] = useState(false);
 
-let newSrc = "https://filer.cdn-thefoodassembly.com/photo/"+props.prodottoDelFarmer.ImageID+"/view/medium"
+    let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
 
     return (
         <Card style={{ width: '21rem' }}>
-            <Card.Img variant="top" src={newSrc} />
+            <Card.Img variant="top" className="cover" src={newSrc} />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>
-
                     <Button variant="light"
                         onClick={() => setOpen(!open)}
                         aria-controls="example-collapse-text"

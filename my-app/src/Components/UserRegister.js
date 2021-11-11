@@ -76,7 +76,7 @@ function User(props) {
                             <div class="row justify-content-center">
                                 <div class="col-md-10">
                                         <div class="card">
-                                            <div class="card-header">Register</div>
+                                            <div class="card-header">New Client</div>
                                             <div class="card-body">
                                                 <form name="my-form" method="POST">
                                                     <div class="form-group row">
@@ -151,7 +151,7 @@ function User(props) {
                                                         </div>
                                                     </div>
                                                     <div class="form-group row">
-                                                        <label htmlFor="address" class="col-md-4 col-form-label text-md-right">Address *</label>
+                                                        <label htmlFor="address" class="col-md-4 col-form-label text-md-right">Address</label>
                                                         <div class="col-md-8">
                                                             <input
                                                                 type="text"
@@ -208,9 +208,9 @@ function User(props) {
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-8 offset-md-4">
+                                                    <div class="col-md-8 offset-md-4 mt-3">
                                                         <button variant="primary" onClick={(e) => validform(e)} class="btn btn-primary">
-                                                        Register
+                                                        Sign Up
                                                         </button>
                                                     </div>
                                                 </form>
