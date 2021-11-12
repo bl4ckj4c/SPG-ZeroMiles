@@ -46,8 +46,6 @@ function ProductTable(props) {
             prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct" : props.productByFarmer[i].NameProduct })
         }
 
-    console.log(prodNum);
-
     //this function updates the number in the array, also allows to display the current number in the counter
     function updateNumber(ProductId, sign) {
         let i = props.productByFarmer.findIndex(p => p.ProductID === ProductId)
@@ -59,21 +57,17 @@ function ProductTable(props) {
         return prodNum[i].number;
     }
 
-    function filterSubmit() { //deletes items not selected
-        let submitData = prodNum.filter(p => p.number !== 0);
-        return submitData;
-    }
 
     function submitOrder() {
 
-        let items = filterSubmit()
-        let object = {
-            "UserID": selectedUser.UserID,
-            "items": items
+        let items = prodNum.filter(p => p.number !== 0);
+        if (items.length > 0 && selectedUser.length > 0) {
+            let object = {
+                "UserID": selectedUser[0].UserID,
+                "items": items
+            }
+            console.log(object);
         }
-
-        console.log(object);
-
     }
 
     return (
@@ -104,7 +98,7 @@ function ProductTable(props) {
 
 
 function FarmerRow(props) {
-    console.log("quantirendeding");
+    console.log("quantirendering!");
 
     let product = [];
 
