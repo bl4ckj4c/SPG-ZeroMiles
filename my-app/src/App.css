@@ -4,6 +4,10 @@
     width: 180px;
     margin-left: 22px;
   }
+  .posizionamentoPulsante{
+    margin-top: 20px;
+    margin-right: 22px;
+  }
 }
 
 /*posizionamento del logo in modalità smartphone*/
@@ -11,10 +15,13 @@
   #logo{
     width: 180px;
   }
+  .posizionamentoPulsante{
+    margin-top: 20px;
+  }
 }
 
 .posizionamento{
-  margin-top: 30px;
+  margin-top: 24px;
 }
 
 /* Chrome, Safari, Edge, Opera */

@@ -72,8 +72,10 @@ function App() {
             <Image id="logo" src="/images/logo.png" />
           </Navbar.Brand>
           <Nav>
-            <Nav.Link className="posizionamento" href="/login">Sign in</Nav.Link>
-            <Nav.Link className="posizionamento" href="/user">Sign Up</Nav.Link>
+            <Nav.Link className="posizionamento" href="/login">Login</Nav.Link>
+            <Nav.Link className="posizionamentoPulsante" href="/user">
+              <Button variant="secondary" size="sm">Sign Up</Button>
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>
@@ -108,7 +110,7 @@ function App() {
         </Route>
 
       </Switch>
-    </Router>
+    </Router >
   );
 }
 
