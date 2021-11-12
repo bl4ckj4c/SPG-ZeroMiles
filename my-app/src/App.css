@@ -3,6 +3,18 @@
   padding-right: 10px;
 }
 
-#posizionamento{
+.posizionamento{
   margin-top: 30px;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
