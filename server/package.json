@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Web Applications I, Applicazioni Web I",
@@ -28,8 +28,5 @@
     "passport-local": "^1.0.0",
     "sqlite3": "^5.0.2",
     "uuid": "^8.3.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.13"
   }
 }
