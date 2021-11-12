@@ -22,8 +22,10 @@ def loadProductsToFirebase():
 
     count = 0
 
-    for product in JSONProducts['products']:
-        print(product)
+    #for product in JSONProducts['products']:
+    for i in range(1, 5):
+        #print(product)
+        product = JSONProducts['products'][i]
 
         data = {
             'Name': product['name'],
@@ -35,6 +37,13 @@ def loadProductsToFirebase():
         count += 1
 
         print(count)
+
+def deleteProducts():
+    # Delete tuples in Product by Farmers
+    docs = db.collection(u'Product').get()
+    for doc in docs:
+        print(f'Remove tuple => {json.dumps(doc.to_dict(), indent=4)}\n')
+        db.collection(u'Product').document(doc.id).delete()
 
 def deleteProductByFarmersTuples():
     # Delete tuples in Product by Farmers
@@ -55,7 +64,7 @@ def insertProductByFarmersTuples():
     for farmer in Farmers:
         farmerDict = farmer.to_dict()
 
-        for i in range(1, 20):
+        for i in range(1, 2):
 
             randomProduct = random.choice(Products)
             randomProductDict = randomProduct.to_dict()
@@ -79,6 +88,7 @@ def insertProductByFarmersTuples():
             db.collection(u'Product by Farmers').add(data)
 
 if __name__ == '__main__':
+    #deleteProducts()
     #loadProductsToFirebase()
     deleteProductByFarmersTuples()
     insertProductByFarmersTuples()
