@@ -178,8 +178,7 @@ function ProductCard(props) {
                         See Description
                     </Button>
                     <Collapse style={{marginTop:"10px"}} in={open}>
-                        <div id="example-collapse-text">{props.prodottoDelFarmer.Description}
-                        </div>
+                        <div>{props.prodottoDelFarmer.Description}</div>
                     </Collapse>
                 </Card.Text>
             </Card.Body>
