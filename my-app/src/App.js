@@ -5,10 +5,6 @@ import Select from 'react-select'
 import { Button, DropdownButton, Dropdown } from 'react-bootstrap'
 import axios from 'axios'
 import API from './API';
-import NavigationBar from './Components/Manager.js';
-import Customer from './Components/Customer.js';
-import Officer from './Components/Officer.js';
-import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
 import UserRegister from './Components/UserRegister.js';
@@ -54,21 +50,21 @@ function App() {
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
     {/*setMessage({ msg: err.error, type: 'danger' });*/ }
-    // setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
+    setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
     console.log(err);
   }
 
   return (
     <Router>
       {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
-      {/* <ToastContainer className="p-3" position="middle-center">
-          <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
-            <Toast.Header closeButton={false}>
-              <strong className="me-auto">Error :(</strong>
-            </Toast.Header>
-            <Toast.Body>{message?.msg}</Toast.Body>
-          </Toast>
-      </ToastContainer> */}
+      <ToastContainer className="p-3" position="middle-center">
+        <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
+          <Toast.Header closeButton={false}>
+            <strong className="me-auto">Error :(</strong>
+          </Toast.Header>
+          <Toast.Body>{message?.msg}</Toast.Body>
+        </Toast>
+      </ToastContainer>
 
       <Navbar bg="warning">
         <Container>
@@ -101,14 +97,6 @@ function App() {
 
             </Col>
           </Row>
-        </Route>
-
-        <Route exact path="/officer">
-          <Officer></Officer>
-        </Route>
-
-        <Route exact path="/customer">
-          <Customer></Customer>
         </Route>
 
         <Route exact path="/login">
