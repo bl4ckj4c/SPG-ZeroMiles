@@ -21,6 +21,7 @@ function App() {
   const [farmerList, setFarmerList] = useState([]);
   const [userList, setUserList] = useState([]);
   const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
 
 
   useEffect(() => {
@@ -41,11 +42,18 @@ function App() {
     API.getAllUsers()
       .then(u => {
         setUserList(u);
+        setUserListUpdated(false);
       }).catch(f => handleErrors(f));
 
-    setLoading(false);
 
   }, []);
+
+
+  useEffect(()=> {
+    if(!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
+    setLoading(false);
+
+  }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
 
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {

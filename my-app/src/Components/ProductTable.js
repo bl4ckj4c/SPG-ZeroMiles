@@ -69,6 +69,8 @@ function ProductTable(props) {
             console.log(object);
         }
     }
+    console.log("quantirendering!");
+
 
     return (
         <>
@@ -98,8 +100,6 @@ function ProductTable(props) {
 
 
 function FarmerRow(props) {
-    console.log("quantirendering!");
-
     let product = [];
 
     const splitEvery = (array, length) =>
