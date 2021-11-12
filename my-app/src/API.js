@@ -414,6 +414,19 @@ async function getProductByFarmer(counterID) {
     }
 } */
 
+function addOrder(order) {
+    return getJson(
+      fetch(BASEURL + "/order", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...order})
+      })
+    )
+  }
+  
+
 
 
 const API = {
@@ -426,6 +439,7 @@ const API = {
     getStatisticsForAllCounter,
     getProductByFarmer,
     getFarmer,
+    addOrder,
 
 
     getOrder,
