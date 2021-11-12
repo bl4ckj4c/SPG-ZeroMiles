@@ -10,7 +10,8 @@ import Customer from './Components/Customer.js';
 import Officer from './Components/Officer.js';
 import Manager from './Components/Manager.js';
 import { useState, useEffect } from 'react';
-import User from './Components/UserRegister.js';
+import UserLogin from './Components/UserLogin.js';
+import UserRegister from './Components/UserRegister.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
@@ -53,28 +54,31 @@ function App() {
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
     {/*setMessage({ msg: err.error, type: 'danger' });*/ }
-    setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
+    // setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
     console.log(err);
   }
 
   return (
     <Router>
       {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
-      <ToastContainer className="p-3" position="middle-center">
+      {/* <ToastContainer className="p-3" position="middle-center">
           <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
             <Toast.Header closeButton={false}>
               <strong className="me-auto">Error :(</strong>
             </Toast.Header>
             <Toast.Body>{message?.msg}</Toast.Body>
           </Toast>
-        </ToastContainer>
+      </ToastContainer> */}
 
       <Navbar bg="warning">
         <Container>
           <Navbar.Brand href="/">
             <Image id="logo" src="/images/logo.png" />
           </Navbar.Brand>
-          <Nav.Link id="posizionamento" href="/user">Sign Up</Nav.Link>
+          <Nav>
+            <Nav.Link className="posizionamento" href="/login">Sign in</Nav.Link>
+            <Nav.Link className="posizionamento" href="/user">Sign Up</Nav.Link>
+          </Nav>
         </Container>
       </Navbar>
 
@@ -107,8 +111,12 @@ function App() {
           <Customer></Customer>
         </Route>
 
+        <Route exact path="/login">
+          <UserLogin></UserLogin>
+        </Route>
+
         <Route exact path="/user">
-          <User></User>
+          <UserRegister></UserRegister>
         </Route>
 
       </Switch>
