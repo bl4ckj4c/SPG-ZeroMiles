@@ -239,21 +239,21 @@ app.get('/api/users', async (req, res) => {
 
 /* GET all products */
 
-(async () => {
-    try {
-        const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (products.empty) {
-            console.log("No matching documents.");
-        } else {
-            products.forEach(prod => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-            })
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})();
+// (async () => {
+//     try {
+//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+//         if (products.empty) {
+//             console.log("No matching documents.");
+//         } else {
+//             products.forEach(prod => {
+//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })();
 
 /* GET all farmers */
 app.get('/api/farmers', async (req, res) => {
@@ -398,21 +398,21 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
-(async () => {
-    try {
-        const orders = await db.collection('Order').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (orders.empty) {
-            console.log("No matching documents.");
-        } else {
-            orders.forEach(order => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                console.log(order.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-            })
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})();
+// (async () => {
+//     try {
+//         const orders = await db.collection('Order').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+//         if (orders.empty) {
+//             console.log("No matching documents.");
+//         } else {
+//             orders.forEach(order => {
+//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+//                 console.log(order.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })();
 
 
 /*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
@@ -456,21 +456,21 @@ app.get('/api/productinorder', async (req, res) => {
     }
 });
 
-(async () => {
-    try {
-        const piOrders = await db.collection('ProductInOrder').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (piOrders.empty) {
-            console.log("No matching documents.");
-        } else {
-            piOrders.forEach(pio => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                console.log(pio.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-            })
-        }
-    } catch (error) {
-        console.log(error);
-    }
-})();
+// (async () => {
+//     try {
+//         const piOrders = await db.collection('ProductInOrder').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+//         if (piOrders.empty) {
+//             console.log("No matching documents.");
+//         } else {
+//             piOrders.forEach(pio => {
+//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+//                 console.log(pio.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })();
 
 
 /*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
