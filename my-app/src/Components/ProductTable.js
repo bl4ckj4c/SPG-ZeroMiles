@@ -43,7 +43,7 @@ function ProductTable(props) {
     const [selectedUser, setSelectedUser] = useState([]);
     if (prodNum.length <= 0)
         for (let i = 0; i < props.productByFarmer.length; i++) {
-            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID })
+            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct" : props.productByFarmer[i].NameProduct })
         }
 
     console.log(prodNum);
@@ -69,7 +69,6 @@ function ProductTable(props) {
         let items = filterSubmit()
         let object = {
             "UserID": selectedUser.UserID,
-            "Email": selectedUser.Email,
             "items": items
         }
 
