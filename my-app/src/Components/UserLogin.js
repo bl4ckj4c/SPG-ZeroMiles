@@ -1,4 +1,4 @@
-import { Col, Row, Container, Form, Button } from 'react-bootstrap';
+import { Col, Row, Container, Form, Button, Toast, ToastContainer } from 'react-bootstrap';
 import { useState } from 'react';
 
 import Axios from 'axios'
@@ -6,13 +6,16 @@ import Axios from 'axios'
 function UserLogin(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [toastEmail, setToastEmail] = useState(false);
+    const [toastPassword, setToastPassword] = useState(false);
 
     function validform(event) {
+        event.preventDefault();
         if (!email) {
-            alert("Please Enter Your Email");
+            setToastEmail(true)
             return false;
         } else if (!password) {
-            alert("Please Enter Your Password");
+            setToastPassword(true)
             return false;
         } else {
             sendRegister(event);
@@ -31,6 +34,24 @@ function UserLogin(props) {
    
     return (
         <Container>
+            { toastEmail && (
+                <Toast onClose={() => setToastEmail(false)} delay={5000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Remembering</strong>
+                    </Toast.Header>
+                    <Toast.Body>Please enter your email</Toast.Body>
+                </Toast>
+            )}
+
+            { toastPassword && (
+                <Toast onClose={() => setToastPassword(false)} delay={5000} autohide>
+                    <Toast.Header>
+                        <strong className="me-auto">Remembering</strong>
+                    </Toast.Header>
+                    <Toast.Body>Please enter your password</Toast.Body>
+                </Toast>
+            )}
+
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={4}>
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", backgroundColor:"#2c8da9" }}>
