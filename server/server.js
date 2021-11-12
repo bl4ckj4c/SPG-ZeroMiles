@@ -816,6 +816,68 @@ app.post('/api/manager/servicetype',
     }
 );
 
+
+app.post('/api/order', async (req, res) => {
+    try {
+        const productByFarmer = await db.collection('Product by Farmers').where("ProductID", "==", req.body.ProductID).where("FarmerID", "=", req.body.FarmerID).get();
+        if (productbyfarmer.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No matching documents." });
+        } else {
+            const ClientID = req.body.ClientID;
+            const newOid = uuidv4();
+            let newOrder = {}
+            newOrder.Timestamp = dayjs.format("DD-MM-YYYY");
+            newOrder.ClientID = req.body.ClientID;
+            (async () => {
+                try {
+                    await db.collection('Order').doc(newOid).create(newOrder);
+                } catch (error) {
+                    console.log(error);
+                    res.json(error);
+                }
+            }  ) 
+    
+    req.body.item.forEach(product => {
+
+                let newProduct = {};
+                newProduct.Name = product.name;
+                newProduct.Quantity = product.quantity;
+                newProduct.ProductbyfarmerID = productByFarmer.id;
+                newProduct.OrderID = newOid;
+                const newPid = uuidv4();
+                new Promise(async (resolve, reject) => {
+
+                    await db.collection('ProductinOrder').doc(newPid).create(newProduct);
+                    console.log("Done.");
+                    resolve(1);
+
+
+                      
+
+
+
+
+
+                })
+            })
+
+
+
+            res.status(201).end();
+
+
+
+
+
+        }
+    } catch (error) {
+        console.log(error);
+        res.json(error);
+
+     }
+})
+
 // *******************
 // *** MANAGER end ***
 // *******************
