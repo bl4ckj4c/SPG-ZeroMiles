@@ -178,7 +178,7 @@ function ProductCard(props) {
                         aria-expanded={open}>
                         See Description
                     </Button>
-                    <Collapse in={open}>
+                    <Collapse style={{marginTop:"10px"}} in={open}>
                         <div id="example-collapse-text">{props.prodottoDelFarmer.Description}
                         </div>
                     </Collapse>
