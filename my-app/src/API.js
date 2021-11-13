@@ -416,7 +416,7 @@ async function getProductByFarmer(counterID) {
 
 
 function addOrder(order) {
-    return getJson(
+    return (
       fetch(BASEURL + "/order", {
         method: 'POST',
         headers: {
