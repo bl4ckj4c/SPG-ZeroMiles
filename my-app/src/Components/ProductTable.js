@@ -183,7 +183,7 @@ function ProductCard(props) {
                 <Row>
                     <Col> <Button variant="outline-warning"
                         onClick={() => setOpen(!open)}
-                        style={{ fontSize: 12, color: "black"}}
+                        style={{ fontSize: 14, color: "black"}}
                         aria-controls="example-collapse-text"
                         aria-expanded={open}>
                         See Description
@@ -208,13 +208,13 @@ function ProductsCounter(props) {
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ maxHeight: "2rem", fontSize: 12}} variant='warning' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15}} variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2.5rem", fontSize: 12 }} disabled variant="warning">
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2rem", fontSize: 12 }} variant="warning" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant="warning" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
         </ButtonGroup>
