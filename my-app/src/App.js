@@ -90,23 +90,22 @@ function App() {
 
       <Switch>
 
+        {/*}
         <Route exact path="/">
           <Main></Main>
-        </Route>
+        </Route> */}
 
-        <Route exact path="/productsbyfarmer">
-          <Row className="page">
+        <Route exact path="/">
             <Col as="main">
 
               {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
               {loading ? <Row className="justify-content-center mt-5">
-                <Spinner animation="border" size="xl" variant="primary" />
+                <Spinner animation="border" size="xl" variant="secondary" />
               </Row> :
 
                 <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
 
             </Col>
-          </Row>
         </Route>
 
         <Route exact path="/login">

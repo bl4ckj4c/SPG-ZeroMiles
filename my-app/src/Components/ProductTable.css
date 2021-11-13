@@ -1,8 +1,3 @@
-.table-striped>tbody>tr:nth-child(odd)>td, 
-.table-striped>tbody>tr:nth-child(odd)>th {
-   background-color: #e1e2e1;
- }
-
  .bordo{
      border-radius: 10px;
  }
@@ -13,12 +8,23 @@
 
  @media (max-width: 1200px) {
    .column-margin {
-     margin: 10px 0;
+     margin-bottom: 10px;
    }
+   .row-style {
+    margin-right: 8px;
+  }
  }
+
+ @media (min-width: 1200px) {
+  .row-style {
+   margin-left: 18px;
+   margin-right: 28px;
+ }
+}
 
  .cover {
   object-fit: cover;
   width: 334px;
   height: 120px;
 }
+

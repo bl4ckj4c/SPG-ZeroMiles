@@ -63,8 +63,8 @@ function UserRegister(props) {
         <Container>
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={4}>
-                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", backgroundColor:"#2c8da9" }}>
-                        Register
+                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px"}}>
+                        Sign up a new client
                     </Row>
                     <Form onSubmit={(e) => validform(e) } id="my-form">
                         <Form.Group className="mb-3">
@@ -72,7 +72,7 @@ function UserRegister(props) {
                             <Form.Control type="text"  id="name" placeholder="Enter Name" onChange={ setName }/>
                         </Form.Group>
                         <Form.Group className="mb-3">
-                            <Form.Label>Surname::</Form.Label>
+                            <Form.Label>Surname:</Form.Label>
                             <Form.Control type="text" id="surname" placeholder="Enter Surname" onChange={ setSurname }/>
                         </Form.Group>
                         <Form.Group className="mb-3" id="email">
@@ -103,9 +103,9 @@ function UserRegister(props) {
                             <Form.Label>Confirm Password:</Form.Label>
                             <Form.Control type="password" placeholder="Confirm Password" onChange={ setConfPassword }/>
                         </Form.Group>
-                        <Row className="justify-content-center mt-1 mb-1">
+                        <Row className="justify-content-center mt-3 mb-3">
                             <Button 
-                                variant="primary"
+                                variant="secondary"
                                 type="submit"
                             >
                                 Submit

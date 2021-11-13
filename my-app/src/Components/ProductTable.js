@@ -1,5 +1,5 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash} from 'react-bootstrap-icons';
+import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash } from 'react-bootstrap-icons';
 import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse } from 'react-bootstrap';
 import { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
@@ -74,12 +74,12 @@ function ProductTable(props) {
 
     return (
         <>
-            <Container>
-                <Row className="mt-3">
+            <Container >
+                <Row className="mt-3 row-style">
                     <Col>
                         <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                     </Col>
-                    <Col>
+                    <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
                     </Col>
                 </Row>
@@ -168,22 +168,22 @@ function ProductCard(props) {
                 </Card.Text>
             </Card.Body>
             <Container>
-            <Row>
-                <Col><Collection/></Col>
-                <Col><Bag/></Col>
-                <Col><Cash/></Col>
-            </Row>
-            <Row className="mb-4">
-                <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
-                <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
-                <Col>{props.prodottoDelFarmer.Price}€</Col>
-            </Row>
+                <Row>
+                    <Col><Collection /></Col>
+                    <Col><Bag /></Col>
+                    <Col><Cash /></Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
+                    <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
+                    <Col>{props.prodottoDelFarmer.Price}€</Col>
+                </Row>
             </Container>
             <Card.Footer>
                 <Row>
                     <Col> <Button variant="outline-warning"
                         onClick={() => setOpen(!open)}
-                        style={{ fontSize: 14, color: "black"}}
+                        style={{ fontSize: 14, color: "black" }}
                         aria-controls="example-collapse-text"
                         aria-expanded={open}>
                         See Description
@@ -208,7 +208,7 @@ function ProductsCounter(props) {
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15}} variant='warning' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
