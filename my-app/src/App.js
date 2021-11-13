@@ -95,7 +95,6 @@ function App() {
         </Route>
 
         <Route exact path="/productsbyfarmer">
-          <Row className="page">
             <Col as="main">
 
               {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
@@ -106,7 +105,6 @@ function App() {
                 <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
 
             </Col>
-          </Row>
         </Route>
 
         <Route exact path="/login">
