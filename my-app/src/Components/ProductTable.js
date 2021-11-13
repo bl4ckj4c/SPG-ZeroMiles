@@ -1,5 +1,5 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, TypeH1 } from 'react-bootstrap-icons';
+import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash } from 'react-bootstrap-icons';
 import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse } from 'react-bootstrap';
 import { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
@@ -10,9 +10,7 @@ import API from '../API';
 let prodNum = [];
 
 function UserDropdown(props) {
-
     const filterByFields = ['Name', 'Surname'];
-
     return (
         <>
             <Form.Group>
@@ -44,13 +42,13 @@ function ProductTable(props) {
     const [selectedUser, setSelectedUser] = useState([]);
     if (prodNum.length <= 0)
         for (let i = 0; i < props.productByFarmer.length; i++) {
-            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct" : props.productByFarmer[i].NameProduct })
+            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct": props.productByFarmer[i].NameProduct })
         }
 
     //this function updates the number in the array, also allows to display the current number in the counter
     function updateNumber(ProductID, FarmerID, sign) {
         let i = props.productByFarmer.findIndex(p => (p.ProductID === ProductID && p.FarmerID === FarmerID))
-        
+
         if (i === -1)
             return 0;
         else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
@@ -61,7 +59,6 @@ function ProductTable(props) {
 
 
     function submitOrder() {
-
         let items = prodNum.filter(p => p.number !== 0);
         if (items.length > 0 && selectedUser.length > 0) {
             let object = {
@@ -79,11 +76,11 @@ function ProductTable(props) {
         <>
             <Container>
                 <Row className="mt-3">
-                    <Col  >
+                    <Col>
                         <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} >
-                        <Button onClick={submitOrder}>Submit</Button>
+                        <Button onClick={submitOrder} variant="secondary">Submit</Button>
                     </Col>
                 </Row>
             </Container>
@@ -168,25 +165,35 @@ function ProductCard(props) {
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>
-                    <Button variant="light"
+                </Card.Text>
+            </Card.Body>
+            <Container>
+                <Row>
+                    <Col><Collection /></Col>
+                    <Col><Bag /></Col>
+                    <Col><Cash /></Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
+                    <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
+                    <Col>{props.prodottoDelFarmer.Price}€</Col>
+                </Row>
+            </Container>
+            <Card.Footer>
+                <Row>
+                    <Col> <Button variant="outline-warning"
                         onClick={() => setOpen(!open)}
+                        style={{ fontSize: 14, color: "black" }}
                         aria-controls="example-collapse-text"
                         aria-expanded={open}>
                         See Description
-                    </Button>
-                    <Collapse style={{marginTop:"10px"}} in={open}>
-                        <div>{props.prodottoDelFarmer.Description}</div>
-                    </Collapse>
-                </Card.Text>
-            </Card.Body>
-            <ListGroup horizontal className="list-group-flush justify-content-center">
-                <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
-                <ListGroupItem>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</ListGroupItem>
-                <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
-            </ListGroup>
-            <Card.Body>
-                <ProductsCounter ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} />
-            </Card.Body>
+                    </Button></Col>
+                    <Col><ProductsCounter ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} /></Col>
+                </Row>
+                <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
+                    <div>{props.prodottoDelFarmer.Description}</div>
+                </Collapse>
+            </Card.Footer>
         </Card>
     );
 }
@@ -201,13 +208,13 @@ function ProductsCounter(props) {
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant='light' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
-            <ToggleButton style={{ minWidth: "3rem" }} disabled variant="light">
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant="light" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant="warning" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
         </ButtonGroup>
