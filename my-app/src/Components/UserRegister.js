@@ -64,7 +64,7 @@ function UserRegister(props) {
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={4}>
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px"}}>
-                        Sign Up
+                        Sign up a new client
                     </Row>
                     <Form onSubmit={(e) => validform(e) } id="my-form">
                         <Form.Group className="mb-3">
