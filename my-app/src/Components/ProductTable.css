@@ -8,7 +8,7 @@
 
  @media (max-width: 1200px) {
    .column-margin {
-     margin: 10px;
+     margin-bottom: 10px;
    }
    .row-style {
     margin-right: 8px;
