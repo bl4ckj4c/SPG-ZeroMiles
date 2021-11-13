@@ -414,7 +414,6 @@ async function getProductByFarmer(counterID) {
     }
 } */
 
-
 function addOrder(order) {
     return getJson(
       fetch(BASEURL + "/order", {
@@ -438,8 +437,7 @@ const API = {
     getProductByFarmer,
     getFarmer,
     addOrder,
-
-
+    
     getOrder,
     getProductInOrder, 
     getAllUsers

@@ -100,7 +100,7 @@ function App() {
 
               {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
               {loading ? <Row className="justify-content-center mt-5">
-                <Spinner animation="border" size="xl" variant="primary" />
+                <Spinner animation="border" size="xl" variant="secondary" />
               </Row> :
 
                 <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
