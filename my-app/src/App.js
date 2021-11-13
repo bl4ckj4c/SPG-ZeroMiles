@@ -90,11 +90,12 @@ function App() {
 
       <Switch>
 
+        {/*}
         <Route exact path="/">
           <Main></Main>
-        </Route>
+        </Route> */}
 
-        <Route exact path="/productsbyfarmer">
+        <Route exact path="/">
             <Col as="main">
 
               {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
