@@ -491,7 +491,7 @@ app.post('/api/order', async (req, res) => {
                 
         if (productByFarmer.empty) {
             console.log("No entries (Table: product by farmers)");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" });
+            res.status(404).json({ error: "No entries (Table: product by farmers)" }).end();
         }
         
         //for each product in the order
@@ -500,7 +500,7 @@ app.post('/api/order', async (req, res) => {
             productByFarmer.forEach(prodfarm => {
                 if(product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity){ //check if there are enough unities for the product requested
                     console.log("Not enough products ("+product.NameProduct+")");
-                    res.status(404).json({ error: "Not enough products ("+product.NameProduct+")" });
+                    res.status(404).json({ error: "Not enough products ("+product.NameProduct+")" }).end();
                 }
             })
         })
