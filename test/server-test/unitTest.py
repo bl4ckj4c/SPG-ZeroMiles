@@ -62,7 +62,7 @@ class TestStorySPG2(unittest.TestCase):
             ]
             regexes = [
                 r'^[a-zA-Z]+$',
-                r'^[a-zA-Z]+$',
+                r'^[a-zA-Z\']+$',
                 r'^.+$',
                 r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
                 r'^(\+(\([0-9]{1,2}\))?)?[0-9]+$',
@@ -220,8 +220,8 @@ class TestStorySPG3(unittest.TestCase):
             ]
             regexes = [
                 r'^[a-zA-Z]+$',
-                r'^[a-zA-Z]+$',
-                r'^[a-zA-Z\-\_\s0-9\.\,]+$',
+                r'^[a-zA-Z\']+$',
+                r'^[a-zA-Z\-\_\s0-9\.\,\']+$',
                 r'^.+$',
                 r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
                 r'^(\+(\([0-9]{1,2}\))?)?[0-9]+$',
@@ -306,19 +306,16 @@ class TestStorySPG3(unittest.TestCase):
                 # Product
                 'ProductID',
                 'NameProduct',
-                'Description',
                 'ImageID',
                 # Product by farmer
-                'Quantity',
-                'UnitOfMeasurement',
-                'Price'
+                'UnitOfMeasurement'
             ]
             regexes = [
                 # Farmer
                 r'^.+$',
                 r'^[a-zA-Z]+$',
-                r'^[a-zA-Z]+$',
-                r'^[a-zA-Z\-\_\s0-9\.\,]+$',
+                r'^[a-zA-Z\']+$',
+                r'^[a-zA-Z\-\_\s0-9\.\,\']+$',
                 r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
                 r'^(\+(\([0-9]{1,2}\))?)?[0-9]+$',
                 r'^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$',
@@ -326,13 +323,10 @@ class TestStorySPG3(unittest.TestCase):
                 r'^[0-9]{5}$',
                 # Product
                 r'^.+$',
-                r'^[a-zA-Z\-\_0-9\.\,]+$',
-                r'^[a-zA-Z\,\.0-9\t\n\r\f\v\s]+$',
-                r'^[0-9]+$',
+                r'^.+$',
+                r'^.+$',
                 # Product by farmer
-                r'^[0-9]+$',
-                r'^[a-zA-Z]+$',
-                r'^([1-9][0-9]{,2}(,[0-9]{3})*|[0-9]+)(\.[0-9]{1,9})?$',
+                r'^[a-zA-Z]+$'
             ]
 
             # Check that the JSON has all the fields expected and that them are all well-formed

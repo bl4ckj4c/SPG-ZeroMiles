@@ -11,7 +11,7 @@ The unit test of this method consists in sending the `GET` request to the server
 | Field    | Regex                                              |
 | -------- | -------------------------------------------------- |
 | Name     | `^[a-zA-Z]+$`                                      |
-| Surname  | `^[a-zA-Z]+$`                                      |
+| Surname  | `^[a-zA-Z\']+$`                                    |
 | FarmerID | `^.+$`                                             |
 | Email    | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$` |
 | Phoneno  | `^(\+(\([0-9]{1,2}\))?)?[0-9]+$`                   |
@@ -57,20 +57,17 @@ The unit test of this method consists in sending the `GET` request to the server
 | ----------------- | ------------------------------------------------------------ |
 | FarmerID          | `^.+$`                                                       |
 | Name              | `^[a-zA-Z]+$`                                                |
-| Surname           | `^[a-zA-Z]+$`                                                |
-| Company           | `^[a-zA-Z\-\_\s0-9\.\,]+$`                                   |
+| Surname           | `^[a-zA-Z\']+$`                                              |
+| Company           | `^[a-zA-Z\-\_\s0-9\.\,\']+$`                                 |
 | Email             | `^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$`           |
 | Phoneno           | `^(\+(\([0-9]{1,2}\))?)?[0-9]+$`                             |
 | Address           | `^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$` |
 | State             | `^[a-zA-Z]+$`                                                |
 | Zipcode           | `^[0-9]{5}$`                                                 |
 | ProductID         | `^.+$`                                                       |
-| NameProduct       | `^[a-zA-Z\-\_0-9\.\,]+$`                                     |
-| Description       | `^[a-zA-Z\,\.0-9\t\n\r\f\v\s]+$`                             |
-| ImageID           | `^[0-9]+$`                                                   |
-| Quantity          | `^[0-9]+$`                                                   |
+| NameProduct       | `^.+$`                                                       |
+| ImageID           | `^.+$`                                                       |
 | UnitOfMeasurement | `^[a-zA-Z]+$`                                                |
-| Price             | `^([1-9][0-9]{,2}(,[0-9]{3})*`                               |
 
 The output of the test is none if it passes, otherwise it's a JSON object containing an array in which object contains the wrong farmer and the wrong field(s) that caused the fail of the test.
 
