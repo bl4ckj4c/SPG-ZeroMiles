@@ -68,11 +68,12 @@ function UserRegister(props) {
     return (
         <Container>
             <Row className="justify-content-center mt-1 mb-1">
-                <Col xs={4}>
+                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
+                    Sign up a new client
+                </Row>
+                <Form onSubmit={(e) => validForm(e) } controlId="my-form">
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
-                        Sign up a new client
-                    </Row>
-                    <Form onSubmit={(e) => validForm(e) } controlId="my-form">
+                    <Col xs={6}>
                         <Form.Group className="mb-3">
                             <Form.Label>Name:</Form.Label>
                             <Form.Control type="text"  controlId="name" placeholder="Enter Name" onChange={ (e) => setName(e.target.value) }/>
@@ -93,6 +94,8 @@ function UserRegister(props) {
                             <Form.Label>City:</Form.Label>
                             <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
                         </Form.Group>
+                    </Col>
+                    <Col xs={6}>
                         <Form.Group as={Col} className="mb-3" controlId="state">
                             <Form.Label>State:</Form.Label>
                             <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
@@ -115,16 +118,17 @@ function UserRegister(props) {
                             <Form.Label>Confirm Password:</Form.Label>
                             <Form.Control type="password" placeholder="Confirm Password" onChange={ (e) => setConfPassword(e.target.value) }/>
                         </Form.Group>
-                        <Row className="justify-content-center mt-3 mb-3">
+                        </Col>
+                        <Row className="justify-content-center mt-2 mb-2">
                             <Button 
                                 variant="secondary"
                                 type="submit"
-                            >
+                                >
                                 Submit
                             </Button>
                         </Row>
-                    </Form>
-                </Col>
+                    </Row>
+                </Form>
             </Row>
         </Container>
     )};
