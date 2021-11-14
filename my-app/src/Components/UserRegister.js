@@ -1,6 +1,6 @@
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import SelectCity from './SelectCity.js';
+import SelectState from './SelectState.js';
 
 import Axios from 'axios'
 import "./user.css";
@@ -14,14 +14,16 @@ function UserRegister(props) {
     const [confPassword, setConfPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
+    const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
 
-    function validform(event) {
+    function validForm(event) {
+        event.preventDefault();
         if (!name) {
-            alert("Please Enter Your Full Name");
+            alert("Please Enter Your name");
             return false;
         } else if (!surname) {
-            alert("Please Enter Your last Name");
+            alert("Please Enter Your surname");
             return false;
         } else if (!password) {
             alert("Please Enter Your password");
@@ -29,7 +31,7 @@ function UserRegister(props) {
         } else if (!confPassword) {
             alert("Please Enter Your confirmation password");
             return false;
-        } else if ( !(password === confPassword)) {
+        } else if ( !( password === confPassword )) {
             alert("The password is not the same");
             return false;
         } else if (!email) {
@@ -37,6 +39,9 @@ function UserRegister(props) {
             return false;
         } else if (!address) {
             alert("Please Enter Your Address");
+            return false;
+        } else if (!state) {
+            alert("Please Enter Your State / Province");
             return false;
         } else if (!city) {
             alert("Please Enter Your permanent city");
@@ -52,6 +57,7 @@ function UserRegister(props) {
     async function sendRegister(event) {
         event.preventDefault();
         let data = { name, surname, email, address, phone, city, password, zipcode };
+        console.log(data)
         Axios.post('/api/register', data)
           .then((response) => {
               console.log(response);
@@ -63,45 +69,51 @@ function UserRegister(props) {
         <Container>
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={4}>
-                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px"}}>
+                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
                         Sign up a new client
                     </Row>
-                    <Form onSubmit={(e) => validform(e) } id="my-form">
+                    <Form onSubmit={(e) => validForm(e) } controlId="my-form">
                         <Form.Group className="mb-3">
                             <Form.Label>Name:</Form.Label>
-                            <Form.Control type="text"  id="name" placeholder="Enter Name" onChange={ setName }/>
+                            <Form.Control type="text"  controlId="name" placeholder="Enter Name" onChange={ (e) => setName(e.target.value) }/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                             <Form.Label>Surname:</Form.Label>
-                            <Form.Control type="text" id="surname" placeholder="Enter Surname" onChange={ setSurname }/>
+                            <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={ (e) => setSurname(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="email">
+                        <Form.Group className="mb-3" controlId="email">
                             <Form.Label>Email:</Form.Label>
-                            <Form.Control type="email" placeholder="Enter Email" onChange={ setEmail }/>
+                            <Form.Control type="email" placeholder="Enter Email" onChange={ (e) => setEmail(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="address">
+                        <Form.Group className="mb-3" controlId="address">
                             <Form.Label>Address:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Address" onChange={ setAddress }/>
+                            <Form.Control type="text" placeholder="Enter Address" onChange={ (e) => setAddress(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="city">
+                        <Form.Group className="mb-3" controlId="city">
                             <Form.Label>City:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Address" onChange={ setAddress }/>
+                            <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="phone">
+                        <Form.Group as={Col} className="mb-3" controlId="state">
+                            <Form.Label>State:</Form.Label>
+                            <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
+                                <SelectState></SelectState>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="phone">
                             <Form.Label>Phone:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter Phone" onChange={ setPhone }/>
+                            <Form.Control type="number" placeholder="Enter Phone" onChange={ (e) => setPhone(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="zipcode">
+                        <Form.Group className="mb-3" controlId="zipcode">
                             <Form.Label>Zipcode:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ setZipcode }/>
+                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ (e) => setZipcode(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="password">
+                        <Form.Group className="mb-3" controlId="password">
                             <Form.Label>Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Enter password" onChange={ setPassword }/>
+                            <Form.Control type="password" placeholder="Enter password" onChange={ (e) => setPassword(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="confPassword">
+                        <Form.Group className="mb-3" controlId="confPassword">
                             <Form.Label>Confirm Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Confirm Password" onChange={ setConfPassword }/>
+                            <Form.Control type="password" placeholder="Confirm Password" onChange={ (e) => setConfPassword(e.target.value) }/>
                         </Form.Group>
                         <Row className="justify-content-center mt-3 mb-3">
                             <Button 
@@ -115,122 +127,6 @@ function UserRegister(props) {
                 </Col>
             </Row>
         </Container>
-        // <Container>
-        //     <Row className="justify-content-center mt-2 mb-2">
-        //         <Col xs lg="1">
-        //             <main class="my-form">
-        //                 <div class="container">
-        //                     <div class="row justify-content-center">
-        //                         <div class="col-md-10">
-        //                                 <div class="card">
-        //                                     <div class="card-header">New Client</div>
-        //                                     <div class="card-body">
-        //                                         <form name="my-form" method="POST">
-        //                                             <div class="form-group row">
-        //                                                 <label for="password" class="col-md-4 col-form-label text-md-right">password</label>
-        //                                                 <div class="col-md-8">
-        //                                                     <input
-        //                                                     type="password"
-        //                                                     class="form-control"
-        //                                                     name="password"
-        //                                                     id="password"
-        //                                                     placeholder="put the password"
-        //                                                     onChange={(e) => setPassword(e.target.value)}
-        //                                                     required
-        //                                                     ></input>
-        //                                                 </div>
-        //                                             </div>
-        //                                             <div class="form-group row">
-        //                                                 <label for="confPassword" class="col-md-4 col-form-label text-md-right">Confirm password</label>
-        //                                                 <div class="col-md-8">
-        //                                                     <input
-        //                                                         type="password"
-        //                                                         class="form-control"
-        //                                                         name="confPassword"
-        //                                                         id="confPassword"
-        //                                                         placeholder="put the password"
-        //                                                         required
-        //                                                     ></input>
-        //                                                 </div>
-        //                                             </div>
-        //                                             <div class="form-group row">
-        //                                                 <label htmlFor="address" class="col-md-4 col-form-label text-md-right">Address</label>
-        //                                                 <div class="col-md-8">
-        //                                                     <input
-        //                                                         type="text"
-        //                                                         class="form-control"
-        //                                                         name="address"
-        //                                                         id="address"
-        //                                                         placeholder="put the address"
-        //                                                         required
-        //                                                         onChange={(e) => setAddress(e.target.value)}
-        //                                                     ></input>                                    
-        //                                                 </div>
-        //                                             </div>
-        //                                             <div class="form-group row">
-        //                                                 <label for="phone" class="col-md-4 col-form-label text-md-right">Phone Number</label>
-        //                                                 <div class="col-md-8">
-        //                                                     <input
-        //                                                         type="phone"
-        //                                                         id="phone"
-        //                                                         class="form-control"
-        //                                                         placeholder="put the phone"
-        //                                                         required
-        //                                                         onChange={(e) => setPhone(e.target.value)}
-        //                                                     ></input>
-        //                                                 </div>
-        //                                             </div>
-                                                    
-        //                                             <div class="form-group row">
-        //                                                 <label for="ZipCode" class="col-md-4 col-form-label text-md-right">Zip code</label>
-        //                                                 <div class="col-md-8">
-        //                                                     <input
-        //                                                         type="text"
-        //                                                         id="zipCode"
-        //                                                         class="form-control"
-        //                                                         placeholder="put the ZipCode"
-        //                                                         required
-        //                                                         onChange={(e) => setZipcode(e.target.value)}
-        //                                                     ></input>
-        //                                                 </div>
-        //                                             </div>
-
-        //                                             <div class="form-group row">
-        //                                                 <label for="city" class="col-md-4 col-form-label text-md-right">City</label>
-        //                                                 <div class="col-md-8">                                    
-        //                                                     <select 
-        //                                                         type="city"
-        //                                                         id="city"
-        //                                                         class="form-control"
-        //                                                         placeholder="put the city"
-        //                                                         required
-        //                                                         onChange={(e) => setCity(e.target.value)}
-        //                                                         name="city"
-        //                                                     >
-        //                                                         <SelectCity/>
-        //                                                     </select>
-        //                                                 </div>
-        //                                             </div>
-        //                                             <div class="col-md-8 offset-md-4 mt-3">
-        //                                                 <button variant="primary" onClick={(e) => validform(e)} class="btn btn-primary">
-        //                                                 Sign Up
-        //                                                 </button>
-        //                                             </div>
-        //                                         </form>
-        //                                     </div>
-        //                                 </div>
-        //                         </div>
-        //                     </div>
-        //                 </div>
-        //             </main>
-        //         </Col>
-        //         <Col xs lg="4"></Col>
-        //     </Row>
-        //     <Row className="justify-content-center mt-2 mb-2">
-        //         <Col xs lg="4"></Col>
-        //         <Col xs lg="4"></Col>
-        //     </Row>
-        // </Container>
     )};
 
     // TODO: Catch the server response to show a message with the status   
