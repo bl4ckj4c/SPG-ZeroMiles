@@ -87,7 +87,7 @@ function UserRegister(props) {
                             <Form.Control type="text" placeholder="Enter Address" onChange={ (e) => setAddress(e.target.value) }/>
                         </Form.Group>
                         <Form.Group as={Col} className="mb-3" controlId="state">
-                            <Form.Label className="label">State:</Form.Label>
+                            <Form.Label className="label">Province:</Form.Label>
                             <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
                                 <SelectState></SelectState>
                             </Form.Control>
