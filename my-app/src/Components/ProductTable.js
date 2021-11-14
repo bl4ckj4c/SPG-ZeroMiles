@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse } from 'react-bootstrap';
+import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill } from 'react-bootstrap-icons';
+import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -36,7 +36,44 @@ function UserDropdown(props) {
     );
 };
 
+function ConfirmOrder() {
+    const [show, setShow] = useState(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    return (
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                Launch demo modal
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
+}
+
 function ProductTable(props) {
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const handleCloseConfirm = () => setShowConfirm(false);
+    const handleShowConfirm = () => setShowConfirm(true); 
+
+    const [showError, setShowError] = useState(false);
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);  
 
     const [selectedUser, setSelectedUser] = useState([]);
     if (prodNum.length <= 0)
@@ -59,24 +96,26 @@ function ProductTable(props) {
 
     async function submitOrder() {
 
-
         try {
             let items = prodNum.filter(p => p.number !== 0);
             if (items.length > 0 && selectedUser.length > 0) {
+                handleShowConfirm(); //show the modal
                 let object = {
                     "UserID": selectedUser[0].UserID,
                     "items": items
                 }
 
                 let res = await API.addOrder(object);
-                console.log("order submitted: "+res.msg);
+            }
+
+            if(items.length <= 0 || selectedUser.length <= 0) {
+                handleShowError(); //Se non ho selezionato alcun prodotto o cliente
             }
         }
         catch (err) {
-         console.log("errore: "+err);
+            console.log("errore: " + err);
             //   handleError(err);
         }
-
     }
 
     console.log("quantirendering!");
@@ -91,6 +130,31 @@ function ProductTable(props) {
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
+
+                        <Modal show={showConfirm} onHide={handleCloseConfirm} autoFocus={true} size="sm" centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Thank you! 🎉</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body> Order completed</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="warning" onClick={handleCloseConfirm}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        <Modal show={showError} onHide={handleCloseError} autoFocus={true} size="sm" centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Warning! ⚠️</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>Select at least a product or a customer.</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="warning" onClick={handleCloseError}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
                     </Col>
                 </Row>
             </Container>
@@ -218,13 +282,13 @@ function ProductsCounter(props) {
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false } variant='warning' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false } variant="warning" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant="warning" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
         </ButtonGroup>
