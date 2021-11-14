@@ -2,18 +2,18 @@
 
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
-const {firebaseconf} = require('./firebase-server/config.js');
+const { firebaseconf } = require('./firebase-server/config.js');
 
-const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
+const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
 const Dao = require('./dao');
-const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
+const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
-const {v4: uuidv4} = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
 // init express
@@ -65,7 +65,7 @@ var db = firebase.firestore();
 app.post('/api/register',
     body('name')
         // Check if the name parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the name parameter is not empty
         .notEmpty()
@@ -79,7 +79,7 @@ app.post('/api/register',
         }),
     body('lastName')
         // Check if the lastName parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the lastName parameter is not empty
         .notEmpty()
@@ -93,7 +93,7 @@ app.post('/api/register',
         }),
     body('email')
         // Check if the email parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the email parameter is not empty
         .notEmpty()
@@ -107,7 +107,7 @@ app.post('/api/register',
         }),
     body('address')
         // Check if the address parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the address parameter is not empty
         .notEmpty()
@@ -121,7 +121,7 @@ app.post('/api/register',
         }),
     body('phone')
         // Check if the phone parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the phone parameter is not empty
         .notEmpty()
@@ -135,7 +135,7 @@ app.post('/api/register',
         }),
     body('city')
         // Check if the city parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the city parameter is not empty
         .notEmpty()
@@ -149,7 +149,7 @@ app.post('/api/register',
         }),
     body('password')
         // Check if the password parameter is not null
-        .exists({checkNull: true})
+        .exists({ checkNull: true })
         .bail()
         // Check if the password parameter is not empty
         .notEmpty()
@@ -297,7 +297,7 @@ app.get('/api/productByFarmer', async (req, res) => {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
-            res.status(404).json({error: "No matching documents."});
+            res.status(404).json({ error: "No matching documents." });
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
@@ -370,7 +370,7 @@ app.get('/api/productByFarmer', async (req, res) => {
 
 app.get('/api/orders', async (req, res) => {
     try {
-        const orders = await db.collection('Order').get();  
+        const orders = await db.collection('Order').get();
         if (orders.empty) {
             console.log("No matching documents.");
         } else {
@@ -440,7 +440,7 @@ app.get('/api/orders', async (req, res) => {
 //                         ProductbyfarmerID: pio.data().ProductbyfarmerID,
 //                         ProductName: pio.ProductName,
 //                         Quantity: pio.Quantity
-        
+
 //                     });
 //                 }));
 //             })
@@ -485,22 +485,22 @@ app.get('/api/client', (req, res) => {
 
 app.post('/api/order', async (req, res) => {
     try {
-        
+        let result = [];
         let productByFarmer = await db.collection('Product by Farmers').get()
         //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
-                
+
         if (productByFarmer.empty) {
             console.log("No entries (Table: product by farmers)");
             res.status(404).json({ error: "No entries (Table: product by farmers)" }).end();
         }
-        
+
         //for each product in the order
         req.body.items.forEach(product => {
-            
+
             productByFarmer.forEach(prodfarm => {
-                if(product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity){ //check if there are enough unities for the product requested
-                    console.log("Not enough products ("+product.NameProduct+")");
-                    res.status(404).json({ error: "Not enough products ("+product.NameProduct+")" }).end();
+                if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
+                    console.log("Not enough products (" + product.NameProduct + ")");
+                    res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" }).end();
                 }
             })
         })
@@ -519,6 +519,23 @@ app.post('/api/order', async (req, res) => {
                 res.json(error);
             }
         })()
+
+        req.body.items.forEach(product => {
+            productByFarmer.forEach(prodfarm => {
+                if (product.ProductID == prodfarm.data().ProductID) {
+                    let newQuantity = prodfarm.data().Quantity - product.number;
+                   result.push( new Promise( async(resolve, reject) => {
+                        
+                        await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
+                        resolve("QUANTITYUPDATE");
+                }))
+              
+                
+            }
+                 })
+            })
+  
+        Promise.all(result);
         res.status(201).end();
 
     } catch (error) {
