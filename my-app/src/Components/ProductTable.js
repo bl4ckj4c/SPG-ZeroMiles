@@ -37,7 +37,6 @@ function UserDropdown(props) {
 };
 
 function ProductTable(props) {
-    // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
 
     const [selectedUser, setSelectedUser] = useState([]);
     if (prodNum.length <= 0)
@@ -58,17 +57,28 @@ function ProductTable(props) {
     }
 
 
-    function submitOrder() {
-        let items = prodNum.filter(p => p.number !== 0);
-        if (items.length > 0 && selectedUser.length > 0) {
-            let object = {
-                "UserID": selectedUser[0].UserID,
-                "items": items
+    async function submitOrder() {
+
+
+        try {
+            let items = prodNum.filter(p => p.number !== 0);
+            if (items.length > 0 && selectedUser.length > 0) {
+                let object = {
+                    "UserID": selectedUser[0].UserID,
+                    "items": items
+                }
+
+                let res = await API.addOrder(object);
+                console.log("order submitted: "+res.msg);
             }
-            API.addOrder(object);
-            console.log(object);
         }
+        catch (err) {
+         console.log("errore: "+err);
+            //   handleError(err);
+        }
+
     }
+
     console.log("quantirendering!");
 
 
@@ -160,7 +170,7 @@ function ProductCard(props) {
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
 
     return (
-        <Card style={{ width: '21rem' }}>
+        <Card style={{ width: '21rem' }} >
             <Card.Img variant="top" className="cover" src={newSrc} />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
@@ -176,7 +186,7 @@ function ProductCard(props) {
                 <Row className="mb-4">
                     <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
                     <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
-                    <Col>{props.prodottoDelFarmer.Price}€</Col>
+                    <Col>€{props.prodottoDelFarmer.Price}</Col>
                 </Row>
             </Container>
             <Card.Footer>
@@ -188,7 +198,7 @@ function ProductCard(props) {
                         aria-expanded={open}>
                         See Description
                     </Button></Col>
-                    <Col><ProductsCounter ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} /></Col>
+                    <Col><ProductsCounter Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} /></Col>
                 </Row>
                 <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
                     <div>{props.prodottoDelFarmer.Description}</div>
@@ -208,13 +218,13 @@ function ProductsCounter(props) {
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant='warning' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false } variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} variant="warning" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false } variant="warning" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
         </ButtonGroup>
