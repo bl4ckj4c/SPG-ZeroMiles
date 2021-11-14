@@ -75,47 +75,47 @@ function UserRegister(props) {
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
                     <Col xs={6}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Name:</Form.Label>
+                            <Form.Label className="label">Name:</Form.Label>
                             <Form.Control type="text"  controlId="name" placeholder="Enter Name" onChange={ (e) => setName(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3">
-                            <Form.Label>Surname:</Form.Label>
-                            <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={ (e) => setSurname(e.target.value) }/>
-                        </Form.Group>
                         <Form.Group className="mb-3" controlId="email">
-                            <Form.Label>Email:</Form.Label>
+                            <Form.Label className="label">Email:</Form.Label>
                             <Form.Control type="email" placeholder="Enter Email" onChange={ (e) => setEmail(e.target.value) }/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="address">
-                            <Form.Label>Address:</Form.Label>
+                            <Form.Label className="label">Address:</Form.Label>
                             <Form.Control type="text" placeholder="Enter Address" onChange={ (e) => setAddress(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="city">
-                            <Form.Label>City:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
-                        </Form.Group>
-                    </Col>
-                    <Col xs={6}>
                         <Form.Group as={Col} className="mb-3" controlId="state">
-                            <Form.Label>State:</Form.Label>
+                            <Form.Label className="label">State:</Form.Label>
                             <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
                                 <SelectState></SelectState>
                             </Form.Control>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="phone">
-                            <Form.Label>Phone:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter Phone" onChange={ (e) => setPhone(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="zipcode">
-                            <Form.Label>Zipcode:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ (e) => setZipcode(e.target.value) }/>
-                        </Form.Group>
                         <Form.Group className="mb-3" controlId="password">
-                            <Form.Label>Password:</Form.Label>
+                            <Form.Label className="label">Password:</Form.Label>
                             <Form.Control type="password" placeholder="Enter password" onChange={ (e) => setPassword(e.target.value) }/>
                         </Form.Group>
+                    </Col>
+                    <Col xs={6}>
+                        <Form.Group className="mb-3">
+                            <Form.Label className="label">Surname:</Form.Label>
+                            <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={ (e) => setSurname(e.target.value) }/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="phone">
+                            <Form.Label className="label">Phone:</Form.Label>
+                            <Form.Control type="number" placeholder="Enter Phone" onChange={ (e) => setPhone(e.target.value) }/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="city">
+                            <Form.Label className="label">City:</Form.Label>
+                            <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="zipcode">
+                            <Form.Label className="label">Zipcode:</Form.Label>
+                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ (e) => setZipcode(e.target.value) }/>
+                        </Form.Group>
                         <Form.Group className="mb-3" controlId="confPassword">
-                            <Form.Label>Confirm Password:</Form.Label>
+                            <Form.Label className="label">Confirm Password:</Form.Label>
                             <Form.Control type="password" placeholder="Confirm Password" onChange={ (e) => setConfPassword(e.target.value) }/>
                         </Form.Group>
                         </Col>

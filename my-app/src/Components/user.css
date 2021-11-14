@@ -50,3 +50,7 @@ body{
     margin-left: 0;
     margin-right: 0;
 }
+
+.label {
+    font-size: medium;
+}
