@@ -54,3 +54,8 @@ body{
 .label {
     font-size: medium;
 }
+
+.toast-register {
+    margin: auto;
+    z-index: 1000;
+}
