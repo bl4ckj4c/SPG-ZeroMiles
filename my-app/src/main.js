@@ -6,12 +6,7 @@ import { Col, Row, Container } from 'react-bootstrap';
 function Main() {
     return (
         <Container>
-            <Row className="justify-content-center mt-3">
-                <Col></Col>
-                <Col>WELCOME BACK!</Col>
-                <Col></Col>
-            </Row>
-
+            <Row></Row>
             <Row className="justify-content-center mt-3">
                 <Col></Col>
                 <Col>

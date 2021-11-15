@@ -1,6 +1,6 @@
 import { Col, Row, Container, Form, Button } from 'react-bootstrap';
 import { useState } from 'react';
-import SelectCity from './SelectCity.js';
+import SelectState from './SelectState.js';
 
 import Axios from 'axios'
 import "./user.css";
@@ -14,14 +14,16 @@ function UserRegister(props) {
     const [confPassword, setConfPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
+    const [state, setState] = useState('');
     const [zipcode, setZipcode] = useState('');
 
-    function validform(event) {
+    function validForm(event) {
+        event.preventDefault();
         if (!name) {
-            alert("Please Enter Your Full Name");
+            alert("Please Enter Your name");
             return false;
         } else if (!surname) {
-            alert("Please Enter Your last Name");
+            alert("Please Enter Your surname");
             return false;
         } else if (!password) {
             alert("Please Enter Your password");
@@ -29,7 +31,7 @@ function UserRegister(props) {
         } else if (!confPassword) {
             alert("Please Enter Your confirmation password");
             return false;
-        } else if ( !(password === confPassword)) {
+        } else if ( !( password === confPassword )) {
             alert("The password is not the same");
             return false;
         } else if (!email) {
@@ -37,6 +39,9 @@ function UserRegister(props) {
             return false;
         } else if (!address) {
             alert("Please Enter Your Address");
+            return false;
+        } else if (!state) {
+            alert("Please Enter Your State / Province");
             return false;
         } else if (!city) {
             alert("Please Enter Your permanent city");
@@ -52,6 +57,7 @@ function UserRegister(props) {
     async function sendRegister(event) {
         event.preventDefault();
         let data = { name, surname, email, address, phone, city, password, zipcode };
+        console.log(data)
         Axios.post('/api/register', data)
           .then((response) => {
               console.log(response);
@@ -62,57 +68,67 @@ function UserRegister(props) {
     return (
         <Container>
             <Row className="justify-content-center mt-1 mb-1">
-                <Col xs={4}>
-                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", backgroundColor:"#2c8da9" }}>
-                        Register
-                    </Row>
-                    <Form onSubmit={(e) => validform(e) } id="my-form">
+                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
+                    Sign up a new client
+                </Row>
+                <Form onSubmit={(e) => validForm(e) } controlId="my-form">
+                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
+                    <Col xs={6}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Name:</Form.Label>
-                            <Form.Control type="text"  id="name" placeholder="Enter Name" onChange={ setName }/>
+                            <Form.Label className="label">Name:</Form.Label>
+                            <Form.Control type="text"  controlId="name" placeholder="Enter Name" onChange={ (e) => setName(e.target.value) }/>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="email">
+                            <Form.Label className="label">Email:</Form.Label>
+                            <Form.Control type="email" placeholder="Enter Email" onChange={ (e) => setEmail(e.target.value) }/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="address">
+                            <Form.Label className="label">Address:</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Address" onChange={ (e) => setAddress(e.target.value) }/>
+                        </Form.Group>
+                        <Form.Group as={Col} className="mb-3" controlId="state">
+                            <Form.Label className="label">Province:</Form.Label>
+                            <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
+                                <SelectState></SelectState>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="password">
+                            <Form.Label className="label">Password:</Form.Label>
+                            <Form.Control type="password" placeholder="Enter password" onChange={ (e) => setPassword(e.target.value) }/>
+                        </Form.Group>
+                    </Col>
+                    <Col xs={6}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Surname::</Form.Label>
-                            <Form.Control type="text" id="surname" placeholder="Enter Surname" onChange={ setSurname }/>
+                            <Form.Label className="label">Surname:</Form.Label>
+                            <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={ (e) => setSurname(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="email">
-                            <Form.Label>Email:</Form.Label>
-                            <Form.Control type="email" placeholder="Enter Email" onChange={ setEmail }/>
+                        <Form.Group className="mb-3" controlId="phone">
+                            <Form.Label className="label">Phone:</Form.Label>
+                            <Form.Control type="number" placeholder="Enter Phone" onChange={ (e) => setPhone(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="address">
-                            <Form.Label>Address:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Address" onChange={ setAddress }/>
+                        <Form.Group className="mb-3" controlId="city">
+                            <Form.Label className="label">City:</Form.Label>
+                            <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="city">
-                            <Form.Label>City:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter City" onChange={ setCity }/>
+                        <Form.Group className="mb-3" controlId="zipcode">
+                            <Form.Label className="label">Zipcode:</Form.Label>
+                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ (e) => setZipcode(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="phone">
-                            <Form.Label>Phone:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter Phone" onChange={ setPhone }/>
+                        <Form.Group className="mb-3" controlId="confPassword">
+                            <Form.Label className="label">Confirm Password:</Form.Label>
+                            <Form.Control type="password" placeholder="Confirm Password" onChange={ (e) => setConfPassword(e.target.value) }/>
                         </Form.Group>
-                        <Form.Group className="mb-3" id="zipcode">
-                            <Form.Label>Zipcode:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ setZipcode }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" id="password">
-                            <Form.Label>Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Enter password" onChange={ setPassword }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" id="confPassword">
-                            <Form.Label>Confirm Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Confirm Password" onChange={ setConfPassword }/>
-                        </Form.Group>
-                        <Row className="justify-content-center mt-1 mb-1">
+                        </Col>
+                        <Row className="justify-content-center mt-2 mb-2">
                             <Button 
-                                variant="primary"
+                                variant="secondary"
                                 type="submit"
-                            >
+                                >
                                 Submit
                             </Button>
                         </Row>
-                    </Form>
-                </Col>
+                    </Row>
+                </Form>
             </Row>
         </Container>
     )};

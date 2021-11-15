@@ -1,17 +1,16 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, TypeH1 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse } from 'react-bootstrap';
+import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill } from 'react-bootstrap-icons';
+import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
+import API from '../API';
 
 let prodNum = [];
 
 function UserDropdown(props) {
-
     const filterByFields = ['Name', 'Surname'];
-
     return (
         <>
             <Form.Group>
@@ -37,20 +36,55 @@ function UserDropdown(props) {
     );
 };
 
+function ConfirmOrder() {
+    const [show, setShow] = useState(true);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+
+    return (
+        <>
+            <Button variant="primary" onClick={handleShow}>
+                Launch demo modal
+            </Button>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+        </>
+    );
+}
+
 function ProductTable(props) {
-    // Here I create an array that contains all the product ids and the number of ordered products. I initialized it to zero.
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const handleCloseConfirm = () => setShowConfirm(false);
+    const handleShowConfirm = () => setShowConfirm(true); 
+
+    const [showError, setShowError] = useState(false);
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);  
 
     const [selectedUser, setSelectedUser] = useState([]);
     if (prodNum.length <= 0)
         for (let i = 0; i < props.productByFarmer.length; i++) {
-            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID })
+            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct": props.productByFarmer[i].NameProduct })
         }
 
-    console.log(prodNum);
-
     //this function updates the number in the array, also allows to display the current number in the counter
-    function updateNumber(ProductId, sign) {
-        let i = props.productByFarmer.findIndex(p => p.ProductID === ProductId)
+    function updateNumber(ProductID, FarmerID, sign) {
+        let i = props.productByFarmer.findIndex(p => (p.ProductID === ProductID && p.FarmerID === FarmerID))
+
         if (i === -1)
             return 0;
         else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
@@ -59,33 +93,68 @@ function ProductTable(props) {
         return prodNum[i].number;
     }
 
-    function filterSubmit() { //deletes items not selected
-        let submitData = prodNum.filter(p => p.number !== 0);
-        return submitData;
-    }
 
-    function submitOrder() {
+    async function submitOrder() {
 
-        let items = filterSubmit()
-        let object = {
-            "UserID": selectedUser.UserID,
-            "Email": selectedUser.Email,
-            "items": items
+        try {
+            let items = prodNum.filter(p => p.number !== 0);
+            if (items.length > 0 && selectedUser.length > 0) {
+                handleShowConfirm(); //show the modal
+                let object = {
+                    "UserID": selectedUser[0].UserID,
+                    "items": items
+                }
+
+                let res = await API.addOrder(object);
+            }
+
+            if(items.length <= 0 || selectedUser.length <= 0) {
+                handleShowError(); //Se non ho selezionato alcun prodotto o cliente
+            }
         }
-
-        console.log(object);
-
+        catch (err) {
+            console.log("errore: " + err);
+            //   handleError(err);
+        }
     }
+
+    console.log("quantirendering!");
+
 
     return (
         <>
-            <Container>
-                <Row className="mt-3">
+            <Container >
+                <Row className="mt-3 row-style">
                     <Col>
                         <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                     </Col>
-                    <Col>
-                        <Button onClick={submitOrder}>Submit</Button>
+                    <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
+                        <Button onClick={submitOrder} variant="secondary">Submit</Button>
+
+                        <Modal show={showConfirm} onHide={handleCloseConfirm} autoFocus={true} size="sm" centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Thank you! 🎉</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body> Order completed</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="warning" onClick={handleCloseConfirm}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        <Modal show={showError} onHide={handleCloseError} autoFocus={true} size="sm" centered>
+                            <Modal.Header closeButton>
+                                <Modal.Title>Warning! ⚠️</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>Select at least a product or a customer.</Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="warning" onClick={handleCloseError}>
+                                    Close
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
                     </Col>
                 </Row>
             </Container>
@@ -105,8 +174,6 @@ function ProductTable(props) {
 
 
 function FarmerRow(props) {
-    console.log("quantirendeding");
-
     let product = [];
 
     const splitEvery = (array, length) =>
@@ -167,31 +234,40 @@ function ProductCard(props) {
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
 
     return (
-        <Card style={{ width: '21rem' }}>
+        <Card style={{ width: '21rem' }} >
             <Card.Img variant="top" className="cover" src={newSrc} />
             <Card.Body>
                 <Card.Title>{props.prodottoDelFarmer.NameProduct}</Card.Title>
                 <Card.Text>
-                    <Button variant="light"
+                </Card.Text>
+            </Card.Body>
+            <Container>
+                <Row>
+                    <Col><Collection /></Col>
+                    <Col><Bag /></Col>
+                    <Col><Cash /></Col>
+                </Row>
+                <Row className="mb-4">
+                    <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
+                    <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
+                    <Col>€{props.prodottoDelFarmer.Price}</Col>
+                </Row>
+            </Container>
+            <Card.Footer>
+                <Row>
+                    <Col> <Button variant="outline-warning"
                         onClick={() => setOpen(!open)}
+                        style={{ fontSize: 14, color: "black" }}
                         aria-controls="example-collapse-text"
                         aria-expanded={open}>
                         See Description
-                    </Button>
-                    <Collapse in={open}>
-                        <div id="example-collapse-text">{props.prodottoDelFarmer.Description}
-                        </div>
-                    </Collapse>
-                </Card.Text>
-            </Card.Body>
-            <ListGroup horizontal className="list-group-flush justify-content-center">
-                <ListGroupItem>Available: {props.prodottoDelFarmer.Quantity}</ListGroupItem>
-                <ListGroupItem>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</ListGroupItem>
-                <ListGroupItem>Price: {props.prodottoDelFarmer.Price}€</ListGroupItem>
-            </ListGroup>
-            <Card.Body>
-                <ProductsCounter ProductId={props.prodottoDelFarmer.ProductID} updateNumber={props.updateNumber} />
-            </Card.Body>
+                    </Button></Col>
+                    <Col><ProductsCounter Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} /></Col>
+                </Row>
+                <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
+                    <div>{props.prodottoDelFarmer.Description}</div>
+                </Collapse>
+            </Card.Footer>
         </Card>
     );
 }
@@ -201,19 +277,18 @@ function ProductsCounter(props) {
     const [number, setNumber] = useState(0)
 
     function updateIndex(sign) {
-        let i = props.updateNumber(props.ProductId, sign);
+        let i = props.updateNumber(props.ProductID, props.FarmerID, sign);
         setNumber(i);
-        console.log(i);
     }
     return (
         <ButtonGroup>
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant='light' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant='warning' onClick={() => updateIndex(-1)}>
                 -
             </ToggleButton>
-            <ToggleButton style={{ minWidth: "3rem" }} disabled variant="light">
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
                 {number}
             </ToggleButton>
-            <ToggleButton style={{ minWidth: "2.5rem" }} variant="light" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant="warning" onClick={() => updateIndex(+1)} >
                 +
             </ToggleButton>
         </ButtonGroup>

@@ -414,8 +414,22 @@ async function getProductByFarmer(counterID) {
     }
 } */
 
+  async function addOrder(order){
 
-
+    const response = await fetch(BASEURL + "/order", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...order})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Order succesfully added' };
+    }
+    return { 'err': 'POST error' };
+  }
+  
 const API = {
     getSelectedType,
     getTicket,
@@ -426,8 +440,8 @@ const API = {
     getStatisticsForAllCounter,
     getProductByFarmer,
     getFarmer,
-
-
+    addOrder,
+    
     getOrder,
     getProductInOrder, 
     getAllUsers
