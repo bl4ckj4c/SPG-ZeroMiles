@@ -68,7 +68,13 @@ function ConfirmOrder() {
 function ProductTable(props) {
 
     const [showConfirm, setShowConfirm] = useState(false);
-    const handleCloseConfirm = () => setShowConfirm(false);
+    const handleCloseConfirm = () => {
+
+        setShowConfirm(false);
+        prodNum.forEach( p => p.number = 0);
+        props.triggerUpdate();
+    }
+
     const handleShowConfirm = () => setShowConfirm(true); 
 
     const [showError, setShowError] = useState(false);

@@ -22,10 +22,18 @@ function App() {
   const [userList, setUserList] = useState([]);
   const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
   const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-
+  const [update, setUpdate] = useState(true);
+  const triggerUpdate = () => setUpdate(true);
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
+    if(update === true){
+      setProductByFarmerListUpdated(true);
+      setFarmerListUpdated(true);
+      setUserListUpdated(true);
+
+
+
     setLoading(true);
     API.getProductByFarmer()
       .then(productByFarmer => {
@@ -45,8 +53,10 @@ function App() {
         setUserListUpdated(false);
       }).catch(f => handleErrors(f));
 
+      setUpdate(false);
 
-  }, []);
+    }
+  }, [update]);
 
 
   useEffect(()=> {
@@ -103,7 +113,7 @@ function App() {
                 <Spinner animation="border" size="xl" variant="secondary" />
               </Row> :
 
-                <ProductTable productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
+                <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
 
             </Col>
         </Route>
