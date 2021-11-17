@@ -77,7 +77,7 @@ app.post('/api/register',
             let regex = new RegExp(/^[a-zA-Z]+$/);
             return regex.test(value);
         }),
-    body('lastName')
+    body('surname')
         // Check if the lastName parameter is not null
         .exists({ checkNull: true })
         .bail()
@@ -88,7 +88,7 @@ app.post('/api/register',
         .isString()
         // Check if the lastName parameter contains only letters
         .custom((value, req) => {
-            let regex = new RegExp(/^[a-zA-Z]+$/);
+            let regex = new RegExp(/^[a-zA-Z\']+$/);
             return regex.test(value);
         }),
     body('email')
@@ -177,13 +177,15 @@ app.post('/api/register',
         else {
             const newUUid = uuidv4()
             let newUser = {}
-            newUser.name = req.body.name;
-            newUser.surname = req.body.lastName;
-            newUser.email = req.body.email;
-            newUser.address = req.body.address;
-            newUser.phone = req.body.phone;
-            newUser.city = req.body.city;
-            newUser.password = req.body.password;
+            newUser.Name = req.body.name;
+            newUser.Surname = req.body.surname;
+            newUser.Email = req.body.email;
+            newUser.Address = req.body.address;
+            newUser.Phoneno = req.body.phone;
+            newUser.City = req.body.city;
+            newUser.Password = req.body.password;
+            newUser.Zipcode = req.body.zipcode;
+            newUser.State = req.body.stateCaps;
 
             (async () => {
                 try {

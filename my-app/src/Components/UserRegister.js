@@ -1,4 +1,4 @@
-import { Col, Row, Container, Form, Button, Toast } from 'react-bootstrap';
+import { Col, Row, Container, Form, Button, Toast, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import SelectState from './SelectState.js';
 
@@ -27,6 +27,13 @@ function UserRegister(props) {
     const [toastZipcode, setToastZipcode] = useState(false);
     const [toastPasswordNotEqual, setToastPasswordNotEqual] = useState(false);
 
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const handleShowConfirm = () => setShowConfirm(true); 
+    const handleCloseConfirm = () => {
+        setShowConfirm(false);
+    }
+
     function validForm(event) {
         event.preventDefault();
         if (!name) {
@@ -41,9 +48,9 @@ function UserRegister(props) {
         } else if (!confPassword) {
             setToastConfPassword(true)
             return false;
-        } else if ( !( password === confPassword )) {
+        } else if (!(password === confPassword)) {
             alert("The password is not the same");
-        } else if ( !(password === confPassword)) {
+        } else if (!(password === confPassword)) {
             setToastPasswordNotEqual(true)
             return false;
         } else if (!email) {
@@ -63,23 +70,25 @@ function UserRegister(props) {
             return false;
         } else {
             sendRegister(event);
+            handleShowConfirm();
         }
     }
 
     async function sendRegister(event) {
         event.preventDefault();
-        let data = { name, surname, email, address, phone, city, password, zipcode };
+        let stateCaps = state.toUpperCase().toString();
+        let data = { name, surname, email, address, phone, city, password, zipcode, stateCaps };
         console.log(data)
         Axios.post('/api/register', data)
-          .then((response) => {
-              console.log(response);
-          })
-          .catch(error => console.log("Error from server: ", error))
+            .then((response) => {
+                console.log(response);
+            })
+            .catch(error => console.log("Error from server: ", error))
     }
-   
+
     return (
         <Container>
-            { toastName && (
+            {toastName && (
                 <Toast className="toast-register" onClose={() => setToastName(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -88,7 +97,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastSurname && (
+            {toastSurname && (
                 <Toast className="toast-register" onClose={() => setToastSurname(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -97,7 +106,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastEmail && (
+            {toastEmail && (
                 <Toast className="toast-register" onClose={() => setToastEmail(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -106,7 +115,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastAddress && (
+            {toastAddress && (
                 <Toast className="toast-register" onClose={() => setToastAddress(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -115,7 +124,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastCity && (
+            {toastCity && (
                 <Toast className="toast-register" onClose={() => setToastCity(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -124,7 +133,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastPhone && (
+            {toastPhone && (
                 <Toast className="toast-register" onClose={() => setToastPhone(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -133,7 +142,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastZipcode && (
+            {toastZipcode && (
                 <Toast className="toast-register" onClose={() => setToastZipcode(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -142,7 +151,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastPassword && (
+            {toastPassword && (
                 <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -151,7 +160,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastConfPassword && (
+            {toastConfPassword && (
                 <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -160,7 +169,7 @@ function UserRegister(props) {
                 </Toast>
             )}
 
-            { toastPasswordNotEqual && (
+            {toastPasswordNotEqual && (
                 <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
                     <Toast.Header>
                         <strong className="me-auto">Remembering</strong>
@@ -169,64 +178,78 @@ function UserRegister(props) {
                 </Toast>
             )}
             <Row className="justify-content-center mt-1 mb-1">
-                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
+                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                     Sign up a new client
                 </Row>
-                <Form onSubmit={(e) => validForm(e) } controlId="my-form">
-                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize:"22px" }}>
-                    <Col xs={6}>
-                        <Form.Group className="mb-3">
-                            <Form.Label className="label">Name:</Form.Label>
-                            <Form.Control type="text"  controlId="name" placeholder="Enter Name" onChange={ (e) => setName(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="email">
-                            <Form.Label className="label">Email:</Form.Label>
-                            <Form.Control type="email" placeholder="Enter Email" onChange={ (e) => setEmail(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="address">
-                            <Form.Label className="label">Address:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Address" onChange={ (e) => setAddress(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group as={Col} className="mb-3" controlId="state">
-                            <Form.Label className="label">Province:</Form.Label>
-                            <Form.Control as="select" name="state" defaultValue={''} onChange={ (e) => setState(e.target.value) }>
-                                <SelectState></SelectState>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="password">
-                            <Form.Label className="label">Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Enter password" onChange={ (e) => setPassword(e.target.value) }/>
-                        </Form.Group>
-                    </Col>
-                    <Col xs={6}>
-                        <Form.Group className="mb-3">
-                            <Form.Label className="label">Surname:</Form.Label>
-                            <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={ (e) => setSurname(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="phone">
-                            <Form.Label className="label">Phone:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter Phone" onChange={ (e) => setPhone(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="city">
-                            <Form.Label className="label">City:</Form.Label>
-                            <Form.Control type="text" placeholder="Enter City" onChange={ (e) => setCity(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="zipcode">
-                            <Form.Label className="label">Zipcode:</Form.Label>
-                            <Form.Control type="number" placeholder="Enter ZipCode" onChange={ (e) => setZipcode(e.target.value) }/>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="confPassword">
-                            <Form.Label className="label">Confirm Password:</Form.Label>
-                            <Form.Control type="password" placeholder="Confirm Password" onChange={ (e) => setConfPassword(e.target.value) }/>
-                        </Form.Group>
+                <Form onSubmit={(e) => validForm(e)} controlId="my-form">
+                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
+                        <Col xs={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label className="label">Name:</Form.Label>
+                                <Form.Control type="text" controlId="name" placeholder="Enter Name" onChange={(e) => setName(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="email">
+                                <Form.Label className="label">Email:</Form.Label>
+                                <Form.Control type="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="address">
+                                <Form.Label className="label">Address:</Form.Label>
+                                <Form.Control type="text" placeholder="Enter Address" onChange={(e) => setAddress(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group as={Col} className="mb-3" controlId="state">
+                                <Form.Label className="label">Province:</Form.Label>
+                                <Form.Control as="select" name="state" defaultValue={''} onChange={(e) => setState(e.target.value)}>
+                                    <SelectState></SelectState>
+                                </Form.Control>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="password">
+                                <Form.Label className="label">Password:</Form.Label>
+                                <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
+                            </Form.Group>
+                        </Col>
+                        <Col xs={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label className="label">Surname:</Form.Label>
+                                <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={(e) => setSurname(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="phone">
+                                <Form.Label className="label">Phone:</Form.Label>
+                                <Form.Control type="number" placeholder="Enter Phone" onChange={(e) => setPhone(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="city">
+                                <Form.Label className="label">City:</Form.Label>
+                                <Form.Control type="text" placeholder="Enter City" onChange={(e) => setCity(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="zipcode">
+                                <Form.Label className="label">Zipcode:</Form.Label>
+                                <Form.Control type="number" placeholder="Enter ZipCode" onChange={(e) => setZipcode(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="confPassword">
+                                <Form.Label className="label">Confirm Password:</Form.Label>
+                                <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfPassword(e.target.value)} />
+                            </Form.Group>
                         </Col>
                         <Row className="justify-content-center mt-2 mb-2">
-                            <Button 
+                            <Button
                                 variant="secondary"
                                 type="submit"
-                                >
+                            >
                                 Submit
                             </Button>
+
+                            <Modal show={showConfirm} onHide={handleCloseConfirm} autoFocus={true} size="sm" centered>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Welcome! 🎉</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>Registration completed</Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="warning" onClick={handleCloseConfirm}>
+                                        Close
+                                    </Button>
+                                </Modal.Footer>
+                            </Modal>
+
+
                         </Row>
                     </Row>
                 </Form>
