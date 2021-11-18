@@ -2,7 +2,7 @@ import TestRenderer from 'react-test-renderer';
 import UserRegister from "../Components/UserRegister";
 import {Form, Row, Button, Toast, Container} from "react-bootstrap";
 import {Simulate} from "react-dom/test-utils";
-import {fireEvent, waitFor} from "@testing-library/react";
+import {fireEvent, render, waitFor} from "@testing-library/react";
 
 let testRenderer = null;
 let testInstance = null;
@@ -61,10 +61,66 @@ test("Check if each field is correct", () => {
         // Check field label
         expect(item.findByType(Form.Label).props.children).toEqual(fields[index]);
         // Check field placeholder, not checking the province (there is another assertion)
-        if(item.findByType(Form.Control).props.name !== 'state') {
+        if (item.findByType(Form.Control).props.name !== 'state') {
             expect(item.findByType(Form.Control).props.placeholder).toEqual(placeholders[index]);
         }
     });
 });
+
+test('Test form correct submit', () => {
+    const allFormGroup = testInstance.findAllByType(Form.Group);
+
+    const fields = [
+        'Name:',
+        'Email:',
+        'Address:',
+        'Province:',
+        'Password:',
+        'Surname:',
+        'Phone:',
+        'City:',
+        'Zipcode:',
+        'Confirm Password:'
+    ];
+
+    const placeholders = [
+        'TestName',
+        'TestEmail',
+        'TestAddress',
+        'ProvincePlaceholder',
+        'supersecret1',
+        'TestSurname',
+        1234567890,
+        'TestCity',
+        12345,
+        'supersecret1'
+    ];
+
+    allFormGroup.forEach((item, index) => {
+
+        console.log(item.findByType(Form.Control).props);
+
+        // Fill the form field (except the province)
+        if (item.findByType(Form.Control).props.name !== 'state') {
+            Simulate.change(item.findByType(Form.Control), {
+                target : {
+                    value : placeholders[index]
+                }
+            });
+        }
+
+        // Set the province
+        Simulate.select(allFormGroup.findAllByType(Form.Control).filter((item) => {
+            return item.props.name === 'state';
+        }), {
+            target : {
+                value : 'Agrigento'
+            }
+        })
+    });
+
+
+});
+
 
 
