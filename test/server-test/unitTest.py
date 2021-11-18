@@ -142,7 +142,7 @@ class TestStorySPG2(unittest.TestCase):
         # If the insertion was successful, then remove the test user form Firebase
         # Check if the new user is present in Firebase
         # If yes, then remove the new user
-        users_ref = db.collection(u'User').where(u'name', u'==', u'UserTest')
+        users_ref = db.collection(u'User').where(u'Name', u'==', u'UserTest')
         docs = users_ref.stream()
         flagUser = False
             
