@@ -120,12 +120,14 @@ class TestStorySPG2(unittest.TestCase):
     def test_POST_correct_user(self):
         user = {
             'name': 'UserTest',
-            'lastName': 'Correct',
+            'surname': 'Correct',
             'email': 'user.test@gmail.com',
             'address': 'Via Test 404',
             'phone': '1234567890',
             'city': 'TestNet',
-            'password': 'supersecrettest'
+            'password': 'supersecrettest',
+            'zipcode': '10135',
+            'stateCaps': 'TO'
         }
 
         # Request sent
