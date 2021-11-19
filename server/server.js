@@ -52,6 +52,10 @@ var db = firebase.firestore();
 // ***** API *****
 // *********************
 
+/* Authentication endpoint */
+
+
+
 /* POST user registration (add user to database) */
 
 app.post('/api/register',
@@ -389,10 +393,10 @@ app.get('/api/orders', async (req, res) => {
                 //console.log(farmer.data());
                 result.push(new Promise(async (resolve, reject) => {
                     resolve({
-                        OrderID: order.data().OrderID,  //maybe it's "order.id"
+                        OrderID: order.id,  //maybe it's "order.id"
                         ClientID: order.data().ClientID,
                         Timestamp: order.data().Timestamp,
-                        ListOfProducts: order.data().Products,
+                        ListOfProducts: order.data().Products
                     });
                 }));
             })
