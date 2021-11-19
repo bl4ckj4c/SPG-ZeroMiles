@@ -434,6 +434,7 @@ app.get('/api/orders', async (req, res) => {
                     }
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
+                        Status: order.data().Status,
                         Client: client.data(),
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products
@@ -491,6 +492,7 @@ app.post('/api/order', async (req, res) => {
         console.log("creating new order");
         let newOrder = {}
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY");
+        newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
         (async () => {
