@@ -14,7 +14,7 @@ sections:
 
 - Number of stories committed vs done: 3 committed vs 3 done
 - Total points committed vs done:  29 committed vs 29 done
-- Nr of hours planned vs spent (as a team): 112 planned vs
+- Nr of hours planned vs spent (as a team): 112 planned vs 104.5
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -22,8 +22,6 @@ sections:
 - Code review completed
 - Code present on VCS
 - End-to-End tests performed
-
-> Please refine your DoD 
 
 ### Detailed statistics
 
@@ -37,9 +35,10 @@ sections:
 - Hours per task:
 
   - average: 3h 7m
-  - standard deviation:
+  - standard deviation: 3h 7m
 
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
+- Total task estimation error ratio (sum of total hours estimation / sum of total hours spent from previous table):
+  - 104.5/112 = 0.933 -> 93.3%
 
   
 ## QUALITY MEASURES 
