@@ -1,9 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Select from 'react-select'
-import { Button, DropdownButton, Dropdown } from 'react-bootstrap'
-import axios from 'axios'
 import API from './API';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
@@ -12,6 +9,7 @@ import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import "./App.css";
+import ZeroNavbar from './Components/Navbar';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -27,31 +25,28 @@ function App() {
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
-    if(update === true){
+    if (update === true) {
       setProductByFarmerListUpdated(true);
       setFarmerListUpdated(true);
       setUserListUpdated(true);
+      setLoading(true);
+      API.getProductByFarmer()
+        .then(productByFarmer => {
+          setProductByFarmerList(productByFarmer);
+          setProductByFarmerListUpdated(false);
+        }).catch(pbf => handleErrors(pbf));
 
+      API.getFarmer()
+        .then(farmer => {
+          setFarmerList(farmer);
+          setFarmerListUpdated(false);
+        }).catch(f => handleErrors(f));
 
-
-    setLoading(true);
-    API.getProductByFarmer()
-      .then(productByFarmer => {
-        setProductByFarmerList(productByFarmer);
-        setProductByFarmerListUpdated(false);
-      }).catch(pbf => handleErrors(pbf));
-
-    API.getFarmer()
-      .then(farmer => {
-        setFarmerList(farmer);
-        setFarmerListUpdated(false);
-      }).catch(f => handleErrors(f));
-
-    API.getAllUsers()
-      .then(u => {
-        setUserList(u);
-        setUserListUpdated(false);
-      }).catch(f => handleErrors(f));
+      API.getAllUsers()
+        .then(u => {
+          setUserList(u);
+          setUserListUpdated(false);
+        }).catch(f => handleErrors(f));
 
       setUpdate(false);
 
@@ -59,9 +54,9 @@ function App() {
   }, [update]);
 
 
-  useEffect(()=> {
-    if(!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
-    setLoading(false);
+  useEffect(() => {
+    if (!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
+      setLoading(false);
 
   }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
 
@@ -84,19 +79,7 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-      <Navbar bg="warning">
-        <Container>
-          <Navbar.Brand href="/">
-            <Image id="logo" src="/images/logo.png" />
-          </Navbar.Brand>
-          <Nav>
-            {/*<Nav.Link className="posizionamento" href="/login">Login</Nav.Link>*/}
-            <Nav.Link className="posizionamentoPulsante" href="/user">
-              <Button variant="secondary" size="sm">Sign Up</Button>
-            </Nav.Link>
-          </Nav>
-        </Container>
-      </Navbar>
+        <ZeroNavbar/>
 
       <Switch>
 
@@ -106,16 +89,16 @@ function App() {
         </Route> */}
 
         <Route exact path="/">
-            <Col as="main">
+          <Col as="main">
 
-              {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
-              {loading ? <Row className="justify-content-center mt-5">
-                <Spinner animation="border" size="xl" variant="secondary" />
-              </Row> :
+            {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
+            {loading ? <Row className="justify-content-center mt-5">
+              <Spinner animation="border" size="xl" variant="secondary" />
+            </Row> :
 
-                <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
+              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
 
-            </Col>
+          </Col>
         </Route>
 
         <Route exact path="/login">
