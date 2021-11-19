@@ -8,7 +8,6 @@ const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
-const Dao = require('./dao');
 const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
@@ -62,32 +61,6 @@ app.post('/api/login', (req, res) => {
     console.log(username + " " + password);
 
     res.status(201).end();
-/*
-    userDao.getUser(username).then((user) => {
-
-        if(user === undefined) {
-            res.status(404).send({
-                errors: [{ 'param': 'Server', 'msg': 'Invalid e-mail' }] 
-              });
-        } else {
-            if(!userDao.checkPassword(user, password)){
-                res.status(401).send({
-                    errors: [{ 'param': 'Server', 'msg': 'Wrong password' }] 
-                  });
-            } else {
-                //AUTHENTICATION SUCCESS
-                const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, {expiresIn: expireTime});
-                res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000*expireTime });
-                res.json({id: user.id, name: user.name});
-            }
-        } 
-      }).catch(
-        // Delay response when wrong user/pass is sent to avoid fast guessing attempts
-        (err) => {
-            new Promise((resolve) => {setTimeout(resolve, 1000)}).then(() => res.status(401).json(authErrorObj))
-        }
-      );
-*/
 });
 
 
@@ -457,11 +430,7 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
-app.get('/api/client', (req, res) => {
-    Dao.listSelection()
-        .then(type => res.json(type))
-        .catch(() => res.status(500).end());
-});
+
 
 
 
@@ -534,4 +503,3 @@ app.post('/api/order', async (req, res) => {
 app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
-
