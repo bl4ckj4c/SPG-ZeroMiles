@@ -186,6 +186,7 @@ app.post('/api/register',
             newUser.Password = req.body.password;
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
+            newUser.Role = "Client";
 
             (async () => {
                 try {
@@ -225,7 +226,8 @@ app.get('/api/users', async (req, res) => {
                         Address: user.data().Address,
                         City: user.data().City,
                         State: user.data().State,
-                        Zipcode: user.data().Zipcode
+                        Zipcode: user.data().Zipcode,
+                        Role: user.data().Role,
                     });
                 }));
             })
@@ -279,7 +281,7 @@ app.get('/api/farmers', async (req, res) => {
                         Phoneno: farmer.data().Phoneno,
                         Address: farmer.data().Address,
                         State: farmer.data().State,
-                        Zipcode: farmer.data().Zipcode
+                        Zipcode: farmer.data().Zipcode,
                     });
                 }));
             })
