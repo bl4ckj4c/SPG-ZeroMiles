@@ -54,6 +54,42 @@ var db = firebase.firestore();
 
 /* Authentication endpoint */
 
+app.post('/api/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(req.body);
+    console.log(username + " " + password);
+
+    res.status(201).end();
+/*
+    userDao.getUser(username).then((user) => {
+
+        if(user === undefined) {
+            res.status(404).send({
+                errors: [{ 'param': 'Server', 'msg': 'Invalid e-mail' }] 
+              });
+        } else {
+            if(!userDao.checkPassword(user, password)){
+                res.status(401).send({
+                    errors: [{ 'param': 'Server', 'msg': 'Wrong password' }] 
+                  });
+            } else {
+                //AUTHENTICATION SUCCESS
+                const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, {expiresIn: expireTime});
+                res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000*expireTime });
+                res.json({id: user.id, name: user.name});
+            }
+        } 
+      }).catch(
+        // Delay response when wrong user/pass is sent to avoid fast guessing attempts
+        (err) => {
+            new Promise((resolve) => {setTimeout(resolve, 1000)}).then(() => res.status(401).json(authErrorObj))
+        }
+      );
+*/
+});
+
 
 
 /* POST user registration (add user to database) */
@@ -382,7 +418,7 @@ app.get('/api/productByFarmer', async (req, res) => {
 
 app.get('/api/orders', async (req, res) => {
     try {
-        const orders = await db.collection('Order').get();
+        const orders = await db.collection('Order').orderBy('Timestamp').get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Order)" });
@@ -392,9 +428,13 @@ app.get('/api/orders', async (req, res) => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
                 result.push(new Promise(async (resolve, reject) => {
+                    const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching users for " + order.data().ClientID);
+                    }
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
-                        ClientID: order.data().ClientID,
+                        Client: client.data(),
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products
                     });

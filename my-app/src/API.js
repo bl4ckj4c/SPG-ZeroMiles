@@ -430,6 +430,24 @@ async function getProductByFarmer(counterID) {
     return { 'err': 'POST error' };
   }
   
+
+  async function userLogin(username, password) {
+    const response = await fetch(BASEURL + "/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username, password: password})
+    }); 
+
+    
+    if (response.ok) {
+        return {'msg': 'JSON of the user, to know what kind of user has logged in'}
+    } 
+    
+    return {'err': ''};
+}
+
 const API = {
     getSelectedType,
     getTicket,
@@ -444,6 +462,8 @@ const API = {
     
     getOrder,
     getProductInOrder, 
-    getAllUsers
+    getAllUsers,
+
+    userLogin
 };
 export default API;
