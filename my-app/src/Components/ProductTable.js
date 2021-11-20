@@ -132,7 +132,7 @@ function ProductTable(props) {
                 <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
-                            <FarmerRow UpdateNumber={UpdateNumber} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} UpdateNumber={UpdateNumber} />
+                            <FarmerRow UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} UpdateNumber={UpdateNumber} />
                         )}
                     </tbody>
                 </Table>
@@ -214,7 +214,7 @@ function FarmerRow(props) {
                         <Row className="mb-xl-4">
                             {p.map(pf => (
                                 <Col xl className="column-margin">
-                                    <ProductCard UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
+                                    <ProductCard unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
                                 </Col>
                             ))}
                         </Row>
@@ -265,7 +265,7 @@ function ProductCard(props) {
                         aria-expanded={open}>
                         See Description
                     </Button></Col>
-                    <Col><ProductsCounter UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} UpdateNumber={props.UpdateNumber} /></Col>
+                    <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} UpdateNumber={props.UpdateNumber} /></Col>
                 </Row>
                 <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
                     <div>{props.prodottoDelFarmer.Description}</div>
@@ -277,7 +277,7 @@ function ProductCard(props) {
 
 
 function ProductsCounter(props) {
-    let i = props.productByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
+    let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     console.log(i + props.prodNum[i].number);
     return (
         <ButtonGroup>
@@ -300,13 +300,13 @@ function SearchBar(props){
 
     function ManageSearch(text){
         props.setSearchParameter(text);
-        props.setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(text.toLowerCase())));        
+        props.setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(text.trim().toLowerCase())));        
     }
 
     return(
 
         <Form onSubmit={(event) => event.preventDefault()}  >
-        search: <Form.Control type='text' value={props.username} onChange={(event) => { ManageSearch(event.target.value) }} />
+         <Form.Control placeholder="Search for a product" type='text' value={props.username} onChange={(event) => { ManageSearch(event.target.value) }} />
 
       </Form>
 
