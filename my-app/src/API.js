@@ -152,11 +152,8 @@ const API = {
     getOrder,
     getProductInOrder, 
     getAllUsers,
-<<<<<<< HEAD
-    getOrders
-=======
+    getOrders,
 
     userLogin
->>>>>>> 9253f3f848b0cddb6708fe87cc2c44e93065eea1
 };
 export default API;
