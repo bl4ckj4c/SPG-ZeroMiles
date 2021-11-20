@@ -10,7 +10,7 @@ function EmployeeView(props) {
     const [ordersList, setOrdersList] = useState([]);
     const [ordersListSearch, setOrdersListSearch] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
-    const [orderStatusSelected, setOrderStatusSelected] = useState('open');
+    const [orderStatusSelected, setOrderStatusSelected] = useState('all');
 
     useEffect(() => {
         API.getOrders()
@@ -32,6 +32,10 @@ function EmployeeView(props) {
         }
     }, [ordersListUpdated]);
 
+    useEffect(() => {
+        setOrdersListSearch(ordersListSearch);
+    }, [orderStatusSelected])
+
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
         }
@@ -51,13 +55,19 @@ function EmployeeView(props) {
                 <Col>
                     <Table className="d-flex justify-content-center">
                         <tbody id="employee-table" align="center">
-                        {ordersListSearch
-                            .filter((order, index) => {
-                                return order.Status === orderStatusSelected;
-                            })
-                            .map(o =>
-                                <OrderRow order={o}/>
-                            )}
+                        {
+                            ordersListSearch
+                                .filter(order => {
+                                    if(orderStatusSelected === 'all') {
+                                        console.log(true);
+                                        return true;
+                                    }
+                                    else {
+                                        return order.Status === orderStatusSelected;
+                                    }
+                                })
+                                .map(o => <OrderRow order={o}/>)
+                        }
                         </tbody>
                     </Table>
                 </Col>
@@ -155,13 +165,16 @@ function ProductList(props) {
 
 function Sidebar(props) {
 
+    const allActive = props.orderStatusSelected === 'all' ? 'active' : '';
     const openActive = props.orderStatusSelected === 'open' ? 'active' : '';
     const pendingActive = props.orderStatusSelected === 'pending' ? 'active' : '';
     const closedActive = props.orderStatusSelected === 'closed' ? 'active' : '';
     const clientsActive = props.orderStatusSelected === 'clients' ? 'active' : '';
 
     function ManageSearch(text) {
-        props.setOrderListSearch(props.ordersList.filter(p => p.OrderID.toLowerCase().startsWith(text.trim().toLowerCase())));
+        props.setOrderListSearch(
+            props.ordersList
+                .filter(order => order.OrderID.toLowerCase().startsWith(text.trim().toLowerCase())));
     }
 
 
@@ -169,7 +182,8 @@ function Sidebar(props) {
         <Col
             className='collapse d-sm-block col col-3 below-nav bg-light'
             id="left-sidebar"
-            style={{height: '100vh'}}>
+            style={{minHeight: '100vh'}}
+            sticky='left'>
             <ListGroup variant="flush">
                 <Form
                     className='m-2'
@@ -209,6 +223,10 @@ function Sidebar(props) {
                 <ListGroup.Item className='border-0'>
                     <div style={{fontSize: 20}}><b>Orders</b></div>
                 </ListGroup.Item>
+                <ListGroup.Item className={'border-0 ' + allActive} action
+                                onClick={() => props.setOrderStatusSelected('all')}>
+                    All
+                </ListGroup.Item>
                 <ListGroup.Item className={'border-0 ' + openActive} action
                                 onClick={() => props.setOrderStatusSelected('open')}>
                     Open
@@ -221,9 +239,12 @@ function Sidebar(props) {
                                 onClick={() => props.setOrderStatusSelected('closed')}>
                     Closed
                 </ListGroup.Item>
-                <ListGroup.Item className={'border-0 mt-2 ' + clientsActive} action
-                                onClick={() => props.setOrderStatusSelected('clients')}>
+                <ListGroup.Item className='border-0 mt-2 '>
                     <div style={{fontSize: 20}}><b>Clients</b></div>
+                </ListGroup.Item>
+                <ListGroup.Item className={'border-0 ' + clientsActive} action
+                                onClick={() => props.setOrderStatusSelected('clients')}>
+                    <div>All</div>
                 </ListGroup.Item>
             </ListGroup>
         </Col>
