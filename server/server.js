@@ -8,7 +8,6 @@ const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
-const Dao = require('./dao');
 const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
@@ -53,6 +52,16 @@ var db = firebase.firestore();
 // *********************
 
 /* Authentication endpoint */
+
+app.post('/api/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(req.body);
+    console.log(username + " " + password);
+
+    res.status(201).end();
+});
 
 
 
@@ -382,7 +391,7 @@ app.get('/api/productByFarmer', async (req, res) => {
 
 app.get('/api/orders', async (req, res) => {
     try {
-        const orders = await db.collection('Order').get();
+        const orders = await db.collection('Order').orderBy('Timestamp').get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Order)" });
@@ -392,9 +401,14 @@ app.get('/api/orders', async (req, res) => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
                 result.push(new Promise(async (resolve, reject) => {
+                    const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching users for " + order.data().ClientID);
+                    }
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
-                        ClientID: order.data().ClientID,
+                        Status: order.data().Status,
+                        Client: client.data(),
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products
                     });
@@ -416,11 +430,7 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
-app.get('/api/client', (req, res) => {
-    Dao.listSelection()
-        .then(type => res.json(type))
-        .catch(() => res.status(500).end());
-});
+
 
 
 
@@ -451,6 +461,7 @@ app.post('/api/order', async (req, res) => {
         console.log("creating new order");
         let newOrder = {}
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY");
+        newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
         (async () => {
@@ -492,4 +503,3 @@ app.post('/api/order', async (req, res) => {
 app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
-

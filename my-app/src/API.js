@@ -125,6 +125,24 @@ async function getProductByFarmer(counterID) {
     return data.map((o) => new Order(...Object.values(o)));
 }
   
+
+  async function userLogin(username, password) {
+    const response = await fetch(BASEURL + "/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({username: username, password: password})
+    }); 
+
+    
+    if (response.ok) {
+        return {'msg': 'JSON of the user, to know what kind of user has logged in'}
+    } 
+    
+    return {'err': ''};
+}
+
 const API = {   
    
     getProductByFarmer,
@@ -134,6 +152,11 @@ const API = {
     getOrder,
     getProductInOrder, 
     getAllUsers,
+<<<<<<< HEAD
     getOrders
+=======
+
+    userLogin
+>>>>>>> 9253f3f848b0cddb6708fe87cc2c44e93065eea1
 };
 export default API;

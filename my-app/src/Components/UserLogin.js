@@ -1,5 +1,6 @@
 import { Col, Row, Container, Form, Button, Toast, ToastContainer } from 'react-bootstrap';
 import { useState } from 'react';
+import API from '../API';
 
 import Axios from 'axios'
 
@@ -24,12 +25,13 @@ function UserLogin(props) {
 
     async function sendRegister(event) {
         event.preventDefault();
-        let data = { email, password };
-        Axios.post('/api/login', data)
-          .then((response) => {
-              console.log("From loging:", response);
-          })
-          .catch(error => console.log("Error from server: ", error))
+        API.userLogin(email, password);
+        //let data = { email, password };
+        //Axios.post('/api/login', data)
+        //  .then((response) => {
+        //      console.log("From loging:", response);
+        //  })
+        //  .catch(error => console.log("Error from server: ", error))
     }
    
     return (
@@ -60,11 +62,11 @@ function UserLogin(props) {
                     <Form onSubmit={(e) => validform(e) }>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" onChange={ setEmail }/>
+                            <Form.Control type="email" placeholder="Enter email" onChange={ (e) => setEmail(e.target.value) }/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={ setPassword }/>
+                            <Form.Control type="password" placeholder="Password" onChange={ (e) => setPassword(e.target.value) }/>
                         </Form.Group>
                         <Row className="justify-content-center mt-1 mb-1">
                             <Button 
