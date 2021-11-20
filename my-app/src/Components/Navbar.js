@@ -1,4 +1,5 @@
 import {Navbar, Nav, Button, Image, Container} from 'react-bootstrap';
+import "../App.css";
 
 function ZeroNavbar() {
     return (
