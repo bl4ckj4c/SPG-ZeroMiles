@@ -460,7 +460,7 @@ app.post('/api/order', async (req, res) => {
 
         console.log("creating new order");
         let newOrder = {}
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY");
+        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss", );
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
