@@ -233,9 +233,9 @@ app.post('/api/register',
                         console.log("Done.");
                         res.status(201).end();
                     }
-                    else res.status(500).json({
+                    else res.status(409).json({
                         info: "New user registration",
-                        error: "User already present"
+                        error: "Email already used"
                     });
                 } catch (error) {
                     console.log("ERROR: ", error);
