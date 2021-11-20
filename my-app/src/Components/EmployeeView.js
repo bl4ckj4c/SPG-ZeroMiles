@@ -66,7 +66,7 @@ function EmployeeView(props) {
                                         return order.Status === orderStatusSelected;
                                     }
                                 })
-                                .map(o => <OrderRow order={o}/>)
+                                .slice(0).reverse().map(o => <OrderRow order={o}/>)
                         }
                         </tbody>
                     </Table>
