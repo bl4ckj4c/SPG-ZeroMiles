@@ -7,7 +7,6 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 import API from '../API';
 
-let prodNum = [];
 
 function UserDropdown(props) {
     const filterByFields = ['Name', 'Surname'];
@@ -36,38 +35,64 @@ function UserDropdown(props) {
     );
 };
 
+
+function ProductTableWrapper(props) {
+  
+
+}
+
 function ProductTable(props) {
 
-    const [showConfirm, setShowConfirm] = useState(false);
-    const handleCloseConfirm = () => {
 
-        setShowConfirm(false);
-        prodNum.forEach( p => p.number = 0);
-        props.triggerUpdate();
+  const [prodNum, setProdNum] = useState(() => prodNumInit())
+  const [searchParameter, setSearchParameter] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState(props.productByFarmer.slice(0));
+
+    function prodNumInit() {
+        let tmp = []
+        props.productByFarmer.forEach(p => tmp.push({ "number": 0, "ProductID": p.ProductID, "FarmerID": p.FarmerID, "NameProduct": p.NameProduct, "ImageID": p.ImageID, "Price": p.Price}))
+        return tmp;
+
     }
 
-    const handleShowConfirm = () => setShowConfirm(true); 
+
+    function ManageSearch(text){
+        setSearchParameter(text);
+        if(searchParameter!==""){
+            setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(searchParameter.toLowerCase())));
+        }
+        else
+        setFilteredProducts(props.productByFarmer.slice(0));
+        
+
+    }
+
+    const [showConfirm, setShowConfirm] = useState(false);
+
+    const handleCloseConfirm = () => {
+        setShowConfirm(false);
+        props.triggerUpdate();
+        setProdNum(() => prodNumInit());
+    }
+
+    const handleShowConfirm = () => setShowConfirm(true);
 
     const [showError, setShowError] = useState(false);
     const handleCloseError = () => setShowError(false);
-    const handleShowError = () => setShowError(true);  
+    const handleShowError = () => setShowError(true);
 
     const [selectedUser, setSelectedUser] = useState([]);
-    if (prodNum.length <= 0)
-        for (let i = 0; i < props.productByFarmer.length; i++) {
-            prodNum.push({ "number": 0, "ProductID": props.productByFarmer[i].ProductID, "FarmerID": props.productByFarmer[i].FarmerID, "NameProduct": props.productByFarmer[i].NameProduct })
-        }
 
     //this function updates the number in the array, also allows to display the current number in the counter
-    function updateNumber(ProductID, FarmerID, sign) {
-        let i = props.productByFarmer.findIndex(p => (p.ProductID === ProductID && p.FarmerID === FarmerID))
-
+    function UpdateNumber(i, sign) {
+        // let i = props.productByFarmer.findIndex(p => (p.ProductID === ProductID && p.FarmerID === FarmerID))
+        let prodNumCopy = [...prodNum];
         if (i === -1)
-            return 0;
-        else if ((sign === -1 && prodNum[i].number !== 0) || (sign === +1 && prodNum[i].number < props.productByFarmer[i].Quantity))
-            prodNum[i].number += sign;
+            return;
+        else if ((sign === -1 && prodNumCopy[i].number !== 0) || (sign === +1 && prodNumCopy[i].number < props.productByFarmer[i].Quantity))
+            prodNumCopy[i].number += sign;
 
-        return prodNum[i].number;
+        setProdNum(prodNumCopy);
     }
 
 
@@ -85,7 +110,7 @@ function ProductTable(props) {
                 let res = await API.addOrder(object);
             }
 
-            if(items.length <= 0 || selectedUser.length <= 0) {
+            if (items.length <= 0 || selectedUser.length <= 0) {
                 handleShowError(); //Se non ho selezionato alcun prodotto o cliente
             }
         }
@@ -100,6 +125,7 @@ function ProductTable(props) {
 
     return (
         <>
+        <SearchBar ManageSearch={ManageSearch} />
             <Container >
                 <Row className="mt-3 row-style">
                     <Col>
@@ -107,31 +133,8 @@ function ProductTable(props) {
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
-
-                        <Modal show={showConfirm} onHide={handleCloseConfirm} autoFocus={true} size="sm" centered>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Thank you! 🎉</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body> Order completed</Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="warning" onClick={handleCloseConfirm}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-
-                        <Modal show={showError} onHide={handleCloseError} autoFocus={true} size="sm" centered>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Warning! ⚠️</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>Select at least a product or a customer.</Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="warning" onClick={handleCloseError}>
-                                    Close
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-
+                        <OrderConfirmedModal showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
+                        <ErrorModal showError={showError} handleCloseError={handleCloseError}  />
                     </Col>
                 </Row>
             </Container>
@@ -140,7 +143,7 @@ function ProductTable(props) {
                 <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
-                            <FarmerRow farmer={f} productByFarmer={props.productByFarmer} updateNumber={updateNumber} />
+                            <FarmerRow UpdateNumber={UpdateNumber} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} UpdateNumber={UpdateNumber} />
                         )}
                     </tbody>
                 </Table>
@@ -149,6 +152,36 @@ function ProductTable(props) {
     );
 };
 
+function OrderConfirmedModal(props) {
+    return (
+        <Modal show={props.showConfirm} onHide={props.handleCloseConfirm} autoFocus={true} size="sm" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Thank you! 🎉</Modal.Title>
+            </Modal.Header>
+            <Modal.Body> Order completed</Modal.Body>
+            <Modal.Footer>
+                <Button variant="warning" onClick={props.handleCloseConfirm}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>);
+}
+
+function ErrorModal(props) {
+    return (
+        <Modal show={props.showError} onHide={props.handleCloseError} autoFocus={true} size="sm" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Warning! ⚠️</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>Select at least a product or a customer.</Modal.Body>
+            <Modal.Footer>
+                <Button variant="warning" onClick={props.handleCloseError}>
+                    Close
+                </Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
 
 function FarmerRow(props) {
     let product = [];
@@ -164,7 +197,8 @@ function FarmerRow(props) {
         );
 
     props.productByFarmer.map(p => p.FarmerID === props.farmer.FarmerID ? product.push(p) : '')
-
+        
+    if(product.length > 0)
     return (<>
         <tr>
             <td className="producttable-col">
@@ -191,7 +225,7 @@ function FarmerRow(props) {
                         <Row className="mb-xl-4">
                             {p.map(pf => (
                                 <Col xl className="column-margin">
-                                    <ProductCard prodottoDelFarmer={pf} updateNumber={props.updateNumber} />
+                                    <ProductCard UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
                                 </Col>
                             ))}
                         </Row>
@@ -202,6 +236,9 @@ function FarmerRow(props) {
         </tr>
     </>
     );
+    else
+    return "";
+
 };
 
 function ProductCard(props) {
@@ -239,7 +276,7 @@ function ProductCard(props) {
                         aria-expanded={open}>
                         See Description
                     </Button></Col>
-                    <Col><ProductsCounter Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} updateNumber={props.updateNumber} /></Col>
+                    <Col><ProductsCounter UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} UpdateNumber={props.UpdateNumber} /></Col>
                 </Row>
                 <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
                     <div>{props.prodottoDelFarmer.Description}</div>
@@ -251,24 +288,32 @@ function ProductCard(props) {
 
 
 function ProductsCounter(props) {
-    const [number, setNumber] = useState(0)
-
-    function updateIndex(sign) {
-        let i = props.updateNumber(props.ProductID, props.FarmerID, sign);
-        setNumber(i);
-    }
+    let i = props.productByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
+    console.log(i + props.prodNum[i].number);
     return (
         <ButtonGroup>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant='warning' onClick={() => updateIndex(-1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
-                {number}
+                {props.prodNum[i].number}
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.Quantity === 0 ? true : false} variant="warning" onClick={() => updateIndex(+1)} >
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="warning" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>
         </ButtonGroup>
+    );
+}
+
+
+function SearchBar(props){
+    return(
+
+        <Form onSubmit={(event) => event.preventDefault()}  >
+        search: <Form.Control type='text' value={props.username} onChange={(event) => { props.ManageSearch(event.target.value) }} />
+
+      </Form>
+
     );
 }
 
