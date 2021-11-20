@@ -8,7 +8,6 @@ const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
-const Dao = require('./dao');
 const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
@@ -40,14 +39,6 @@ const firebaseapp = firebase.initializeApp({
 
 /* create a document in an existing collection */
 var db = firebase.firestore();
-// (async()=>{
-//     try{
-//         await db.collection('Food').doc("/23/").create({item: "Onion"});
-//         console.log("done.");
-//     }catch(error){
-//         console.log(error);
-//     }
-// })();
 
 
 /* firebase debug */
@@ -59,6 +50,20 @@ var db = firebase.firestore();
 // *********************
 // ***** API *****
 // *********************
+
+/* Authentication endpoint */
+
+app.post('/api/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    console.log(req.body);
+    console.log(username + " " + password);
+
+    res.status(201).end();
+});
+
+
 
 /* POST user registration (add user to database) */
 
@@ -204,6 +209,8 @@ app.post('/api/register',
         }
     });
 
+
+    
 /* GET all users */
 
 app.get('/api/users', async (req, res) => {
@@ -211,6 +218,7 @@ app.get('/api/users', async (req, res) => {
         const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (users.empty) {
             console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Users)" });
         } else {
             let result = [];
             users.forEach(user => {
@@ -233,11 +241,14 @@ app.get('/api/users', async (req, res) => {
             })
             const response = Promise.all(result)
                 .then(r => res.json(r))
-                .catch(r => res.status(500));
+                .catch(r => res.status(500).end());
         }
     } catch (error) {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
 
@@ -260,12 +271,15 @@ app.get('/api/users', async (req, res) => {
 //     }
 // })();
 
+
+
 /* GET all farmers */
 app.get('/api/farmers', async (req, res) => {
     try {
         const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (farmers.empty) {
             console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Farmer)" });
         } else {
             let result = [];
             farmers.forEach(farmer => {
@@ -287,13 +301,21 @@ app.get('/api/farmers', async (req, res) => {
             })
             const response = Promise.all(result)
                 .then(r => res.json(r))
-                .catch(r => res.status(500));
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all farmers)",
+                    error: error
+                }));
         }
     } catch (error) {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
+
+
 
 /* GET all products by farmers */
 app.get('/api/productByFarmer', async (req, res) => {
@@ -301,7 +323,7 @@ app.get('/api/productByFarmer', async (req, res) => {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No matching documents." });
+            res.status(404).json({ error: "No entries (Table: product by farmers)" });
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
@@ -350,139 +372,66 @@ app.get('/api/productByFarmer', async (req, res) => {
             });
             const response = Promise.all(result)
                 .then(r => res.json(r))
-                .catch(r => res.status(500));
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get productbyfarmer)",
+                    error: error
+                }));
         }
     } catch (error) {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
-
-
-
-
-
-
-
-
-
-
-/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
 
 
 /* GET all Order */
 
 app.get('/api/orders', async (req, res) => {
     try {
-        const orders = await db.collection('Order').get();
+        const orders = await db.collection('Order').orderBy('Timestamp').get();
         if (orders.empty) {
             console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Order)" });
         } else {
             let result = [];
             orders.forEach(order => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
                 result.push(new Promise(async (resolve, reject) => {
+                    const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching users for " + order.data().ClientID);
+                    }
                     resolve({
-                        OrderID: order.data().OrderID,  //maybe it's "order.id"
-                        ClientID: order.data().ClientID,
+                        OrderID: order.id,  //maybe it's "order.id"
+                        Status: order.data().Status,
+                        Client: client.data(),
                         Timestamp: order.data().Timestamp,
-                        ListOfProducts: order.data().Products,
+                        ListOfProducts: order.data().Products
                     });
                 }));
             })
             const response = Promise.all(result)
                 .then(r => res.json(r))
-                .catch(r => res.status(500));
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all orders)",
+                    error: error
+                }));
         }
     } catch (error) {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
 
-// (async () => {
-//     try {
-//         const orders = await db.collection('Order').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (orders.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             orders.forEach(order => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(order.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
 
 
-/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
-
-
-
-/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
-
-
-/* GET all productinorder */        //not needed for now
-
-// app.get('/api/productinorder', async (req, res) => {
-//     try {
-//         const piOrders = await db.collection('ProductInOrder').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (piOrders.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             let result = [];
-//             piOrders.forEach(pio => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 //console.log(farmer.data());
-//                 result.push(new Promise(async (resolve, reject) => {
-//                     resolve({
-//                         ProductinorderID: pio.data().ProductinorderID,
-//                         OrderID: pio.data().OrderID,
-//                         ProductbyfarmerID: pio.data().ProductbyfarmerID,
-//                         ProductName: pio.ProductName,
-//                         Quantity: pio.Quantity
-
-//                     });
-//                 }));
-//             })
-//             const response = Promise.all(result)
-//                 .then(r => res.json(r))
-//                 .catch(r => res.status(500));
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.json(error);
-//     }
-// });
-
-// (async () => {
-//     try {
-//         const piOrders = await db.collection('ProductInOrder').get();  //order is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (piOrders.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             piOrders.forEach(pio => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(pio.data());  //order.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
-
-
-/*ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss*/
-
-
-app.get('/api/client', (req, res) => {
-    Dao.listSelection()
-        .then(type => res.json(type))
-        .catch(() => res.status(500).end());
-});
 
 
 /* POST place an order in the database */
@@ -495,7 +444,7 @@ app.post('/api/order', async (req, res) => {
 
         if (productByFarmer.empty) {
             console.log("No entries (Table: product by farmers)");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" }).end();
+            res.status(404).json({ error: "No entries (Table: product by farmers)" });
         }
 
         //for each product in the order
@@ -504,14 +453,15 @@ app.post('/api/order', async (req, res) => {
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
-                    res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" }).end();
+                    res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" });
                 }
             })
         })
 
         console.log("creating new order");
         let newOrder = {}
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY");
+        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss", );
+        newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
         (async () => {
@@ -533,422 +483,23 @@ app.post('/api/order', async (req, res) => {
                         await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
                         resolve("QUANTITYUPDATE");
                 }))
-              
-                
-            }
-                 })
+                }
             })
+        })
   
         Promise.all(result);
         res.status(201).end();
 
     } catch (error) {
         console.log(error);
-        res.json(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 })
-
-// *********************
-// *** MANAGER start ***
-// *********************
-
-// Get statistics about all counters
-// app.post('/api/manager/counters',
-//     body('typeOfRequest')
-//         // Check if the typeOfRequest parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the typeOfRequest parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the typeOfRequest parameter is a string
-//         .isString()
-//         // Check if the typeOfRequest parameter is equal to "manager"
-//         .custom((value, req) => {
-//             return value === "manager";
-//         }),
-//     body('startDate')
-//         // Check if the startDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the startDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the startDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     body('endDate')
-//         // Check if the endDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the endDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the endDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     async (req, res) => {
-
-//         const result = validationResult(req);
-//         // Validation error
-//         if (!result.isEmpty()) {
-//             let jsonArray = [];
-//             for (let item of result.array())
-//                 jsonArray.push({
-//                     param: item.param,
-//                     error: item.msg,
-//                     valueReceived: item.value
-//                 })
-//             res.status(400).json({
-//                 info: "The server cannot process the request",
-//                 errors: jsonArray
-//             });
-//         }
-//         // No error in validation
-//         else {
-
-//             let jsonData = req.body;
-
-//             if (dayjs(jsonData.endDate).isSameOrAfter(dayjs(jsonData.startDate), 'day'))
-//                 Dao.getStatisticsAllCounters(jsonData.startDate, jsonData.endDate, "M1")
-//                     .then(r => res.status(200).json(r))
-//                     .catch(() => res.status(500).end());
-//             else
-//                 res.status(400).json({
-//                     info: "The server cannot process the request",
-//                     errors: "The end date is before the start date"
-//                 });
-//         }
-//     }
-// );
-
-// Get statistics about one counter
-// app.post('/api/manager/counter',
-//     body('typeOfRequest')
-//         // Check if the typeOfRequest parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the typeOfRequest parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the typeOfRequest parameter is a string
-//         .isString()
-//         // Check if the typeOfRequest parameter is equal to "manager"
-//         .custom((value, req) => {
-//             return value === "manager";
-//         }),
-//     body('ID')
-//         // Check if the ID parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the ID parameter is a string
-//         .isString(),
-//     body('startDate')
-//         // Check if the startDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the startDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the startDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     body('endDate')
-//         // Check if the endDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the endDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the endDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     async (req, res) => {
-
-//         const result = validationResult(req);
-//         // Validation error
-//         if (!result.isEmpty()) {
-//             let jsonArray = [];
-//             for (let item of result.array())
-//                 jsonArray.push({
-//                     param: item.param,
-//                     error: item.msg,
-//                     valueReceived: item.value
-//                 })
-//             res.status(400).json({
-//                 info: "The server cannot process the request",
-//                 errors: jsonArray
-//             });
-//         }
-//         // No error in validation
-//         else {
-//             let jsonData = req.body;
-
-//             if (dayjs(jsonData.endDate).isSameOrAfter(dayjs(jsonData.startDate), 'day'))
-//                 Dao.getStatisticsCounter(jsonData.ID, jsonData.startDate, jsonData.endDate, "M1")
-//                     .then(r => res.status(200).json(r))
-//                     .catch(() => res.status(500).end());
-//             else
-//                 res.status(400).json({
-//                     info: "The server cannot process the request",
-//                     errors: "The end date is before the start date"
-//                 });
-//         }
-//     }
-// );
-
-// Get statistics about all service types
-// app.post('/api/manager/servicetypes',
-//     body('typeOfRequest')
-//         // Check if the typeOfRequest parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the typeOfRequest parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the typeOfRequest parameter is a string
-//         .isString()
-//         // Check if the typeOfRequest parameter is equal to "manager"
-//         .custom((value, req) => {
-//             return value === "manager";
-//         }),
-//     body('startDate')
-//         // Check if the startDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the startDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the startDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     body('endDate')
-//         // Check if the endDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the endDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the endDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     async (req, res) => {
-
-//         const result = validationResult(req);
-//         // Validation error
-//         if (!result.isEmpty()) {
-//             let jsonArray = [];
-//             for (let item of result.array())
-//                 jsonArray.push({
-//                     param: item.param,
-//                     error: item.msg,
-//                     valueReceived: item.value
-//                 })
-//             res.status(400).json({
-//                 info: "The server cannot process the request",
-//                 errors: jsonArray
-//             });
-//         }
-//         // No error in validation
-//         else {
-//             let jsonData = req.body;
-
-//             if (dayjs(jsonData.endDate).isSameOrAfter(dayjs(jsonData.startDate), 'day'))
-//                 Dao.getStatisticsAllServices(jsonData.startDate, jsonData.endDate, "M1")
-//                     .then(r => res.status(200).json(r))
-//                     .catch(() => res.status(500).end());
-//             else
-//                 res.status(400).json({
-//                     info: "The server cannot process the request",
-//                     errors: "The end date is before the start date"
-//                 });
-//         }
-//     }
-// );
-
-// Get statistics about one service type
-// app.post('/api/manager/servicetype',
-//     body('typeOfRequest')
-//         // Check if the typeOfRequest parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the typeOfRequest parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the typeOfRequest parameter is a string
-//         .isString()
-//         // Check if the typeOfRequest parameter is equal to "manager"
-//         .custom((value, req) => {
-//             return value === "manager";
-//         }),
-//     body('serviceType')
-//         // Check if the serviceType parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the serviceType parameter is a string
-//         .isString(),
-//     body('startDate')
-//         // Check if the startDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the startDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the startDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     body('endDate')
-//         // Check if the endDate parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the endDate parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the endDate is in the right format
-//         .custom((value, req) => {
-//             // Date format: "2021-10-06"
-//             let regex = new RegExp(/^[1-2][0-9]{3}-(((0[13578]|1[02])-([0-2][0-9]|3[0-1]))|(02-([0-2][0-9]))|((0[469]|11)-([0-2][0-9]|30)))$/);
-//             return regex.test(value);
-//         }),
-//     async (req, res) => {
-
-//         const result = validationResult(req);
-//         // Validation error
-//         if (!result.isEmpty()) {
-//             let jsonArray = [];
-//             for (let item of result.array())
-//                 jsonArray.push({
-//                     param: item.param,
-//                     error: item.msg,
-//                     valueReceived: item.value
-//                 })
-//             res.status(400).json({
-//                 info: "The server cannot process the request",
-//                 errors: jsonArray
-//             });
-//         }
-//         // No error in validation
-//         else {
-//             let jsonData = req.body;
-
-//             if (dayjs(jsonData.endDate).isSameOrAfter(dayjs(jsonData.startDate), 'day'))
-//                 Dao.getStatisticsServiceType(jsonData.serviceType, jsonData.startDate, jsonData.endDate, "M1")
-//                     .then(r => res.status(200).json(r))
-//                     .catch(() => res.status(500).end());
-//             else
-//                 res.status(400).json({
-//                     info: "The server cannot process the request",
-//                     errors: "The end date is before the start date"
-//                 });
-//         }
-//     }
-// );
-
-
-
-
-// *******************
-// *** MANAGER end ***
-// *******************
-
-
-// **********************
-// *** CUSTOMER start ***
-// **********************
-
-// app.post('/api/customer/newticket',
-//     body('typeOfRequest')
-//         // Check if the typeOfRequest parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the typeOfRequest parameter is not empty
-//         .notEmpty()
-//         .bail()
-//         // Check if the typeOfRequest parameter is a string
-//         .isString()
-//         // Check if the typeOfRequest parameter is equal to "customer"
-//         .custom((value, req) => {
-//             return value === "customer";
-//         }),
-//     body('serviceType')
-//         // Check if the serviceType parameter is not null
-//         .exists({checkNull: true})
-//         .bail()
-//         // Check if the serviceType parameter is a string
-//         .isString(),
-//     async (req, res) => {
-
-//         const result = validationResult(req);
-//         // Validation error
-//         if (!result.isEmpty()) {
-//             let jsonArray = [];
-//             for (let item of result.array())
-//                 jsonArray.push({
-//                     param: item.param,
-//                     error: item.msg,
-//                     valueReceived: item.value
-//                 })
-//             res.status(400).json({
-//                 info: "The server cannot process the request",
-//                 errors: jsonArray
-//             });
-//         }
-//         // No error in validation
-//         else {
-//             let jsonData = req.body;
-
-//             await Dao.getNewTicket(jsonData.serviceType)
-//                 .then(r => res.status(200).json(r))
-//                 .catch(() => res.status(500).end());
-//         }
-//     }
-// );
-
-// ********************
-// *** CUSTOMER end ***
-// ********************
-
-// *********************
-// *** OFFICER start ***
-// *********************
-
-// app.get('/api/officer/nextclient', async (req, res) => {
-
-//     await Dao.getNextClient()
-//         .then(r => res.status(200).json(r))
-//         .catch(() => res.status(500).end());
-// });
-
-
-
-// *******************
-// *** OFFICER end ***
-// *******************
-
 
 // Activate the server
 app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
-
