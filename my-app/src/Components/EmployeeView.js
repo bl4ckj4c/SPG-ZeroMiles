@@ -77,19 +77,14 @@ function EmployeeView(props) {
 }
 
 function OrderRow(props) {
-    //new User (user);
-
-    //props.users.map(u => u.UserId === order.ClientId ? user=u : '')
-
-    console.log(props.order);
 
     let buttonstatus;
 
     if (props.order.Status === "open") {
         buttonstatus = "outline-primary";
     } else if (props.order.Status === "pending") {
-        buttonstatus = "outline-secondary";
-    } else if (props.order.Status === "completed") {
+        buttonstatus = "outline-danger";
+    } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
     }
 
@@ -112,9 +107,9 @@ function OrderRow(props) {
                             </Row>
 
                             <Row className="mb-1">
-                                <Col>{props.order.Name} {props.order.Surname}</Col>
-                                <Col>{props.order.Timestamp}</Col>
-                                <Col>{props.order.Address}, {props.order.State}</Col>
+                                <Col className="ridotto-mobile">{props.order.Name} {props.order.Surname}</Col>
+                                <Col className="ridotto-mobile">{props.order.Timestamp}</Col>
+                                <Col className="ridotto-mobile">{props.order.Address}, {props.order.State}</Col>
                             </Row>
                         </Row>
 
@@ -122,9 +117,9 @@ function OrderRow(props) {
                             <ProductList product={p}/>
                         ))}
 
-                        <Row className="mb-3 align-items-center">
+                        <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{fontSize: 15, marginTop: 10}}>Total: 25€</h1>
+                                <h1 style={{fontSize: 15, marginTop: 10}}>Total: €25</h1>
                             </Col>
                             <Col>
                                 <Button variant={buttonstatus} size="sm">{props.order.Status}</Button>
@@ -180,13 +175,13 @@ function Sidebar(props) {
 
     return (
         <Col
-            className='collapse d-sm-block col col-3 below-nav bg-light'
+            className='sfondosidebar collapse d-sm-block col col-3 below-nav'
             id="left-sidebar"
             style={{minHeight: '100vh'}}
             sticky='left'>
             <ListGroup variant="flush">
                 <Form
-                    className='m-2'
+                    className='m-1'
                     onSubmit={(event) => event.preventDefault()}>
                     <Form.Control
                         placeholder="Search by order ID"
