@@ -192,6 +192,7 @@ app.post('/api/register',
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
+            newUser.Wallet = 0;
 
             (async () => {
                 try {
@@ -236,6 +237,7 @@ app.get('/api/users', async (req, res) => {
                         State: user.data().State,
                         Zipcode: user.data().Zipcode,
                         Role: user.data().Role,
+                        Wallet: user.data().Wallet,
                     });
                 }));
             })
@@ -296,6 +298,7 @@ app.get('/api/farmers', async (req, res) => {
                         Address: farmer.data().Address,
                         State: farmer.data().State,
                         Zipcode: farmer.data().Zipcode,
+                        Distance: farmer.data().Distance,
                     });
                 }));
             })
@@ -353,6 +356,7 @@ app.get('/api/productByFarmer', async (req, res) => {
                             Address: farmer.data().Address,
                             State: farmer.data().State,
                             Zipcode: farmer.data().Zipcode,
+                            //Distance: farmer.data().Distance
                             // Product
                             ProductID: prodfarm.data().ProductID,
                             NameProduct: product.data().Name,
@@ -396,15 +400,25 @@ app.get('/api/orders', async (req, res) => {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Order)" });
         } else {
+            
+            
+            
+            
             let result = [];
             orders.forEach(order => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
+               
                 result.push(new Promise(async (resolve, reject) => {
                     const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
+                    
+                    
+                    
+                    
+                    
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
                         Status: order.data().Status,
@@ -458,13 +472,17 @@ app.post('/api/order', async (req, res) => {
                 }
             })
         })
-
+        
+       
+       
+       
         console.log("creating new order");
         let newOrder = {}
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss", );
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
+    
         (async () => {
             try {
                 console.log(newOrder);
@@ -499,6 +517,34 @@ app.post('/api/order', async (req, res) => {
         });
     }
 })
+
+
+
+//MODIFY ORDER
+/*app.post('/api/modifyorder', async (req, res) => {
+                 
+    await db.collection('Orders').doc(req.body.id).update({Status: req.body.Status});
+                
+
+    }
+
+
+    )
+
+*/
+
+/* app.post('/api/modifyclient', async (req, res) => {
+    
+   
+     await db.collection('Orders').doc(req.body.id).update({Wallet: req.body.Wallet});
+              
+                 
+
+    }
+
+
+    )
+*/
 
 // Activate the server
 app.listen(port, () => {
