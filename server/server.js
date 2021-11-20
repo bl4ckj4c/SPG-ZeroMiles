@@ -3,17 +3,24 @@
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
 const { firebaseconf } = require('./firebase-server/config.js');
-
+const userDao = require('./userDAO');
 const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
+const jwt = require('express-jwt');
+const jsonwebtoken = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
 const { v4: uuidv4 } = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
+
+//jwt parameters
+const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
+const expireTime = 300; //seconds
 
 // init express
 const app = express();
@@ -53,14 +60,38 @@ var db = firebase.firestore();
 
 /* Authentication endpoint */
 
-app.post('/api/login', (req, res) => {
+app.post('/api/login', async (req, res) => {
+
     const username = req.body.username;
     const password = req.body.password;
 
     console.log(req.body);
     console.log(username + " " + password);
 
-    res.status(201).end();
+    try{
+        const user = await db.collection("User").where("Email","==",username).get();
+
+        if(user.empty) {
+            res.status(404).json({ info: "Authentication error", error: "User not found (Table: User)" });
+        } else {
+            user.forEach(user =>{  //because user is a query snapshot
+                if(!userDao.checkPassword(user.data(), password)){
+                    res.status(401).json({ info: "Authentication error", error: "wrong password" });
+                } else {
+                    //AUTHENTICATION SUCCESS
+                    console.log("Authentication succeeded!"+user.id);
+                    const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, {expiresIn: expireTime});
+                    res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000*expireTime });
+                    res.status(200).json(user.data());
+                }
+            })
+        } 
+    } catch(error){
+        new Promise((resolve) => {setTimeout(resolve, 1000)}).then(() => res.status(500).json({
+            info: "Authentication error",
+            error: error
+        }))
+    }
 });
 
 
@@ -188,7 +219,7 @@ app.post('/api/register',
             newUser.Address = req.body.address;
             newUser.Phoneno = req.body.phone;
             newUser.City = req.body.city;
-            newUser.Password = req.body.password;
+            newUser.Password = userDao.hashOfPassword(req.body.password);
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
@@ -196,9 +227,16 @@ app.post('/api/register',
 
             (async () => {
                 try {
-                    await db.collection('User').doc(newUUid).create(newUser);
-                    console.log("Done.");
-                    res.status(201).end();
+                    const user = await db.collection("User").where("Email","==",req.body.email).get();
+                    if(user.empty){
+                        await db.collection('User').doc(newUUid).create(newUser);
+                        console.log("Done.");
+                        res.status(201).end();
+                    }
+                    else res.status(500).json({
+                        info: "New user registration",
+                        error: "User already present"
+                    });
                 } catch (error) {
                     console.log("ERROR: ", error);
                     res.status(500).json({
