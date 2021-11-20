@@ -2,7 +2,6 @@ import TestRenderer from 'react-test-renderer';
 import UserRegister from "../Components/UserRegister";
 import {Form, Row, Button, Toast, Container} from "react-bootstrap";
 import {Simulate} from "react-dom/test-utils";
-import {fireEvent, render, waitFor} from "@testing-library/react";
 
 let testRenderer = null;
 let testInstance = null;
@@ -96,11 +95,9 @@ test('Test form correct submit', () => {
         'supersecret1'
     ];
 
+    // Fill the form
     allFormGroup.forEach((item, index) => {
-
-        console.log(item.findByType(Form.Control).props);
-
-        // Fill the form field (except the province)
+        // Set the form fields (except the province)
         if (item.findByType(Form.Control).props.name !== 'state') {
             Simulate.change(item.findByType(Form.Control), {
                 target : {
@@ -108,16 +105,18 @@ test('Test form correct submit', () => {
                 }
             });
         }
-
         // Set the province
-        Simulate.select(allFormGroup.findAllByType(Form.Control).filter((item) => {
-            return item.props.name === 'state';
-        }), {
-            target : {
-                value : 'Agrigento'
-            }
-        })
+        else if (item.findByType(Form.Control).props.name === 'state') {
+            Simulate.change(item.findByType(Form.Control), {
+                target : {
+                    value : 'Agrigento'
+                }
+            });
+        }
     });
+
+    // Check if the form is submitted
+    const mockSubmit = jest.fn();
 
 
 });

@@ -110,6 +110,20 @@ async function getProductByFarmer(counterID) {
     }
     return { 'err': 'POST error' };
   }
+
+  async function getOrders() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/orders', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
   
 
   async function userLogin(username, password) {
@@ -138,6 +152,7 @@ const API = {
     getOrder,
     getProductInOrder, 
     getAllUsers,
+    getOrders,
 
     userLogin
 };

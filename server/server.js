@@ -422,6 +422,7 @@ app.get('/api/orders', async (req, res) => {
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
                         Status: order.data().Status,
+                        ClientID: client.id,
                         Client: client.data(),
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products
