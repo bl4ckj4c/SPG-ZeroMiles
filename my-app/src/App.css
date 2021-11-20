@@ -35,3 +35,9 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+/* Color of active item in the sidebar */
+.list-group-item.active {
+  color: #000000;
+  background-color: #FFC107;
+}
