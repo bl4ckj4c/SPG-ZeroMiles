@@ -46,7 +46,7 @@ function ProductTable(props) {
 
   const [prodNum, setProdNum] = useState(() => prodNumInit())
   const [searchParameter, setSearchParameter] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(props.productByFarmer.slice(0));
+  const [filteredProducts, setFilteredProducts] = useState([...props.productByFarmer]);
 
     function prodNumInit() {
         let tmp = []
@@ -55,17 +55,6 @@ function ProductTable(props) {
 
     }
 
-
-    function ManageSearch(text){
-        setSearchParameter(text);
-        if(searchParameter!==""){
-            setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(searchParameter.toLowerCase())));
-        }
-        else
-        setFilteredProducts(props.productByFarmer.slice(0));
-        
-
-    }
 
     const [showConfirm, setShowConfirm] = useState(false);
 
@@ -125,7 +114,7 @@ function ProductTable(props) {
 
     return (
         <>
-        <SearchBar ManageSearch={ManageSearch} />
+        <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} setSearchParameter={setSearchParameter}/>
             <Container >
                 <Row className="mt-3 row-style">
                     <Col>
@@ -307,10 +296,17 @@ function ProductsCounter(props) {
 
 
 function SearchBar(props){
+
+
+    function ManageSearch(text){
+        props.setSearchParameter(text);
+        props.setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(text.toLowerCase())));        
+    }
+
     return(
 
         <Form onSubmit={(event) => event.preventDefault()}  >
-        search: <Form.Control type='text' value={props.username} onChange={(event) => { props.ManageSearch(event.target.value) }} />
+        search: <Form.Control type='text' value={props.username} onChange={(event) => { ManageSearch(event.target.value) }} />
 
       </Form>
 
