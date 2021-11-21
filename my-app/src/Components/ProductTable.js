@@ -120,7 +120,7 @@ function ProductTable(props) {
                 <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
-                            <FarmerRow UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts}  />
+                            <FarmerRow key={f.FarmerID} UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts}  />
                         )}
                     </tbody>
                 </Table>
@@ -198,10 +198,10 @@ function FarmerRow(props) {
                             </section>
                         </Row>
 
-                        {splitEvery(product, 3).map(p => (
-                            <Row className="mb-xl-4">
+                        {splitEvery(product, 3).map( (p, index) => (
+                            <Row key={index+"_"+props.farmer.FarmerID} className="mb-xl-4">
                                 {p.map(pf => (
-                                    <Col xl className="column-margin">
+                                    <Col key={pf.ProductID+"_"+pf.FarmerID} xl className="column-margin">
                                         <ProductCard unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
                                     </Col>
                                 ))}
