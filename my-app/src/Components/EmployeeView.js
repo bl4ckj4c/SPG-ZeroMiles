@@ -2,7 +2,6 @@ import API from '../API';
 import {useState, useEffect} from 'react';
 import {Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup} from 'react-bootstrap';
 import {PersonFill, GeoAltFill, ClockFill} from 'react-bootstrap-icons';
-import {User} from '../Orders/Orders.js';
 import "./EmployeeView.css";
 import {Typeahead} from "react-bootstrap-typeahead";
 
@@ -76,17 +75,29 @@ function EmployeeView(props) {
     );
 }
 
+
+const ostat = {
+    'o': 'open',
+    'p': 'pending',
+    'c': 'closed'
+}
 function OrderRow(props) {
+    let [stat, setStat] = useState(props.order.Status || 'o');
+
 
     let buttonstatus;
-
+   // let stat;
     if (props.order.Status === "open") {
+        stat='o';
         buttonstatus = "outline-primary";
     } else if (props.order.Status === "pending") {
         buttonstatus = "outline-danger";
+        stat='p';
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
+        stat='c';
     }
+    
 
     return (
         <>
@@ -122,7 +133,35 @@ function OrderRow(props) {
                                 <h1 style={{fontSize: 15, marginTop: 10}}>Total: €25</h1>
                             </Col>
                             <Col>
-                                <Button variant={buttonstatus} size="sm">{props.order.Status}</Button>
+                                <Button  onClick={() => {
+                                    
+                                    if (stat === 'o'){
+                                        props.order.Status = "pending";
+                                        setStat('p');
+                                        API.modifyOrderStatus(props.order);
+
+                                        
+                                    }
+                                    if(stat==='p'){
+                                        props.order.Status = "closed";
+                                        setStat('c');
+                                        API.modifyOrderStatus(props.order);
+
+                                    }
+                                    if(stat==='c'){
+                                        props.order.Status = "closed";
+                                        setStat('c');}
+                                        API.modifyOrderStatus(props.order);
+                        
+
+                                }}variant={buttonstatus} size="sm">
+                                    {ostat[stat]}
+                                
+                                
+                                
+                                
+                                
+                                </Button>
                             </Col>
                         </Row>
 
@@ -132,6 +171,8 @@ function OrderRow(props) {
         </>
     );
 }
+
+
 
 function ProductList(props) {
 
