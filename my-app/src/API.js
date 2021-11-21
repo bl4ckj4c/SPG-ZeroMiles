@@ -143,6 +143,29 @@ async function getProductByFarmer(counterID) {
     return {'err': ''};
 }
 
+
+
+async function modifyOrderStatus(order){
+
+    const response = await fetch(BASEURL + "/modifyorder", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            id: order.OrderID,
+            Status: order.Status
+        })
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Order status succesfully changed' };
+    }
+    return { 'err': 'POST error' };
+  }
+
+
+
 const API = {   
    
     getProductByFarmer,
@@ -153,6 +176,7 @@ const API = {
     getProductInOrder, 
     getAllUsers,
     getOrders,
+    modifyOrderStatus,
 
     userLogin
 };
