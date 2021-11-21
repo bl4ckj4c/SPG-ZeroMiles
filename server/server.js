@@ -559,30 +559,30 @@ app.post('/api/order', async (req, res) => {
 
 
 //MODIFY ORDER
-/*app.post('/api/modifyorder', async (req, res) => {
-                 
-    await db.collection('Orders').doc(req.body.id).update({Status: req.body.Status});
-                
-
+app.post('/api/modifyorder', async (req, res) => {
+    try {
+        await db.collection('Order').doc(req.body.id).update({Status: req.body.Status});
+    }  catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
+});
+    
+        
 
 
-    )
 
-*/
-
-/* app.post('/api/modifyclient', async (req, res) => {
+ app.post('/api/modifyclient', async (req, res) => {
     
    
      await db.collection('Orders').doc(req.body.id).update({Wallet: req.body.Wallet});
               
                  
 
-    }
-
-
-    )
-*/
+});
 
 // Activate the server
 app.listen(port, () => {
