@@ -94,7 +94,11 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.use(cookieParser());
 
+app.post('api/logout', (req,res) => {
+    res.clearCookie('token').end();
+});
 
 /* POST user registration (add user to database) */
 
@@ -557,7 +561,6 @@ app.post('/api/order', async (req, res) => {
 })
 
 
-
 //MODIFY ORDER
 /*app.post('/api/modifyorder', async (req, res) => {
                  
@@ -583,6 +586,18 @@ app.post('/api/order', async (req, res) => {
 
     )
 */
+
+
+
+
+app.use(
+    jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
 
 // Activate the server
 app.listen(port, () => {
