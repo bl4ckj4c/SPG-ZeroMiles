@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect, Link, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import API from './API';
 import { useState, useEffect } from 'react';
@@ -25,8 +25,6 @@ function App() {
   const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
   const [update, setUpdate] = useState(true);
   const triggerUpdate = () => setUpdate(true);
-
-  let history = useHistory();
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
@@ -105,7 +103,7 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-        <ZeroNavbar/>
+        <ZeroNavbar isLoggedIn={loggedIn} user={user}/>
 
       <Switch>
 
