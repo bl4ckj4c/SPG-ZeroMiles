@@ -94,7 +94,11 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.use(cookieParser());
 
+app.post('api/logout', (req,res) => {
+    res.clearCookie('token').end();
+});
 
 /* POST user registration (add user to database) */
 
@@ -557,32 +561,43 @@ app.post('/api/order', async (req, res) => {
 })
 
 
-
 //MODIFY ORDER
-/*app.post('/api/modifyorder', async (req, res) => {
-                 
-    await db.collection('Orders').doc(req.body.id).update({Status: req.body.Status});
-                
-
+app.post('/api/modifyorder', async (req, res) => {
+    try {
+        await db.collection('Order').doc(req.body.id).update({Status: req.body.Status});
+    }  catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
+});
+    
+        
 
 
-    )
 
-*/
-
-/* app.post('/api/modifyclient', async (req, res) => {
+ app.post('/api/modifyclient', async (req, res) => {
     
    
      await db.collection('Orders').doc(req.body.id).update({Wallet: req.body.Wallet});
               
                  
 
-    }
+});
 
 
-    )
-*/
+
+
+app.use(
+    jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
 
 // Activate the server
 app.listen(port, () => {
