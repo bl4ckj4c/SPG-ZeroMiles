@@ -6,6 +6,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 import API from '../API';
+import {ProductList} from './EmployeeView'
 
 
 function UserDropdown(props) {
@@ -39,7 +40,6 @@ function UserDropdown(props) {
 
 function ProductTable(props) {
 
-
     const [prodNum, setProdNum] = useState(() => prodNumInit())
     const [searchParameter, setSearchParameter] = useState("");
     const [filteredProducts, setFilteredProducts] = useState([...props.productByFarmer]);
@@ -49,6 +49,7 @@ function ProductTable(props) {
     const handleCloseError = () => setShowError(false);
     const handleShowError = () => setShowError(true);
     const [selectedUser, setSelectedUser] = useState([]);
+    const [insertedOrder, setInsertedOrder] = useState();
 
 
     const handleCloseConfirm = () => {
@@ -81,13 +82,14 @@ function ProductTable(props) {
         try {
             let items = prodNum.filter(p => p.number !== 0);
             if (items.length > 0 && selectedUser.length > 0) {
-                handleShowConfirm(); //show the modal
                 let object = {
                     "UserID": selectedUser[0].UserID,
                     "items": items
                 }
-
+                setInsertedOrder(object);
                 let res = await API.addOrder(object);
+                handleShowConfirm(); //show the modal
+
             }
 
             if (items.length <= 0 || selectedUser.length <= 0) {
@@ -110,7 +112,7 @@ function ProductTable(props) {
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
-                        <OrderConfirmedModal showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
+                        <OrderConfirmedModal order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
                         <ErrorModal showError={showError} handleCloseError={handleCloseError} />
                     </Col>
                 </Row>
@@ -130,12 +132,23 @@ function ProductTable(props) {
 };
 
 function OrderConfirmedModal(props) {
+    let items = [];
+    let total = 0;
+    if (props.order !== undefined){
+        items = props.order.items;
+        items.forEach(p => total += p.Price*p.number);
+    }
+
+
     return (
-        <Modal show={props.showConfirm} onHide={props.handleCloseConfirm} autoFocus={true} size="sm" centered>
+        <Modal show={props.showConfirm} onHide={props.handleCloseConfirm} autoFocus={true} size="md" centered>
             <Modal.Header closeButton>
                 <Modal.Title>Thank you! 🎉</Modal.Title>
             </Modal.Header>
-            <Modal.Body> Order completed</Modal.Body>
+            <Modal.Body> Order completed
+            {items.map( p => <ProductList key={"ord"+p.ProductID+p.FarmerID} product={p}/>)}
+            Total = €{total}
+            </Modal.Body>
             <Modal.Footer>
                 <Button variant="warning" onClick={props.handleCloseConfirm}>
                     Close
@@ -299,5 +312,7 @@ function SearchBar(props) {
 
     );
 }
+
+
 
 export default ProductTable;

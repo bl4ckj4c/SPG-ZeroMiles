@@ -246,4 +246,4 @@ function Sidebar(props) {
     );
 }
 
-export default EmployeeView;
+export {ProductList, EmployeeView};
