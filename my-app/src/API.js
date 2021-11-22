@@ -136,7 +136,7 @@ async function userLogin(username, password) {
     }); 
 
     if (response.ok) {
-        return response.json();
+        return response;
     } 
     
     return {'err': 'LOGIN error'};
@@ -153,7 +153,16 @@ async function userLogout(username, password) {
     return {'err': 'LOGOUT error'};
 }
 
-
+async function getUserInfo() {
+    const response = await fetch('/api/sessions/current');
+    const userInfo = await response.json();
+    if (response.ok) {
+        console.log(userInfo);
+      return userInfo;
+    } else {
+      throw userInfo;  // an object with the error coming from the server
+    }
+  }
 
 async function modifyOrderStatus(order){
 
@@ -189,6 +198,7 @@ const API = {
     modifyOrderStatus,
 
     userLogin,
-    userLogout
+    userLogout,
+    getUserInfo
 };
 export default API;

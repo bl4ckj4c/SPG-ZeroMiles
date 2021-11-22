@@ -80,9 +80,9 @@ app.post('/api/login', async (req, res) => {
                 } else {
                     //AUTHENTICATION SUCCESS
                     console.log("Authentication succeeded!"+user.id);
-                    const token = jsonwebtoken.sign({ user: user.id }, jwtSecret, {expiresIn: expireTime});
+                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret, {expiresIn: expireTime});
                     res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000*expireTime });
-                    res.status(200).json(user.data());
+                    res.status(200).end();
                 }
             })
         } 
@@ -96,9 +96,11 @@ app.post('/api/login', async (req, res) => {
 
 app.use(cookieParser());
 
+
 app.post('api/logout', (req,res) => {
     res.clearCookie('token').end();
 });
+
 
 /* POST user registration (add user to database) */
 
@@ -573,6 +575,8 @@ app.post('/api/modifyclient', async (req, res) => {
 
 });
 
+
+
 app.use(
     jwt({
         algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
@@ -580,6 +584,15 @@ app.use(
         getToken: req => req.cookies.token
     })
 );
+
+app.get('/api/sessions/current',(req,res)=>{
+    const user = req.user && req.user.user;
+    console.log(req.user);
+    if(user){
+        res.status(200).json(req.user);
+    }
+    else res.status(401).json({error: 'User non authenticated'});
+});
 
 
 // Activate the server
