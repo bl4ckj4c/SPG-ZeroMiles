@@ -29,6 +29,20 @@ function App() {
   let history = useHistory();
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const userinfo = await API.getUserInfo();
+        console.log("userinfo:" + userinfo);
+        setUser(userinfo);
+        setLoggedIn(true);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
     if (update === true) {
       setProductByFarmerListUpdated(true);
