@@ -136,6 +136,7 @@ async function userLogin(username, password) {
     }); 
 
     if (response.ok) {
+        console.log(response.json());
         return response;
     } 
     

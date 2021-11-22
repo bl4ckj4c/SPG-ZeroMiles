@@ -30,15 +30,16 @@ function App() {
     const checkAuth = async () => {
       try {
         const userinfo = await API.getUserInfo();
-        console.log("userinfo:" + userinfo);
-        setUser(userinfo);
+        console.log("userinfo:" + userinfo.user);
+        setUser(userinfo.user);
+      if(!loggedIn) //TODO riguardare
         setLoggedIn(true);
       } catch (error) {
         console.error(error);
       }
     };
     checkAuth();
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     //prima di chiamare le API avvio l'animazione di caricamento
@@ -86,9 +87,8 @@ function App() {
 
   const login = (email, password) => {
     API.userLogin(email, password).then((user) => {
-        setUser(user);
+        
         setLoggedIn(true);
-        console.log(user)
       }
     ).catch(
       (error) => {

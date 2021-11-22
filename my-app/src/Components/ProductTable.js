@@ -80,10 +80,16 @@ function ProductTable(props) {
     async function submitOrder() {
 
         try {
+            let customerID;
+            if(props.isLoggedIn)
+                if (props.user.Role === "Employee")
+                customerID = selectedUser[0].UserID;
+                else
+                customerID = props.user.userID
             let items = prodNum.filter(p => p.number !== 0);
             if (items.length > 0 && selectedUser.length > 0) {
                 let object = {
-                    "UserID": selectedUser[0].UserID,
+                    "UserID": customerID,
                     "items": items
                 }
                 setInsertedOrder(object);
@@ -92,7 +98,7 @@ function ProductTable(props) {
 
             }
 
-            if (items.length <= 0 || selectedUser.length <= 0) {
+            if (items.length <= 0 || (props.user.Role === "Employee" && selectedUser.length <= 0) ) {
                 handleShowError(); //Se non ho selezionato alcun prodotto o cliente
             }
         }
@@ -106,9 +112,12 @@ function ProductTable(props) {
         <>
             <Container >
             <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} searchParameter={searchParameter} setSearchParameter={setSearchParameter} />
+            {props.isLoggedIn ? 
                 <Row className="mt-3 row-style">
+                    
                     <Col>
-                        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                        {props.user.Role === "Employee"? <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                        : "" }
                     </Col>
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
@@ -116,6 +125,8 @@ function ProductTable(props) {
                         <ErrorModal showError={showError} handleCloseError={handleCloseError} />
                     </Col>
                 </Row>
+                : "" } 
+                
             </Container>
 
             <Col className="justify-content-center">
