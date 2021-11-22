@@ -25,7 +25,7 @@ function UserLogin(props) {
 
     async function sendRegister(event) {
         event.preventDefault();
-        API.userLogin(email, password);
+        props.login(email, password);
         //let data = { email, password };
         //Axios.post('/api/login', data)
         //  .then((response) => {

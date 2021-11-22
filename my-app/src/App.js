@@ -13,6 +13,8 @@ import ZeroNavbar from './Components/Navbar';
 import EmployeeView from './Components/EmployeeView';
 
 function App() {
+  const [user, setUser] = useState({});
+  const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [productByFarmerList, setProductByFarmerList] = useState([]);
@@ -68,6 +70,29 @@ function App() {
     console.log(err);
   }
 
+  const login = (email, password) => {
+    API.userLogin(email, password).then((user) => {
+        setUser(user);
+        setLoggedIn(true);
+        console.log(user)
+        this.props.history.push("/");  //redirect to main page (ProductTable - logged-in version)
+      }
+    ).catch(
+      (error) => {
+          console.log(error);
+          //handle login error
+      }
+    );
+  }
+
+  const logout = () => {
+    API.userLogout().then(() => {
+      setUser({});
+      setLoggedIn(false);
+      this.props.history.push("/");  //redirect to main page (ProductTable)
+    });
+  }
+
   return (
     <Router>
       {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
@@ -97,17 +122,17 @@ function App() {
               <Spinner animation="border" size="xl" variant="secondary" />
             </Row> :
 
-              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} />}
+              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={loggedIn} user={user}/>}
 
           </Col>
         </Route>
 
         <Route exact path="/login">
-          <UserLogin></UserLogin>
+          <UserLogin login={login}></UserLogin>
         </Route>
 
         <Route exact path="/user">
-          <UserRegister></UserRegister>
+          <UserRegister ></UserRegister>
         </Route>
 
         <Route exact path="/employee">

@@ -443,9 +443,6 @@ app.get('/api/orders', async (req, res) => {
             res.status(404).json({ error: "No entries (Table: Order)" });
         } else {
             
-            
-            
-            
             let result = [];
             orders.forEach(order => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
@@ -456,10 +453,6 @@ app.get('/api/orders', async (req, res) => {
                         if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
-                    
-                    
-                    
-                    
                     
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
@@ -514,9 +507,6 @@ app.post('/api/order', async (req, res) => {
                 }
             })
         })
-        
-       
-       
        
         console.log("creating new order");
         let newOrder = {}
@@ -573,12 +563,8 @@ app.post('/api/modifyorder', async (req, res) => {
         });
     }
 });
-    
-        
 
-
-
- app.post('/api/modifyclient', async (req, res) => {
+app.post('/api/modifyclient', async (req, res) => {
     
    
      await db.collection('Orders').doc(req.body.id).update({Wallet: req.body.Wallet});
@@ -586,9 +572,6 @@ app.post('/api/modifyorder', async (req, res) => {
                  
 
 });
-
-
-
 
 app.use(
     jwt({

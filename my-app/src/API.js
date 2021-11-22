@@ -126,7 +126,7 @@ async function getProductByFarmer(counterID) {
 }
   
 
-  async function userLogin(username, password) {
+async function userLogin(username, password) {
     const response = await fetch(BASEURL + "/login", {
         method: 'POST',
         headers: {
@@ -135,12 +135,22 @@ async function getProductByFarmer(counterID) {
         body: JSON.stringify({username: username, password: password})
     }); 
 
-    
     if (response.ok) {
-        return {'msg': 'JSON of the user, to know what kind of user has logged in'}
+        return response.json();
     } 
     
-    return {'err': ''};
+    return {'err': 'LOGIN error'};
+}
+
+async function userLogout(username, password) {
+    const response = await fetch(BASEURL + "/logout", {
+        method: 'POST',
+    })
+
+    if (response.ok) {
+        return {'msg': 'User successfully logged out'}
+    } 
+    return {'err': 'LOGOUT error'};
 }
 
 
@@ -178,6 +188,7 @@ const API = {
     getOrders,
     modifyOrderStatus,
 
-    userLogin
+    userLogin,
+    userLogout
 };
 export default API;
