@@ -36,27 +36,20 @@ function UserDropdown(props) {
 };
 
 
-function ProductTableWrapper(props) {
-  
-
-}
 
 function ProductTable(props) {
 
 
-  const [prodNum, setProdNum] = useState(() => prodNumInit())
-  const [searchParameter, setSearchParameter] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState([...props.productByFarmer]);
-
-    function prodNumInit() {
-        let tmp = []
-        props.productByFarmer.forEach(p => tmp.push({ "number": 0, "ProductID": p.ProductID, "FarmerID": p.FarmerID, "NameProduct": p.NameProduct, "ImageID": p.ImageID, "Price": p.Price}))
-        return tmp;
-
-    }
-
-
+    const [prodNum, setProdNum] = useState(() => prodNumInit())
+    const [searchParameter, setSearchParameter] = useState("");
+    const [filteredProducts, setFilteredProducts] = useState([...props.productByFarmer]);
     const [showConfirm, setShowConfirm] = useState(false);
+    const handleShowConfirm = () => setShowConfirm(true);
+    const [showError, setShowError] = useState(false);
+    const handleCloseError = () => setShowError(false);
+    const handleShowError = () => setShowError(true);
+    const [selectedUser, setSelectedUser] = useState([]);
+
 
     const handleCloseConfirm = () => {
         setShowConfirm(false);
@@ -64,13 +57,12 @@ function ProductTable(props) {
         setProdNum(() => prodNumInit());
     }
 
-    const handleShowConfirm = () => setShowConfirm(true);
+    function prodNumInit() {
+        let tmp = []
+        props.productByFarmer.forEach(p => tmp.push({ "number": 0, "ProductID": p.ProductID, "FarmerID": p.FarmerID, "NameProduct": p.NameProduct, "ImageID": p.ImageID, "Price": p.Price }))
+        return tmp;
 
-    const [showError, setShowError] = useState(false);
-    const handleCloseError = () => setShowError(false);
-    const handleShowError = () => setShowError(true);
-
-    const [selectedUser, setSelectedUser] = useState([]);
+    }
 
     //this function updates the number in the array, also allows to display the current number in the counter
     function UpdateNumber(i, sign) {
@@ -83,7 +75,6 @@ function ProductTable(props) {
 
         setProdNum(prodNumCopy);
     }
-
 
     async function submitOrder() {
 
@@ -109,13 +100,10 @@ function ProductTable(props) {
         }
     }
 
-    console.log("quantirendering!");
-
-
     return (
         <>
-        <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} setSearchParameter={setSearchParameter}/>
             <Container >
+            <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} searchParameter={searchParameter} setSearchParameter={setSearchParameter} />
                 <Row className="mt-3 row-style">
                     <Col>
                         <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
@@ -123,7 +111,7 @@ function ProductTable(props) {
                     <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
                         <Button onClick={submitOrder} variant="secondary">Submit</Button>
                         <OrderConfirmedModal showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
-                        <ErrorModal showError={showError} handleCloseError={handleCloseError}  />
+                        <ErrorModal showError={showError} handleCloseError={handleCloseError} />
                     </Col>
                 </Row>
             </Container>
@@ -132,7 +120,7 @@ function ProductTable(props) {
                 <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
-                            <FarmerRow UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} UpdateNumber={UpdateNumber} />
+                            <FarmerRow key={f.FarmerID} UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts}  />
                         )}
                     </tbody>
                 </Table>
@@ -186,47 +174,47 @@ function FarmerRow(props) {
         );
 
     props.productByFarmer.map(p => p.FarmerID === props.farmer.FarmerID ? product.push(p) : '')
-        
-    if(product.length > 0)
-    return (<>
-        <tr>
-            <td className="producttable-col">
 
-                <Container>
+    if (product.length > 0)
+        return (<>
+            <tr>
+                <td className="producttable-col">
 
-                    <Row className="mt-2">
-                        <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
-                    </Row>
+                    <Container>
 
-                    <Row className="mb-3">
-                        <section className="d-flex justify-content-between">
-                            <div> <PersonFill /><span>&nbsp;</span>
-                                {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
-                            </div>
-                            <div>
-                                <GeoAltFill className="ml-3" /><span>&nbsp;</span>
-                                {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
-                            </div>
-                        </section>
-                    </Row>
-
-                    {splitEvery(product, 3).map(p => (
-                        <Row className="mb-xl-4">
-                            {p.map(pf => (
-                                <Col xl className="column-margin">
-                                    <ProductCard unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
-                                </Col>
-                            ))}
+                        <Row className="mt-2">
+                            <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
                         </Row>
-                    ))}
 
-                </Container>
-            </td>
-        </tr>
-    </>
-    );
+                        <Row className="mb-3">
+                            <section className="d-flex justify-content-between">
+                                <div> <PersonFill /><span>&nbsp;</span>
+                                    {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
+                                </div>
+                                <div>
+                                    <GeoAltFill className="ml-3" /><span>&nbsp;</span>
+                                    {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
+                                </div>
+                            </section>
+                        </Row>
+
+                        {splitEvery(product, 3).map( (p, index) => (
+                            <Row key={index+"_"+props.farmer.FarmerID} className="mb-xl-4">
+                                {p.map(pf => (
+                                    <Col key={pf.ProductID+"_"+pf.FarmerID} xl className="column-margin">
+                                        <ProductCard unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
+                                    </Col>
+                                ))}
+                            </Row>
+                        ))}
+
+                    </Container>
+                </td>
+            </tr>
+        </>
+        );
     else
-    return "";
+        return "";
 
 };
 
@@ -265,7 +253,7 @@ function ProductCard(props) {
                         aria-expanded={open}>
                         See Description
                     </Button></Col>
-                    <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} UpdateNumber={props.UpdateNumber} /></Col>
+                    <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col>
                 </Row>
                 <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
                     <div>{props.prodottoDelFarmer.Description}</div>
@@ -278,7 +266,6 @@ function ProductCard(props) {
 
 function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
-    console.log(i + props.prodNum[i].number);
     return (
         <ButtonGroup>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
@@ -295,20 +282,20 @@ function ProductsCounter(props) {
 }
 
 
-function SearchBar(props){
+function SearchBar(props) {
 
 
-    function ManageSearch(text){
+    function ManageSearch(text) {
         props.setSearchParameter(text);
-        props.setFilteredProducts(props.productByFarmer.filter( p=> p.NameProduct.toLowerCase().includes(text.trim().toLowerCase())));        
+        props.setFilteredProducts(props.productByFarmer.filter(p => p.NameProduct.toLowerCase().includes(text.trim().toLowerCase())));
     }
 
-    return(
+    return (
 
         <Form onSubmit={(event) => event.preventDefault()}  >
-         <Form.Control placeholder="Search for a product" type='text' value={props.username} onChange={(event) => { ManageSearch(event.target.value) }} />
+            <Form.Control placeholder="Search for a product" type='text' value={props.searchParameter} onChange={(event) => { ManageSearch(event.target.value) }} />
 
-      </Form>
+        </Form>
 
     );
 }
