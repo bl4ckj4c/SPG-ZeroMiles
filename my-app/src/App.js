@@ -10,7 +10,7 @@ import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import "./App.css";
 import ZeroNavbar from './Components/Navbar';
-import EmployeeView from './Components/EmployeeView';
+import { EmployeeView }  from './Components/EmployeeView';
 
 function App() {
   const [user, setUser] = useState({});
