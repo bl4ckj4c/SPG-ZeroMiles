@@ -26,7 +26,7 @@ function Order(OrderID, Status, ClientID, Client, Timestamp, ProductInOrder){
 }
 
 
-function User(Name, Surname, UserID, Email, Phoneno, Address, City, State, Zipcode){
+function User(Name, Surname, UserID, Email, Phoneno, Address, City, State, Zipcode, Role, Wallet){
     this.Name = Name;
     this.Surname = Surname;
     this.UserID = UserID;
@@ -36,6 +36,8 @@ function User(Name, Surname, UserID, Email, Phoneno, Address, City, State, Zipco
     this.City = City;
     this.State = State;
     this.Zipcode = Zipcode;
+    this.Role = Role;
+    this.Wallet = Wallet;
 }
 
 export { ProductInOrder, Order, User };

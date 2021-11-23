@@ -40,8 +40,8 @@
   margin: 0 1rem 1rem 0;
 }
 
-@media screen and (max-width: 400px) {
+/* @media screen and (max-width: 400px) {
   .fixed-right-bottom {
     margin: 0 1rem 5rem 0;
   }
-}
+} */
