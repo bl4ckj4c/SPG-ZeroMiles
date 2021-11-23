@@ -147,21 +147,25 @@ async function userLogout(username, password) {
     const response = await fetch(BASEURL + "/logout", {
         method: 'POST',
     })
-
+    
     if (response.ok) {
+        console.log("User successfully logged out");
         return {'msg': 'User successfully logged out'}
-    } 
-    return {'err': 'LOGOUT error'};
+    }
+    else{
+        console.log("Error logout");
+        return {'err': 'LOGOUT error'};
+    }
 }
 
 async function getUserInfo() {
     const response = await fetch('/api/sessions/current');
     const userInfo = await response.json();
     if (response.ok) {
-        console.log(userInfo);
-      return userInfo;
+        //console.log(userInfo);
+        return userInfo;
     } else {
-      throw userInfo;  // an object with the error coming from the server
+      return {};  // an object with the error coming from the server
     }
   }
 

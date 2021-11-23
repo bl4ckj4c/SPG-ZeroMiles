@@ -30,10 +30,12 @@ function App() {
     const checkAuth = async () => {
       try {
         const userinfo = await API.getUserInfo();
-        console.log("userinfo:" + userinfo.user);
-        setUser(userinfo.user);
-      if(!loggedIn) //TODO riguardare
-        setLoggedIn(true);
+        console.log(userinfo);
+        if(userinfo.user){
+          setUser(userinfo.user ? userinfo.user : {});
+          if(!loggedIn) //TODO riguardare
+            setLoggedIn(true);
+        }
       } catch (error) {
         console.error(error);
       }
@@ -87,15 +89,9 @@ function App() {
 
   const login = (email, password) => {
     API.userLogin(email, password).then((user) => {
-        
         setLoggedIn(true);
       }
-    ).catch(
-      (error) => {
-          console.log(error);
-          //handle login error
-      }
-    );
+      ).catch(error => {console.log(error);}); //handle login error
   }
 
   const logout = () => {
@@ -117,7 +113,7 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-        <ZeroNavbar isLoggedIn={loggedIn} user={user}/>
+        <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout}/>
 
       <Switch>
 

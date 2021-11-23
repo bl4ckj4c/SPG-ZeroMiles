@@ -97,8 +97,9 @@ app.post('/api/login', async (req, res) => {
 app.use(cookieParser());
 
 
-app.post('api/logout', (req,res) => {
-    res.clearCookie('token').end();
+app.post('/api/logout', (req,res) => {
+    res.clearCookie('token',{ httpOnly: true, sameSite: true});
+    res.status(200).end();
 });
 
 
@@ -587,7 +588,7 @@ app.use(
 
 app.get('/api/sessions/current',(req,res)=>{
     const user = req.user && req.user.user;
-    console.log(req.user);
+    console.log(req.user.user.Email);
     if(user){
         res.status(200).json(req.user);
     }
