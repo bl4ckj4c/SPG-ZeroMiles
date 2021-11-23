@@ -25,6 +25,7 @@ function App() {
   const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
   const [update, setUpdate] = useState(true);
   const triggerUpdate = () => setUpdate(true);
+  const [sidebarCollapse, setSidebarCollapse] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
