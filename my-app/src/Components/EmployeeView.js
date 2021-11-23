@@ -10,6 +10,7 @@ function EmployeeView(props) {
     const [ordersListSearch, setOrdersListSearch] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
     const [orderStatusSelected, setOrderStatusSelected] = useState('all');
+    const [orderClientSelected, setOrderClientSelected] = useState('');
 
     useEffect(() => {
         API.getOrders()
@@ -32,8 +33,31 @@ function EmployeeView(props) {
     }, [ordersListUpdated]);
 
     useEffect(() => {
-        setOrdersListSearch(ordersListSearch);
-    }, [orderStatusSelected])
+        if (orderClientSelected !== '') {
+            setOrdersListSearch(ordersList
+                .filter(item => {
+                    if (orderStatusSelected === 'all')
+                        return true;
+                    else
+                        return item.Status === orderStatusSelected;
+                })
+                .filter(item => {
+                    let name = orderClientSelected.split(' ')[0];
+                    let surname = orderClientSelected.split(' ')[1];
+                    return item.Name === name && item.Surname === surname;
+                }));
+        } else {
+            setOrdersListSearch(ordersList
+                .filter(item => {
+                    if (orderStatusSelected === 'all')
+                        return true;
+                    else
+                        return item.Status === orderStatusSelected;
+                }));
+        }
+
+
+    }, [orderStatusSelected, orderClientSelected])
 
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
@@ -50,18 +74,17 @@ function EmployeeView(props) {
                     setOrderListSearch={setOrdersListSearch}
                     setOrderListUpdated={setOrdersListUpdated}
                     orderStatusSelected={orderStatusSelected}
-                    setOrderStatusSelected={setOrderStatusSelected}/>
+                    setOrderStatusSelected={setOrderStatusSelected}
+                    setOrderClientSelected={setOrderClientSelected}/>
                 <Col>
                     <Table className="d-flex justify-content-center">
                         <tbody id="employee-table" align="center">
                         {
                             ordersListSearch
                                 .filter(order => {
-                                    if(orderStatusSelected === 'all') {
-                                        console.log(true);
+                                    if (orderStatusSelected === 'all') {
                                         return true;
-                                    }
-                                    else {
+                                    } else {
                                         return order.Status === orderStatusSelected;
                                     }
                                 })
@@ -81,23 +104,24 @@ const ostat = {
     'p': 'pending',
     'c': 'closed'
 }
+
 function OrderRow(props) {
     let [stat, setStat] = useState(props.order.Status || 'o');
 
 
     let buttonstatus;
-   // let stat;
+    // let stat;
     if (props.order.Status === "open") {
-        stat='o';
+        stat = 'o';
         buttonstatus = "outline-primary";
     } else if (props.order.Status === "pending") {
         buttonstatus = "outline-danger";
-        stat='p';
+        stat = 'p';
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
-        stat='c';
+        stat = 'c';
     }
-    
+
 
     return (
         <>
@@ -133,34 +157,32 @@ function OrderRow(props) {
                                 <h1 style={{fontSize: 15, marginTop: 10}}>Total: €25</h1>
                             </Col>
                             <Col>
-                                <Button  onClick={() => {
-                                    
-                                    if (stat === 'o'){
+                                <Button onClick={() => {
+
+                                    if (stat === 'o') {
                                         props.order.Status = "pending";
                                         setStat('p');
                                         API.modifyOrderStatus(props.order);
 
-                                        
+
                                     }
-                                    if(stat==='p'){
+                                    if (stat === 'p') {
                                         props.order.Status = "closed";
                                         setStat('c');
                                         API.modifyOrderStatus(props.order);
 
                                     }
-                                    if(stat==='c'){
+                                    if (stat === 'c') {
                                         props.order.Status = "closed";
-                                        setStat('c');}
-                                        API.modifyOrderStatus(props.order);
-                        
+                                        setStat('c');
+                                    }
+                                    API.modifyOrderStatus(props.order);
 
-                                }}variant={buttonstatus} size="sm">
+
+                                }} variant={buttonstatus} size="sm">
                                     {ostat[stat]}
-                                
-                                
-                                
-                                
-                                
+
+
                                 </Button>
                             </Col>
                         </Row>
@@ -171,7 +193,6 @@ function OrderRow(props) {
         </>
     );
 }
-
 
 
 function ProductList(props) {
@@ -191,7 +212,7 @@ function ProductList(props) {
                 Quantity: {props.product.number}
             </Col>
             <Col>
-                Price: €{props.product.Price}
+                Price: €{props.product.Price.toFixed(2)}
             </Col>
         </Row>
 
@@ -207,13 +228,6 @@ function Sidebar(props) {
     const closedActive = props.orderStatusSelected === 'closed' ? 'active' : '';
     const clientsActive = props.orderStatusSelected === 'clients' ? 'active' : '';
 
-    function ManageSearch(text) {
-        props.setOrderListSearch(
-            props.ordersList
-                .filter(order => order.OrderID.toLowerCase().startsWith(text.trim().toLowerCase())));
-    }
-
-
     return (
         <Col
             className='sfondosidebar collapse d-sm-block col col-3 below-nav'
@@ -221,41 +235,23 @@ function Sidebar(props) {
             style={{minHeight: '100vh'}}
             sticky='left'>
             <ListGroup variant="flush">
-                <Form
-                    className='m-1'
-                    onSubmit={(event) => event.preventDefault()}>
-                    <Form.Control
-                        placeholder="Search by order ID"
-                        type='text'
-                        value={props.username}
-                        onChange={(event) => {
-                            ManageSearch(event.target.value)
-                        }}/>
-                </Form>
-                {/*<Form.Group>
+                <Form.Group>
                     <Typeahead
-                        filterBy={['OrderID', 'Name', 'Surname', 'Timestamp']}
+                        className='my-2 ml-2'
                         id="basic-typeahead-single"
-                        labelKey={(option) => `${option.OrderID}`}
-                        options={props.ordersList}
-                        placeholder="Search a product..."
-                        onChange={selected => props.setOrderListSearch(selected)}
-                        onInputChange={(text, event) => {
-                            if(text === '') {
-                                props.setOrderListUpdated(true);
-                            }
+                        labelKey={(option) => `${option}`}
+                        options={props.ordersList
+                            .map(item => [item.Name, item.Surname].join(" "))
+                            .filter((item, index, self) => self.indexOf(item) === index)}
+                        placeholder="Search by client"
+                        onChange={selected => {
+                            if (selected.length > 0)
+                                props.setOrderClientSelected(selected[0]);
+                            else
+                                props.setOrderClientSelected('');
                         }}
                     />
-                </Form.Group>*/}
-                {/*<Form className="d-flex my-2">
-                    <FormControl
-                        type="search"
-                        placeholder="Search"
-                        className="me-2"
-                        aria-label="Search"
-                    />
-                    <Button variant="outline-warning" size='sm'>Search</Button>
-                </Form>*/}
+                </Form.Group>
                 <ListGroup.Item className='border-0'>
                     <div style={{fontSize: 20}}><b>Orders</b></div>
                 </ListGroup.Item>
