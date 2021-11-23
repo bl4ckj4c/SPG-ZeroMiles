@@ -19,8 +19,12 @@
   .row-style {
    margin-left: 18px;
    margin-right: 28px;
+  }
+ .margine-cerca-desktop{
+  margin-left: 18px;
+  margin-right: 18px;
+  }
  }
-}
 
  .cover {
   object-fit: cover;
