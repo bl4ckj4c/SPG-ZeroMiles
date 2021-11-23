@@ -121,20 +121,22 @@ function ProductTable(props) {
                 </Row>
 
                 {props.isLoggedIn ?
-                    <Row className="mt-3 row-style">
 
-                        <Col>
-                            {props.user.Role === "Employee" ? <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-                                : ""}
-                        </Col>
-                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
-                            <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn}selectedUser={selectedUser}/>
-                            <OrderConfirmedModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser}  prodNum={prodNum}  order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
+                    
+                       props.user.Role === "Employee" ? <Row className="mt-3 row-style">
+
+                            <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                            </Col>
+                            <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
+                                <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
+                            </Col>
+                        </Row>
+                            : "" 
+
+                    : ""}
+ <OrderConfirmedModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser}  prodNum={prodNum}  order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
                             <ErrorModal showError={showError} handleCloseError={handleCloseError} />
                             <CartCheckoutModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
-                        </Col>
-                    </Row>
-                    : ""}
 
             </Container>
 
@@ -160,10 +162,14 @@ function AvailableAmountButton(props){
     }
     else
         wallet = "€"+wallet.toFixed(2);
+ 
+       if (props.isLoggedIn) 
+       return(
+         <Button disabled variant="secondary">{wallet}</Button>
+        ); 
+        else
+         return "" 
 
-        return(
-        <Button disabled variant="secondary">{wallet}</Button>
-        );
 }
 
 function GetWallet(isLoggedIn, user, selectedUser){
