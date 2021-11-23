@@ -269,7 +269,6 @@ function FarmerRow(props) {
                                 )
                                 )
                                 }
-                                {console.log("ciaooooo" + p.size)}
                                 {p.length === 2 ? <> <Col> </Col> </> : ''}
                                 {p.length === 1 ? <> <Col> </Col> <Col> </Col> </> : ''}
                             </Row>
