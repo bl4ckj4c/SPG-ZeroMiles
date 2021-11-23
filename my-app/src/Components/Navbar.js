@@ -4,6 +4,7 @@ import "../App.css";
 function ZeroNavbar(props) {
     return (
         <Navbar bg="warning">
+            <Navbar.Toggle aria-controls="left-sidebar" onClick={() => props.setCollapse(old => !old)}/>
             <Container>
                 <Navbar.Brand href="/">
                     <Image id="logo" src="/images/logo.png" />
