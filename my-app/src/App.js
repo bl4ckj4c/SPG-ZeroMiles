@@ -11,6 +11,7 @@ import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDr
 import "./App.css";
 import ZeroNavbar from './Components/Navbar';
 import { EmployeeView }  from './Components/EmployeeView';
+import ClientView  from './Components/ClientView';
 
 function App() {
   const [user, setUser] = useState({});
@@ -147,6 +148,10 @@ function App() {
 
         <Route exact path="/employee">
           <EmployeeView users={userList}/>
+        </Route>
+
+        <Route exact path="/clients">
+          <ClientView users ={userList}/>
         </Route>
 
       </Switch>
