@@ -115,7 +115,12 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-        <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout}/>
+        <ZeroNavbar
+            isLoggedIn={loggedIn}
+            user={user}
+            logout={logout}
+            sidebarCollapse={sidebarCollapse}
+            setSidebarCollapse={setSidebarCollapse}/>
 
       <Switch>
 
@@ -147,7 +152,10 @@ function App() {
         </Route>
 
         <Route exact path="/employee">
-          <EmployeeView users={userList}/>
+          <EmployeeView
+              users={userList}
+              sidebarCollapse={sidebarCollapse}
+              setSidebarCollapse={setSidebarCollapse}/>
         </Route>
 
         <Route exact path="/clients">

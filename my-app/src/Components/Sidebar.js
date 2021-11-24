@@ -8,12 +8,8 @@ function Sidebar(props) {
     const pendingActive = props.orderStatusSelected === 'pending' ? 'active' : '';
     const closedActive = props.orderStatusSelected === 'closed' ? 'active' : '';
     const clientsActive = props.orderStatusSelected === 'clients' ? 'active' : '';
-    let classStr;
-
-    if(props.collapsed)
-        classStr = 'sfondosidebar collapse d-sm-block col col-3 below-nav';
-    else
-        classStr = 'sfondosidebar d-sm-block col col-3 below-nav';
+    //const classStr = props.sidebarCollapse ? 'sfondosidebar collapse d-sm-block col col-3 below-nav' : 'sfondosidebar d-sm-block col col-3 below-nav';
+    const classStr = props.sidebarCollapse ? 'sfondosidebar collapse d-sm-block col col-4 below-nav' : 'sfondosidebar d-sm-block col col-4 below-nav';
 
     return (
         <Col

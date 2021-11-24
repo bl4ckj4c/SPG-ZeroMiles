@@ -1,11 +1,14 @@
 import { Navbar, Nav, Button, Image, Container } from 'react-bootstrap';
 import "./Navbar.css";
+import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 
 function ZeroNavbar(props) {
     return (
         <Navbar bg="warning">
-            <Navbar.Toggle aria-controls="left-sidebar" onClick={() => props.setCollapse(old => !old)}/>
             <Container>
+                <Button
+                    aria-controls="left-sidebar"
+                    onClick={() => props.setSidebarCollapse(old => !old)}/>
                 <Navbar.Brand href="/">
                     <Image id="logo" src="/images/logo.png" />
                 </Navbar.Brand>

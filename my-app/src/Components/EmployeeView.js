@@ -75,7 +75,9 @@ function EmployeeView(props) {
                     setOrderListUpdated={setOrdersListUpdated}
                     orderStatusSelected={orderStatusSelected}
                     setOrderStatusSelected={setOrderStatusSelected}
-                    setOrderClientSelected={setOrderClientSelected}/>
+                    setOrderClientSelected={setOrderClientSelected}
+                    sidebarCollapse={props.sidebarCollapse}
+                    setSidebarCollapse={props.setSidebarCollapse}/>
                 <Col>
                     <Table className="d-flex justify-content-center">
                         <tbody id="employee-table" align="center">
