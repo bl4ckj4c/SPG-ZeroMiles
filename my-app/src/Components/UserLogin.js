@@ -56,9 +56,9 @@ function UserLogin(props) {
 
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={4}>
-                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", backgroundColor:"#2c8da9" }}>
-                        Login
-                    </Row>
+                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
+                    Sign in
+                </Row>
                     <Form onSubmit={(e) => validform(e) }>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
@@ -73,7 +73,7 @@ function UserLogin(props) {
                                 variant="primary"
                                 type="submit"
                             >
-                            Submit
+                            Login
                             </Button>
                         </Row>
                     </Form>

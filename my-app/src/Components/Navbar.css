@@ -1,0 +1,25 @@
+/* posizionamento del logo in modalità desktop */
+@media only screen and (min-width: 600px) {
+    #logo{
+      width: 180px;
+      margin-left: 22px;
+    }
+    .posizionamentoPulsante{
+      margin-top: 20px;
+      margin-right: 22px;
+    }
+  }
+  
+  /*posizionamento del logo in modalità smartphone*/
+  @media only screen and (max-width: 600px) {
+    #logo{
+      width: 180px;
+    }
+    .posizionamentoPulsante{
+      margin-top: 20px;
+    }
+  }
+  
+  .posizionamento{
+    margin-top: 24px;
+  }
