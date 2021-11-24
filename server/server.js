@@ -600,3 +600,5 @@ app.get('/api/sessions/current',(req,res)=>{
 app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
+
+module.exports = app;
