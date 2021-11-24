@@ -13,6 +13,13 @@
    .row-style {
     margin-right: 8px;
   }
+  .fixed-button-bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1030;
+    margin: 0 0 1rem 1rem ;
+  }
  }
 
  @media (min-width: 1200px) {
@@ -24,20 +31,19 @@
   margin-left: 18px;
   margin-right: 18px;
   }
+  .fixed-button-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1030;
+    margin: 0 1rem 1rem 0 ;
+  }
  }
 
  .cover {
   object-fit: cover;
   width: 334px;
   height: 120px;
-}
-
-.fixed-right-bottom {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  z-index: 1030;
-  margin: 0 1rem 1rem 0;
 }
 
 /* @media screen and (max-width: 400px) {
