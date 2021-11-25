@@ -126,6 +126,7 @@ function App() {
       <Switch>
 
       <Route exact path="/">
+      {loggedIn ? <Redirect to="/products" /> : ""}
           <Welcome/>
       </Route>
 
@@ -134,9 +135,10 @@ function App() {
 
             {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
             {loading ? <Row className="justify-content-center mt-5">
+            {!loggedIn ? <Redirect to="/" /> : ""}
               <Spinner animation="border" size="xl" variant="secondary" />
             </Row> :
-
+              
               <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={loggedIn} user={user} />}
 
           </Col>
