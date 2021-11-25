@@ -19,15 +19,22 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [productByFarmerList, setProductByFarmerList] = useState([]);
-  const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  const [farmerList, setFarmerList] = useState([]);
-  const [userList, setUserList] = useState([]);
-  const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  const [update, setUpdate] = useState(true);
-  const triggerUpdate = () => setUpdate(true);
   const [sidebarCollapse, setSidebarCollapse] = useState(true);
+  const [userList, setUserList] = useState([]);
+  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+
+
+  useEffect(() => {
+    if(loggedIn){
+      API.getAllUsers()
+        .then(u => {
+          setUserList(u);
+          setUserListUpdated(false);
+        }).catch(f => console.log(f));
+      }
+
+    }
+  , [loggedIn]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -46,42 +53,7 @@ function App() {
     checkAuth();
   }, [loggedIn]);
 
-  useEffect(() => {
-    //prima di chiamare le API avvio l'animazione di caricamento
-    if (update === true) {
-      setProductByFarmerListUpdated(true);
-      setFarmerListUpdated(true);
-      setUserListUpdated(true);
-      setLoading(true);
-      API.getProductByFarmer()
-        .then(productByFarmer => {
-          setProductByFarmerList(productByFarmer);
-          setProductByFarmerListUpdated(false);
-        }).catch(pbf => handleErrors(pbf));
 
-      API.getFarmer()
-        .then(farmer => {
-          setFarmerList(farmer);
-          setFarmerListUpdated(false);
-        }).catch(f => handleErrors(f));
-
-      API.getAllUsers()
-        .then(u => {
-          setUserList(u);
-          setUserListUpdated(false);
-        }).catch(f => handleErrors(f));
-
-      setUpdate(false);
-
-    }
-  }, [update]);
-
-
-  useEffect(() => {
-    if (!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
-      setLoading(false);
-
-  }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
 
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
@@ -132,15 +104,16 @@ function App() {
 
         <Route exact path="/products">
           <Col as="main">
-
-            {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
+         
+          {!loggedIn ? <Redirect to="/" /> :  <ProductTable  isLoggedIn={loggedIn} user={user} />}
+            {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria
             {loading ? <Row className="justify-content-center mt-5">
-            {!loggedIn ? <Redirect to="/" /> : ""}
+            
               <Spinner animation="border" size="xl" variant="secondary" />
             </Row> :
               
-              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={loggedIn} user={user} />}
-
+              <ProductTable  isLoggedIn={loggedIn} user={user} />}
+ */}
           </Col>
         </Route>
 
@@ -150,18 +123,20 @@ function App() {
         </Route>
 
         <Route exact path="/signup">
-          <UserRegister ></UserRegister>
+          <UserRegister/>
         </Route>
 
         <Route exact path="/employee">
-          <EmployeeView
+       <EmployeeView
             users={userList}
             sidebarCollapse={sidebarCollapse}
             setSidebarCollapse={setSidebarCollapse} />
+         
         </Route>
 
         <Route exact path="/clients">
-          <ClientView users={userList} />
+       <ClientView users={userList} />
+        
         </Route>
 
       </Switch>

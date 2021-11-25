@@ -1,7 +1,7 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
 import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse, Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
@@ -36,9 +36,67 @@ function UserDropdown(props) {
     );
 };
 
+function ProductTable(props){
+
+    const [productByFarmerList, setProductByFarmerList] = useState([]);
+    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+    const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [farmerList, setFarmerList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [update, setUpdate] = useState(true);
+  const triggerUpdate = () => setUpdate(true);
+  const [loading, setLoading] = useState(true);
 
 
-function ProductTable(props) {
+
+    useEffect(() => {
+        //prima di chiamare le API avvio l'animazione di caricamento
+        if (update === true) {
+          setProductByFarmerListUpdated(true);
+          setFarmerListUpdated(true);
+          setUserListUpdated(true);
+          setLoading(true);
+          API.getProductByFarmer()
+            .then(productByFarmer => {
+              setProductByFarmerList(productByFarmer);
+              setProductByFarmerListUpdated(false);
+            }).catch(pbf => console.log(pbf));
+    
+          API.getFarmer()
+            .then(farmer => {
+              setFarmerList(farmer);
+              setFarmerListUpdated(false);
+            }).catch(f => console.log(f));
+    
+            if(props.user.Role==="Employee")
+          API.getAllUsers()
+            .then(u => {
+              setUserList(u);
+              setUserListUpdated(false);
+            }).catch(f => console.log(f));
+        else setUserListUpdated(false);
+
+          setUpdate(false);
+    
+        }
+      }, [update]);
+    
+    
+      useEffect(() => {
+        if (!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
+          setLoading(false);
+    
+      }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
+
+    if (!loading)
+    return <ProductTableWrapped  triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={props.isLoggedIn} user={props.user}  />;
+    else return "" ; 
+}
+
+
+function ProductTableWrapped(props) {
+    console.log("quantirendering?!");
 
     const [prodNum, setProdNum] = useState(() => prodNumInit())
     const [searchParameter, setSearchParameter] = useState("");
