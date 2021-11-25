@@ -87,7 +87,7 @@ function ButtonBalance(props) {
                     <Container>
                         <Row>
                             <Col style={{ textAlign: "right" }} ><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(-1)}>-</Button></Col>
-                            <Col style={{ fontSize: 25, textAlign: "center" }} xs={4}>€ {amount}</Col>
+                            <Col style={{ fontSize: 24, textAlign: "center" }} xs={4}>€ {amount}</Col>
                             <Col style={{ textAlign: "left" }}><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(+1)}>+</Button></Col>
                         </Row>
                     </Container>

@@ -189,6 +189,22 @@ async function modifyOrderStatus(order){
   }
 
 
+  async function modifyWallet(client){
+
+    const response = await fetch(BASEURL + "/modifywallet", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...client})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Wallet Aggiornato' };
+    }
+    return { 'err': 'POST error' };
+  }
+
 
 const API = {   
    
@@ -201,6 +217,7 @@ const API = {
     getAllUsers,
     getOrders,
     modifyOrderStatus,
+    modifyWallet,
 
     userLogin,
     userLogout,

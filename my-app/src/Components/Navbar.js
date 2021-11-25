@@ -1,15 +1,18 @@
 import { Navbar, Nav, Button, Image, Container } from 'react-bootstrap';
 import "./Navbar.css";
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
+import {useLocation} from 'react-router-dom';
 
 function ZeroNavbar(props) {
+    const location = useLocation();
     return (
+        location.pathname === "/" ? <></> :
         <Navbar bg="warning">
             <Container>
                 <Button
                     aria-controls="left-sidebar"
                     onClick={() => props.setSidebarCollapse(old => !old)}/>
-                <Navbar.Brand href="/">
+                <Navbar.Brand href="/products">
                     <Image id="logo" src="/images/logo.png" />
                 </Navbar.Brand>
                 <Nav>
