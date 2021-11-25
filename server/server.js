@@ -417,7 +417,7 @@ app.get('/api/users', async (req, res) => {
 /* GET all farmers */
 app.get('/api/farmers', async (req, res) => {
     try {
-        const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (farmers.empty) {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Farmer)" });
