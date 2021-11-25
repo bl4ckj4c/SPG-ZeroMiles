@@ -10,8 +10,9 @@ import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import "./App.css";
 import ZeroNavbar from './Components/Navbar';
-import { EmployeeView }  from './Components/EmployeeView';
-import ClientView  from './Components/ClientView';
+import { EmployeeView } from './Components/EmployeeView';
+import ClientView from './Components/ClientView';
+import Welcome from './Components/Welcome';
 
 function App() {
   const [user, setUser] = useState({});
@@ -33,9 +34,9 @@ function App() {
       try {
         const userinfo = await API.getUserInfo();
         console.log(userinfo);
-        if(userinfo.user){
+        if (userinfo.user) {
           setUser(userinfo.user ? userinfo.user : {});
-          if(!loggedIn) //TODO riguardare
+          if (!loggedIn) //TODO riguardare
             setLoggedIn(true);
         }
       } catch (error) {
@@ -91,9 +92,9 @@ function App() {
 
   const login = (email, password) => {
     API.userLogin(email, password).then((user) => {
-        setLoggedIn(true);
-      }
-      ).catch(error => {console.log(error);}); //handle login error
+      setLoggedIn(true);
+    }
+    ).catch(error => { console.log(error); }); //handle login error
   }
 
   const logout = () => {
@@ -115,21 +116,20 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-        <ZeroNavbar
-            isLoggedIn={loggedIn}
-            user={user}
-            logout={logout}
-            sidebarCollapse={sidebarCollapse}
-            setSidebarCollapse={setSidebarCollapse}/>
+      <ZeroNavbar
+        isLoggedIn={loggedIn}
+        user={user}
+        logout={logout}
+        sidebarCollapse={sidebarCollapse}
+        setSidebarCollapse={setSidebarCollapse} />
 
       <Switch>
 
-        {/*}
-        <Route exact path="/">
-          <Main></Main>
-        </Route> */}
+      <Route exact path="/">
+          <Welcome/>
+      </Route>
 
-        <Route exact path="/">
+        <Route exact path="/products">
           <Col as="main">
 
             {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria */}
@@ -137,29 +137,29 @@ function App() {
               <Spinner animation="border" size="xl" variant="secondary" />
             </Row> :
 
-              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={loggedIn} user={user}/>}
+              <ProductTable triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={loggedIn} user={user} />}
 
           </Col>
         </Route>
 
         <Route exact path="/login">
           <UserLogin login={login} />
-          {loggedIn ? <Redirect to="/" /> : ""  }
+          {loggedIn ? <Redirect to="/products" /> : ""}
         </Route>
 
-        <Route exact path="/user">
+        <Route exact path="/signup">
           <UserRegister ></UserRegister>
         </Route>
 
         <Route exact path="/employee">
           <EmployeeView
-              users={userList}
-              sidebarCollapse={sidebarCollapse}
-              setSidebarCollapse={setSidebarCollapse}/>
+            users={userList}
+            sidebarCollapse={sidebarCollapse}
+            setSidebarCollapse={setSidebarCollapse} />
         </Route>
 
         <Route exact path="/clients">
-          <ClientView users ={userList}/>
+          <ClientView users={userList} />
         </Route>
 
       </Switch>
