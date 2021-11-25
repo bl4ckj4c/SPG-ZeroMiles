@@ -12,7 +12,7 @@ function ZeroNavbar(props) {
                 <Button
                     aria-controls="left-sidebar"
                     onClick={() => props.setSidebarCollapse(old => !old)}/>
-                <Navbar.Brand href="/">
+                <Navbar.Brand href="/products">
                     <Image id="logo" src="/images/logo.png" />
                 </Navbar.Brand>
                 <Nav>
