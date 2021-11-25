@@ -102,9 +102,123 @@ app.post('/api/logout', (req,res) => {
     res.status(200).end();
 });
 
+/* GET all products by farmers */
+app.get('/api/productByFarmer', async (req, res) => {
+    try {
+        const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (productbyfarmer.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: product by farmers)" });
+        } else {
+            let result = [];
+            productbyfarmer.forEach((prodfarm) => {
+                //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
+                const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
+                const farmerid = prodfarm.data().FarmerID;
+                console.log("Querying for " + productid + " and " + farmerid);
+
+                result.push(new Promise(async (resolve, reject) => {
+                    const product = await db.collection('Product').doc("" + productid).get();
+                    const farmer = await db.collection('Farmer').doc("" + farmerid).get();
+                    if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching products for " + productid);
+                    }
+                    if (!farmer.exists) {
+                        console.log("No matching farmers for" + farmerid);
+                    } else {
+                        //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
+                        resolve({
+                            // Farmer
+                            FarmerID: prodfarm.data().FarmerID,
+                            Name: farmer.data().Name,
+                            Surname: farmer.data().Surname,
+                            Company: farmer.data().Company,
+                            Email: farmer.data().Email,
+                            Phoneno: farmer.data().Phoneno,
+                            Address: farmer.data().Address,
+                            State: farmer.data().State,
+                            Zipcode: farmer.data().Zipcode,
+                            //Distance: farmer.data().Distance
+                            // Product
+                            ProductID: prodfarm.data().ProductID,
+                            NameProduct: product.data().Name,
+                            Description: product.data().Description,
+                            ImageID: product.data().ImageID,
+                            // Product by farmer
+                            Quantity: prodfarm.data().Quantity,
+                            UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
+                            Price: prodfarm.data().Price
+                        });
+
+                        //  console.log(farmer.data().Name + " offers " +
+                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " +
+                        //           product.data().Name);
+                    }
+                }));
+            });
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get productbyfarmer)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+
+/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
+
+// (async () => {
+//     try {
+//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+//         if (products.empty) {
+//             console.log("No matching documents.");
+//         } else {
+//             products.forEach(prod => {
+//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })();
+
+/*
+ * ********************************************
+ * ******** AUTHENTICATED APIs: ***************
+ * ********************************************
+ * 
+ * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
+ * BACK 401 (UnauthorizedError: No authorization 
+ * token was found) IF THE REQUEST DOES NOT 
+ * TRANSPORT ANY TOKEN
+ * 
+ * 
+ */
+
+app.use(jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
+app.use(function (err, req, res, next){
+    if(err.name === 'UnauthorizedError'){
+        console.log("Invalid token");
+        res.redirect(401,"/api/login");
+    }
+});
 
 /* POST user registration (add user to database) */
-
 app.post('/api/register',
     body('name')
         // Check if the name parameter is not null
@@ -256,9 +370,8 @@ app.post('/api/register',
     });
 
 
-    
-/* GET all users */
 
+/* GET all users */
 app.get('/api/users', async (req, res) => {
     try {
         const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
@@ -298,25 +411,6 @@ app.get('/api/users', async (req, res) => {
         });
     }
 });
-
-
-/* GET all products */
-
-// (async () => {
-//     try {
-//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (products.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             products.forEach(prod => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
 
 
 
@@ -365,79 +459,11 @@ app.get('/api/farmers', async (req, res) => {
 
 
 
-/* GET all products by farmers */
-app.get('/api/productByFarmer', async (req, res) => {
-    try {
-        const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (productbyfarmer.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" });
-        } else {
-            let result = [];
-            productbyfarmer.forEach((prodfarm) => {
-                //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
-                const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
-                const farmerid = prodfarm.data().FarmerID;
-                console.log("Querying for " + productid + " and " + farmerid);
 
-                result.push(new Promise(async (resolve, reject) => {
-                    const product = await db.collection('Product').doc("" + productid).get();
-                    const farmer = await db.collection('Farmer').doc("" + farmerid).get();
-                    if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
-                        console.log("No matching products for " + productid);
-                    }
-                    if (!farmer.exists) {
-                        console.log("No matching farmers for" + farmerid);
-                    } else {
-                        //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
-                        resolve({
-                            // Farmer
-                            FarmerID: prodfarm.data().FarmerID,
-                            Name: farmer.data().Name,
-                            Surname: farmer.data().Surname,
-                            Company: farmer.data().Company,
-                            Email: farmer.data().Email,
-                            Phoneno: farmer.data().Phoneno,
-                            Address: farmer.data().Address,
-                            State: farmer.data().State,
-                            Zipcode: farmer.data().Zipcode,
-                            //Distance: farmer.data().Distance
-                            // Product
-                            ProductID: prodfarm.data().ProductID,
-                            NameProduct: product.data().Name,
-                            Description: product.data().Description,
-                            ImageID: product.data().ImageID,
-                            // Product by farmer
-                            Quantity: prodfarm.data().Quantity,
-                            UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
-                            Price: prodfarm.data().Price
-                        });
 
-                        //  console.log(farmer.data().Name + " offers " +
-                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " +
-                        //           product.data().Name);
-                    }
-                }));
-            });
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get productbyfarmer)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
 
 
 /* GET all Order */
-
 app.get('/api/orders', async (req, res) => {
     try {
         const orders = await db.collection('Order').orderBy('Timestamp').get();
@@ -485,10 +511,7 @@ app.get('/api/orders', async (req, res) => {
 
 
 
-
-
 /* POST place an order in the database */
-
 app.post('/api/order', async (req, res) => {
     try {
         let result = [];
@@ -554,6 +577,7 @@ app.post('/api/order', async (req, res) => {
 })
 
 
+
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
     try {
@@ -567,6 +591,8 @@ app.post('/api/modifyorder', async (req, res) => {
     }
 });
 
+
+
 app.post('/api/modifyclient', async (req, res) => {
     
    
@@ -577,14 +603,6 @@ app.post('/api/modifyclient', async (req, res) => {
 });
 
 
-
-app.use(
-    jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
-);
 
 app.get('/api/sessions/current',(req,res)=>{
     const user = req.user && req.user.user;
