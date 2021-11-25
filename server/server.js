@@ -68,26 +68,26 @@ app.post('/api/login', async (req, res) => {
     console.log(req.body);
     console.log(username + " " + password);
 
-    try{
-        const user = await db.collection("User").where("Email","==",username).get();
+    try {
+        const user = await db.collection("User").where("Email", "==", username).get();
 
-        if(user.empty) {
+        if (user.empty) {
             res.status(404).json({ info: "Authentication error", error: "User not found (Table: User)" });
         } else {
-            user.forEach(user =>{  //because user is a query snapshot
-                if(!userDao.checkPassword(user.data(), password)){
+            user.forEach(user => {  //because user is a query snapshot
+                if (!userDao.checkPassword(user.data(), password)) {
                     res.status(401).json({ info: "Authentication error", error: "wrong password" });
                 } else {
                     //AUTHENTICATION SUCCESS
-                    console.log("Authentication succeeded!"+user.id);
-                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret, {expiresIn: expireTime});
-                    res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000*expireTime });
+                    console.log("Authentication succeeded!" + user.id);
+                    const token = jsonwebtoken.sign({ user: { userID: user.id, ...user.data() } }, jwtSecret, { expiresIn: expireTime });
+                    res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000 * expireTime });
                     res.status(200).end();
                 }
             })
-        } 
-    } catch(error){
-        new Promise((resolve) => {setTimeout(resolve, 1000)}).then(() => res.status(500).json({
+        }
+    } catch (error) {
+        new Promise((resolve) => { setTimeout(resolve, 1000) }).then(() => res.status(500).json({
             info: "Authentication error",
             error: error
         }))
@@ -97,8 +97,8 @@ app.post('/api/login', async (req, res) => {
 app.use(cookieParser());
 
 
-app.post('/api/logout', (req,res) => {
-    res.clearCookie('token',{ httpOnly: true, sameSite: true});
+app.post('/api/logout', (req, res) => {
+    res.clearCookie('token', { httpOnly: true, sameSite: true });
     res.status(200).end();
 });
 
@@ -234,8 +234,8 @@ app.post('/api/register',
 
             (async () => {
                 try {
-                    const user = await db.collection("User").where("Email","==",req.body.email).get();
-                    if(user.empty){
+                    const user = await db.collection("User").where("Email", "==", req.body.email).get();
+                    if (user.empty) {
                         await db.collection('User').doc(newUUid).create(newUser);
                         console.log("Done.");
                         res.status(201).end();
@@ -256,7 +256,7 @@ app.post('/api/register',
     });
 
 
-    
+
 /* GET all users */
 
 app.get('/api/users', async (req, res) => {
@@ -445,18 +445,18 @@ app.get('/api/orders', async (req, res) => {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Order)" });
         } else {
-            
+
             let result = [];
             orders.forEach(order => {
                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
                 //console.log(farmer.data());
-               
+
                 result.push(new Promise(async (resolve, reject) => {
                     const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
-                    
+
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
                         Status: order.data().Status,
@@ -510,14 +510,14 @@ app.post('/api/order', async (req, res) => {
                 }
             })
         })
-       
+
         console.log("creating new order");
         let newOrder = {}
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss", );
+        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",);
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
-    
+
         (async () => {
             try {
                 console.log(newOrder);
@@ -532,15 +532,15 @@ app.post('/api/order', async (req, res) => {
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID) {
                     let newQuantity = prodfarm.data().Quantity - product.number;
-                   result.push( new Promise( async(resolve, reject) => {
-                        
-                        await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
+                    result.push(new Promise(async (resolve, reject) => {
+
+                        await db.collection('Product by Farmers').doc(prodfarm.id).update({ Quantity: newQuantity });
                         resolve("QUANTITYUPDATE");
-                }))
+                    }))
                 }
             })
         })
-  
+
         Promise.all(result);
         res.status(201).end();
 
@@ -557,8 +557,8 @@ app.post('/api/order', async (req, res) => {
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
     try {
-        await db.collection('Order').doc(req.body.id).update({Status: req.body.Status});
-    }  catch (error) {
+        await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             info: "The server cannot process the request",
@@ -567,12 +567,27 @@ app.post('/api/modifyorder', async (req, res) => {
     }
 });
 
-app.post('/api/modifyclient', async (req, res) => {
-    
-   
-     await db.collection('Orders').doc(req.body.id).update({Wallet: req.body.Wallet});
-              
-                 
+app.post('/api/modifywallet', async (req, res) => {
+
+    try {
+        const users = await db.collection('User').get();  
+        if (users.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Users)" });
+        } else {
+
+            (async () => {
+                await db.collection('User').doc(req.body.ClientID).update({ Wallet: req.body.Wallet });
+            })()
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+    res.status(201).end();
 
 });
 
@@ -586,13 +601,13 @@ app.use(
     })
 );
 
-app.get('/api/sessions/current',(req,res)=>{
+app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
-    if(user){
+    if (user) {
         res.status(200).json(req.user);
     }
-    else res.status(401).json({error: 'User non authenticated'});
+    else res.status(401).json({ error: 'User non authenticated' });
 });
 
 
