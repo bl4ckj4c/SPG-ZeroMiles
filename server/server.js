@@ -225,7 +225,7 @@ app.post('/api/register',
             newUser.Address = req.body.address;
             newUser.Phoneno = req.body.phone;
             newUser.City = req.body.city;
-            newUser.Password = userDao.hashOfPassword(req.body.password);
+            newUser.Password = req.body.password;  //userDao.hashOfPassword(req.body.password)
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
