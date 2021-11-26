@@ -20,7 +20,7 @@ const { v4: uuidv4 } = require('uuid');
 
 //jwt parameters
 const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
-const expireTime = 600; //seconds
+const expireTime = 1200; //seconds
 
 // init express
 const app = express();
