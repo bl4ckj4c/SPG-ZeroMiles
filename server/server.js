@@ -103,53 +103,6 @@ app.post('/api/logout', (req, res) => {
 });
 
 
-
-
-/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
-
-// (async () => {
-//     try {
-//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (products.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             products.forEach(prod => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
-
-/*
- * ********************************************
- * ******** AUTHENTICATED APIs: ***************
- * ********************************************
- * 
- * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
- * BACK 401 (UnauthorizedError: No authorization 
- * token was found) IF THE REQUEST DOES NOT 
- * TRANSPORT ANY TOKEN
- * 
- * 
- */
-
-app.use(jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
-);
-
-app.use(function (err, req, res, next){
-    if(err.name === 'UnauthorizedError'){
-        console.log("Invalid token");
-        res.redirect(401,"/api/login");
-    }
-});
-
 /* POST user registration (add user to database) */
 app.post('/api/register',
     body('name')
@@ -300,6 +253,53 @@ app.post('/api/register',
             })()
         }
     });
+
+
+
+/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
+
+// (async () => {
+//     try {
+//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+//         if (products.empty) {
+//             console.log("No matching documents.");
+//         } else {
+//             products.forEach(prod => {
+//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
+//             })
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// })();
+
+/*
+ * ********************************************
+ * ******** AUTHENTICATED APIs: ***************
+ * ********************************************
+ * 
+ * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
+ * BACK 401 (UnauthorizedError: No authorization 
+ * token was found) IF THE REQUEST DOES NOT 
+ * TRANSPORT ANY TOKEN
+ * 
+ * 
+ */
+
+app.use(jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
+app.use(function (err, req, res, next){
+    if(err.name === 'UnauthorizedError'){
+        console.log("Invalid token");
+        res.redirect(401,"/api/login");
+    }
+});
 
 /* GET all products by farmers */
 app.get('/api/productByFarmer', async (req, res) => {
