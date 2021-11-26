@@ -63,8 +63,11 @@ function App() {
   }
 
   const login = (email, password) => {
-    API.userLogin(email, password).then((user) => {
-      setLoggedIn(true);
+    API.userLogin(email, password).then((response) => {
+      if(response.ok){
+        setLoggedIn(true);
+      }
+      
     }
     ).catch(error => { console.log(error); }); //handle login error
   }
