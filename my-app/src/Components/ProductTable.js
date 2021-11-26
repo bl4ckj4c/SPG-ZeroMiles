@@ -1,7 +1,7 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
 import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse, Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
@@ -36,9 +36,67 @@ function UserDropdown(props) {
     );
 };
 
+function ProductTable(props){
+
+    const [productByFarmerList, setProductByFarmerList] = useState([]);
+    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+    const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [farmerList, setFarmerList] = useState([]);
+  const [userList, setUserList] = useState([]);
+  const [update, setUpdate] = useState(true);
+  const triggerUpdate = () => setUpdate(true);
+  const [loading, setLoading] = useState(true);
 
 
-function ProductTable(props) {
+
+    useEffect(() => {
+        //prima di chiamare le API avvio l'animazione di caricamento
+        if (update === true) {
+          setProductByFarmerListUpdated(true);
+          setFarmerListUpdated(true);
+          setUserListUpdated(true);
+          setLoading(true);
+          API.getProductByFarmer()
+            .then(productByFarmer => {
+              setProductByFarmerList(productByFarmer);
+              setProductByFarmerListUpdated(false);
+            }).catch(pbf => console.log(pbf));
+    
+          API.getFarmer()
+            .then(farmer => {
+              setFarmerList(farmer);
+              setFarmerListUpdated(false);
+            }).catch(f => console.log(f));
+    
+            if(props.user.Role==="Employee")
+          API.getAllUsers()
+            .then(u => {
+              setUserList(u);
+              setUserListUpdated(false);
+            }).catch(f => console.log(f));
+        else setUserListUpdated(false);
+
+          setUpdate(false);
+    
+        }
+      }, [update]);
+    
+    
+      useEffect(() => {
+        if (!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
+          setLoading(false);
+    
+      }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
+
+    if (!loading)
+    return <ProductTableWrapped  triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={props.isLoggedIn} user={props.user}  />;
+    else return "" ; 
+}
+
+
+function ProductTableWrapped(props) {
+    console.log("quantirendering?!");
 
     const [prodNum, setProdNum] = useState(() => prodNumInit())
     const [searchParameter, setSearchParameter] = useState("");
@@ -122,21 +180,21 @@ function ProductTable(props) {
 
                 {props.isLoggedIn ?
 
-                    
-                       props.user.Role === "Employee" ? <Row className="mt-3 row-style">
 
-                            <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-                            </Col>
-                            <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
-                                <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
-                            </Col>
-                        </Row>
-                            : "" 
+                    props.user.Role === "Employee" ? <Row className="mt-3 row-style">
+
+                        <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                        </Col>
+                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
+                            <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
+                        </Col>
+                    </Row>
+                        : ""
 
                     : ""}
- <OrderConfirmedModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser}  prodNum={prodNum}  order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
-                            <ErrorModal showError={showError} handleCloseError={handleCloseError} />
-                            <CartCheckoutModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
+                <OrderConfirmedModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
+                <ErrorModal showError={showError} handleCloseError={handleCloseError} />
+                <CartCheckoutModal user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
 
             </Container>
 
@@ -155,29 +213,29 @@ function ProductTable(props) {
     );
 };
 
-function AvailableAmountButton(props){
+function AvailableAmountButton(props) {
     let wallet = GetWallet(props.isLoggedIn, props.user, props.selectedUser);
-    if (wallet === false){
+    if (wallet === false) {
         wallet = "€0.00";
     }
     else
-        wallet = "€"+wallet.toFixed(2);
- 
-       if (props.isLoggedIn) 
-       return(
-         <Button disabled variant="secondary">{wallet}</Button>
-        ); 
-        else
-         return "" 
+        wallet = "€" + wallet.toFixed(2);
+
+    if (props.isLoggedIn)
+        return (
+            <Button disabled variant="secondary">{wallet}</Button>
+        );
+    else
+        return ""
 
 }
 
-function GetWallet(isLoggedIn, user, selectedUser){
-    if(isLoggedIn){
-        if(user.Role!=="Employee")
+function GetWallet(isLoggedIn, user, selectedUser) {
+    if (isLoggedIn) {
+        if (user.Role !== "Employee")
             return user.Wallet
         else
-            if(selectedUser.length > 0)
+            if (selectedUser.length > 0)
                 return selectedUser[0].Wallet
     }
 
@@ -189,14 +247,14 @@ function CartBottomButton(props) {
 
     let total = 0;
     props.prodNum.forEach(p => p.number > 0 ? total += p.number * p.Price : "")
-    if (wallet!==false)
+    if (wallet !== false)
         return (
-        <Button variant={total > wallet ? "danger" : "secondary"} className="fixed-button-bottom" onClick={props.handleCartCheckoutModalShow}>
-            <Cart4 size={25}/>
-        <span>&nbsp;</span> €{total.toFixed(2)} </Button>
-     );
-     else
-     return ""; 
+            <Button variant={total > wallet ? "danger" : "secondary"} className="fixed-button-bottom" onClick={props.handleCartCheckoutModalShow}>
+                <Cart4 size={25} />
+                <span>&nbsp;</span> €{total.toFixed(2)} </Button>
+        );
+    else
+        return "";
 }
 
 function OrderConfirmedModal(props) {
@@ -235,7 +293,7 @@ function CartCheckoutModal(props) {
             </Modal.Body>
             <Modal.Footer>
                 <Col><Button onClick={props.submitOrder} disabled={(wallet < total || !props.prodNum.some(p => p.number > 0)) ? true : false} variant={wallet < total ? "danger" : "success"}>{wallet < total ? "Insufficient funds" : "Submit Order"}</Button></Col>
-                <Col style={{textAlign: 'right', marginRight:'18px'}}>Total €{total.toFixed(2)}</Col>
+                <Col style={{ textAlign: 'right', marginRight: '18px' }}>Total €{total.toFixed(2)}</Col>
             </Modal.Footer>
         </Modal>);
 }
@@ -322,8 +380,11 @@ function FarmerRow(props) {
 };
 
 function ProductCard(props) {
-
     const [open, setOpen] = useState(false);
+
+    const [showDesc, setShowDesc] = useState(false);
+    const handleCloseDesc = () => setShowDesc(false);
+    const handleShowDesc = () => setShowDesc(true);
 
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
 
@@ -352,17 +413,45 @@ function ProductCard(props) {
                     <Col> <Button variant="outline-warning"
                         onClick={() => setOpen(!open)}
                         style={{ fontSize: 14, color: "black" }}
-                        aria-controls="example-collapse-text"
-                        aria-expanded={open}>
+                        onClick={handleShowDesc}>
                         See Description
                     </Button></Col>
                     {props.isLoggedIn ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
                 </Row>
-                <Collapse style={{ marginTop: "10px", fontSize: 13 }} in={open}>
-                    <div>{props.prodottoDelFarmer.Description}</div>
-                </Collapse>
+                <Modal show={showDesc} onHide={handleCloseDesc} centered size="lg">
+                    <DescriptionModal handleCloseDesc={handleCloseDesc} prodotto={props.prodottoDelFarmer} imgProd={newSrc} />
+                </Modal>
             </Card.Footer>
-        </Card>
+        </Card >
+    );
+}
+
+function DescriptionModal(props) {
+    return (<>
+        <Modal.Body>
+            <Container>
+                <Row style={{textAlign: "center"}}>
+                    <h3>{props.prodotto.NameProduct}</h3>
+                </Row>
+                <Row className="mt-2">
+                    <Col style={{ textAlign: "center",  display: "block", marginBottom:"auto", marginTop:"auto"}}><Image style={{ maxHeight: "300px", maxWidth: "300px" }} src={props.imgProd} /></Col>
+                    <Col>
+                        <Row className="justify-content-center desc-mobile-margin">
+                            <ListGroup>
+                                <ListGroup.Item><p>{props.prodotto.Description}</p></ListGroup.Item>
+                            </ListGroup>
+                        </Row>
+                    </Col>
+                </Row>
+            </Container>
+
+        </Modal.Body>
+        <Modal.Footer>
+            <Button variant="secondary" onClick={props.handleCloseDesc}>
+                Close
+            </Button>
+        </Modal.Footer>
+    </>
     );
 }
 

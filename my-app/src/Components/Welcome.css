@@ -1,0 +1,21 @@
+@media (min-width: 1200px) {
+    .desktop-margin{
+        margin-top: 30px;
+    }
+    .text-placement{
+        text-align: left;
+        font-size: 45px;
+    }
+  }
+
+@media (max-width: 1200px) {
+    .text-placement{
+        text-align: left;
+        font-size: 45px;
+        margin-left: 25px;
+    }
+  }
+
+.no-scroll{
+    overflow: hidden;
+}

@@ -20,6 +20,9 @@
     z-index: 1030;
     margin: 0 0 1rem 1rem ;
   }
+  .desc-mobile-margin {
+    margin-top: 20px;
+  }
  }
 
  @media (min-width: 1200px) {

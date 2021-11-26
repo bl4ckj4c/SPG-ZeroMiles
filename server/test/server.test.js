@@ -7,8 +7,11 @@ let app = require('../server');
 
 chai.use(chaiHttp);
 
-// Server variable
-let requester = null;
+// User for the authentication
+const user = {
+    username: 'testname.testsurname@polito.it',
+    password: 'test'
+}
 
 const userKeys = [
     'Name',
@@ -37,26 +40,44 @@ const userKeysRegexp = [
     /^[Client|Employee]$/
 ];
 
-// Start and keep open the server before each test
-beforeEach(() => {
-    requester = chai.request(app).keepOpen();
-});
-
-// Close the server after each test
-afterEach(() => {
-    requester.close();
-    requester = null;
-});
 
 describe("GET for /api/users", () => {
-    test('prova', (done) => {
+    test('Unauthorized request', (done) => {
         chai.request(app)
             .get('/api/users')
             .end((err, res) => {
-                console.log(res);
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
                 done();
             });
-    })
+    });
+
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(user))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/users')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+
+                        done();
+
+                        //requester.close();
+                    });
+            });
+    });
 
     test("It should receive all users from the server", (done) => {
         chai

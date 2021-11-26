@@ -20,7 +20,7 @@ const { v4: uuidv4 } = require('uuid');
 
 //jwt parameters
 const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
-const expireTime = 300; //seconds
+const expireTime = 600; //seconds
 
 // init express
 const app = express();
@@ -99,12 +99,11 @@ app.use(cookieParser());
 
 app.post('/api/logout', (req, res) => {
     res.clearCookie('token', { httpOnly: true, sameSite: true });
-    res.status(200).end();
+    res.redirect(200,"/");
 });
 
 
 /* POST user registration (add user to database) */
-
 app.post('/api/register',
     body('name')
         // Check if the name parameter is not null
@@ -257,50 +256,7 @@ app.post('/api/register',
 
 
 
-/* GET all users */
-
-app.get('/api/users', async (req, res) => {
-    try {
-        const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (users.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Users)" });
-        } else {
-            let result = [];
-            users.forEach(user => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(users.data());
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: user.data().Name,
-                        Surname: user.data().Surname,
-                        UserID: user.id,
-                        Email: user.data().Email,
-                        Phoneno: user.data().Phoneno,
-                        Address: user.data().Address,
-                        City: user.data().City,
-                        State: user.data().State,
-                        Zipcode: user.data().Zipcode,
-                        Role: user.data().Role,
-                        Wallet: user.data().Wallet,
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).end());
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
-
-/* GET all products */
+/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
 
 // (async () => {
 //     try {
@@ -318,52 +274,32 @@ app.get('/api/users', async (req, res) => {
 //     }
 // })();
 
+/*
+ * ********************************************
+ * ******** AUTHENTICATED APIs: ***************
+ * ********************************************
+ * 
+ * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
+ * BACK 401 (UnauthorizedError: No authorization 
+ * token was found) IF THE REQUEST DOES NOT 
+ * TRANSPORT ANY TOKEN
+ * 
+ * 
+ */
 
+app.use(jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
 
-/* GET all farmers */
-app.get('/api/farmers', async (req, res) => {
-    try {
-        const farmers = await db.collection('Farmer').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (farmers.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Farmer)" });
-        } else {
-            let result = [];
-            farmers.forEach(farmer => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: farmer.data().Name,
-                        Surname: farmer.data().Surname,
-                        Company: farmer.data().Company,
-                        FarmerID: farmer.id,
-                        Email: farmer.data().Email,
-                        Phoneno: farmer.data().Phoneno,
-                        Address: farmer.data().Address,
-                        State: farmer.data().State,
-                        Zipcode: farmer.data().Zipcode,
-                        Distance: farmer.data().Distance,
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all farmers)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
+app.use(function (err, req, res, next){
+    if(err.name === 'UnauthorizedError'){
+        console.log("Invalid token");
+        res.redirect(401,"/api/login");
     }
 });
-
-
 
 /* GET all products by farmers */
 app.get('/api/productByFarmer', async (req, res) => {
@@ -435,9 +371,99 @@ app.get('/api/productByFarmer', async (req, res) => {
     }
 });
 
+/* GET all users */
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (users.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Users)" });
+        } else {
+            let result = [];
+            users.forEach(user => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(users.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: user.data().Name,
+                        Surname: user.data().Surname,
+                        UserID: user.id,
+                        Email: user.data().Email,
+                        Phoneno: user.data().Phoneno,
+                        Address: user.data().Address,
+                        City: user.data().City,
+                        State: user.data().State,
+                        Zipcode: user.data().Zipcode,
+                        Role: user.data().Role,
+                        Wallet: user.data().Wallet,
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).end());
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+
+
+/* GET all farmers */
+app.get('/api/farmers', async (req, res) => {
+    try {
+        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (farmers.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Farmer)" });
+        } else {
+            let result = [];
+            farmers.forEach(farmer => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: farmer.data().Name,
+                        Surname: farmer.data().Surname,
+                        Company: farmer.data().Company,
+                        FarmerID: farmer.id,
+                        Email: farmer.data().Email,
+                        Phoneno: farmer.data().Phoneno,
+                        Address: farmer.data().Address,
+                        State: farmer.data().State,
+                        Zipcode: farmer.data().Zipcode,
+                        Distance: farmer.data().Distance,
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all farmers)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+
+
+
+
+
 
 /* GET all Order */
-
 app.get('/api/orders', async (req, res) => {
     try {
         const orders = await db.collection('Order').orderBy('Timestamp').get();
@@ -485,10 +511,7 @@ app.get('/api/orders', async (req, res) => {
 
 
 
-
-
 /* POST place an order in the database */
-
 app.post('/api/order', async (req, res) => {
     try {
         let new_Quantity=0;
@@ -595,6 +618,7 @@ app.post('/api/order', async (req, res) => {
 })
 
 
+
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
     try {
@@ -634,15 +658,7 @@ app.post('/api/modifywallet', async (req, res) => {
 
 
 
-app.use(
-    jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
-);
-
-app.get('/api/sessions/current', (req, res) => {
+app.get('/api/sessions/current',(req,res)=>{
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
     if (user) {
