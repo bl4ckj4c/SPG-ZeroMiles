@@ -491,7 +491,27 @@ app.get('/api/orders', async (req, res) => {
 
 app.post('/api/order', async (req, res) => {
     try {
+        let new_Quantity=0;
+        let client;
         let result = [];
+        let result1 = [];
+
+        (async () => {
+            try {
+                client =await db.collection('User').doc("" + req.body.UserID).get();
+                console.log(client.data());
+                new_Quantity= client.data().Wallet - quantity;
+            } catch (error) {
+                console.log("dio");
+                res.json(error);
+            }
+        })()
+        
+        
+        
+        
+        
+        
         let productByFarmer = await db.collection('Product by Farmers').get()
         //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
 
@@ -501,18 +521,26 @@ app.post('/api/order', async (req, res) => {
         }
 
         //for each product in the order
+        let quantity=0;
         req.body.items.forEach(product => {
-
+        quantity = quantity + product.number*product.Price;
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
                     res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" });
+                
+
+
                 }
             })
+           
         })
-
+        
+       
         console.log("creating new order");
+        console.log(quantity);
         let newOrder = {}
+        
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",);
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
@@ -540,8 +568,21 @@ app.post('/api/order', async (req, res) => {
                 }
             })
         })
-
         Promise.all(result);
+       new_Quantity = client.data().Wallet - quantity;
+       if (new_Quantity<0){
+        res.status(500).json({
+            info: "You Haven't enough money",
+       })}
+       result1.push( new Promise(async (resolve, reject) => {
+        console.log (new_Quantity);
+           await db.collection('User').doc(req.body.UserID).update({ Wallet: new_Quantity});
+            resolve("QUANTITYUPDATE");
+        }))
+
+        Promise.all(result1);
+
+
         res.status(201).end();
 
     } catch (error) {
