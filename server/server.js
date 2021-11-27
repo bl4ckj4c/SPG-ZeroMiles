@@ -509,7 +509,7 @@ app.get('/api/clientorders', async(req, res)=>{
         const orders = await db.collection('Order').where("ClientID","==",""+user.userID).get();
         if (orders.empty) {
             console.log("No matching documents.");
-            res.status(200).json({});
+            res.status(200).json([]);
         } else {
             let result = [];
             orders.forEach(order => {
