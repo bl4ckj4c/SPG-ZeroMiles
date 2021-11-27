@@ -113,7 +113,7 @@ async function getProductByFarmer(counterID) {
 async function getClient(){
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/user', { method: 'GET' });
+        const res = await fetch(BASEURL + '/userinfo', { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -121,7 +121,7 @@ async function getClient(){
     } catch (e) {
         throw new Error(e);
     }
-    return data.map((o) => new Order(...Object.values(o)));
+    return data[0];
 }
 
 async function getClientOrders(clientid){
@@ -235,6 +235,7 @@ const API = {
     userLogin,
     userLogout,
     getUserInfo,
-    getClientOrders
+    getClientOrders,
+    getClient
 };
 export default API;

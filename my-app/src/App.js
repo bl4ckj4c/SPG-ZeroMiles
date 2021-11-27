@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import API from './API';
 import { useState, useEffect } from 'react';
@@ -78,6 +78,8 @@ function App() {
     });
   }
 
+  let history = useHistory();
+
   return (
     <Router>
       {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
@@ -100,14 +102,14 @@ function App() {
       <Switch>
 
         <Route exact path="/">
-          {loggedIn ? <Redirect to="/products" /> : ""}
+          {loggedIn ? <Redirect to="/products" /> : <Redirect to="/login"/>}
           <Welcome />
         </Route>
 
         <Route exact path="/products">
           <Col as="main">
 
-            {!loggedIn ? <Redirect to="/" /> : <ProductTable isLoggedIn={loggedIn} user={user} userList={userList}/>}
+            {loggedIn ? <ProductTable isLoggedIn={loggedIn} user={user} userList={userList}/> : <Redirect to="/"/>}
             {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria
             {loading ? <Row className="justify-content-center mt-5">
             
@@ -121,8 +123,7 @@ function App() {
         </Route>
 
         <Route exact path="/login">
-          <UserLogin login={login} />
-          {loggedIn ? <Redirect to="/products" /> : ""}
+          {loggedIn ? <Redirect to="/products"/> : <UserLogin login={login}/>}
         </Route>
 
         <Route exact path="/signup">
@@ -134,10 +135,7 @@ function App() {
             users={userList}
             sidebarCollapse={sidebarCollapse}
             setSidebarCollapse={setSidebarCollapse}
-            status={match.params.status} />
-        )
-        }
-        />
+            status={match.params.status} /> )}/>
 
         <Route exact path="/clients">
           <ClientView users={userList} />

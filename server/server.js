@@ -415,7 +415,7 @@ app.get('/api/users', async (req, res) => {
 
 /* GET a user*/
 
-app.get('/api/user', async (req, res) => {
+app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
     try {
         const users = await db.collection('User').where("Email","==",""+user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))

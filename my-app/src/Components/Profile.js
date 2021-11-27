@@ -11,8 +11,9 @@ function Profile(props) {
 
     useEffect(() => {
         setLoading(true);
-        API.getClientOrders()
+        API.getClient()
             .then(client => {
+                console.log(client);
                 setloggedClient(client);
                 setloggedClientUpdated(false);
                 setLoading(false);
@@ -22,7 +23,7 @@ function Profile(props) {
     useEffect(() => {
         if (loggedClientUpdated === true) {
             setLoading(true);
-            API.getClientOrders()
+            API.getClient()
                 .then(client => {
                     setloggedClient(client);
                     setloggedClientUpdated(false);
@@ -36,18 +37,24 @@ function Profile(props) {
         console.log(err);
     }
 
+    console.log(loggedClient);
+
     return (
-        <Col>
-            <Table className="d-flex justify-content-center">
-                <tbody id="client-table" align="center">
-                    {loading ? <> <Row className="justify-content-center mt-5">
-                        < Spinner animation="border" size="xl" variant="secondary" />
-                            </Row > </> :
-                        <>
-                            <ClientRow client={loggedClient} /> </>}
-                </tbody>
-            </Table>
-        </Col>
+        <>
+            {loading ? <> <Row className="justify-content-center mt-5">
+                < Spinner animation="border" size="xl" variant="secondary" />
+                    </Row > </> :
+                <>
+                    <Col>
+                        <Table className="d-flex justify-content-center">
+                            <tbody id="client-table" align="center">
+                                <ClientRow client={loggedClient} />
+                            </tbody>
+                        </Table>
+                    </Col>
+                </>
+            }
+        </>
     );
 }
 

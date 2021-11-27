@@ -23,7 +23,7 @@ function ZeroNavbar(props) {
             <Navbar bg="warning" expand={false}>
                 <Container>
 
-                    <Navbar.Brand className="logo" href="/products">
+                    <Navbar.Brand className="logo" onClick={handleHome}>
                         <Image id="logo" src="/images/logo.png" />
                     </Navbar.Brand>
 
