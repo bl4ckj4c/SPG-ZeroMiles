@@ -110,6 +110,19 @@ async function getProductByFarmer(counterID) {
     return data.map((o) => new Order(...Object.values(o)));
 }
   
+async function getClient(){
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/user', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
 
 async function getClientOrders(clientid){
     let data = [];
@@ -119,6 +132,7 @@ async function getClientOrders(clientid){
             throw new Error(res.statusText);
         }
         data = await res.json();
+        console.log(data.length);
     } catch (e) {
         throw new Error(e);
     }

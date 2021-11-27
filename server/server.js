@@ -413,6 +413,48 @@ app.get('/api/users', async (req, res) => {
 });
 
 
+/* GET a user*/
+
+app.get('/api/user', async (req, res) => {
+    const user = req.user && req.user.user;
+    try {
+        const users = await db.collection('User').where("Email","==",""+user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (users.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Users)" });
+        } else {
+            let result = [];
+            users.forEach(user => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(users.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: user.data().Name,
+                        Surname: user.data().Surname,
+                        UserID: user.id,
+                        Email: user.data().Email,
+                        Phoneno: user.data().Phoneno,
+                        Address: user.data().Address,
+                        City: user.data().City,
+                        State: user.data().State,
+                        Zipcode: user.data().Zipcode,
+                        Role: user.data().Role,
+                        Wallet: user.data().Wallet,
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).end());
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 /* GET all farmers */
 app.get('/api/farmers', async (req, res) => {
