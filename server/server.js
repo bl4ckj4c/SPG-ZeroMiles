@@ -475,7 +475,18 @@ app.get('/api/clientorders', async(req, res)=>{
                 //console.log(farmer.data());
 
                 result.push(new Promise(async (resolve, reject) => {
-                    resolve(order.data());
+                    const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching users for " + order.data().ClientID);
+                    }
+                    resolve({
+                        OrderID: order.id,  //maybe it's "order.id"
+                        Status: order.data().Status,
+                        ClientID: client.id,
+                        Client: client.data(),
+                        Timestamp: order.data().Timestamp,
+                        ListOfProducts: order.data().Products
+                    });
                 }));
             })
             const response = Promise.all(result)
