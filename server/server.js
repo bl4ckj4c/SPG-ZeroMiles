@@ -459,9 +459,42 @@ app.get('/api/farmers', async (req, res) => {
 
 
 
+/* GET all orders from a client*/
 
+app.get('/api/clientorders', async(req, res)=>{
+    const user = req.user && req.user.user;
+    try{
+        const orders = await db.collection('Order').where("ClientID","==",""+user.userID).get();
+        if (orders.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Order)" });
+        } else {
+            let result = [];
+            orders.forEach(order => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
 
-
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve(order.data());
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all client orders)",
+                    error: error
+                }));
+            //console.log(orders);
+            //orders.forEach(order => {console.log(order.data())})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+})
 
 /* GET all Order */
 app.get('/api/orders', async (req, res) => {
