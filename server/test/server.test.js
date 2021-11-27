@@ -113,3 +113,51 @@ describe("GET for /api/users", () => {
             });
     });
 });
+
+//2 GET productByFarmer
+
+describe("GET for /api/productByFarmer", () => {
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/productByFarmer')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+});
+
+//3 GET all Farmers
+
+describe("GET for /api/farmers", () => {
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/farmers')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+});
+
+//4 GET all Order
+
+describe("GET for /api/orders", () => {
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/orders')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+});
