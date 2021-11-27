@@ -1,12 +1,11 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner } from 'react-bootstrap';
+import { Table, Row, Col, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
-import "./EmployeeView.css";
-import Sidebar from "./Sidebar";
+import "./ClientOrders.css";
 
-function EmployeeView(props) {
+function ClientOrders(props) {
 
     const [ordersList, setOrdersList] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
@@ -14,7 +13,7 @@ function EmployeeView(props) {
 
     useEffect(() => {
         setLoading(true);
-        API.getOrders()
+        API.getClientOrders()
             .then(orders => {
                 setOrdersList(orders);
                 setOrdersListUpdated(false);
@@ -25,7 +24,7 @@ function EmployeeView(props) {
     useEffect(() => {
         if (ordersListUpdated === true) {
             setLoading(true);
-            API.getOrders()
+            API.getClientOrders()
                 .then(orders => {
                     setOrdersList(orders);
                     setOrdersListUpdated(false);
@@ -36,8 +35,7 @@ function EmployeeView(props) {
 
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/
-        }
+        {/*setMessage({ msg: err.error, type: 'danger' });*/}
         console.log(err);
     }
 
@@ -45,29 +43,15 @@ function EmployeeView(props) {
         <>
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
-                        </Row > </> :
+            </Row > </> :
                 <>
                     <Row>
                         <Col>
                             <Table className="d-flex justify-content-center">
                                 <tbody id="employee-table" align="center">
-                                    {
-                                        ordersList.slice(0).reverse().map(o => {
-                                            if (o.Status == "open" && props.status == "open") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (o.Status == "pending" && props.status == "pending") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (o.Status == "closed" && props.status == "closed") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (props.status == "all") {
-                                                return <OrderRow order={o} />
-                                            }
-                                        }
-
-                                        )
+                                    {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o => {
+                                        <OrderRow order={o}/>
+                                    }) : <NoOrders />
                                     }
                                 </tbody>
                             </Table>
@@ -87,22 +71,15 @@ const ostat = {
 }
 
 function OrderRow(props) {
-    let [stat, setStat] = useState(props.order.Status || 'o');
-
 
     let buttonstatus;
-    // let stat;
     if (props.order.Status === "open") {
-        stat = 'o';
         buttonstatus = "outline-primary";
     } else if (props.order.Status === "pending") {
         buttonstatus = "outline-danger";
-        stat = 'p';
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
-        stat = 'c';
     }
-
 
     return (
         <>
@@ -138,33 +115,7 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €25</h1>
                             </Col>
                             <Col>
-                                <Button onClick={() => {
-
-                                    if (stat === 'o') {
-                                        props.order.Status = "pending";
-                                        setStat('p');
-                                        API.modifyOrderStatus(props.order);
-
-
-                                    }
-                                    if (stat === 'p') {
-                                        props.order.Status = "closed";
-                                        setStat('c');
-                                        API.modifyOrderStatus(props.order);
-
-                                    }
-                                    if (stat === 'c') {
-                                        props.order.Status = "closed";
-                                        setStat('c');
-                                    }
-                                    API.modifyOrderStatus(props.order);
-
-
-                                }} variant={buttonstatus} size="sm">
-                                    {ostat[stat]}
-
-
-                                </Button>
+                                <Button variant={buttonstatus} size="sm" disabled> {props.order.Status} </Button>
                             </Col>
                         </Row>
 
@@ -196,9 +147,17 @@ function ProductList(props) {
                 Price: €{props.product.Price.toFixed(2)}
             </Col>
         </Row>
-
-
     );
 }
 
-export { ProductList, EmployeeView };
+function NoOrders() {
+    return (
+        <tr>
+            <td>
+                <h3 className="mt-5 mb-5">You have no orders yet</h3>
+            </td>
+        </tr>
+    );
+}
+
+export default ClientOrders;

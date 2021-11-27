@@ -67,9 +67,9 @@ function UserLogin(props) {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={ (e) => setPassword(e.target.value) }/>
                         </Form.Group>
-                        <Row className="justify-content-center mt-1 mb-1">
+                        <Row className="justify-content-center m-5">
                             <Button 
-                                variant="primary"
+                                variant="secondary"
                                 type="submit"
                             >
                             Login

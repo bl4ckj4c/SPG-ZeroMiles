@@ -4,9 +4,8 @@
       width: 180px;
       margin-left: 22px;
     }
-    .posizionamentoPulsante{
-      margin-top: 20px;
-      margin-right: 22px;
+    .posizionamento-pulsante{
+      margin-right: 30px;
     }
   }
   
@@ -15,11 +14,36 @@
     #logo{
       width: 180px;
     }
-    .posizionamentoPulsante{
-      margin-top: 20px;
+    .posizionamento-pulsante{
+      margin-top: 10px;
     }
   }
   
   .posizionamento{
     margin-top: 24px;
   }
+
+  .bg-sidebar{
+    background-color:#ffbf02  ;
+  }
+
+  .sidebar-text{
+    color: white;
+    font-size: 24;
+    font-weight: bold;
+  }
+
+  .logout-button{
+    margin-top: -25px;
+  }
+ 
+
+  .nav-subtitle{
+    color: white;
+  } 
+
+  .side-farmer{
+    opacity: 0.4;
+  }
+
+  /*background-color: blanchedalmond;*/

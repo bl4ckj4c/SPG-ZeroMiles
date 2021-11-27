@@ -111,6 +111,20 @@ async function getProductByFarmer(counterID) {
 }
   
 
+async function getClientOrders(clientid){
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/clientorders', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
 async function userLogin(username, password) {
     const response = await fetch(BASEURL + "/login", {
         method: 'POST',
@@ -206,6 +220,7 @@ const API = {
 
     userLogin,
     userLogout,
-    getUserInfo
+    getUserInfo,
+    getClientOrders
 };
 export default API;

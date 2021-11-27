@@ -13,6 +13,8 @@ import ZeroNavbar from './Components/Navbar';
 import { EmployeeView } from './Components/EmployeeView';
 import ClientView from './Components/ClientView';
 import Welcome from './Components/Welcome';
+import ClientOrders from './Components/ClientOrders'
+import Profile from './Components/Profile'
 
 function App() {
   const [user, setUser] = useState({});
@@ -25,16 +27,15 @@ function App() {
 
 
   useEffect(() => {
-    if(loggedIn){
+    if (loggedIn) {
       API.getAllUsers()
         .then(u => {
           setUserList(u);
           setUserListUpdated(false);
         }).catch(f => console.log(f));
-      }
-
     }
-  , [loggedIn]);
+  }
+    , [loggedIn]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -53,8 +54,6 @@ function App() {
     checkAuth();
   }, [loggedIn]);
 
-
-
   //Gestione di eventuali errori in risposta alle API
   const handleErrors = (err) => {
     {/*setMessage({ msg: err.error, type: 'danger' });*/ }
@@ -64,10 +63,10 @@ function App() {
 
   const login = (email, password) => {
     API.userLogin(email, password).then((response) => {
-      if(response.ok){
+      if (response.ok) {
         setLoggedIn(true);
       }
-      
+
     }
     ).catch(error => { console.log(error); }); //handle login error
   }
@@ -100,15 +99,15 @@ function App() {
 
       <Switch>
 
-      <Route exact path="/">
-      {loggedIn ? <Redirect to="/products" /> : ""}
-          <Welcome/>
-      </Route>
+        <Route exact path="/">
+          {loggedIn ? <Redirect to="/products" /> : ""}
+          <Welcome />
+        </Route>
 
         <Route exact path="/products">
           <Col as="main">
-         
-          {!loggedIn ? <Redirect to="/" /> :  <ProductTable  isLoggedIn={loggedIn} user={user} />}
+
+            {!loggedIn ? <Redirect to="/" /> : <ProductTable isLoggedIn={loggedIn} user={user} userList={userList}/>}
             {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria
             {loading ? <Row className="justify-content-center mt-5">
             
@@ -116,7 +115,8 @@ function App() {
             </Row> :
               
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
- */}
+            */}
+
           </Col>
         </Route>
 
@@ -126,20 +126,29 @@ function App() {
         </Route>
 
         <Route exact path="/signup">
-          <UserRegister/>
+          <UserRegister />
         </Route>
 
-        <Route exact path="/employee">
-       <EmployeeView
+        <Route exact path="/orders/:status" render={({ match }) => (
+          <EmployeeView
             users={userList}
             sidebarCollapse={sidebarCollapse}
-            setSidebarCollapse={setSidebarCollapse} />
-         
-        </Route>
+            setSidebarCollapse={setSidebarCollapse}
+            status={match.params.status} />
+        )
+        }
+        />
 
         <Route exact path="/clients">
-       <ClientView users={userList} />
-        
+          <ClientView users={userList} />
+        </Route>
+
+        <Route exact path="/myorders">
+          <ClientOrders/>
+        </Route>
+
+        <Route exact path="/profile">
+          <Profile/>
         </Route>
 
       </Switch>

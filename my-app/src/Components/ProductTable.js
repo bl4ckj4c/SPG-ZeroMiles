@@ -41,14 +41,12 @@ function ProductTable(props){
     const [productByFarmerList, setProductByFarmerList] = useState([]);
     const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
     const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  const [farmerList, setFarmerList] = useState([]);
-  const [userList, setUserList] = useState([]);
-  const [update, setUpdate] = useState(true);
-  const triggerUpdate = () => setUpdate(true);
-  const [loading, setLoading] = useState(true);
-
-
+    const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+    const [farmerList, setFarmerList] = useState([]);
+    const [userList, setUserList] = useState([]);
+    const [update, setUpdate] = useState(true);
+    const triggerUpdate = () => setUpdate(true);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
@@ -181,11 +179,11 @@ function ProductTableWrapped(props) {
                 {props.isLoggedIn ?
 
 
-                    props.user.Role === "Employee" ? <Row className="mt-3 row-style">
+                    props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
                         <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                         </Col>
-                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
+                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} style={{textAlign: 'right'}}>
                             <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
                         </Col>
                     </Row>
