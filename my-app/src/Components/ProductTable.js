@@ -36,60 +36,51 @@ function UserDropdown(props) {
     );
 };
 
-function ProductTable(props){
+function ProductTable(props) {
 
     const [productByFarmerList, setProductByFarmerList] = useState([]);
     const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
     const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-    const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
     const [farmerList, setFarmerList] = useState([]);
-    const [userList, setUserList] = useState([]);
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
     const [loading, setLoading] = useState(true);
 
+
+
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
-          setProductByFarmerListUpdated(true);
-          setFarmerListUpdated(true);
-          setUserListUpdated(true);
-          setLoading(true);
-          API.getProductByFarmer()
-            .then(productByFarmer => {
-              setProductByFarmerList(productByFarmer);
-              setProductByFarmerListUpdated(false);
-            }).catch(pbf => console.log(pbf));
-    
-          API.getFarmer()
-            .then(farmer => {
-              setFarmerList(farmer);
-              setFarmerListUpdated(false);
-            }).catch(f => console.log(f));
-    
-            if(props.user.Role==="Employee")
-          API.getAllUsers()
-            .then(u => {
-              setUserList(u);
-              setUserListUpdated(false);
-            }).catch(f => console.log(f));
-        else setUserListUpdated(false);
+            setProductByFarmerListUpdated(true);
+            setFarmerListUpdated(true);
+            setLoading(true);
+            API.getProductByFarmer()
+                .then(productByFarmer => {
+                    setProductByFarmerList(productByFarmer);
+                    setProductByFarmerListUpdated(false);
+                }).catch(pbf => console.log(pbf));
 
-          setUpdate(false);
-    
+            API.getFarmer()
+                .then(farmer => {
+                    setFarmerList(farmer);
+                    setFarmerListUpdated(false);
+                }).catch(f => console.log(f));
+
+
+            setUpdate(false);
+
         }
-      }, [update]);
-    
-    
-      useEffect(() => {
-        if (!userListUpdated && !farmerListUpdated && !productByFarmerListUpdated)
-          setLoading(false);
-    
-      }, [userListUpdated, farmerListUpdated, productByFarmerListUpdated]);
+    }, [update]);
+
+    useEffect(() => {
+        if (!farmerListUpdated && !productByFarmerListUpdated)
+            setLoading(false);
+
+    }, [farmerListUpdated, productByFarmerListUpdated]);
 
     if (!loading)
-    return <ProductTableWrapped  triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} users={userList} isLoggedIn={props.isLoggedIn} user={props.user}  />;
-    else return "" ; 
+        return <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} />;
+    else return "";
 }
 
 
@@ -428,11 +419,11 @@ function DescriptionModal(props) {
     return (<>
         <Modal.Body>
             <Container>
-                <Row style={{textAlign: "center"}}>
+                <Row style={{ textAlign: "center" }}>
                     <h3>{props.prodotto.NameProduct}</h3>
                 </Row>
                 <Row className="mt-2">
-                    <Col style={{ textAlign: "center",  display: "block", marginBottom:"auto", marginTop:"auto"}}><Image style={{ maxHeight: "300px", maxWidth: "300px" }} src={props.imgProd} /></Col>
+                    <Col style={{ textAlign: "center", display: "block", marginBottom: "auto", marginTop: "auto" }}><Image style={{ maxHeight: "300px", maxWidth: "300px" }} src={props.imgProd} /></Col>
                     <Col>
                         <Row className="justify-content-center desc-mobile-margin">
                             <ListGroup>

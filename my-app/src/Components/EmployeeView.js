@@ -135,7 +135,7 @@ function OrderRow(props) {
 
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €25</h1>
+                                <h1 style={{fontSize: 15, marginTop: 10}}>Total: {props.order.ProductInOrder.reduce((sum, p) => {return sum + parseInt(p.number)* parseInt(p.Price)},0)}</h1>
                             </Col>
                             <Col>
                                 <Button onClick={() => {
