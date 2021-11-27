@@ -547,28 +547,11 @@ app.get('/api/orders', async (req, res) => {
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
-        let new_Quantity=0;
-        let client;
         let result = [];
-        let result1 = [];
-
-        (async () => {
-            try {
-                client =await db.collection('User').doc("" + req.body.UserID).get();
-                console.log(client.data());
-                new_Quantity= client.data().Wallet - quantity;
-            } catch (error) {
-                console.log("dio");
-                res.json(error);
-            }
-        })()
         
         
         
-        
-        
-        
-        let productByFarmer = await db.collection('Product by Farmers').get()
+         let productByFarmer = await db.collection('Product by Farmers').get()
         //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
 
         if (productByFarmer.empty) {
@@ -596,7 +579,7 @@ app.post('/api/order', async (req, res) => {
         console.log("creating new order");
         console.log(quantity);
         let newOrder = {}
-        
+        newOrder.Price=quantity;
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",);
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
@@ -625,20 +608,6 @@ app.post('/api/order', async (req, res) => {
             })
         })
         Promise.all(result);
-       new_Quantity = client.data().Wallet - quantity;
-       if (new_Quantity<0){
-        res.status(500).json({
-            info: "You Haven't enough money",
-       })}
-       result1.push( new Promise(async (resolve, reject) => {
-        console.log (new_Quantity);
-           await db.collection('User').doc(req.body.UserID).update({ Wallet: new_Quantity});
-            resolve("QUANTITYUPDATE");
-        }))
-
-        Promise.all(result1);
-
-
         res.status(201).end();
 
     } catch (error) {
@@ -654,8 +623,49 @@ app.post('/api/order', async (req, res) => {
 
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
+    let result=[];
+    let risultato=[];
+    let order;
+    let user;
+    let new_Quantity=9;
+    let id;
+    
     try {
-        await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
+        if(req.body.Status=="pending"){
+        order = await db.collection('Order').doc(req.body.id).get();
+                     
+            console.log(order);
+           
+        risultato.push( new Promise(async (resolve, reject) => {
+            id = order.data().ClientID;
+            console.log(id);
+            user = await db.collection('User').doc(id).get();
+            console.log(user);
+            new_Quantity=user.data().Wallet - order.data().Price;
+            console.log(new_Quantity);
+            if (new_Quantity<0){
+                res.status(500).end();
+            }else{
+                  
+        db.collection('Order').doc(req.body.id).update({ Status: req.body.Status }); 
+        db.collection('User').doc(""+order.data().ClientID).update({ Wallet:new_Quantity });        
+                resolve("QUANTITYUPDATE");
+               
+             
+            } 
+            }))
+        Promise.all(risultato);
+
+
+
+            }else{
+                (async () => {
+                    await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status }); 
+                    res.status(201).end();
+                    })()
+
+            }
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -663,6 +673,8 @@ app.post('/api/modifyorder', async (req, res) => {
             error: error
         });
     }
+    res.status(201).end();       
+   
 });
 
 app.post('/api/modifywallet', async (req, res) => {
@@ -707,3 +719,6 @@ app.listen(port, () => {
 });
 
 module.exports = app;
+
+
+

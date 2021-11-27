@@ -23,21 +23,6 @@ async function getProductInOrder() {
 }
 
 
-async function getOrder() {
-    let data = [];
-    try {
-        const res = await fetch(BASEURL + '/orders', { method: 'GET' });
-        if (!res.ok) {
-            throw new Error(res.statusText);
-        }
-        data = await res.json();
-    } catch (e) {
-        throw new Error(e);
-    }
-    return data.map((o) => new Order(...Object.values(o)));
-}
-
-
 
 
 async function getProductByFarmer() {
@@ -226,7 +211,7 @@ const API = {
     getFarmer,
     addOrder,
     
-    getOrder,
+    
     getProductInOrder, 
     getAllUsers,
     getOrders,
