@@ -220,6 +220,7 @@ const API = {
 
     userLogin,
     userLogout,
-    getUserInfo
+    getUserInfo,
+    getClientOrders
 };
 export default API;

@@ -33,11 +33,16 @@ function ClientOrders(props) {
         }
     }, [ordersListUpdated]);
 
+    console.log(ordersList.length);
+    console.log(ordersList);
+
 
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/}
         console.log(err);
     }
+
+    console.log(ordersList);
 
     return (
         <>
@@ -49,10 +54,12 @@ function ClientOrders(props) {
                         <Col>
                             <Table className="d-flex justify-content-center">
                                 <tbody id="employee-table" align="center">
-                                    {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o => {
+
+                                    {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o => 
                                         <OrderRow order={o}/>
-                                    }) : <NoOrders />
-                                    }
+                                    ) : <NoOrders/>
+                                    } 
+
                                 </tbody>
                             </Table>
                         </Col>
