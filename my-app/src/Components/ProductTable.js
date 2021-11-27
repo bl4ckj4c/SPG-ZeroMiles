@@ -170,11 +170,11 @@ function ProductTableWrapped(props) {
                 {props.isLoggedIn ?
 
 
-                    props.user.Role === "Employee" ? <Row className="mt-3 row-style">
+                    props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
                         <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                         </Col>
-                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1}>
+                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} style={{textAlign: 'right'}}>
                             <AvailableAmountButton user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
                         </Col>
                     </Row>

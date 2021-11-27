@@ -1,7 +1,9 @@
-import { Navbar, Nav, Button, Image, Container } from 'react-bootstrap';
+import { Navbar, Nav, Button, Image, Container, Offcanvas, NavDropdown, Col, Row } from 'react-bootstrap';
 import "./Navbar.css";
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
-import {useLocation, useHistory} from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
+import { House, DoorOpen } from 'react-bootstrap-icons';
+import {WelcomeFarmerSidebar} from "../Images/WelcomeFarmer.js";
 
 function ZeroNavbar(props) {
     const location = useLocation();
@@ -12,30 +14,106 @@ function ZeroNavbar(props) {
         history.push('/login');
     }
 
+    function handleHome() {
+        history.push('/products');
+    }
+
     return (
         location.pathname === "/" ? <></> :
-        <Navbar bg="warning">
-            <Container>
-                <Button
-                    aria-controls="left-sidebar"
-                    onClick={() => props.setSidebarCollapse(old => !old)}/>
-                <Navbar.Brand href="/products">
-                    <Image id="logo" src="/images/logo.png" />
-                </Navbar.Brand>
-                <Nav>
-                    {!props.isLoggedIn ? <><Nav.Link className="posizionamento" href="/login">Login</Nav.Link>
-                        <Nav.Link className="posizionamentoPulsante" href="/user">
-                            <Button variant="secondary" size="sm">Sign Up</Button>
-                        </Nav.Link></> : <Button className="posizionamentoPulsante" variant="secondary" size="sm" onClick={handleLogout}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                        </svg> Logout</Button>}
-                </Nav>
-            </Container>
-        </Navbar>
+            <Navbar bg="warning" expand={false}>
+                <Container>
+
+                    <Navbar.Brand className="logo" href="/products">
+                        <Image id="logo" src="/images/logo.png" />
+                    </Navbar.Brand>
+
+                    {!props.isLoggedIn ? <></> : <>
+
+                        <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
+                        <Navbar.Offcanvas
+                            id="offcanvasNavbar"
+                            aria-labelledby="offcanvasNavbarLabel"
+                            placement="end"
+                            className="bg-sidebar"
+                        >
+                            <Offcanvas.Header closeButton>
+                                <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
+                            </Offcanvas.Header>
+
+                            <Offcanvas.Body>
+                                <Row>
+                                    <Col>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{marginTop: '-4px', marginRight: '4px'}}/>Home</Button>
+                                    </Col>
+                                    <Col>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{marginTop: '-4px', marginRight: '4px'}}/>Logout</Button>
+                                    </Col>
+                                </Row>
+
+
+                                {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
+
+                                {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
+
+                            </Offcanvas.Body>
+
+                            <WelcomeFarmerSidebar className="side-farmer"/>
+
+                        </Navbar.Offcanvas>
+                    </>}
+
+                </Container >
+            </Navbar >
 
     );
 };
+
+
+function EmployeeSidebar(props) {
+
+    return (
+        <>
+            <Offcanvas.Title className="mt-3 nav-subtitle">ORDERS</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/orders/all" >All</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/orders/open">Open</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/orders/pending">Pending</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/orders/closed">Closed</Nav.Link>
+            </Nav>
+
+            <Offcanvas.Title className="mt-3 nav-subtitle">CLIENTS</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/clients" >All</Nav.Link>
+            </Nav>
+        </>
+    );
+}
+
+function ClientSidebar(props) {
+
+    return (
+        <>
+            <Offcanvas.Title className="mt-3 nav-subtitle">ORDERS</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/myorders">My orders</Nav.Link>
+            </Nav>
+
+            <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
+            </Nav>
+        </>
+    );
+}
 
 export default ZeroNavbar;
 

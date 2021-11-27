@@ -1,0 +1,15 @@
+.sfondoriga{
+    /*background-color: #eaeaea;*/
+    background-color: #efefef;
+    border-radius: 10px;
+}
+
+.sfondosidebar{
+    background-color: #efefef;
+}
+
+@media (max-width: 1200px) {
+    .ridotto-mobile {
+      font-size: 13px;
+    }
+  }
