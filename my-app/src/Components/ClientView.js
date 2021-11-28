@@ -1,11 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Table, Row, Col, ListGroup, Container, Modal, Button, Image, InputGroup, FormControl, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
+import API from '../API';
 import "./ClientView.css";
 
 function ClientView(props) {
-    const [clientsList, setClientsList] = useState([]);
-    const [clientsListUpdated, setClientsListUpdated] = useState(true);
 
     return (
         <Col>
@@ -19,6 +18,7 @@ function ClientView(props) {
 }
 
 function ClientRow(props) {
+
     return (
         <Card className="client-card mt-3">
 
@@ -53,25 +53,48 @@ function ButtonBalance(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
+    const [showConfirm, setShowConfirm] = useState(false);
+    const handleCloseConfirm = () => handleRefresh();
+    const handleShowConfirm = () => setShowConfirm(true);
+
     const [amount, setAmount] = useState(props.client.Wallet);
     const [difference, setDifference] = useState(0);
-    const [operation, setOperation] = useState ("Add");
+    const [operation, setOperation] = useState("Add");
 
     function UpdateNumber(i) {
         if (i === -1 && amount > 0) {
             setAmount(amount - 1);
             setDifference(difference - 1);
-            }
+        }
         else if (i === +1) {
             setAmount(amount + 1);
             setDifference(difference + 1);
         }
 
-        if(difference < 0){
+        if (difference < 0) {
             setOperation("Subtract");
         } else {
             setOperation("Add");
         }
+    }
+
+    async function handleUpdate() {
+        try {
+            let object = {
+                "ClientID": props.client.UserID,
+                "Wallet": amount
+            }
+            let res = await API.modifyWallet(object);
+            handleClose();
+            handleShowConfirm();
+        } catch (err) {
+            console.log("errore: " + err);
+        }
+    }
+
+    function handleRefresh(){
+        setShowConfirm(false);
+        window.location.reload(true);
     }
 
     return (
@@ -97,8 +120,20 @@ function ButtonBalance(props) {
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
-                    <Button variant="warning" onClick={handleClose}>
+                    <Button variant="warning" onClick={handleUpdate}>
                         {operation} €{Math.abs(difference)}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal show={showConfirm} onHide={handleCloseConfirm} size ="md" centered >
+                <Modal.Header closeButton>
+                    <Modal.Title>{props.client.Name}'s wallet updated ✅</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{textAlign: 'center'}}>Amount added: {difference}€. New wallet balance: {amount}€</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseConfirm}>
+                        Close
                     </Button>
                 </Modal.Footer>
             </Modal>
