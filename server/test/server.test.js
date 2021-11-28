@@ -252,4 +252,64 @@ describe("GET for /api/orders", () => {
                 done();
             });
     });
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(user))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/orders')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        // The body received should be an array
+                        expect(res.body).to.be.an("array");
+                        // Check the the number of users in Firebase
+                        expect(res.body).to.have.lengthOf(20);
+
+                        res.body.forEach((item, indexItem) => {
+
+
+                            // Check if the current item is an object
+                            expect(item).to.be.an("object");
+
+
+
+
+
+                        });
+                        done();
+
+                    });
+            });
+
+    });
+
+
+
+//5 GET all Product In Order
+
+    describe("GET for /api/productinorder", () => {
+        test('Unauthorized request', (done) => {
+            chai.request(app)
+                .get('/api/productinorder')
+                .end((err, res) => {
+                    // We should not have error
+                    expect(err).to.be.null;
+                    // Check that the response status is 401
+                    expect(res.status).to.be.equal(401);
+                    done();
+                });
+        });
+    });
+
+
+
 });
