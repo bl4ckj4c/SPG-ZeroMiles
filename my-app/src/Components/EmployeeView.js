@@ -4,12 +4,15 @@ import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
+import UserDropdown from "./CustomerSearchBar"
 import Sidebar from "./Sidebar";
 
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
+    const [filteredOrdersList, setFilteredOrdersList] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
+    const [selectedUser, setSelectedUser] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -17,6 +20,7 @@ function EmployeeView(props) {
         API.getOrders()
             .then(orders => {
                 setOrdersList(orders);
+                setFilteredOrdersList(orders);
                 setOrdersListUpdated(false);
                 setLoading(false);
             }).catch(o => handleErrors(o));
@@ -28,6 +32,7 @@ function EmployeeView(props) {
             API.getOrders()
                 .then(orders => {
                     setOrdersList(orders);
+                    setFilteredOrdersList(orders);
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -43,6 +48,7 @@ function EmployeeView(props) {
 
     return (
         <>
+        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
                         </Row > </> :
@@ -53,18 +59,20 @@ function EmployeeView(props) {
                                 <tbody id="employee-table" align="center">
                                     {
                                         ordersList.slice(0).reverse().map(o => {
-                                            if (o.Status == "open" && props.status == "open") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (o.Status == "pending" && props.status == "pending") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (o.Status == "closed" && props.status == "closed") {
-                                                return <OrderRow order={o} />
-                                            }
-                                            if (props.status == "all") {
-                                                return <OrderRow order={o} />
-                                            }
+                                            if(selectedUser.length >0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0 ){
+                                                if (o.Status == "open" && props.status == "open") {
+                                                    return <OrderRow order={o} />
+                                                }
+                                                if (o.Status == "pending" && props.status == "pending") {
+                                                    return <OrderRow order={o} />
+                                                }
+                                                if (o.Status == "closed" && props.status == "closed") {
+                                                    return <OrderRow order={o} />
+                                                }
+                                                if (props.status == "all") {
+                                                    return <OrderRow order={o} />
+                                                }
+                                        }
                                         }
 
                                         )
@@ -200,5 +208,6 @@ function ProductList(props) {
 
     );
 }
+
 
 export { ProductList, EmployeeView };
