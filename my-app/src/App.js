@@ -61,15 +61,12 @@ function App() {
     console.log(err);
   }
 
-  const login = (email, password) => {
+    const login = (email, password) => {
     API.userLogin(email, password).then((response) => {
-      if (response.ok) {
-        setLoggedIn(true);
-      }
-
+  
     }
-    ).catch(error => { console.log(error); }); //handle login error
-  }
+    ); //handle login error
+  } 
 
   const logout = () => {
     API.userLogout().then(() => {
@@ -123,7 +120,7 @@ function App() {
         </Route>
 
         <Route exact path="/login">
-          {loggedIn ? <Redirect to="/products"/> : <UserLogin login={login}/>}
+          {loggedIn ? <Redirect to="/products" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} isLoggedIn={loggedIn}/>}
         </Route>
 
         <Route exact path="/signup">
