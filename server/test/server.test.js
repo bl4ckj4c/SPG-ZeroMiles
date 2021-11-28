@@ -121,7 +121,6 @@ describe("GET for /api/users", () => {
                         expect(field).to.match(userKeysRegexp[indexField])
                     })
                 })
-
                 // Test passed
                 done();
             });
@@ -165,21 +164,12 @@ describe("GET for /api/productByFarmer", () => {
                         expect(res.body).to.have.lengthOf(20);
 
                         res.body.forEach((item, indexItem) => {
-
-
                             // Check if the current item is an object
                             expect(item).to.be.an("object");
-
-
-
-
-
-                    });
+                        });
                         done();
-
                     });
-    });
-
+            });
     });
 });
 
@@ -224,9 +214,6 @@ describe("GET for /api/farmers", () => {
 
                             // Check if the current item is an object
                             expect(item).to.be.an("object");
-
-
-
 
 
                         });
@@ -281,9 +268,6 @@ describe("GET for /api/orders", () => {
                             expect(item).to.be.an("object");
 
 
-
-
-
                         });
                         done();
 
@@ -291,8 +275,6 @@ describe("GET for /api/orders", () => {
             });
 
     });
-
-
 
 //5 GET all Product In Order
 
@@ -309,7 +291,6 @@ describe("GET for /api/orders", () => {
                 });
         });
     });
-
 
 
 });
