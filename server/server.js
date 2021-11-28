@@ -99,7 +99,7 @@ app.use(cookieParser());
 
 app.post('/api/logout', (req, res) => {
     res.clearCookie('token', { httpOnly: true, sameSite: true });
-    res.redirect(200,"/");
+    res.redirect(200, "/");
 });
 
 
@@ -288,16 +288,16 @@ app.post('/api/register',
  */
 
 app.use(jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
+    algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+    secret: jwtSecret,
+    getToken: req => req.cookies.token
+})
 );
 
-app.use(function (err, req, res, next){
-    if(err.name === 'UnauthorizedError'){
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
         console.log("Invalid token");
-        res.redirect(401,"/api/login");
+        res.redirect(401, "/api/login");
     }
 });
 
@@ -418,7 +418,7 @@ app.get('/api/users', async (req, res) => {
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
     try {
-        const users = await db.collection('User').where("Email","==",""+user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const users = await db.collection('User').where("Email", "==", "" + user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (users.empty) {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Users)" });
@@ -503,10 +503,10 @@ app.get('/api/farmers', async (req, res) => {
 
 /* GET all orders from a client*/
 
-app.get('/api/clientorders', async(req, res)=>{
+app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
-    try{
-        const orders = await db.collection('Order').where("ClientID","==",""+user.userID).get();
+    try {
+        const orders = await db.collection('Order').where("ClientID", "==", "" + user.userID).get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(200).json([]);
@@ -601,10 +601,10 @@ app.get('/api/orders', async (req, res) => {
 app.post('/api/order', async (req, res) => {
     try {
         let result = [];
-        
-        
-        
-         let productByFarmer = await db.collection('Product by Farmers').get()
+
+
+
+        let productByFarmer = await db.collection('Product by Farmers').get()
         //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
 
         if (productByFarmer.empty) {
@@ -613,26 +613,26 @@ app.post('/api/order', async (req, res) => {
         }
 
         //for each product in the order
-        let quantity=0;
+        let quantity = 0;
         req.body.items.forEach(product => {
-        quantity = quantity + product.number*product.Price;
+            quantity = quantity + product.number * product.Price;
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
                     res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" });
-                
+
 
 
                 }
             })
-           
+
         })
-        
-       
+
+
         console.log("creating new order");
         console.log(quantity);
         let newOrder = {}
-        newOrder.Price=quantity;
+        newOrder.Price = quantity;
         newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",);
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
@@ -676,49 +676,52 @@ app.post('/api/order', async (req, res) => {
 
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
-    let result=[];
-    let risultato=[];
+    let result = [];
+    let risultato = [];
     let order;
     let user;
-    let new_Quantity=9;
+    let new_Quantity = 0;
     let id;
-    
+
     try {
-        if(req.body.Status=="pending"){
-        order = await db.collection('Order').doc(req.body.id).get();
-                     
+        if (req.body.Status == "pending") {
+            order = await db.collection('Order').doc(req.body.id).get();
+
             console.log(order);
-           
-        risultato.push( new Promise(async (resolve, reject) => {
-            id = order.data().ClientID;
-            console.log(id);
-            user = await db.collection('User').doc(id).get();
-            console.log(user);
-            new_Quantity=user.data().Wallet - order.data().Price;
-            console.log(new_Quantity);
-            if (new_Quantity<0){
-                res.status(500).end();
-            }else{
-                  
-        db.collection('Order').doc(req.body.id).update({ Status: req.body.Status }); 
-        db.collection('User').doc(""+order.data().ClientID).update({ Wallet:new_Quantity });        
-                resolve("QUANTITYUPDATE");
-               
-             
-            } 
-            }))
-        Promise.all(risultato);
 
+            risultato.push(new Promise(async (resolve, reject) => {
+                id = order.data().ClientID;
+                console.log(id);
+                user = await db.collection('User').doc(id).get();
+                console.log(user);
+                new_Quantity = user.data().Wallet - order.data().Price;
+                console.log(new_Quantity);
+                if (new_Quantity < 0) {
+                    res.status(500).json({
 
+                        error: "The client haven't enough money"
+                    });
+                } else {
 
-            }else{
-                (async () => {
-                    await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status }); 
+                    db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
+                    db.collection('User').doc("" + order.data().ClientID).update({ Wallet: new_Quantity });
+                    resolve("QUANTITYUPDATE");
+
                     res.status(201).end();
-                    })()
+                }
+            }))
+            Promise.all(risultato);
 
-            }
-        
+
+
+        } else {
+            (async () => {
+                await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
+                res.status(201).end();
+            })()
+
+        }
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -726,14 +729,13 @@ app.post('/api/modifyorder', async (req, res) => {
             error: error
         });
     }
-    res.status(201).end();       
-   
+
 });
 
 app.post('/api/modifywallet', async (req, res) => {
 
     try {
-        const users = await db.collection('User').get();  
+        const users = await db.collection('User').get();
         if (users.empty) {
             console.log("No matching documents.");
             res.status(404).json({ error: "No entries (Table: Users)" });
@@ -754,9 +756,57 @@ app.post('/api/modifywallet', async (req, res) => {
 
 });
 
+app.post('/api/checkClient', async (req, res) => {
+
+    let soldi_spesi = 0;
+    let ritorno = {};
+    console.log(req.body.ClientID);
+    let client;
+   
+    try {
+        (async () => {
+            client = await db.collection('User').doc(req.body.ClientID).get();
+            
 
 
-app.get('/api/sessions/current',(req,res)=>{
+        })()
+
+        let order = await db.collection('Order').get()
+        //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
+
+        if (order.empty) {
+            console.log("No entries (Table: order)");
+            res.status(404).json({ error: "No entries (Table: order)" });
+        }
+         
+        //for each product in the orde
+            order.forEach(order => {
+                if (order.data().ClientID == req.body.ClientID && order.data().Status == "open") { //check if there are enough unities for the product requested
+                    soldi_spesi=soldi_spesi + order.data().Price
+                }})
+       
+                   
+       
+        ritorno.Wallet= client.data().Wallet;
+        ritorno.Money= soldi_spesi;
+        res.status(201).json(ritorno);
+        
+
+        
+              }catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+
+  
+});
+
+
+
+app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
     if (user) {

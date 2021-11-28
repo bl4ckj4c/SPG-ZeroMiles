@@ -217,7 +217,23 @@ async function modifyOrderStatus(order){
     }
     return { 'err': 'POST error' };
   }
+  
+  async function clientCheck(idClient){
 
+    const response = await fetch(BASEURL + "/checkClient", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...idClient})
+    });  
+  
+    if(response.ok){
+        return response.json();
+    }
+    return { 'err': 'POST error' };
+  }
+  
 
 const API = {   
    
@@ -225,7 +241,7 @@ const API = {
     getFarmer,
     addOrder,
     
-    
+    clientCheck,
     getProductInOrder, 
     getAllUsers,
     getOrders,
