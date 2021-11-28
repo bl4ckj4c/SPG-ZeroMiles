@@ -197,38 +197,44 @@ describe("GET for /api/farmers", () => {
                 done();
             });
     });
-    test("It should receive all users from the server", (done) => {
-        chai
-            .request(app)
-            .get('/api/users')
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(user))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-                // The body received should be an array
-                expect(res.body).to.be.an("array");
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/farmers')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        // The body received should be an array
+                        expect(res.body).to.be.an("array");
+                        // Check the the number of users in Firebase
+                        expect(res.body).to.have.lengthOf(6);
 
-                // Check the the number of users in Firebase
-                expect(res.body).to.have.lengthOf(13);
+                        res.body.forEach((item, indexItem) => {
 
-                // Check that each element returned is well-formed
-                res.body.forEach((item, indexItem) => {
-                    console.log(item);
-                    // Check if the current item is an object
-                    expect(item).to.be.an("object");
-                    // Check that the current elements has all fields expected
-                    expect(item).to.have.all.keys(userKeys[indexItem]);
 
-                    // Check that each field is correct
-                    item.forEach((field, indexField) => {
-                        expect(field).to.match(userKeysRegexp[indexField])
-                    })
-                })
+                            // Check if the current item is an object
+                            expect(item).to.be.an("object");
 
-                // Test passed
-                done();
+
+
+
+
+                        });
+                        done();
+
+                    });
             });
+
     });
 });
 
