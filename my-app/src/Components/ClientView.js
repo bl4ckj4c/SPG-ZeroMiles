@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, Modal, Button, Image, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { Form, Table, Row, Col, ListGroup, Container, Modal, Button, Image, InputGroup, FormControl, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import API from '../API';
 import "./ClientView.css";
 
 function ClientView(props) {
+    const [searchParameter, setSearchParameter] = useState("");
+    const [filteredClients, setFilteredClients] = useState([]);
 
+    useEffect(() => {
+        if(props.users.length > 0)
+            setFilteredClients([...props.users])
+      }
+        , [props.users]);
+    
     return (
         <Col>
+        <Container>
+        <UserSearchBar searchParameter={searchParameter} setSearchParameter={setSearchParameter} users={props.users} setFilteredClients={setFilteredClients}/>
+            </Container>
             <Table className="d-flex justify-content-center">
                 <tbody id="client-table" align="center">
-                    {props.users.map(c => c.Role === "Client" ? <ClientRow client={c} /> : '')}
+                    {filteredClients.map(c => c.Role === "Client" ? <ClientRow client={c} /> : '')}
                 </tbody>
             </Table>
         </Col>
@@ -138,6 +149,23 @@ function ButtonBalance(props) {
                 </Modal.Footer>
             </Modal>
         </>
+    );
+}
+
+function UserSearchBar(props) {
+
+    function ManageSearch(text) {
+        props.setSearchParameter(text);
+        props.setFilteredClients(props.users.filter(c => (c.Name+" "+c.Surname).toLowerCase().includes(text.trim().toLowerCase())));
+    }
+
+    return (
+
+        <Form onSubmit={(event) => event.preventDefault()}  >
+            <Form.Control placeholder="🔍 Search for a customer..." type='text' value={props.searchParameter} onChange={(event) => { ManageSearch(event.target.value) }} />
+
+        </Form>
+
     );
 }
 
