@@ -199,7 +199,7 @@ function WelcomeFarmerSidebar(props) {
       contentScriptType="text/ecmascript"
       width={320}
       height={220}
-      viewBox="60 0 800 800"
+      viewBox="60 40 800 800"
       {...props}
     >
       <defs>
