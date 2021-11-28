@@ -86,10 +86,11 @@ function EmployeeSidebar(props) {
             <Offcanvas.Title className="mt-3 nav-subtitle">CLIENTS</Offcanvas.Title>
             <NavDropdown.Divider />
 
-
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/clients" >All</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/clients" >All clients</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/signup">New client</Nav.Link>
             </Nav>
+
         </>
     );
 }
