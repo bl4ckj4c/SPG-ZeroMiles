@@ -148,12 +148,8 @@ async function userLogin(username, password) {
         body: JSON.stringify({username: username, password: password})
     }); 
 
-    if (response.ok) {
-        console.log(response.json());
-        return response;
-    } 
     
-    return {'err': 'LOGIN error'};
+    return response;
 }
 
 async function userLogout(username, password) {
