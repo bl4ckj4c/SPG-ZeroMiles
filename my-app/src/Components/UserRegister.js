@@ -179,7 +179,7 @@ function UserRegister(props) {
             )}
             <Row className="justify-content-center mt-1 mb-1">
                 <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
-                    Sign up a new client
+                    Get on board!
                 </Row>
                 <Form onSubmit={(e) => validForm(e)} controlId="my-form">
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
@@ -234,7 +234,7 @@ function UserRegister(props) {
                                 variant="secondary"
                                 type="submit"
                             >
-                                Submit
+                                Sign Up
                             </Button>
 
                             <Modal show={showConfirm} onHide={handleCloseConfirm} autoFocus={true} size="sm" centered>

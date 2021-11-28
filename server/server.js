@@ -41,12 +41,42 @@ app.use(express.json());
 
 const firebaseapp = firebase.initializeApp({
     credential: firebase.credential.cert(firebaseconf),
-    databaseURL: "https://polito-se2-21-01-spg.europe-west1.firebasedatabase.app"
+    databaseURL: "https://polito-se2-21-01-spg.europe-west1.firebasedatabase.app",
+    storageBucket: "gs://polito-se2-21-01-spg.appspot.com"
 });
 
 /* create a document in an existing collection */
 var db = firebase.firestore();
 
+/*
+const bucket = firebase.storage().bucket();
+
+//scarica dallo storage di firebase un file. ".file(<firebase_storage_path>)" localizza il file e ".download(<options_json>)" lo scarica
+bucket.file('395100.png').download({
+    destination: "./newfile.png"  //supporta path relativi; SPECIFICARE IL NOME DEL FILE SCARICATO COME ULTIMA STRINGA DEL PATH
+},function(err){
+    console.log(err);
+})
+
+
+//carica sullo storage di firebase un file. Prende come parametro il path del file locale e un json di opzioni, tra cui la destinazione
+bucket.upload('./newfile.png',{
+    destination: "bar.png"  //destinazione nello storage di firebase; si possono specificare anche delle directory (es. foo/store/bar.png) che, se non esistenti, verranno create
+}).then(()=>{
+    console.log("file uploaded successfully");
+}).catch(err => {
+    console.error("ERROR: ", err);
+})
+
+//ritorna un JSON con tutti i file presenti nello storage di firebase -> ne stampo i nomi
+bucket.getFiles(function(err,files){
+    if(!err){
+        files.forEach(file =>{
+            console.log(file.name)
+        })
+    }
+})
+*/
 
 /* firebase debug */
 
