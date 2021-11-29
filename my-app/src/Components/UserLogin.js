@@ -20,15 +20,16 @@ function UserLogin(props) {
 
     function validform(event) {
        event.preventDefault();
-        if (!email) {
+        if (!email && email.length <= 0) {
             setToastEmail(true)
             return false;
-        } else if (!password) {
+        } else if (!password && password.length <= 0) {
             setToastPassword(true)
             return false;
         } else {
             sendRegister(event);
         }
+        return true;
     }
 
     async function sendRegister(event) {
@@ -40,7 +41,7 @@ function UserLogin(props) {
         else{
             console.log(res);
             setMessageErrorLogin(res.statusText);
-             handleLoginResponseModalShow();
+            handleLoginResponseModalShow();
           
         }
     }
@@ -79,11 +80,10 @@ function UserLogin(props) {
                     <Row className="justify-content-center mt-3 mb-4" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                         <Image id="logo" src="/images/logo.png" />
                     </Row>
-                    {/* <Form onSubmit={(e) => validform(e)}> */}
                 <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                     Sign in
                 </Row>
-                <LoginResponseModal messageErrorLogin={messageErrorLogin} isLoggedIn={props.isLoggedIn} loginResponseModal={loginResponseModal}  handleLoginResponseModalClose={handleLoginResponseModalClose} />
+                <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal}  handleLoginResponseModalClose={handleLoginResponseModalClose} />
                     <Form onSubmit={(e) => validform(e) }>
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email user</Form.Label>
@@ -100,13 +100,8 @@ function UserLogin(props) {
                                 </Button>
                             </Col>
                             <Col style={{ textAlign: 'right' }}>
-                                <Button variant="warning" type="submit" >
-                                    Login
-                                </Button></Col>
-                        </Row>
-                        <Row className="justify-content-center mt-1 mb-1">
-                        <SubmitButton handleLoginResponseModalShow={handleLoginResponseModalShow}/>
-     
+                                <SubmitButton/>
+                            </Col>
                         </Row>
                     </Form>
                 </Col>
@@ -116,9 +111,6 @@ function UserLogin(props) {
 
 
     function LoginResponseModal(props) {
-        switch(props.messageErrorLogin){
-            
-        }
         return (
                 <Modal show={props.loginResponseModal} onHide={props.handleLoginResponseModalClose} autoFocus={true} size="md" centered>
                     <Modal.Header closeButton>
@@ -139,8 +131,7 @@ function UserLogin(props) {
     function SubmitButton(props) {
 
         return (
-            <Button 
-            variant="primary"
+            <Button
             type="submit"
             onClick={props.handleLoginResponseModalShow}
             >
