@@ -2,7 +2,7 @@ import { Col, Row, Container, Form, Button, Toast, Modal } from 'react-bootstrap
 import { useState } from 'react';
 import SelectState from './SelectState.js';
 
-import Axios from 'axios'
+import API from '../API';
 import "./user.css";
 
 function UserRegister(props) {
@@ -54,13 +54,7 @@ function UserRegister(props) {
             setToastPasswordNotEqual(true)
             return false;
         } else if (!email) {
-            setToastEmail(true)
-            return false;
-        } else if (!address) {
-            setToastAddress(true)
-            return false;
-        } else if (!state) {
-            alert("Please Enter Your State / Province");
+            setToastEmail(true);
             return false;
         } else if (!city) {
             setToastCity(true)
@@ -77,13 +71,12 @@ function UserRegister(props) {
     async function sendRegister(event) {
         event.preventDefault();
         let stateCaps = state.toUpperCase().toString();
-        let data = { name, surname, email, address, phone, city, password, zipcode, stateCaps };
-        console.log(data)
-        Axios.post('/api/register', data)
-            .then((response) => {
-                console.log(response);
-            })
-            .catch(error => console.log("Error from server: ", error))
+        try {
+            let res = await API.userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps);
+        } catch(err){
+            console.log("MY FAULT :",err)
+        }
+
     }
 
     return (

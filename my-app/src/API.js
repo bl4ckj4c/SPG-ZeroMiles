@@ -139,6 +139,24 @@ async function getClientOrders(clientid){
     return data.map((o) => new Order(...Object.values(o)));
 }
 
+async function userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps) {
+
+    const response = await fetch(BASEURL + "/register", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({name, surname, email, address, phone, city, password, zipcode, stateCaps})
+    }); 
+}
+
+// Axios.post('/api/register', data)
+// .then((response) => {
+//     console.log(response);
+// })
+// .catch(error => console.log("Error from server: ", error))
+
+
 async function userLogin(username, password) {
     const response = await fetch(BASEURL + "/login", {
         method: 'POST',
@@ -244,6 +262,7 @@ const API = {
     modifyOrderStatus,
     modifyWallet,
 
+    userRegister,
     userLogin,
     userLogout,
     getUserInfo,
