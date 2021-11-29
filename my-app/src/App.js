@@ -120,7 +120,7 @@ function App() {
         </Route>
 
         <Route exact path="/login">
-          {loggedIn ? <Redirect to="/products" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} isLoggedIn={loggedIn}/>}
+          {loggedIn ? <Redirect to="/products" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} />}
         </Route>
 
         <Route exact path="/signup">
