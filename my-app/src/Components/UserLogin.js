@@ -11,6 +11,7 @@ function UserLogin(props) {
     const [messageErrorLogin, setMessageErrorLogin] = useState('');
     const [toastEmail, setToastEmail] = useState(false);
     const [toastPassword, setToastPassword] = useState(false);
+    const [toastPasswordAndEmail, setToastPasswordAndEmail ]= useState(false);
     
     const [loginResponseModal, setLoginResponseModal] = useState(false);
     const handleLoginResponseModalShow = () => setLoginResponseModal(true);
@@ -20,16 +21,19 @@ function UserLogin(props) {
 
     function validform(event) {
        event.preventDefault();
-        if (!email && email.length <= 0) {
-            setToastEmail(true)
-            return false;
+        if (!password && password.length <= 0 && !email && email.length <= 0) {
+            setToastPasswordAndEmail(true);
+            // return false;
         } else if (!password && password.length <= 0) {
-            setToastPassword(true)
-            return false;
+            setToastPassword(true);
+            // return false;
+        } else if (!email && email.length <= 0) {
+            setToastEmail(true);
+            // return false;
         } else {
             sendRegister(event);
         }
-        return true;
+        // return true;
     }
 
     async function sendRegister(event) {
@@ -71,6 +75,17 @@ function UserLogin(props) {
                             <strong className="me-auto">Warning</strong>
                         </Toast.Header>
                         <Toast.Body>Please enter your password</Toast.Body>
+                    </Toast>
+                </ToastContainer>
+            )}
+
+            {toastPasswordAndEmail && (
+                <ToastContainer position="middle-center">
+                    <Toast onClose={() => setToastPasswordAndEmail(false)} delay={5000} autohide position="middle-center">
+                        <Toast.Header>
+                            <strong className="me-auto">Warning</strong>
+                        </Toast.Header>
+                        <Toast.Body>Please enter your email and password</Toast.Body>
                     </Toast>
                 </ToastContainer>
             )}
