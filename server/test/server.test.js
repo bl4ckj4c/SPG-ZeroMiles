@@ -292,5 +292,101 @@ describe("GET for /api/orders", () => {
         });
     });
 
+  //POST for users
 
+/*
+    describe("POST /register", () => {
+        test('Unauthorized request', (done) => {
+            chai.request(app)
+                .get('/api/register')
+                .end((err, res) => {
+                    // We should not have error
+                    expect(err).to.be.null;
+                    // Check that the response status is 401
+                    expect(res.status).to.be.equal(401);
+                    done();
+                });
+        });
+        it("it should create a new employee or client", (done) => {
+            chai
+                .request(app)
+                .post("/api/register")
+                .send({
+                    name: "employee",
+                    surname: "employeeSurname",
+                    email: "employee1@test.com",
+                    address: "via Polito 12",
+                    phone: "3248967544",
+                    city: "Torino",
+                    password: "password",
+                    zipcode: "10134",
+                    stateCaps: "Piemonte",
+                    // Role: "Employee",
+                    // Wallet: 100,
+                })
+                .end((err, res) => {
+                    expect(err).to.be.null;
+                    expect(res.status).to.be.equal(200);
+                    expect(res.body).to.be.an("object");
+                    expect(res.body.email).to.be.equal("employee1@test.com");
+                    expect(res.body.Name).to.be.equal("employee");
+
+                    done();
+                });
+        });
+*/
+
+//         it("it must fail when an invalid email is passed", (done) => {
+//             chai
+//                 .request(app)
+//                 .post("/api/register")
+//                 .send({
+//                     name: "employee",
+//                     surname: "employeeSurname",
+//                     email: "notemail",
+//                     address: "via Polito 12",
+//                     phone: "3248967544",
+//                     city: "Torino",
+//                     password: "password",
+//                     zipcode: "10134",
+//                     stateCaps: "Piemonte",
+//                 })
+//                 .end((err, res) => {
+//                     expect(err).to.be.null;
+//                     expect(res.status).to.be.equal(400);
+//
+//                     done();
+//                 });
+//         });
+//
+//         it("it must fail when a password too short is passed", (done) => {
+//             chai
+//                 .request(app)
+//                 .post("/api/register")
+//                 .send({
+//                     name: "employee",
+// //                     surname: "employeeSurname",
+// //                     email: "notemail",
+// //                     address: "via Polito 12",
+// //                     phone: "3248967544",
+// //                     city: "Torino",
+// //                     password: "p",
+// //                     zipcode: "10134",
+// //                     stateCaps: "Piemonte",
+//                 })
+//                 .end((err, res) => {
+//                     expect(err).to.be.null;
+//                     expect(res.status).to.be.equal(400);
+//
+//                     done();
+//                 });
+//         });
+//
+//       
+//
+//     });
+// });
+
+
+ //   });
 });
