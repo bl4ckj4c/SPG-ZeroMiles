@@ -536,7 +536,7 @@ app.get('/api/farmers', async (req, res) => {
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
     try {
-        const orders = await db.collection('Order').where("ClientID", "==", "" + user.userID).get();
+        const orders = await db.collection('Order').where("ClientID", "==", "" + user.userID).orderBy("Timestamp").get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(200).json([]);

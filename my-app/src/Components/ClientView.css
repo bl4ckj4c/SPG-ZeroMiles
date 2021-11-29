@@ -2,6 +2,10 @@
     .client-card {
         width: 27rem;
     }
+    .margin-search-desktop{
+        margin-left: 18px;
+        margin-right: 18px;
+    }
   }
 
 @media (max-width: 1200px) {

@@ -37,15 +37,13 @@ function Profile(props) {
         console.log(err);
     }
 
-    console.log(loggedClient);
-
     return (
         <>
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
                     </Row > </> :
                 <>
-                    <Col>
+                    <Col className="mt-3">
                         <Table className="d-flex justify-content-center">
                             <tbody id="client-table" align="center">
                                 <ClientRow client={loggedClient} />
