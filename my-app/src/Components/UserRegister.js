@@ -27,6 +27,11 @@ function UserRegister(props) {
     const [toastZipcode, setToastZipcode] = useState(false);
     const [toastPasswordNotEqual, setToastPasswordNotEqual] = useState(false);
 
+    const [messageErrorRegister, setMessageErrorRegister] = useState('');
+    const [registerResponseModal, setRegisterResponseModal] = useState(false);
+    const handleRegisterResponseModalShow = () => setRegisterResponseModal(true);
+    const handleRegisterResponseModalClose = () => setRegisterResponseModal(false);
+
 
     const [showConfirm, setShowConfirm] = useState(false);
     const handleShowConfirm = () => setShowConfirm(true); 
@@ -64,19 +69,47 @@ function UserRegister(props) {
             return false;
         } else {
             sendRegister(event);
-            handleShowConfirm();
+            // handleShowConfirm();
         }
     }
 
     async function sendRegister(event) {
         event.preventDefault();
         let stateCaps = state.toUpperCase().toString();
+        
         try {
             let res = await API.userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps);
+            if (res.ok){
+                props.setLoggedIn(true);
+                handleShowConfirm();
+            }
+            else{
+                console.log(res);
+                setMessageErrorRegister(res.statusText);
+                handleRegisterResponseModalShow();
+              
+            }
         } catch(err){
-            console.log("MY FAULT :",err)
+            console.log("MY FAULT :", err)
         }
+    }
 
+    function RegisterResponseModal(props) {
+        return (
+                <Modal show={props.registerResponseModal} onHide={props.handleRegisterResponseModalClose} autoFocus={true} size="md" centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Error Register</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                    {props.messageErrorRegister}
+                    </Modal.Body>
+                    {/* <Modal.Footer>
+                        <Col style={{ textAlign: 'center'}}>
+                        
+                        </Col>
+                    </Modal.Footer> */}
+                </Modal>
+            );
     }
 
     return (
@@ -174,6 +207,7 @@ function UserRegister(props) {
                 <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                     Get on board!
                 </Row>
+                <RegisterResponseModal messageErrorRegister={messageErrorRegister} registerResponseModal={registerResponseModal}  handleRegisterResponseModalClose={handleRegisterResponseModalClose} />
                 <Form onSubmit={(e) => validForm(e)} controlId="my-form">
                     <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                         <Col xs={6}>
@@ -226,6 +260,7 @@ function UserRegister(props) {
                             <Button
                                 variant="secondary"
                                 type="submit"
+                                onClick={props.handleRegisterResponseModalShow}
                             >
                                 Sign Up
                             </Button>

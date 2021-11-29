@@ -147,15 +147,9 @@ async function userRegister(name, surname, email, address, phone, city, password
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({name, surname, email, address, phone, city, password, zipcode, stateCaps})
-    }); 
+    });
+    return response;
 }
-
-// Axios.post('/api/register', data)
-// .then((response) => {
-//     console.log(response);
-// })
-// .catch(error => console.log("Error from server: ", error))
-
 
 async function userLogin(username, password) {
     const response = await fetch(BASEURL + "/login", {
