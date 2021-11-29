@@ -91,16 +91,16 @@ function UserLogin(props) {
             )}
 
             <Row className="justify-content-center mt-1 mb-1">
-                <Col xs={4}>
+                <Col xs={8}>
                     <Row className="justify-content-center mt-3 mb-4" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                         <Image id="logo" src="/images/logo.png" />
                     </Row>
-                <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
-                    Sign in
-                </Row>
-                <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal}  handleLoginResponseModalClose={handleLoginResponseModalClose} />
+                    <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
+                        Sign in
+                    </Row>
+                    <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal}  handleLoginResponseModalClose={handleLoginResponseModalClose} />
                     <Form onSubmit={(e) => validform(e) }>
-                        <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form.Group className="mt-8 mb-4" controlId="formBasicEmail">
                             <Form.Label>Email user</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
@@ -108,7 +108,7 @@ function UserLogin(props) {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
-                        <Row className="mt-5">
+                        <Row className="mt-8">
                             <Col style={{ textAlign: 'left' }}>
                                 <Button variant="secondary" onClick={handleSignUp} >
                                     Signup
