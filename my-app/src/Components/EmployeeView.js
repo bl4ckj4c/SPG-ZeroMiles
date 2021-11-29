@@ -48,7 +48,12 @@ function EmployeeView(props) {
 
     return (
         <>
-        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+        <Container>
+            <Row className="mt-3 margine-cerca-desktop">
+                <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+            </Row>
+        </Container>
+
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
                         </Row > </> :

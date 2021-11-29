@@ -9,22 +9,27 @@ function ClientView(props) {
     const [filteredClients, setFilteredClients] = useState([]);
 
     useEffect(() => {
-        if(props.users.length > 0)
+        if (props.users.length > 0)
             setFilteredClients([...props.users])
-      }
+    }
         , [props.users]);
-    
+
     return (
-        <Col>
-        <Container>
-        <UserSearchBar searchParameter={searchParameter} setSearchParameter={setSearchParameter} users={props.users} setFilteredClients={setFilteredClients}/>
+        <>
+            <Container>
+                <Row className="mt-3 margin-search-desktop">
+                    <UserSearchBar searchParameter={searchParameter} setSearchParameter={setSearchParameter} users={props.users} setFilteredClients={setFilteredClients} />
+                </Row>
             </Container>
-            <Table className="d-flex justify-content-center">
-                <tbody id="client-table" align="center">
-                    {filteredClients.map(c => c.Role === "Client" ? <ClientRow client={c} /> : '')}
-                </tbody>
-            </Table>
-        </Col>
+
+            <Col>
+                <Table className="d-flex justify-content-center">
+                    <tbody id="client-table" align="center">
+                        {filteredClients.map(c => c.Role === "Client" ? <ClientRow client={c} /> : '')}
+                    </tbody>
+                </Table>
+            </Col>
+        </>
     );
 }
 
@@ -103,7 +108,7 @@ function ButtonBalance(props) {
         }
     }
 
-    function handleRefresh(){
+    function handleRefresh() {
         setShowConfirm(false);
         window.location.reload(true);
     }
@@ -137,11 +142,11 @@ function ButtonBalance(props) {
                 </Modal.Footer>
             </Modal>
 
-            <Modal show={showConfirm} onHide={handleCloseConfirm} size ="md" centered >
+            <Modal show={showConfirm} onHide={handleCloseConfirm} size="md" centered >
                 <Modal.Header closeButton>
                     <Modal.Title>{props.client.Name}'s wallet updated ✅</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{textAlign: 'center'}}>Amount added: {difference}€. New wallet balance: {amount}€</Modal.Body>
+                <Modal.Body style={{ textAlign: 'center' }}>Amount added: {difference}€. New wallet balance: {amount}€</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseConfirm}>
                         Close
@@ -156,7 +161,7 @@ function UserSearchBar(props) {
 
     function ManageSearch(text) {
         props.setSearchParameter(text);
-        props.setFilteredClients(props.users.filter(c => (c.Name+" "+c.Surname).toLowerCase().includes(text.trim().toLowerCase())));
+        props.setFilteredClients(props.users.filter(c => (c.Name + " " + c.Surname).toLowerCase().includes(text.trim().toLowerCase())));
     }
 
     return (
