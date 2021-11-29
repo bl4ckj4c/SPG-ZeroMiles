@@ -105,7 +105,7 @@ function UserLogin(props) {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                         </Form.Group>
-                        <Row className="mt-8">
+                        <Row className="mt-5">
                             <Col style={{ textAlign: 'left' }}>
                                 <Button variant="secondary" onClick={handleSignUp} >
                                     Signup
