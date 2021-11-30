@@ -91,11 +91,7 @@ function ProductTableWrapped(props) {
             }
 
         
-    }, [cartCheckoutModal, selectedUser]);
-
-
-
-
+    }, [cartCheckoutModal, selectedUser, showConfirm]);
 
 
     const handleCloseConfirm = () => {
@@ -232,8 +228,8 @@ function OrderConfirmedModal(props) {
             <Modal.Header closeButton>
                 <Modal.Title>Order submitted! 🎉</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Updated wallet amount: €{(props.walletAndTotal.Wallet - props.walletAndTotal.Money).toFixed(2)}
-            </Modal.Body>
+            <Modal.Body>Total of your "open" orders: €{(props.walletAndTotal.Money).toFixed(2)}</Modal.Body>
+            <Modal.Body>Your wallet amount: €{(props.walletAndTotal.Wallet).toFixed(2)}</Modal.Body>
             <Modal.Footer>
                 <Button variant="warning" onClick={props.handleCloseConfirm}>
                     Close

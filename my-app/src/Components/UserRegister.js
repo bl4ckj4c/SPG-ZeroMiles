@@ -1,6 +1,7 @@
 import { Col, Row, Container, Form, Button, Toast, Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import SelectState from './SelectState.js';
+import { useHistory } from 'react-router-dom';
 
 import API from '../API';
 import "./user.css";
@@ -32,11 +33,22 @@ function UserRegister(props) {
     const handleRegisterResponseModalShow = () => setRegisterResponseModal(true);
     const handleRegisterResponseModalClose = () => setRegisterResponseModal(false);
 
-
     const [showConfirm, setShowConfirm] = useState(false);
-    const handleShowConfirm = () => setShowConfirm(true); 
+
+    let history = useHistory();
+
+    const handleShowConfirm = () => setShowConfirm(true);  
+
     const handleCloseConfirm = () => {
         setShowConfirm(false);
+
+        if(!props.loggedIn){
+            history.push("/");
+        }
+
+        if(props.loggedIn){
+            history.push("/clients");
+        }
     }
 
     function validForm(event) {
@@ -80,7 +92,7 @@ function UserRegister(props) {
         try {
             let res = await API.userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps);
             if (res.ok){
-                props.setLoggedIn(true);
+                //props.setLoggedIn(true);
                 handleShowConfirm();
             }
             else{
@@ -203,6 +215,7 @@ function UserRegister(props) {
                     <Toast.Body>Your Password is not confirmed properly</Toast.Body>
                 </Toast>
             )}
+
             <Row className="justify-content-center mt-1 mb-1">
                 <Row className="justify-content-center mt-1 mb-1" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                     Get on board!

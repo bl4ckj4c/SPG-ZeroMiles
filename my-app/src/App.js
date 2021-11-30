@@ -124,7 +124,7 @@ function App() {
         </Route>
 
         <Route exact path="/signup">
-          <UserRegister setLoggedIn={setLoggedIn}/>
+          <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
 
         <Route exact path="/orders/:status" render={({ match }) => (

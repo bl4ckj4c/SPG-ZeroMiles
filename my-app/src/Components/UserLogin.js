@@ -91,7 +91,7 @@ function UserLogin(props) {
             )}
 
             <Row className="justify-content-center mt-1 mb-1">
-                <Col xs={8}>
+                <Col xs={8} lg={4}>
                     <Row className="justify-content-center mt-3 mb-4" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                         <Image id="logo" src="/images/logo.png" />
                     </Row>
