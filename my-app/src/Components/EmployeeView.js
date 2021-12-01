@@ -170,7 +170,6 @@ function OrderRow(props) {
                                         props.order.Status = "closed";
                                         setStat('c');
                                     }
-                                    API.modifyOrderStatus(props.order);
 
 
                                 }} variant={buttonstatus} size="sm">
