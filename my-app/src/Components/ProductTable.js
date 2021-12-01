@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, ListGroupItem, Form, Button, Collapse, Modal } from 'react-bootstrap';
+import { Image, Card, ListGroup, InputGroup,FormControl, Form, Button, Collapse, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -72,25 +72,24 @@ function ProductTableWrapped(props) {
     const [cartCheckoutModal, setCartCheckoutModal] = useState(false);
     const handleCartCheckoutModalShow = () => setCartCheckoutModal(true);
     const handleCartCheckoutModalClose = () => setCartCheckoutModal(false);
-    const [walletAndTotal, setWalletAndTotal] = useState({ Wallet : 0, Money : 0});
+    const [walletAndTotal, setWalletAndTotal] = useState({ Wallet: 0, Money: 0 });
     const [showMoneyError, setShowMoneyError] = useState(false);
 
     useEffect(() => {
-        if(props.user.Role!=="Employee"){
-            API.clientCheck({ClientID : props.user.userID }).then(w => {
+        if (props.user.Role !== "Employee") {
+            API.clientCheck({ ClientID: props.user.userID }).then(w => {
                 setWalletAndTotal(w);
             }).catch(err => console.log(err));
         }
-        else if(selectedUser.length===0)
-            setWalletAndTotal({ Wallet : 0, Money : 0});
-            else
-            {
-                API.clientCheck({ClientID : selectedUser[0].UserID }).then(w => {
-                    setWalletAndTotal(w);
-                }).catch(err => console.log(err));
-            }
+        else if (selectedUser.length === 0)
+            setWalletAndTotal({ Wallet: 0, Money: 0 });
+        else {
+            API.clientCheck({ ClientID: selectedUser[0].UserID }).then(w => {
+                setWalletAndTotal(w);
+            }).catch(err => console.log(err));
+        }
 
-        
+
     }, [cartCheckoutModal, selectedUser, showConfirm]);
 
 
@@ -119,15 +118,39 @@ function ProductTableWrapped(props) {
         setProdNum(prodNumCopy);
     }
 
+    function UpdateNumberInput(i, input, product){
+        let prodNumCopy = [...prodNum];
+        console.log("upd "+ input);
+        input = parseInt(input);
+        if(isNaN(input) || input < 0){
+
+            prodNumCopy[i].number = 0;
+            console.log("updN "+ input + prodNumCopy[i].number);
+
+        }
+        else
+        {
+            if(input > product.Quantity)
+                 prodNumCopy[i].number = product.Quantity;
+            else
+                 prodNumCopy[i].number = input;
+
+
+        }
+
+        setProdNum(prodNumCopy);
+
+    }
+
     async function submitOrder() {
 
         try {
             let customerID;
 
             if (props.isLoggedIn)
-                if (props.user.Role === "Employee"){
-                    if(selectedUser.length===0)
-                        throw {err : "No user selected" };
+                if (props.user.Role === "Employee") {
+                    if (selectedUser.length === 0)
+                        throw { err: "No user selected" };
                     customerID = selectedUser[0].UserID;
                 }
                 else
@@ -135,8 +158,8 @@ function ProductTableWrapped(props) {
 
 
             let items = prodNum.filter(p => p.number !== 0);
-            if(items.length===0)
-            throw {err : "No products selected" };
+            if (items.length === 0)
+                throw { err: "No products selected" };
 
             if (items.length > 0 && (selectedUser.length > 0 || props.user.Role !== "Employee")) {
                 let object = {
@@ -156,9 +179,9 @@ function ProductTableWrapped(props) {
         catch (err) {
             console.log(err);
             handleShowError();
-                }
+        }
     }
-    
+
     return (
         <>
             <Container >
@@ -174,7 +197,7 @@ function ProductTableWrapped(props) {
 
                         <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                         </Col>
-                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} style={{textAlign: 'right'}}>
+                        <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} style={{ textAlign: 'right' }}>
                             <AvailableAmountButton walletAndTotal={walletAndTotal} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
                         </Col>
                     </Row>
@@ -183,14 +206,14 @@ function ProductTableWrapped(props) {
                     : ""}
                 <OrderConfirmedModal user={props.user} walletAndTotal={walletAndTotal} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
                 <ErrorModal showError={showError} handleCloseError={handleCloseError} />
-                <CartCheckoutModal walletAndTotal={walletAndTotal} showMoneyError={()=> setShowMoneyError(true)} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
+                <CartCheckoutModal walletAndTotal={walletAndTotal} showMoneyError={() => setShowMoneyError(true)} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
             </Container>
 
             <Col className="justify-content-center">
                 <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
-                            <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
+                            <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
                         )}
                     </tbody>
                 </Table>
@@ -202,23 +225,23 @@ function ProductTableWrapped(props) {
 };
 
 function AvailableAmountButton(props) {
-        return (
-            <Button disabled variant="secondary">€{(props.walletAndTotal.Wallet-props.walletAndTotal.Money).toFixed(2)}</Button>
-        );
+    return (
+        <Button disabled variant="secondary">€{(props.walletAndTotal.Wallet - props.walletAndTotal.Money).toFixed(2)}</Button>
+    );
 }
 
 function CartBottomButton(props) {
     let total = 0;
     props.prodNum.forEach(p => p.number > 0 ? total += p.number * p.Price : "")
-    if (props.user.Role==="Employee")
-        if(props.selectedUser.length === 0)
+    if (props.user.Role === "Employee")
+        if (props.selectedUser.length === 0)
             return "";
 
-        return (
-            <Button variant= "secondary" className="fixed-button-bottom" onClick={props.handleCartCheckoutModalShow}>
-                <Cart4 size={25} />
-                <span>&nbsp;</span> €{total.toFixed(2)} </Button>
-        );
+    return (
+        <Button variant="secondary" className="fixed-button-bottom" onClick={props.handleCartCheckoutModalShow}>
+            <Cart4 size={25} />
+            <span>&nbsp;</span> €{total.toFixed(2)} </Button>
+    );
 
 }
 
@@ -264,12 +287,12 @@ function CartCheckoutModal(props) {
             </Modal.Header>
             <Modal.Body>
                 {props.prodNum.some(p => p.number > 0) && total > props.walletAndTotal.Wallet - props.walletAndTotal.Money ? <p>⚠️ The total is more than the wallet availability (€{(props.walletAndTotal.Wallet - props.walletAndTotal.Money).toFixed(2)})</p> : ""}
-        
-               {props.prodNum.some(p => p.number > 0) ? "" : "The cart is empty"}
+
+                {props.prodNum.some(p => p.number > 0) ? "" : "The cart is empty"}
                 {props.prodNum.map(p => p.number !== 0 ? <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
             </Modal.Body>
             <Modal.Footer>
-                <Col><Button onClick={props.submitOrder} disabled={props.prodNum.some(p => p.number > 0) ? false : true  } variant="success">Submit Order</Button></Col>
+                <Col><Button onClick={props.submitOrder} disabled={props.prodNum.some(p => p.number > 0) ? false : true} variant="success">Submit Order</Button></Col>
                 <Col style={{ textAlign: 'right', marginRight: '18px' }}>Total €{total.toFixed(2)}</Col>
             </Modal.Footer>
         </Modal>);
@@ -336,7 +359,7 @@ function FarmerRow(props) {
                             <Row key={index + "_" + props.farmer.FarmerID} className="mb-xl-4">
                                 {p.map(pf => (
                                     <Col key={pf.ProductID + "_" + pf.FarmerID} xl className="column-margin">
-                                        <ProductCard isLoggedIn={props.isLoggedIn} unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumber={props.UpdateNumber} />
+                                        <ProductCard isLoggedIn={props.isLoggedIn} unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} />
                                     </Col>
                                 )
                                 )
@@ -393,7 +416,7 @@ function ProductCard(props) {
                         onClick={handleShowDesc}>
                         See Description
                     </Button></Col>
-                    {props.isLoggedIn ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
+                    {props.isLoggedIn ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
                 </Row>
                 <Modal show={showDesc} onHide={handleCloseDesc} centered size="lg">
                     <DescriptionModal handleCloseDesc={handleCloseDesc} prodotto={props.prodottoDelFarmer} imgProd={newSrc} />
@@ -436,17 +459,15 @@ function DescriptionModal(props) {
 function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
-        <ButtonGroup>
+        <InputGroup>
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled variant="warning">
-                {props.prodNum[i].number}
-            </ToggleButton>
+            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer ) } disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign : "center", maxHeight: "2.2rem", fontSize: 15, maxWidth: "3.5rem" }} value={props.prodNum[i].number}   />          
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="warning" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>
-        </ButtonGroup>
+        </InputGroup >
     );
 }
 
