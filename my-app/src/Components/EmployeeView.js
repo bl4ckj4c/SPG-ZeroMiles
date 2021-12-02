@@ -157,10 +157,8 @@ function OrderRow(props) {
                                 <h1 style={{fontSize: 15, marginTop: 10}}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {return sum + parseInt(p.number)* parseInt(p.Price)},0)}</h1>
                             </Col>
                             <Col>
-                                <DropdownButton title={props.order.Status}  variant={buttonstatus} size="sm">
-                                    {
+                                <DropdownButton onClick={()=>{alert("You click to change the status of order with orderID:"+ props.order.OrderID)}} title={props.order.Status}  variant={buttonstatus} size="sm">
 
-                                    }
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
                                         setStat('o');
