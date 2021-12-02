@@ -1,6 +1,6 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner } from 'react-bootstrap';
+import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner,Dropdown, DropdownButton, ProgressBar  } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
@@ -92,15 +92,13 @@ function EmployeeView(props) {
     );
 }
 
+let progressRate=0;
+let progressType="success";
 
-const ostat = {
-    'o': 'open',
-    'p': 'pending',
-    'c': 'closed'
-}
 
 function OrderRow(props) {
     let [stat, setStat] = useState(props.order.Status || 'o');
+
 
 
     let buttonstatus;
@@ -151,32 +149,35 @@ function OrderRow(props) {
                                 <h1 style={{fontSize: 15, marginTop: 10}}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {return sum + parseInt(p.number)* parseInt(p.Price)},0)}</h1>
                             </Col>
                             <Col>
-                                <Button onClick={() => {
+                                <DropdownButton title={props.order.Status}  variant={buttonstatus} size="sm">
+                                    <Dropdown.Item onClick={() => {
+                                        props.order.Status = "open";
+                                        setStat('o');
+                                        API.modifyOrderStatus(props.order);
+                                        progressRate=10;
+                                        
 
-                                    if (stat === 'o') {
+                                    } }>Open</Dropdown.Item>
+                                    <Dropdown.Item onClick={() =>  {
                                         props.order.Status = "pending";
                                         setStat('p');
+                                        progressRate=49;
+                                        progressType="danger";   
+
                                         API.modifyOrderStatus(props.order);
-
-
-                                    }
-                                    if (stat === 'p') {
+                                    } }>Pending</Dropdown.Item>
+                                    <Dropdown.Item onClick={() =>{
                                         props.order.Status = "closed";
                                         setStat('c');
+
+                                        progressRate=99;
+
                                         API.modifyOrderStatus(props.order);
-
-                                    }
-                                    if (stat === 'c') {
-                                        props.order.Status = "closed";
-                                        setStat('c');
-                                    }
+                                    } }>Closed</Dropdown.Item>
+                                    
 
 
-                                }} variant={buttonstatus} size="sm">
-                                    {ostat[stat]}
-
-
-                                </Button>
+                                </DropdownButton >
                             </Col>
                         </Row>
 
@@ -193,7 +194,7 @@ function ProductList(props) {
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
 
     return (
-
+        <Table >
         <Row className="mb-2 align-items-center">
             <Col>
                 <Image src={newSrc} height={"60 px"} rounded />
@@ -208,8 +209,10 @@ function ProductList(props) {
                 Price: €{props.product.Price.toFixed(2)}
             </Col>
         </Row>
+        <Row>
+        <ProgressBar striped variant={progressType} animated now={progressRate} /> 
 
-
+</Row></Table>
     );
 }
 
