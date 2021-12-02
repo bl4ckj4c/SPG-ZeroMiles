@@ -105,7 +105,7 @@ function OrderRow(props) {
     // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
-        progressType="warning";   
+        progressType="info";   
         buttonstatus = "outline-primary";
         progressRate=10;
     } else if (props.order.Status == "pending") {
