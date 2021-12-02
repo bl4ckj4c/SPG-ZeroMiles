@@ -105,13 +105,21 @@ function OrderRow(props) {
     // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
+        progressType="warning";   
         buttonstatus = "outline-primary";
-    } else if (props.order.Status === "pending") {
+        progressRate=10;
+    } else if (props.order.Status == "pending") {
         buttonstatus = "outline-danger";
         stat = 'p';
+        progressType="danger";   
+        progressRate=49;
+
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
         stat = 'c';
+        progressType="success";   
+        progressRate=100;
+
     }
 
 
@@ -150,6 +158,9 @@ function OrderRow(props) {
                             </Col>
                             <Col>
                                 <DropdownButton title={props.order.Status}  variant={buttonstatus} size="sm">
+                                    {
+
+                                    }
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
                                         setStat('o');
@@ -162,10 +173,10 @@ function OrderRow(props) {
                                         props.order.Status = "pending";
                                         setStat('p');
                                         progressRate=49;
-                                        progressType="danger";   
-
                                         API.modifyOrderStatus(props.order);
-                                    } }>Pending</Dropdown.Item>
+                                        }
+                                    
+                                      }>Pending</Dropdown.Item>
                                     <Dropdown.Item onClick={() =>{
                                         props.order.Status = "closed";
                                         setStat('c');
@@ -173,6 +184,7 @@ function OrderRow(props) {
                                         progressRate=99;
 
                                         API.modifyOrderStatus(props.order);
+                                        
                                     } }>Closed</Dropdown.Item>
                                     
 
