@@ -14,7 +14,7 @@ sections:
 
 - Number of stories committed vs done: 5 vs 5
 - Total points committed vs done: 39 vs 39
-- Nr of hours planned vs spent (as a team): 113h 15m vs 113h 15m
+- Nr of hours planned vs spent (as a team): 109h 15m vs 113h 15m
 
 **Remember**  a story is done ONLY if it fits the Definition of Done:
 
@@ -27,7 +27,7 @@ sections:
 
 | Story | # Tasks | Points | Hours est. | Hours actual |
 | ----- | ------- | ------ | ---------- | ------------ |
-| _#0_  | 18      | -      | 87h        | 105h         |
+| _#0_  | 27      | -      | 73h        | 76.20m       |
 | 4     | 12      | 8      | 21h 30m    | 21h 30m      |
 | 5     | 2       | 5      | 6h         | 5h 15m       |
 | 6     | 1       | 13     | 5h         | 4h           |
@@ -35,10 +35,10 @@ sections:
 | 8     | 2       | 5      | 1h 45m     | 3h 10m       |
 
 - Hours per task (average, standard deviation):
-  - Average: 2h 24m
+  - Average: 2h 32m
   - Standard deviation: 1h 33m
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
-  - 113h 15m / 113h 15m = 1 -> 100%
+  - 109h 25m / 113h 15m = 0.965 -> 96%
 ## QUALITY MEASURES 
 
 - Unit Testing:
@@ -58,7 +58,7 @@ sections:
 - Technical Debt management:
   - Total hours estimated: 10h
   
-  - Total hours spent: 6h 30m
+  - Total hours spent: 10h
   
   - Hours estimated for remediation by SonarQube: 10h
   
