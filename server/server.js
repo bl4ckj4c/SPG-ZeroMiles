@@ -2,7 +2,9 @@
 
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
+const firebaseBackup = require('firebase-admin'); 
 const { firebaseconf } = require('./firebase-server/config.js');
+const { firebaseconf_backup } = require('./firebase-server/config.js');
 const userDao = require('./userDAO');
 const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
 const express = require('express');
@@ -45,8 +47,15 @@ const firebaseapp = firebase.initializeApp({
     storageBucket: "gs://polito-se2-21-01-spg.appspot.com"
 });
 
-/* create a document in an existing collection */
+const firebaseappBackup = firebaseBackup.initializeApp({
+    credential: firebaseBackup.credential.cert(firebaseconf_backup),
+    databaseURL: "https://polito-se2-21-01-spg-backup.europe-west1.firebasedatabase.app",
+    storageBucket: "gs://polito-se2-21-01-spg-backup.appspot.com"
+},"firebase_backup");
+
+/* get reference a reference to the firestore database */
 var db = firebase.firestore();
+var db_backup = firebaseBackup.firestore(firebaseappBackup);
 
 /*
 const bucket = firebase.storage().bucket();
