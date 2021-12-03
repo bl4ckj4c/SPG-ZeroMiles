@@ -22,9 +22,6 @@ async function getProductInOrder() {
     return data.map((pio) => new ProductInOrder(...Object.values(pio)));
 }
 
-
-
-
 async function getProductByFarmer() {
     let data = [];
     try {
@@ -65,6 +62,20 @@ async function getAllUsers() {
         throw new Error(e);
     }
     return data.map((f) => new User(...Object.values(f)));
+}
+
+async function getAllProducts() {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/products', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((f) => new Product(...Object.values(f)));
 }
 
 /*
@@ -252,6 +263,7 @@ const API = {
     clientCheck,
     getProductInOrder, 
     getAllUsers,
+    getAllProducts,
     getOrders,
     modifyOrderStatus,
     modifyWallet,
