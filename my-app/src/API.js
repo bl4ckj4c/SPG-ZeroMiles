@@ -1,4 +1,4 @@
-import { ProductByFarmer, Farmer } from './Products/Products.js';
+import { Product, ProductByFarmer, Farmer } from './Products/Products.js';
 import { ProductInOrder, Order, User } from './Orders/Orders.js';
 
 /**
