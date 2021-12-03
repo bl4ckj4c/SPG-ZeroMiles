@@ -452,8 +452,8 @@ app.get('/api/users', async (req, res) => {
 });
 
 
-/* GET a user*/
 
+/* GET a user*/
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
     try {
@@ -538,10 +538,41 @@ app.get('/api/farmers', async (req, res) => {
     }
 });
 
-
+/* GET all products */
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await db.collection('Product').get();
+        if (products.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({ error: "No entries (Table: Product)" });
+        } else {
+            let result = [];
+            products.forEach(product => {
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Description: product.data().Description,
+                        ImageID: product.data().ImageID,
+                        Name: product.data().Name
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all products)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 /* GET all orders from a client*/
-
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
     try {
