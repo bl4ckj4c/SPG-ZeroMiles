@@ -36,7 +36,7 @@ sections:
 
 - Hours per task (average, standard deviation):
   - Average: 2h 32m
-  - Standard deviation: 1h 33m
+  - Standard deviation: 2h 33m
 - Total task estimation error ratio: sum of total hours estimation / sum of total hours spent from previous table
   - 109h 25m / 113h 15m = 0.965 -> 96%
 ## QUALITY MEASURES 
