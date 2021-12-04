@@ -33,6 +33,8 @@ const port = 3001;
 app.use(morgan('dev'));
 app.use(express.json());
 
+// Set-up middleware for managing the images
+app.use('/images', express.static('images'));
 
 // *********************
 // ***** FIREBASE  *****
@@ -54,8 +56,9 @@ const firebaseappBackup = firebaseBackup.initializeApp({
 }, "firebase_backup");
 
 /* get reference a reference to the firestore database */
-var db = firebase.firestore();
-var db_backup = firebaseBackup.firestore(firebaseappBackup);
+//var db = firebase.firestore();
+//var db_backup = firebaseBackup.firestore(firebaseappBackup);
+var db = firebaseBackup.firestore(firebaseappBackup);
 
 /*
 const bucket = firebase.storage().bucket();
@@ -957,6 +960,8 @@ app.get('/api/sessions/current', (req, res) => {
     }
     else res.status(401).json({ error: 'User non authenticated' });
 });
+
+
 
 
 // Activate the server

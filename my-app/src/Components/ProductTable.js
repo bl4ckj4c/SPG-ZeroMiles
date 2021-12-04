@@ -386,7 +386,8 @@ function ProductCard(props) {
     const handleCloseDesc = () => setShowDesc(false);
     const handleShowDesc = () => setShowDesc(true);
 
-    let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
+    //let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
+    let newSrc = "http://localhost:3001/images/" + props.prodottoDelFarmer.ImageID + ".png"
 
     return (
         <Card style={{ width: '21rem' }} >
