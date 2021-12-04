@@ -434,7 +434,7 @@ function DescriptionModal(props) {
                     <h3>{props.prodotto.NameProduct}</h3>
                 </Row>
                 <Row className="mt-2">
-                    <Col style={{ textAlign: "center", display: "block", marginBottom: "auto", marginTop: "auto" }}><Image style={{ maxHeight: "300px", maxWidth: "300px" }} src={props.imgProd} /></Col>
+                    <Col style={{ textAlign: "center", display: "block", marginBottom: "auto", marginTop: "auto" }} xl ><Image style={{ maxHeight: "300px", maxWidth: "300px" }} src={props.imgProd} /></Col>
                     <Col>
                         <Row className="justify-content-center desc-mobile-margin">
                             <ListGroup>
