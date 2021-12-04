@@ -28,7 +28,7 @@ function ProductTable(props) {
             setProductByFarmerListUpdated(true);
             setFarmerListUpdated(true);
             setLoading(true);
-            API.getProductByFarmer()
+            API.getAllProductsByFarmers()
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
