@@ -30,10 +30,11 @@ function Farmer(Name, Surname, Company, FarmerID, Email, Phoneno, Address, State
     this.Zipcode = Zipcode;
 }
 
-function Product(Name, Description, ImageID){
+function Product(Name, Description, ImageID, ProductID){
     this.Name = Name;
     this.Description = Description;
     this.ImageID = ImageID;
+    this.ProductID = ProductID;
 }
 
 export { ProductByFarmer, Farmer, Product };

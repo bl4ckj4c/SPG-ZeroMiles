@@ -15,7 +15,7 @@ import ClientView from './Components/ClientView';
 import Welcome from './Components/Welcome';
 import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
-
+import FarmerProducts from './Components/FarmerProducts';
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -144,6 +144,10 @@ function App() {
 
         <Route exact path="/profile">
           <Profile/>
+        </Route>
+
+        <Route exact path="/farmerview">
+          <FarmerProducts/>
         </Route>
 
       </Switch>

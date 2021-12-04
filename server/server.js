@@ -549,10 +549,11 @@ app.get('/api/products', async (req, res) => {
             let result = [];
             products.forEach(product => {
                 result.push(new Promise(async (resolve, reject) => {
-                    resolve({
+                    resolve({                        
+                        Name: product.data().Name,
                         Description: product.data().Description,
                         ImageID: product.data().ImageID,
-                        Name: product.data().Name
+                        ProductID: product.id
                     });
                 }));
             })
