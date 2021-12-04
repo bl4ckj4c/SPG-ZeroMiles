@@ -268,6 +268,22 @@ async function modifyOrderStatus(order){
     }
     return { 'err': 'POST error' };
   }
+
+  async function createProduct(newProduct) {
+      const formData  = new FormData();
+
+      formData.append('productJson', newProduct);
+      formData.append('image', 'imagePlaceholder');
+
+
+      const response = await fetch(BASEURL + "/newproduct", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'multipart/form-data',
+          },
+          body: formData
+      });
+  }
   
 
 const API = {   

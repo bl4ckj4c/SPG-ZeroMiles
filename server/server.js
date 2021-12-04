@@ -3,22 +3,35 @@
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
 const firebaseBackup = require('firebase-admin');
-const { firebaseconf } = require('./firebase-server/config.js');
-const { firebaseconf_backup } = require('./firebase-server/config.js');
+const {firebaseconf} = require('./firebase-server/config.js');
+const {firebaseconf_backup} = require('./firebase-server/config.js');
 const userDao = require('./userDAO');
-const { body, param, validationResult, sanitizeBody, sanitizeParam } = require('express-validator');
+const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan'); // logging middleware
 const jwt = require('express-jwt');
 const jsonwebtoken = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const { toJSON } = require("express-session/session/cookie"); // module for accessing the exams in the DB
+const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 dayjs.extend(isSameOrAfter)
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
+
+// Upload new image handler
+const fs = require("fs");
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images/tmp/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+const upload = multer({storage: storage});
 
 //jwt parameters
 const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
@@ -32,6 +45,11 @@ const port = 3001;
 // set-up the middlewares
 app.use(morgan('dev'));
 app.use(express.json());
+
+
+/*const formData = require('express-form-data');
+app.use(formData.parse());*/
+
 
 // Set-up middleware for managing the images
 app.use('/images', express.static('images'));
@@ -114,22 +132,24 @@ app.post('/api/login', async (req, res) => {
         const user = await db.collection("User").where("Email", "==", username).get();
 
         if (user.empty) {
-            res.status(404).json({ info: "Authentication error", error: "User not found (Table: User)" });
+            res.status(404).json({info: "Authentication error", error: "User not found (Table: User)"});
         } else {
             user.forEach(user => {  //because user is a query snapshot
                 if (!userDao.checkPassword(user.data(), password)) {
-                    res.status(401).json({ info: "Authentication error", error: "wrong password" });
+                    res.status(401).json({info: "Authentication error", error: "wrong password"});
                 } else {
                     //AUTHENTICATION SUCCESS
                     console.log("Authentication succeeded!" + user.id);
-                    const token = jsonwebtoken.sign({ user: { userID: user.id, ...user.data() } }, jwtSecret, { expiresIn: expireTime });
-                    res.cookie('token', token, { httpOnly: true, sameSite: true, maxAge: 1000 * expireTime });
+                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret, {expiresIn: expireTime});
+                    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * expireTime});
                     res.status(200).end();
                 }
             })
         }
     } catch (error) {
-        new Promise((resolve) => { setTimeout(resolve, 1000) }).then(() => res.status(500).json({
+        new Promise((resolve) => {
+            setTimeout(resolve, 1000)
+        }).then(() => res.status(500).json({
             info: "Authentication error",
             error: error
         }))
@@ -140,7 +160,7 @@ app.use(cookieParser());
 
 
 app.post('/api/logout', (req, res) => {
-    res.clearCookie('token', { httpOnly: true, sameSite: true });
+    res.clearCookie('token', {httpOnly: true, sameSite: true});
     res.redirect(200, "/");
 });
 
@@ -149,7 +169,7 @@ app.post('/api/logout', (req, res) => {
 app.post('/api/register',
     body('name')
         // Check if the name parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the name parameter is not empty
         .notEmpty()
@@ -163,7 +183,7 @@ app.post('/api/register',
         }),
     body('surname')
         // Check if the lastName parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the lastName parameter is not empty
         .notEmpty()
@@ -177,7 +197,7 @@ app.post('/api/register',
         }),
     body('email')
         // Check if the email parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the email parameter is not empty
         .notEmpty()
@@ -191,7 +211,7 @@ app.post('/api/register',
         }),
     body('address')
         // Check if the address parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the address parameter is not empty
         .notEmpty()
@@ -205,7 +225,7 @@ app.post('/api/register',
         }),
     body('phone')
         // Check if the phone parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the phone parameter is not empty
         .notEmpty()
@@ -219,7 +239,7 @@ app.post('/api/register',
         }),
     body('city')
         // Check if the city parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the city parameter is not empty
         .notEmpty()
@@ -233,7 +253,7 @@ app.post('/api/register',
         }),
     body('password')
         // Check if the password parameter is not null
-        .exists({ checkNull: true })
+        .exists({checkNull: true})
         .bail()
         // Check if the password parameter is not empty
         .notEmpty()
@@ -280,8 +300,7 @@ app.post('/api/register',
                         await db.collection('User').doc(newUUid).create(newUser);
                         console.log("Done.");
                         res.status(201).end();
-                    }
-                    else res.status(409).json({
+                    } else res.status(409).json({
                         info: "New user registration",
                         error: "Email already used"
                     });
@@ -295,7 +314,6 @@ app.post('/api/register',
             })()
         }
     });
-
 
 
 /* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
@@ -330,10 +348,10 @@ app.post('/api/register',
  */
 
 app.use(jwt({
-    algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-    secret: jwtSecret,
-    getToken: req => req.cookies.token
-})
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
 );
 
 app.use(function (err, req, res, next) {
@@ -349,7 +367,7 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" });
+            res.status(404).json({error: "No entries (Table: product by farmers)"});
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
@@ -420,7 +438,7 @@ app.get('/api/productsByFarmer', async (req, res) => {
         const productbyfarmer = await db.collection('Product by Farmers').where("FarmerID", "==", "" + user.userID).get();  //.where("FarmerID","==","JJeuoVa8fpl4wHGLK8FO")
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" });
+            res.status(404).json({error: "No entries (Table: product by farmers)"});
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
@@ -490,7 +508,7 @@ app.get('/api/users', async (req, res) => {
         const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (users.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Users)" });
+            res.status(404).json({error: "No entries (Table: Users)"});
         } else {
             let result = [];
             users.forEach(user => {
@@ -526,7 +544,6 @@ app.get('/api/users', async (req, res) => {
 });
 
 
-
 /* GET a user*/
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
@@ -534,7 +551,7 @@ app.get('/api/userinfo', async (req, res) => {
         const users = await db.collection('User').where("Email", "==", "" + user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (users.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Users)" });
+            res.status(404).json({error: "No entries (Table: Users)"});
         } else {
             let result = [];
             users.forEach(user => {
@@ -575,7 +592,7 @@ app.get('/api/farmers', async (req, res) => {
         const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (farmers.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Farmer)" });
+            res.status(404).json({error: "No entries (Table: Farmer)"});
         } else {
             let result = [];
             farmers.forEach(farmer => {
@@ -618,7 +635,7 @@ app.get('/api/products', async (req, res) => {
         const products = await db.collection('Product').get();
         if (products.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Product)" });
+            res.status(404).json({error: "No entries (Table: Product)"});
         } else {
             let result = [];
             products.forEach(product => {
@@ -700,7 +717,7 @@ app.get('/api/orders', async (req, res) => {
         const orders = await db.collection('Order').orderBy('Timestamp').get();
         if (orders.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Order)" });
+            res.status(404).json({error: "No entries (Table: Order)"});
         } else {
 
             let result = [];
@@ -741,12 +758,10 @@ app.get('/api/orders', async (req, res) => {
 });
 
 
-
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
         let result = [];
-
 
 
         let productByFarmer = await db.collection('Product by Farmers').get()
@@ -754,7 +769,7 @@ app.post('/api/order', async (req, res) => {
 
         if (productByFarmer.empty) {
             console.log("No entries (Table: product by farmers)");
-            res.status(404).json({ error: "No entries (Table: product by farmers)" });
+            res.status(404).json({error: "No entries (Table: product by farmers)"});
         }
 
         //for each product in the order
@@ -764,8 +779,7 @@ app.post('/api/order', async (req, res) => {
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
-                    res.status(404).json({ error: "Not enough products (" + product.NameProduct + ")" });
-
+                    res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
 
 
                 }
@@ -799,7 +813,7 @@ app.post('/api/order', async (req, res) => {
                     let newQuantity = prodfarm.data().Quantity - product.number;
                     result.push(new Promise(async (resolve, reject) => {
 
-                        await db.collection('Product by Farmers').doc(prodfarm.id).update({ Quantity: newQuantity });
+                        await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
                         resolve("QUANTITYUPDATE");
                     }))
                 }
@@ -816,7 +830,6 @@ app.post('/api/order', async (req, res) => {
         });
     }
 })
-
 
 
 //MODIFY ORDER
@@ -848,8 +861,8 @@ app.post('/api/modifyorder', async (req, res) => {
                     });
                 } else {
 
-                    db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
-                    db.collection('User').doc("" + order.data().ClientID).update({ Wallet: new_Quantity });
+                    db.collection('Order').doc(req.body.id).update({Status: req.body.Status});
+                    db.collection('User').doc("" + order.data().ClientID).update({Wallet: new_Quantity});
                     resolve("QUANTITYUPDATE");
 
                     res.status(201).end();
@@ -858,10 +871,9 @@ app.post('/api/modifyorder', async (req, res) => {
             Promise.all(risultato);
 
 
-
         } else {
             (async () => {
-                await db.collection('Order').doc(req.body.id).update({ Status: req.body.Status });
+                await db.collection('Order').doc(req.body.id).update({Status: req.body.Status});
                 res.status(201).end();
             })()
 
@@ -883,11 +895,11 @@ app.post('/api/modifywallet', async (req, res) => {
         const users = await db.collection('User').get();
         if (users.empty) {
             console.log("No matching documents.");
-            res.status(404).json({ error: "No entries (Table: Users)" });
+            res.status(404).json({error: "No entries (Table: Users)"});
         } else {
 
             (async () => {
-                await db.collection('User').doc(req.body.ClientID).update({ Wallet: req.body.Wallet });
+                await db.collection('User').doc(req.body.ClientID).update({Wallet: req.body.Wallet});
             })()
         }
     } catch (error) {
@@ -914,7 +926,7 @@ app.post('/api/checkClient', async (req, res) => {
 
         if (client.empty) {
             console.log("No entries (Table: users)");
-            res.status(404).json({ error: "No entries (Table: users)" });
+            res.status(404).json({error: "No entries (Table: users)"});
         }
 
         let order = await db.collection('Order').get()
@@ -922,7 +934,7 @@ app.post('/api/checkClient', async (req, res) => {
 
         if (order.empty) {
             console.log("No entries (Table: order)");
-            res.status(404).json({ error: "No entries (Table: order)" });
+            res.status(404).json({error: "No entries (Table: order)"});
         }
 
         //for each product in the orde
@@ -938,7 +950,6 @@ app.post('/api/checkClient', async (req, res) => {
         res.status(201).json(ritorno);
 
 
-
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -951,17 +962,62 @@ app.post('/api/checkClient', async (req, res) => {
 });
 
 
-
 app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
     if (user) {
         res.status(200).json(req.user);
-    }
-    else res.status(401).json({ error: 'User non authenticated' });
+    } else res.status(401).json({error: 'User non authenticated'});
 });
 
+// POST for store a new product with realted image into the server
+app.post('/api/newproduct',
+    upload.single('newproductimage'),
+    async (req, res) => {
+        const newProduct = JSON.parse(req.body.newProduct);
+        const newImage = req.file;
 
+        // Generate a new random id for the new image
+        let guid = () => {
+            let s4 = () => {
+                return Math.floor((1 + Math.random()) * 0x10000)
+                    .toString(16)
+                    .substring(1);
+            }
+            //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
+            return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+        }
+
+        //const newRandomId = guid();
+
+        let whileExit = false;
+        let newRandomId;
+        do {
+            newRandomId = guid();
+            // Check if the imageId is not already present in the server
+            try {
+                const fileStat = fs.lstatSync('images/' + newRandomId + '.png');
+            } catch (error) {
+                // If there is an error, it means that the file is not present in the server
+                whileExit = true;
+                // Otherwise the file already exists, so a new random id is generated
+            }
+        } while (!whileExit);
+
+
+        //Insert the new product into Firebase
+        const data = {
+            Name: newProduct.Name,
+            Description: newProduct.Description,
+            ImageID: newRandomId
+        }
+        await db.collection('Product').doc().create(data);
+
+        // Store the new image into the server
+        const renameResult = fs.renameSync('images/tmp/' + newImage.originalname, 'images/' + newRandomId + '.png');
+
+        res.status(201).json('Product inserted with ImageID -> ' + newRandomId);
+    });
 
 
 // Activate the server
