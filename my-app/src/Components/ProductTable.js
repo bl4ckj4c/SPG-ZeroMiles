@@ -117,11 +117,10 @@ function ProductTableWrapped(props) {
 
         setProdNum(prodNumCopy);
     }
-
-    function UpdateNumberInput(i, input, product){
+    function UpdateNumberInput(i, num, product){
         let prodNumCopy = [...prodNum];
-        console.log("upd "+ input);
-        input = parseInt(input);
+        console.log("upd "+ num);
+        let input = parseInt(num);
         if(isNaN(input) || input < 0){
 
             prodNumCopy[i].number = 0;
