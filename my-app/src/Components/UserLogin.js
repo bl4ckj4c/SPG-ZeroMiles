@@ -11,8 +11,8 @@ function UserLogin(props) {
     const [messageErrorLogin, setMessageErrorLogin] = useState('');
     const [toastEmail, setToastEmail] = useState(false);
     const [toastPassword, setToastPassword] = useState(false);
-    const [toastPasswordAndEmail, setToastPasswordAndEmail ]= useState(false);
-    
+    const [toastPasswordAndEmail, setToastPasswordAndEmail] = useState(false);
+
     const [loginResponseModal, setLoginResponseModal] = useState(false);
     const handleLoginResponseModalShow = () => setLoginResponseModal(true);
     const handleLoginResponseModalClose = () => setLoginResponseModal(false);
@@ -20,7 +20,7 @@ function UserLogin(props) {
 
 
     function validform(event) {
-       event.preventDefault();
+        event.preventDefault();
         if (!password && password.length <= 0 && !email && email.length <= 0) {
             setToastPasswordAndEmail(true);
             // return false;
@@ -38,6 +38,17 @@ function UserLogin(props) {
 
     async function sendRegister(event) {
         event.preventDefault();
+        props.login(email, password)
+            .catch((err) => {
+                console.log(err);
+                setMessageErrorLogin(err);
+                handleLoginResponseModalShow();
+            })
+    }
+
+    /*
+    async function sendRegister(event) {
+        event.preventDefault();
         let res = await API.userLogin(email, password);
         if (res.ok){
             props.setLoggedIn(true);
@@ -48,7 +59,7 @@ function UserLogin(props) {
             handleLoginResponseModalShow();
           
         }
-    }
+    } */
 
     let history = useHistory();
     function handleSignUp() {
@@ -95,8 +106,8 @@ function UserLogin(props) {
                     <Row className="justify-content-center mt-3 mb-4" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
                         <Image id="logo" src="/images/logo.png" />
                     </Row>
-                    <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal}  handleLoginResponseModalClose={handleLoginResponseModalClose} />
-                    <Form onSubmit={(e) => validform(e) }>
+                    <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal} handleLoginResponseModalClose={handleLoginResponseModalClose} />
+                    <Form onSubmit={(e) => validform(e)}>
                         <Form.Group className="mt-8 mb-4" controlId="formBasicEmail">
                             <Form.Label>Email user</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
@@ -112,47 +123,48 @@ function UserLogin(props) {
                                 </Button>
                             </Col>
                             <Col style={{ textAlign: 'right' }}>
-                                <SubmitButton/>
+                                <SubmitButton />
                             </Col>
                         </Row>
                     </Form>
                 </Col>
             </Row>
         </Container>
-    )}
+    )
+}
 
 
-    function LoginResponseModal(props) {
-        return (
-                <Modal show={props.loginResponseModal} onHide={props.handleLoginResponseModalClose} autoFocus={true} size="md" centered>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Error login</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                    {props.messageErrorLogin}
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Col style={{ textAlign: 'center'}}>
-                       
-                        </Col>
-                    </Modal.Footer>
-                </Modal>
-            );
-    }
-    
-    function SubmitButton(props) {
+function LoginResponseModal(props) {
+    return (
+        <Modal show={props.loginResponseModal} onHide={props.handleLoginResponseModalClose} autoFocus={true} size="md" centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Error login</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {props.messageErrorLogin}
+            </Modal.Body>
+            <Modal.Footer>
+                <Col style={{ textAlign: 'center' }}>
 
-        return (
-            <Button
+                </Col>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
+function SubmitButton(props) {
+
+    return (
+        <Button
             type="submit"
             variant="warning"
             onClick={props.handleLoginResponseModalShow}
-            >
-                Login
-            </Button>
-        );
-        
-    }
+        >
+            Login
+        </Button>
+    );
+
+}
 
 
 

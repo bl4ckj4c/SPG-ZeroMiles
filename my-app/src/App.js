@@ -24,10 +24,10 @@ function App() {
   const [sidebarCollapse, setSidebarCollapse] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-  
+
 
   useEffect(() => {
-    if (loggedIn && userListUpdated===true) {
+    if (loggedIn && userListUpdated === true) {
       API.getAllUsers()
         .then(u => {
           setUserList(u);
@@ -41,7 +41,6 @@ function App() {
     const checkAuth = async () => {
       try {
         const userinfo = await API.getUserInfo();
-        console.log(userinfo);
         if (userinfo.user) {
           setUser(userinfo.user ? userinfo.user : {});
           if (!loggedIn) //TODO riguardare
@@ -61,12 +60,22 @@ function App() {
     console.log(err);
   }
 
+  const login = async (email, password) => {
+    try {
+      const user = await API.userLogin(email, password);
+      setLoggedIn(true);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  /*
     const login = (email, password) => {
     API.userLogin(email, password).then((response) => {
   
     }
     ); //handle login error
-  } 
+  }  */
 
   const logout = () => {
     API.userLogout().then(() => {
@@ -106,7 +115,8 @@ function App() {
         <Route exact path="/products">
           <Col as="main">
 
-            {loggedIn ? <ProductTable isLoggedIn={loggedIn} user={user} userList={userList}/> : <Redirect to="/"/>}
+            {!loggedIn ? <Redirect to="/" /> : ''}
+
             {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria
             {loading ? <Row className="justify-content-center mt-5">
             
@@ -115,6 +125,8 @@ function App() {
               
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
             */}
+            
+            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} />
 
           </Col>
         </Route>
@@ -132,22 +144,22 @@ function App() {
             users={userList}
             sidebarCollapse={sidebarCollapse}
             setSidebarCollapse={setSidebarCollapse}
-            status={match.params.status} /> )}/>
+            status={match.params.status} />)} />
 
         <Route exact path="/clients">
           <ClientView users={userList} triggerUpdate={() => setUserListUpdated(true)} />
         </Route>
 
         <Route exact path="/myorders">
-          <ClientOrders/>
+          <ClientOrders />
         </Route>
 
         <Route exact path="/profile">
-          <Profile/>
+          <Profile />
         </Route>
 
         <Route exact path="/farmerview">
-          <FarmerProducts/>
+          <FarmerProducts />
         </Route>
 
       </Switch>

@@ -178,6 +178,7 @@ async function userRegister(name, surname, email, address, phone, city, password
     return response;
 }
 
+/*
 async function userLogin(username, password) {
     const response = await fetch(BASEURL + "/login", {
         method: 'POST',
@@ -186,10 +187,28 @@ async function userLogin(username, password) {
         },
         body: JSON.stringify({username: username, password: password})
     }); 
-
-    
     return response;
-}
+}*/
+
+async function userLogin(username, password) {
+    let response = await fetch(BASEURL + "/login", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({username: username, password: password}),
+    });
+    if(!response.ok) {
+        try {
+            const errDetail = await response.json();
+            throw errDetail.error;
+          }
+          catch(err) {
+            throw err;
+          }
+    }
+    return response;
+  }
 
 async function userLogout(username, password) {
     const response = await fetch(BASEURL + "/logout", {
