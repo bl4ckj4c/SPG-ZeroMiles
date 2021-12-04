@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Form, Table, Row, Col, ListGroup, Container, Modal, Button, Image, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { Form, Table, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import API from '../API';
 import "./ClientView.css";
@@ -11,8 +11,7 @@ function ClientView(props) {
     useEffect(() => {
         if (props.users.length > 0)
             setFilteredClients([...props.users])
-    }
-        , [props.users]);
+    }, [props.users]);
 
     return (
         <>
@@ -25,7 +24,7 @@ function ClientView(props) {
             <Col>
                 <Table className="d-flex justify-content-center">
                     <tbody id="client-table" align="center">
-                        {filteredClients.map(c => c.Role === "Client" ? <ClientRow client={c} /> : '')}
+                        {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c}/> : <></>)}
                     </tbody>
                 </Table>
             </Col>
@@ -36,6 +35,7 @@ function ClientView(props) {
 function ClientRow(props) {
 
     return (
+        <>
         <Card className="client-card mt-3">
 
             <Card.Body>
@@ -61,6 +61,7 @@ function ClientRow(props) {
 
             <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <ButtonBalance client={props.client} /></Card.Body>
         </Card>
+        </>
     );
 }
 
@@ -100,7 +101,7 @@ function ButtonBalance(props) {
                 "ClientID": props.client.UserID,
                 "Wallet": amount
             }
-            let res = await API.modifyWallet(object);
+            await API.modifyWallet(object);
             handleClose();
             handleShowConfirm();
         } catch (err) {
