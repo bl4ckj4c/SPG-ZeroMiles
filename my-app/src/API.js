@@ -7,7 +7,7 @@ import { ProductInOrder, Order, User } from './Orders/Orders.js';
  const BASEURL = '/api';
 
 
-
+//get all products by all farmers
 async function getProductInOrder() {
     let data = [];
     try {
@@ -22,10 +22,26 @@ async function getProductInOrder() {
     return data.map((pio) => new ProductInOrder(...Object.values(pio)));
 }
 
-async function getProductByFarmer() {
+async function getAllProductsByFarmers() {
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/productByFarmer', { method: 'GET' });
+        const res = await fetch(BASEURL + '/allProductsByFarmers', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((pbf) => new ProductByFarmer(...Object.values(pbf)));
+}
+
+
+//get products by a single farmer
+async function getProductsByFarmer(){
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/productsByFarmer', { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -256,7 +272,8 @@ async function modifyOrderStatus(order){
 
 const API = {   
    
-    getProductByFarmer,
+    getAllProductsByFarmers,
+    getProductsByFarmer,
     getFarmer,
     addOrder,
     
