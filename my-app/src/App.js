@@ -24,10 +24,10 @@ function App() {
   const [sidebarCollapse, setSidebarCollapse] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-
+  
 
   useEffect(() => {
-    if (loggedIn) {
+    if (loggedIn && userListUpdated===true) {
       API.getAllUsers()
         .then(u => {
           setUserList(u);
@@ -35,7 +35,7 @@ function App() {
         }).catch(f => console.log(f));
     }
   }
-    , [loggedIn]);
+    , [loggedIn, userListUpdated]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -135,7 +135,7 @@ function App() {
             status={match.params.status} /> )}/>
 
         <Route exact path="/clients">
-          <ClientView users={userList} />
+          <ClientView users={userList} triggerUpdate={() => setUserListUpdated(true)} />
         </Route>
 
         <Route exact path="/myorders">

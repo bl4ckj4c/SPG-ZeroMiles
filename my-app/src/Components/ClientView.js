@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Form, Table, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
+import { Form, Table, InputGroup, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import API from '../API';
 import "./ClientView.css";
@@ -24,7 +24,7 @@ function ClientView(props) {
             <Col>
                 <Table className="d-flex justify-content-center">
                     <tbody id="client-table" align="center">
-                        {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c}/> : <></>)}
+                        {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c} triggerUpdate={props.triggerUpdate} /> : <></>)}
                     </tbody>
                 </Table>
             </Col>
@@ -59,7 +59,7 @@ function ClientRow(props) {
                 </ListGroup>
             </Card.Body>
 
-            <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <ButtonBalance client={props.client} /></Card.Body>
+            <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <ButtonBalance client={props.client} triggerUpdate={props.triggerUpdate} /></Card.Body>
         </Card>
         </>
     );
@@ -78,6 +78,9 @@ function ButtonBalance(props) {
     const [difference, setDifference] = useState(0);
     const [operation, setOperation] = useState("Add");
 
+    function HandleOperation(difference)
+         {difference < 0 ? setOperation("Subtract") : setOperation("Add")}
+
     function UpdateNumber(i) {
         if (i === -1 && amount > 0) {
             setAmount(amount - 1);
@@ -87,13 +90,27 @@ function ButtonBalance(props) {
             setAmount(amount + 1);
             setDifference(difference + 1);
         }
-
-        if (difference < 0) {
-            setOperation("Subtract");
-        } else {
-            setOperation("Add");
-        }
+        
+          HandleOperation(difference);
+        
     }
+
+    function UpdateNumberInput(num){
+        let input = parseFloat(num);
+        if(isNaN(input) || input < 0 || !num ){
+            setAmount(0)
+            setDifference(0 - props.client.Wallet);
+
+        }
+        else
+        {
+            setAmount(input)
+            setDifference(input - props.client.Wallet);
+        }
+        HandleOperation(difference);
+
+    }
+ 
 
     async function handleUpdate() {
         try {
@@ -111,14 +128,14 @@ function ButtonBalance(props) {
 
     function handleRefresh() {
         setShowConfirm(false);
-        window.location.reload(true);
+        props.triggerUpdate();
     }
 
     return (
         <>
             <Button variant="outline-dark" size="sm" onClick={handleShow}>Update Balance</Button>
 
-            <Modal show={show} onHide={handleClose} size="sm" centered>
+            <Modal show={show} onHide={handleClose} size="md" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Update balance</Modal.Title>
                 </Modal.Header>
@@ -127,7 +144,17 @@ function ButtonBalance(props) {
                     <Container>
                         <Row>
                             <Col style={{ textAlign: "right" }} ><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(-1)}>-</Button></Col>
-                            <Col style={{ fontSize: 24, textAlign: "center" }} xs={4}>€ {amount}</Col>
+                            <Col style={{ fontSize: 24, textAlign: "center" }} xs={6}>
+                                
+                            <InputGroup>
+                                <InputGroup.Text>€</InputGroup.Text>
+                                <Form.Control value={amount}  onChange={(event) => { UpdateNumberInput(event.target.value)} }   />
+                            </InputGroup>
+
+                                
+                                
+                                
+                                € {amount}</Col>
                             <Col style={{ textAlign: "left" }}><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(+1)}>+</Button></Col>
                         </Row>
                     </Container>
