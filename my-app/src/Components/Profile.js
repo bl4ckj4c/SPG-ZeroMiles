@@ -6,63 +6,41 @@ import "./ClientView.css";
 
 function Profile(props) {
     const [loggedClient, setloggedClient] = useState([]);
-    const [loggedClientUpdated, setloggedClientUpdated] = useState(true);
+    const [loggedClientUpdated, setloggedClientUpdated] = useState(false);
     const [loading, setLoading] = useState(false);
     const [wallet, setWallet] = useState({ Wallet: 0, Money: 0 });
+    const [walletUpdated, setWalletUpdated] = useState(false);
     const [modalShow, setModalShow] = useState(false);
 
-    const amountInsufficient = false;
 
     useEffect(() => {
         setLoading(true);
         API.getClient()
             .then(client => {
-                console.log(client);
                 setloggedClient(client);
-                console.log("ciao" + loggedClient.UserID);
-
-                setloggedClientUpdated(false);
+                setloggedClientUpdated(true);
+                checkWallet(client);
                 setLoading(false);
-            }).catch(c => handleErrors(c));
-
-
+            })
+            .catch(c => handleErrors(c));
     }, []);
 
-    useEffect(() => {
-        if (loggedClientUpdated === true) {
-            setLoading(true);
-            API.getClient()
-                .then(client => {
-                    setloggedClient(client);
-                    console.log("ciao" + loggedClient.UserID);
-                    setloggedClientUpdated(false);
-                    setLoading(false);
-                }).catch(c => handleErrors(c));
+    const checkWallet = (client) => {
+        try {
+            API.clientCheck({ ClientID: client.UserID })
+                .then(w => {
+                    setWallet(w);
+                    setWalletUpdated(true);
+                    if (w.Wallet - w.Money <= 0) {
+                        setModalShow(true);
+                    }
+                })
+        } catch (err) {
+            handleErrors(err);
         }
-
-    }, [loggedClientUpdated]);
-
-
-
-
-    useEffect(() => {
-        if (loggedClientUpdated === false) {
-            API.clientCheck({ ClientID: loggedClient.UserID }).then(w => {
-                setWallet(w);
-                if (w.Wallet - w.Money <= 0 ) {
-                    console.log("pochihi");
-                    setModalShow(true);
-                }
-            }).catch(err => handleErrors(err));
-        }
-
-    }, [loggedClientUpdated]);
-
-
-
+    }
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/ }
         console.log(err);
     }
 
@@ -89,6 +67,7 @@ function Profile(props) {
 }
 
 function ClientRow(props) {
+
     return (
         <>
             <Card className="client-card mt-3">
@@ -113,7 +92,7 @@ function ClientRow(props) {
                     </ListGroup>
                 </Card.Body>
 
-                <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <WalletFill /> Wallet balance: €{props.wallet.Wallet.toFixed(2)}</Card.Body>
+                <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <WalletFill />Wallet balance: €{props.client.Wallet}</Card.Body>
             </Card>
         </>
     );
@@ -125,12 +104,11 @@ function InsufficientWallet(props) {
         <Modal show={props.show} onHide={props.onHide} size="sm" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                ⚠️Wallet information
+                    ⚠️Wallet information
                 </Modal.Title>
             </Modal.Header>
-            <Modal.Body>Your wallet amount: €{(props.wallet.Wallet).toFixed(2)}</Modal.Body>
-            <Modal.Body>Total of your "open" orders: €{(props.wallet.Money).toFixed(2)}</Modal.Body>
-            <Modal.Body>Wallet amount - orders: €{(props.wallet.Wallet - props.wallet.Money).toFixed(2)}</Modal.Body>
+            <Modal.Body>The total of your "open" orders exceeds your wallet by {(props.wallet.Money - props.wallet.Wallet).toFixed(2)}€.</Modal.Body>
+            <Modal.Body>Please top up your wallet!</Modal.Body>
 
             <Modal.Footer>
                 <Button onClick={props.onHide}>Close</Button>

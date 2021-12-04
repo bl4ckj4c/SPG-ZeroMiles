@@ -2,7 +2,7 @@
 
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
-const firebaseBackup = require('firebase-admin'); 
+const firebaseBackup = require('firebase-admin');
 const { firebaseconf } = require('./firebase-server/config.js');
 const { firebaseconf_backup } = require('./firebase-server/config.js');
 const userDao = require('./userDAO');
@@ -51,7 +51,7 @@ const firebaseappBackup = firebaseBackup.initializeApp({
     credential: firebaseBackup.credential.cert(firebaseconf_backup),
     databaseURL: "https://polito-se2-21-01-spg-backup.europe-west1.firebasedatabase.app",
     storageBucket: "gs://polito-se2-21-01-spg-backup.appspot.com"
-},"firebase_backup");
+}, "firebase_backup");
 
 /* get reference a reference to the firestore database */
 var db = firebase.firestore();
@@ -549,7 +549,7 @@ app.get('/api/products', async (req, res) => {
             let result = [];
             products.forEach(product => {
                 result.push(new Promise(async (resolve, reject) => {
-                    resolve({                        
+                    resolve({
                         Name: product.data().Name,
                         Description: product.data().Description,
                         ImageID: product.data().ImageID,
@@ -833,14 +833,15 @@ app.post('/api/checkClient', async (req, res) => {
     let ritorno = {};
     console.log(req.body.ClientID);
     let client;
-   
+
     try {
-        (async () => {
-            client = await db.collection('User').doc(req.body.ClientID).get();
-            
 
+        client = await db.collection('User').doc(req.body.ClientID).get();
 
-        })()
+        if (client.empty) {
+            console.log("No entries (Table: users)");
+            res.status(404).json({ error: "No entries (Table: users)" });
+        }
 
         let order = await db.collection('Order').get()
         //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
@@ -849,22 +850,22 @@ app.post('/api/checkClient', async (req, res) => {
             console.log("No entries (Table: order)");
             res.status(404).json({ error: "No entries (Table: order)" });
         }
-         
-        //for each product in the orde
-            order.forEach(order => {
-                if (order.data().ClientID == req.body.ClientID && order.data().Status == "open") { //check if there are enough unities for the product requested
-                    soldi_spesi=soldi_spesi + order.data().Price
-                }})
-       
-                   
-       
-        ritorno.Wallet= client.data().Wallet;
-        ritorno.Money= soldi_spesi;
-        res.status(201).json(ritorno);
-        
 
-        
-              }catch (error) {
+        //for each product in the orde
+        order.forEach(order => {
+            if (order.data().ClientID == req.body.ClientID && order.data().Status == "open") { //check if there are enough unities for the product requested
+                soldi_spesi = soldi_spesi + order.data().Price
+            }
+        })
+
+        console.log(client);
+        ritorno.Wallet = client.data().Wallet;
+        ritorno.Money = soldi_spesi;
+        res.status(201).json(ritorno);
+
+
+
+    } catch (error) {
         console.log(error);
         res.status(500).json({
             info: "The server cannot process the request",
@@ -872,7 +873,7 @@ app.post('/api/checkClient', async (req, res) => {
         });
     }
 
-  
+
 });
 
 
