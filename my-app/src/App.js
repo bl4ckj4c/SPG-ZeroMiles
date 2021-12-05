@@ -15,13 +15,7 @@ import ClientView from './Components/ClientView';
 import Welcome from './Components/Welcome';
 import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
-<<<<<<< Updated upstream
 import FarmerProducts from './Components/FarmerProducts';
-=======
-import ProductNew from './Components/ProductNew'
-
-
->>>>>>> Stashed changes
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -159,9 +153,7 @@ function App() {
         <Route exact path="/myorders">
           <ClientOrders />
         </Route>
-        <Route exact path="/myproduct">
-          <ProductNew/>
-        </Route>
+ 
 
         <Route exact path="/profile">
           <Profile />
