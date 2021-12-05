@@ -140,8 +140,8 @@ app.post('/api/login', async (req, res) => {
                 } else {
                     //AUTHENTICATION SUCCESS
                     console.log("Authentication succeeded!" + user.id);
-                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret);
-                    res.cookie('token', token, {httpOnly: true, sameSite: true});
+                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret); //for expiration time, add {expiresIn: expireTime} to jwt sign operation
+                    res.cookie('token', token, {httpOnly: true, sameSite: true});  //for expiration time: add parameter 'maxAge: 1000 * expireTime' to the JSON
                     res.status(200).end();
                 }
             })
@@ -431,9 +431,15 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
     }
 });
 
-/* GET products by farmer (one farmer) */
+/* GET products by the authenticated farmer (one farmer) */
 app.get('/api/productsByFarmer', async (req, res) => {
     const user = req.user && req.user.user;
+    if(user.Role != "Farmer"){
+        console.log("GET productsByFarmer - 401 Unauthorized (Maybe you are not a farmer)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+
     try {
         const productbyfarmer = await db.collection('Product by Farmers').where("FarmerID", "==", "" + user.userID).get();  //.where("FarmerID","==","JJeuoVa8fpl4wHGLK8FO")
         if (productbyfarmer.empty) {
@@ -504,6 +510,13 @@ app.get('/api/productsByFarmer', async (req, res) => {
 
 /* GET all users */
 app.get('/api/users', async (req, res) => {
+    const user = req.user && req.user.user;
+    if(user.Role == "Client"){
+        console.log("GET all users - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+
     try {
         const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (users.empty) {
@@ -544,7 +557,7 @@ app.get('/api/users', async (req, res) => {
 });
 
 
-/* GET a user*/
+/* GET informations about the authenticated user*/
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
     try {
@@ -664,7 +677,7 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-/* GET all orders from a client*/
+/* GET all orders of the authenticated user*/
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
     try {
@@ -711,8 +724,14 @@ app.get('/api/clientorders', async (req, res) => {
     }
 })
 
-/* GET all Order */
+/* GET all orders of all users */
 app.get('/api/orders', async (req, res) => {
+    const user = req.user && req.user.user;
+    if(user.Role == "Client"){
+        console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
     try {
         const orders = await db.collection('Order').orderBy('Timestamp').get();
         if (orders.empty) {
@@ -780,14 +799,11 @@ app.post('/api/order', async (req, res) => {
                 if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
                     res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
-
-
                 }
             })
 
         })
-
-
+        
         console.log("creating new order");
         console.log(quantity);
         let newOrder = {}
