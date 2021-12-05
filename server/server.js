@@ -140,8 +140,8 @@ app.post('/api/login', async (req, res) => {
                 } else {
                     //AUTHENTICATION SUCCESS
                     console.log("Authentication succeeded!" + user.id);
-                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret, {expiresIn: expireTime});
-                    res.cookie('token', token, {httpOnly: true, sameSite: true, maxAge: 1000 * expireTime});
+                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret);
+                    res.cookie('token', token, {httpOnly: true, sameSite: true});
                     res.status(200).end();
                 }
             })
