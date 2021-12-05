@@ -54,6 +54,8 @@ function ZeroNavbar(props) {
                                 {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
 
                                 {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
+                               
+                                {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
 
                             </Offcanvas.Body>
 
@@ -90,10 +92,41 @@ function EmployeeSidebar(props) {
                 <Nav.Link className="sidebar-text" href="/clients" >All clients</Nav.Link>
                 <Nav.Link className="sidebar-text" href="/signup">New client</Nav.Link>
             </Nav>
+            <Offcanvas.Title className="mt-3 nav-subtitle">FARMER</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/clients" >All farmers</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/signup">New farmer</Nav.Link>
+            </Nav>
 
         </>
     );
 }
+function FarmerSidebar(props) {
+    return (
+        <>
+            <Offcanvas.Title className="mt-3 nav-subtitle">PRODUCTS</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/myproduct">My products</Nav.Link>
+            </Nav>
+
+            <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
+            </Nav>
+        </>
+    );
+}
+
+
+
+
+
 
 function ClientSidebar(props) {
 
