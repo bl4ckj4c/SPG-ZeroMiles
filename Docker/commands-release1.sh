@@ -8,6 +8,9 @@ cd polito-se2-21-P01-SPG
 echo "git checkout origin/master"
 git checkout origin/master
 
+echo "git checkout tags/release-1"
+git checkout tags/release-1
+
 echo "copying keys (test)"
 mv ../polito-se2-21-01-spg-firebase-adminsdk-76fui-7b28269ea6.json test/server-test
 
