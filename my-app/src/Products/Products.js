@@ -18,6 +18,15 @@ function ProductByFarmer(FarmerID, Name, Surname, Company, Email, Phoneno, Addre
     this.Price = Price;
 }
 
+function ProductByFarmerLITE( ProdByFarmerID, ProductID, NameProduct, Quantity, UnitOfMeasurement, Price) {
+    this.ProdByFarmerID = ProdByFarmerID;
+    this.ProductID = ProductID;
+    this.NameProduct = NameProduct;
+    this.Quantity = Quantity;
+    this.UnitOfMeasurement = UnitOfMeasurement;
+    this.Price = Price;
+}
+
 function Farmer(Name, Surname, Company, FarmerID, Email, Phoneno, Address, State, Zipcode){
     this.Name = Name;
     this.Surname = Surname;
@@ -37,4 +46,4 @@ function Product(Name, Description, ImageID, ProductID){
     this.ProductID = ProductID;
 }
 
-export { ProductByFarmer, Farmer, Product };
+export { ProductByFarmer, ProductByFarmerLITE, Farmer, Product };

@@ -640,7 +640,9 @@ app.get('/api/productsByFarmer', async (req, res) => {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
                             // Farmer
-                            FarmerID: prodfarm.data().FarmerID,
+                        /*  FarmerID: prodfarm.data().FarmerID,
+
+                             
                             Name: farmer.data().Name,
                             Surname: farmer.data().Surname,
                             Company: farmer.data().Company,
@@ -649,12 +651,13 @@ app.get('/api/productsByFarmer', async (req, res) => {
                             Address: farmer.data().Address,
                             State: farmer.data().State,
                             Zipcode: farmer.data().Zipcode,
-                            //Distance: farmer.data().Distance
+ */                            //Distance: farmer.data().Distance
                             // Product
+                            ProdByFarmerID: prodfarm.id,
                             ProductID: prodfarm.data().ProductID,
                             NameProduct: product.data().Name,
-                            Description: product.data().Description,
-                            ImageID: product.data().ImageID,
+/*                             Description: product.data().Description,
+                          ImageID: product.data().ImageID, */  
                             // Product by farmer
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
@@ -1160,16 +1163,16 @@ app.post('/api/addProduct', async (req, res) => {
         let newprodFarmer = {}
         newprodFarmer.FarmerID = user.userID;
         newprodFarmer.ProductID = req.body.ProductID;
-        newprodFarmer.Price = req.body.Price;
-        newprodFarmer.Quantity = req.body.Quantity;
-        newprodFarmer.UnitOfMeasurement = req.body.UnitOfMeasurement;
+        newprodFarmer.Price = parseFloat(req.body.Price);
+        newprodFarmer.Quantity = parseInt(req.body.Quantity);
+        newprodFarmer.Unitofmeasurement = req.body.UnitOfMeasurement;
 
         
         await db.collection('Product by Farmers').add(newprodFarmer);
         }else{
             
             
-            await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, UnitOfMeasurement: req.body.UnitOfMeasurement});
+            await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, Unitofmeasurement: req.body.UnitOfMeasurement});
 
 
         }

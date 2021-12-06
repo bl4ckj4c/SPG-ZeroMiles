@@ -1,4 +1,4 @@
-import { Product, ProductByFarmer, Farmer } from './Products/Products.js';
+import { Product, ProductByFarmer, ProductByFarmerLITE, Farmer } from './Products/Products.js';
 import { ProductInOrder, Order, User } from './Orders/Orders.js';
 
 /**
@@ -49,7 +49,7 @@ async function getProductsByFarmer(){
     } catch (e) {
         throw new Error(e);
     }
-    return data.map((pbf) => new ProductByFarmer(...Object.values(pbf)));
+    return data.map((pbf) => new ProductByFarmerLITE(...Object.values(pbf)));
 }
 
 async function getFarmer() {

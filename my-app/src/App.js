@@ -160,7 +160,7 @@ function App() {
         </Route>
 
         <Route exact path="/farmerview">
-          <FarmerProducts />
+          <FarmerProducts user={user} />
         </Route>
 
       </Switch>
