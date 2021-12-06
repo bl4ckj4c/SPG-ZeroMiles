@@ -1169,7 +1169,7 @@ app.post('/api/addProduct', async (req, res) => {
         }else{
             
             
-            await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, UnitOfMeasurement: UnitOfMeasurement});
+            await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, UnitOfMeasurement: req.body.UnitOfMeasurement});
 
 
         }
