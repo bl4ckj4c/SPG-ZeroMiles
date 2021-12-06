@@ -472,7 +472,7 @@ app.post('/api/register',
                     const user = await db.collection("User").where("Email", "==", req.body.email).get();
                     if (user.empty) {
                         await db.collection('User').doc(newUUid).create(newUser);
-                        await db.collection('Farmer').add(newFarmer);
+                        await db.collection('Farmer').doc(newUUid).create(newFarmer);
                         
                         console.log("Done.");
                         res.status(201).end();
