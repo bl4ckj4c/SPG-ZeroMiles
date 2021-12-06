@@ -11,7 +11,7 @@ function Welcome(props) {
     }
 
     function handleSignup() {
-        history.push('/signup');
+        history.push('/signupClient');
     }
 
     return (

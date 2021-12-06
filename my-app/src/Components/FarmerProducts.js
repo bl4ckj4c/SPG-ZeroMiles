@@ -6,6 +6,7 @@ import API from '../API';
 import { useState, useEffect } from 'react'
 
 function FarmerProducts(props) {
+    console.log("HERE");
     const [products, setProducts] = useState([]);
     const [updated, setUpdated] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState([]);
@@ -73,6 +74,7 @@ function FarmerProducts(props) {
 
 function ProductCard(props){
     const [show, setShow] = useState(false);
+
 
     return (
         <>

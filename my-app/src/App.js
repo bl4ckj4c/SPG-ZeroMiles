@@ -5,6 +5,7 @@ import API from './API';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
 import UserRegister from './Components/UserRegister.js';
+import UserRegisterEmployee from './Components/UserRegisterEmployee.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
@@ -83,6 +84,12 @@ function App() {
       setLoggedIn(false);
     });
   }
+  const register = () => {
+    API.userLogout().then(() => {
+      setUser({});
+      setLoggedIn(false);
+    });
+  }
 
   let history = useHistory();
 
@@ -134,9 +141,15 @@ function App() {
         <Route exact path="/login">
           {loggedIn ? <Redirect to="/products" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} />}
         </Route>
-
-        <Route exact path="/signup">
+            {/* Signup by user
+            */}
+        <Route exact path="/signupClient">
           <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+        </Route>
+            { /* Signup by employee (allow create farmer and user with wallet asignation)
+            */}
+        <Route exact path="/signupEmployee">
+          <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
 
         <Route exact path="/orders/:status" render={({ match }) => (

@@ -8,7 +8,10 @@ import {WelcomeFarmerSidebar} from "../Images/WelcomeFarmer.js";
 function ZeroNavbar(props) {
     const location = useLocation();
     const history = useHistory();
-
+    function handlerRegister() {
+        props.logout();
+        history.push('/login');
+    }
     function handleLogout() {
         props.logout();
         history.push('/login');
@@ -96,8 +99,10 @@ function EmployeeSidebar(props) {
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/clients" >All farmers</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/signup">New farmer</Nav.Link>
+                <Nav.Link className="sidebar-text"  href="/clients" >All farmers</Nav.Link>
+                <Nav.Link className="sidebar-text" role="Farmer" onClick href="/signupEmployee">
+                        New farmer
+                </Nav.Link>
             </Nav>
 
         </>
