@@ -317,6 +317,23 @@ async function modifyOrderStatus(order){
     return response;
 }
 
+async function addProduct(product){
+
+    const response = await fetch(BASEURL + "/addProduct", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...product})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Order succesfully added' };
+    }
+    return { 'err': 'POST error' };
+  }
+
+
   
 
 const API = {   
@@ -325,6 +342,7 @@ const API = {
     getProductsByFarmer,
     getFarmer,
     addOrder,
+    addProduct,
     
     clientCheck,
     getProductInOrder, 
@@ -333,6 +351,9 @@ const API = {
     getOrders,
     modifyOrderStatus,
     modifyWallet,
+
+    createProduct,
+
 
     userRegister,
     userLogin,

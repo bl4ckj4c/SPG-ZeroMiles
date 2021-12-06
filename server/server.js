@@ -1152,6 +1152,40 @@ app.post('/api/checkClient', async (req, res) => {
 });
 
 
+app.post('/api/addProduct', async (req, res) => {
+    const user = req.user && req.user.user;
+    console.log(user);
+    try {
+        if (req.body.productByFarmerID ==false){
+        let newprodFarmer = {}
+        newprodFarmer.FarmerID = user.userID;
+        newprodFarmer.ProductID = req.body.ProductID;
+        newprodFarmer.Price = req.body.Price;
+        newprodFarmer.Quantity = req.body.Quantity;
+        newprodFarmer.UnitOfMeasurement = req.body.UnitOfMeasurement;
+
+        
+        await db.collection('Product by Farmers').add(newprodFarmer);
+        }else{
+            
+            
+            await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, UnitOfMeasurement: UnitOfMeasurement});
+
+
+        }
+        res.status(201).end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+
+});
+
+
 app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
