@@ -143,14 +143,18 @@
   
       ```json5
       {
-          "name": "Teddy",
-          "lastName": "Agnez",
-          "email": "mario.rossi@gmail.com",
-          "address": "Via Bolivia",
-          "phone": "9938893232",
-          "city": "fi",
-          "password": "qwerty"
-      }
+         {
+    "name": "Luca",
+    "surname": "Magurno",
+    "email": "lucamagurno@gmail.com",
+    "address": "Via riviere 93",
+    "phone" : "3456879098",
+    "city" : "Torino",
+    "password" : "sium",
+    "zipcode" : "87023",
+    "stateCaps" : "TO"
+
+    }
       ```
       
   - **response**: `201 Created` (success), `400 Bad Request` (error in passed parameters) or `500 Internal Server Error` (generic error)
@@ -169,7 +173,52 @@
           ]
       }
       ```
+ 
+
+
+- POST `/api/farmerRegister`
+  - **Authenticated** 
   
+  - **description**: insert a new user into the database
+  
+  - **request parameters**: *none*
+  
+  - **request body**: object describing the new user
+  
+      ```json5
+      {
+         {
+    "name": "Luca",
+    "surname": "Magurno",
+    "email": "lucamagurno@gmail.com",
+    "address": "Via riviere 93",
+    "company" : "Le riviere",
+    "phone" : "3456879098",
+    "city" : "Torino",
+    "password" : "sium",
+    "zipcode" : "87023",
+    "stateCaps" : "TO"
+
+    }
+      ```
+      
+  - **response**: `201 Created` (success), `400 Bad Request` (error in passed parameters) or `500 Internal Server Error` (generic error)
+  
+  - **response body content**: *none* in case of success, error object in case of error
+  
+      ```json5
+      {
+          "info": "The server cannot process the request",
+          "errors": [
+              {
+                  "param": "name",
+                  "error": "Invalid value"
+              },
+              ...
+          ]
+      }
+      ```
+   
       
   
 ## Database Tables

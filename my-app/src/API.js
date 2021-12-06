@@ -303,6 +303,20 @@ async function modifyOrderStatus(order){
           body: formData
       });
   }
+
+
+  async function farmerRegister(farmer) {
+
+    const response = await fetch(BASEURL + "/farmerRegister", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({...farmer})
+    });
+    return response;
+}
+
   
 
 const API = {   
@@ -325,6 +339,7 @@ const API = {
     userLogout,
     getUserInfo,
     getClientOrders,
-    getClient
+    getClient,
+    farmerRegister,
 };
 export default API;

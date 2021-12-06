@@ -16,7 +16,9 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+var timezone = require('dayjs/plugin/timezone');
 dayjs.extend(isSameOrAfter)
+dayjs.extend(timezone)
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
@@ -315,6 +317,179 @@ app.post('/api/register',
         }
     });
 
+
+
+    app.post('/api/farmerRegister',
+    body('name')
+        // Check if the name parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the name parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the name parameter is a string
+        .isString()
+        // Check if the name parameter contains only letters
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z]+$/);
+            return regex.test(value);
+        }),
+    body('surname')
+        // Check if the lastName parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the lastName parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the lastName parameter is a string
+        .isString()
+        // Check if the lastName parameter contains only letters
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z\']+$/);
+            return regex.test(value);
+        }),
+    body('email')
+        // Check if the email parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the email parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the email parameter is a string
+        .isString()
+        // Check if the email parameter is a valid email
+        .custom((value, req) => {
+            let regex = new RegExp(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/);
+            return regex.test(value);
+        }),
+    body('address')
+        // Check if the address parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the address parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the address parameter is a string
+        .isString()
+        // Check if the address parameter is a valid address
+        .custom((value, req) => {
+            let regex = new RegExp(/^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$/);
+            return regex.test(value);
+        }),
+    body('phone')
+        // Check if the phone parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the phone parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the phone parameter is a string
+        .isString()
+        // Check if the phone parameter is a valid phone number
+        .custom((value, req) => {
+            let regex = new RegExp(/^(\+(\([0-9]{1,2}\))?)?[0-9]+$/);
+            return regex.test(value);
+        }),
+    body('city')
+        // Check if the city parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the city parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the city parameter is a string
+        .isString()
+        // Check if the city parameter is a valid city
+        .custom((value, req) => {
+            let regex = new RegExp(/^[a-zA-Z]+$/);
+            return regex.test(value);
+        }),
+        body('company')
+        // Check if the city parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the city parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the city parameter is a string
+        .isString(),
+    body('password')
+        // Check if the password parameter is not null
+        .exists({checkNull: true})
+        .bail()
+        // Check if the password parameter is not empty
+        .notEmpty()
+        .bail()
+        // Check if the password parameter is a string
+        .isString(),
+    (req, res) => {
+        const result = validationResult(req);
+
+        // Validation error
+        if (!result.isEmpty()) {
+            let jsonArray = [];
+            for (let item of result.array())
+                jsonArray.push({
+                    param: item.param,
+                    error: item.msg,
+                    valueReceived: item.value
+                })
+            res.status(400).json({
+                info: "The server cannot process the request",
+                errors: jsonArray
+            });
+        }
+        // No error in validation
+        else {
+            const newUUid = uuidv4()
+            let newUser = {}
+            newUser.Name = req.body.name;
+            newUser.Surname = req.body.surname;
+            newUser.Email = req.body.email;
+            newUser.Address = req.body.address;
+            newUser.Company = req.body.company;
+            newUser.Phoneno = req.body.phone;
+            newUser.City = req.body.city;
+            newUser.Password = req.body.password;  //userDao.hashOfPassword(req.body.password)
+            newUser.Zipcode = req.body.zipcode;
+            newUser.State = req.body.stateCaps;
+            newUser.Role = "Farmer";
+            newUser.Wallet = 0;
+
+            let newFarmer = {}
+            newFarmer.Name = req.body.name;
+            newFarmer.Distance = 1;
+            newFarmer.Surname = req.body.surname;
+            newFarmer.Email = req.body.email;
+            newFarmer.Address = req.body.address;
+            newFarmer.Company = req.body.company;
+            newFarmer.Phoneno = req.body.phone;
+            newFarmer.Zipcode = req.body.zipcode;
+            newFarmer.State = req.body.stateCaps;
+
+            (async () => {
+                try {
+                    const user = await db.collection("User").where("Email", "==", req.body.email).get();
+                    if (user.empty) {
+                        await db.collection('User').doc(newUUid).create(newUser);
+                        await db.collection('Farmer').add(newFarmer);
+                        
+                        console.log("Done.");
+                        res.status(201).end();
+                    } else res.status(409).json({
+                        info: "New user registration",
+                        error: "Email already used"
+                    });
+                } catch (error) {
+                    console.log("ERROR: ", error);
+                    res.status(500).json({
+                        info: "The server cannot process the request",
+                        error: error
+                    });
+                }
+            })()
+        }
+    });
 
 /* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
 
@@ -807,7 +982,7 @@ app.post('/api/order', async (req, res) => {
         console.log(quantity);
         let newOrder = {}
         newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",);
+        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",).tz("Italia/Roma");
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
