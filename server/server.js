@@ -556,7 +556,6 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-
 /* GET informations about the authenticated user*/
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;

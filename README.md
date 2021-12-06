@@ -7,6 +7,8 @@
 ## API Server
 
 - GET `/api/users`
+  - **Authenticated** - Unauthorized by a Client
+
   - **description**: get all users
   
   - **request parameters**: *none*
@@ -29,8 +31,20 @@
     ...
     ]
     ```
-  
+
+- GET `/api/userinfo`
+    - **Authenticated**
+
+    - **description**: get informations about a single user (the authenticated one)
+
+- GET `/api/clientorders`
+    - **Authenticated**
+
+    - **description**: get all orders by a user (the authenticated one)
+
 - GET `/api/farmers`
+  - **Authenticated** 
+
   - **description**: get all farmers
   
   - **request parameters**: *none*
@@ -54,9 +68,16 @@
     ...
     ]
     ```
-  
-- GET `/api/productByFarmer`
-    - **description**: get all products by farmers
+
+- GET `/api/products`
+    - **Authenticated**
+
+    - **description**: get all products
+
+- GET `/api/allProductsByFarmers`
+    - **Authenticated**
+
+    - **description**: get all products by all farmers
 
     - **request parameters**: *none*
 
@@ -96,7 +117,23 @@
       }
       ```
     
+- GET `/api/productsByFarmer`
+    - **Authenticated** - Authorized only by a Farmer
+
+    - **description**: get all products by only one farmer (the authenticated one)
+
+- GET `/api/orders`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**: get all orders by all users
+
+- POST `/api/order`
+    - **Authenticated** 
+
+    - **description**: insert a new order into the database
+
 - POST `/api/register`
+  - **Not Authenticated** 
   
   - **description**: insert a new user into the database
   
