@@ -59,7 +59,9 @@ function ProductNew(props) {
             "Name": name,
             "Description": description
         }
-   console.log(object)
+        let res = await API.createProduct(object);
+        console.log(object);
+        console.log(res);
     }
 
     return (
