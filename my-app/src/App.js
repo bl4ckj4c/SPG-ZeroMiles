@@ -154,9 +154,9 @@ function App() {
             { /* Signup by employee (allow create farmer and user with wallet asignation)
             */}
 
-{/*         <Route exact path="/signupEmployee">
+        <Route exact path="/signupEmployee">
           <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-        </Route> */}
+        </Route>
 
 
 
