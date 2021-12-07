@@ -5,8 +5,8 @@ function WelcomeFarmer(props) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       contentScriptType="text/ecmascript"
-      width={400}
-      height={300}
+      width={350}
+      height={250}
       viewBox="145 0 800 800"
       {...props}
     >

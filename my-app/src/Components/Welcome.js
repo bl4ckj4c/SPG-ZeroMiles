@@ -17,7 +17,7 @@ function Welcome(props) {
     return (
         <Container className="no-scroll bg-desktop">
 
-            <Row className="mt-4 desktop-margin">
+            <Row className="mt-2 desktop-margin">
                 <Col className="d-none d-lg-block"></Col>
                 <Col>
                     <h1 className="text-placement desktop-margin"> Your next </h1>
