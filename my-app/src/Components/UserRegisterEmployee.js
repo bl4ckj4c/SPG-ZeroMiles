@@ -11,6 +11,8 @@ function UserRegisterEmployee(props) {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [company, setCompany] = useState('');
+    const [distance, setDistance] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
     const [phone, setPhone] = useState('');
@@ -88,15 +90,29 @@ function UserRegisterEmployee(props) {
     async function sendRegister(event) {
         event.preventDefault();
         let stateCaps = state.toUpperCase().toString();
-        
+        let farmer = {
+            "name": name,
+            "surname": surname,
+            "email": email,
+            "address": address,
+            "company": company,
+            "company": "Name of company",
+            "phone": phone,
+            "city": city,
+            "password": password,
+            "zipcode": zipcode,
+            "stateCaps": stateCaps
+        }
         try {
-            let res = await API.userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps);
+            console.log("Req",farmer)
+            let res = await API.farmerRegister(JSON.parse(farmer));
+            console.log("HERE farmer",farmer);
+            console.log("HERE response",res);
             if (res.ok){
                 //props.setLoggedIn(true);
                 handleShowConfirm();
             }
             else{
-                console.log(res);
                 setMessageErrorRegister(res.statusText);
                 handleRegisterResponseModalShow();
               
@@ -242,9 +258,9 @@ function UserRegisterEmployee(props) {
                                     <SelectState></SelectState>
                                 </Form.Control>
                             </Form.Group>
-                            <Form.Group className="mb-3" controlId="password">
+                            <Form.Group className="mb-3" controlId="company">
                                 <Form.Label className="label">Company:</Form.Label>
-                                <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter copany name" onChange={(e) => setPassword(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="password">
                                 <Form.Label className="label">Password:</Form.Label>
@@ -270,7 +286,7 @@ function UserRegisterEmployee(props) {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="confPassword">
                                 <Form.Label className="label">Distance:</Form.Label>
-                                <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfPassword(e.target.value)} />
+                                <Form.Control type="text" placeholder="Insert distance" onChange={(e) => setConfPassword(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="confPassword">
                                 <Form.Label className="label">Confirm Password:</Form.Label>
