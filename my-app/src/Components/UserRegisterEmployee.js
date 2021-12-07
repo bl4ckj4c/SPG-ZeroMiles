@@ -243,6 +243,10 @@ function UserRegisterEmployee(props) {
                                 </Form.Control>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="password">
+                                <Form.Label className="label">Company:</Form.Label>
+                                <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="password">
                                 <Form.Label className="label">Password:</Form.Label>
                                 <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
                             </Form.Group>
@@ -263,6 +267,10 @@ function UserRegisterEmployee(props) {
                             <Form.Group className="mb-3" controlId="zipcode">
                                 <Form.Label className="label">Zipcode:</Form.Label>
                                 <Form.Control type="number" placeholder="Enter ZipCode" onChange={(e) => setZipcode(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="confPassword">
+                                <Form.Label className="label">Distance:</Form.Label>
+                                <Form.Control type="password" placeholder="Confirm Password" onChange={(e) => setConfPassword(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="confPassword">
                                 <Form.Label className="label">Confirm Password:</Form.Label>
