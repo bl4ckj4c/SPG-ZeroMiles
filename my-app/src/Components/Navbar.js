@@ -1,6 +1,6 @@
 import { Navbar, Nav, Button, Image, Container, Offcanvas, NavDropdown, Col, Row, Modal, Form } from 'react-bootstrap';
 import "./Navbar.css";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 import { useLocation, useHistory } from 'react-router-dom';
 import { House, DoorOpen, Stopwatch } from 'react-bootstrap-icons';
@@ -26,7 +26,10 @@ function ZeroNavbar(props) {
         setModalShow(true);
     }
 
-    const handleClose = () => setModalShow(false);
+    function handleClose (newdate) {
+        setModalShow(false);
+        props.setTimeMachine(newdate);
+    }
 
     return (
         location.pathname === "/" ? <></> :
@@ -59,7 +62,7 @@ function ZeroNavbar(props) {
                                     {!props.timedev ? <></> : <>
                                         <Col>
                                             <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
-                                            <TimeMachine show={modalShow} onHide={() => handleClose()} />
+                                            <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                         </Col>
                                     </>}
 
@@ -89,13 +92,25 @@ function ZeroNavbar(props) {
 };
 
 function TimeMachine(props) {
+    var dayjs = require('dayjs');
+
+    const now_time = new Object();
+    const now_date = new Object();
+    now_time.value = dayjs().format('HH:mm');
+    now_date.value = dayjs().format('YYYY-MM-DD');
+    var newdate = "";
+
+    const [time, setTime] = useState(now_time);
+    const [date, setDate] = useState(now_date);
+    
+
+    function onSubmit() {
+        newdate = (dayjs(date.value).format('DD/MM/YYYY') + " " + time.value + ":00").toString();
+        props.onHide(newdate);
+    }
+
     return (
-        <Modal
-            {...props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-        >
+        <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     "Wait a minute, Doc."
@@ -111,22 +126,22 @@ function TimeMachine(props) {
                     </Row>
                     <Row className="justify-content-center">
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
-                            <Form.Group className="mt-2" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mt-2" controlId="chosendate">
                                 <Form.Label>Date</Form.Label>
-                                <Form.Control type="date"/>
+                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({value: e.target.value})}/>
                             </Form.Group>
                         </Col>
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
-                            <Form.Group className="mt-2" controlId="exampleForm.ControlInput1">
+                            <Form.Group className="mt-2" controlId="chosentime">
                                 <Form.Label>Time</Form.Label>
-                                <Form.Control type="time"/>
+                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({value: e.target.value})}/>
                             </Form.Group>
                         </Col>
                     </Row>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="warning" onClick={props.onHide}>Gigawatts!?</Button>
+                <Button variant="warning" onClick={onSubmit}>Gigawatts!?</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -134,7 +149,6 @@ function TimeMachine(props) {
 
 
 function EmployeeSidebar(props) {
-
     return (
         <>
             <Offcanvas.Title className="mt-3 nav-subtitle">ORDERS</Offcanvas.Title>

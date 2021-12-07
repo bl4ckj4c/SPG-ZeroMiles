@@ -26,8 +26,13 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
+  const [timeMachine, setTimeMachine] = useState('');
 
   const timedev = true; //set at false to disable the time machine
+  useEffect(() => {
+    if(timeMachine)
+    console.log(timeMachine);
+  }, [timeMachine]);
 
   useEffect(() => {
     if (loggedIn && userListUpdated === true) {
@@ -105,6 +110,7 @@ function App() {
         user={user}
         logout={logout}
         timedev={timedev}
+        setTimeMachine={setTimeMachine}
         />
 
       <Switch>
