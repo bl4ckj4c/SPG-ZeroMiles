@@ -26,7 +26,7 @@ function ZeroNavbar(props) {
         setModalShow(true);
     }
 
-    function handleClose (newdate) {
+    function handleClose(newdate) {
         setModalShow(false);
         props.setTimeMachine(newdate);
     }
@@ -80,6 +80,9 @@ function ZeroNavbar(props) {
 
                             </Offcanvas.Body>
 
+                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
+                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
+
                         </Navbar.Offcanvas>
                     </>}
 
@@ -100,7 +103,7 @@ function TimeMachine(props) {
 
     const [time, setTime] = useState(now_time);
     const [date, setDate] = useState(now_date);
-    
+
 
     function onSubmit() {
         newdate = (dayjs(date.value).format('DD/MM/YYYY') + " " + time.value + ":00").toString();
@@ -115,24 +118,24 @@ function TimeMachine(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h6 style={{textAlign:'center'}}>
+                <h6 style={{ textAlign: 'center' }}>
                     “Are you telling me you built a time machine...out of a DeLorean?”
                 </h6>
                 <Form>
                     <Row className="mt-3">
-                        <DeLorean/>
+                        <DeLorean />
                     </Row>
                     <Row className="justify-content-center">
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosendate">
                                 <Form.Label>Date</Form.Label>
-                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({value: e.target.value})}/>
+                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosentime">
                                 <Form.Label>Time</Form.Label>
-                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({value: e.target.value})}/>
+                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -198,7 +201,6 @@ function FarmerSidebar(props) {
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
 
-            <WelcomeFarmerSidebar className="side-farmer" />
         </>
     );
 }
@@ -223,7 +225,6 @@ function ClientSidebar(props) {
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
 
-            <WelcomeFarmerSidebar className="side-farmer" />
         </>
     );
 }
