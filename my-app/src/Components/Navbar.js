@@ -1,17 +1,18 @@
-import { Navbar, Nav, Button, Image, Container, Offcanvas, NavDropdown, Col, Row } from 'react-bootstrap';
+import { Navbar, Nav, Button, Image, Container, Offcanvas, NavDropdown, Col, Row, Modal, Form } from 'react-bootstrap';
 import "./Navbar.css";
+import { useState } from 'react';
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 import { useLocation, useHistory } from 'react-router-dom';
-import { House, DoorOpen } from 'react-bootstrap-icons';
-import {WelcomeFarmerSidebar} from "../Images/WelcomeFarmer.js";
+import { House, DoorOpen, Stopwatch } from 'react-bootstrap-icons';
+import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
+import DeLorean from "../Images/DeLorean.js";
 
 function ZeroNavbar(props) {
     const location = useLocation();
     const history = useHistory();
-    function handlerRegister() {
-        props.logout();
-        history.push('/login');
-    }
+
+    const [modalShow, setModalShow] = useState(false);
+
     function handleLogout() {
         props.logout();
         history.push('/login');
@@ -20,6 +21,12 @@ function ZeroNavbar(props) {
     function handleHome() {
         history.push('/products');
     }
+
+    function handleTime() {
+        setModalShow(true);
+    }
+
+    const handleClose = () => setModalShow(false);
 
     return (
         location.pathname === "/" ? <></> :
@@ -44,12 +51,20 @@ function ZeroNavbar(props) {
                             </Offcanvas.Header>
 
                             <Offcanvas.Body>
-                                <Row>
+                                <Row style={{ textAlign: 'center' }}>
                                     <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{marginTop: '-4px', marginRight: '4px'}}/>Home</Button>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
                                     </Col>
+
+                                    {!props.timedev ? <></> : <>
+                                        <Col>
+                                            <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
+                                            <TimeMachine show={modalShow} onHide={() => handleClose()} />
+                                        </Col>
+                                    </>}
+
                                     <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{marginTop: '-4px', marginRight: '4px'}}/>Logout</Button>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
                                     </Col>
                                 </Row>
 
@@ -57,12 +72,12 @@ function ZeroNavbar(props) {
                                 {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
 
                                 {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
-                               
+
                                 {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
 
                             </Offcanvas.Body>
 
-                            <WelcomeFarmerSidebar className="side-farmer"/>
+                            <WelcomeFarmerSidebar className="side-farmer" />
 
                         </Navbar.Offcanvas>
                     </>}
@@ -72,6 +87,50 @@ function ZeroNavbar(props) {
 
     );
 };
+
+function TimeMachine(props) {
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    "Wait a minute, Doc."
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h6 style={{textAlign:'center'}}>
+                    “Are you telling me you built a time machine...out of a DeLorean?”
+                </h6>
+                <Form>
+                    <Row className="mt-3">
+                        <DeLorean/>
+                    </Row>
+                    <Row className="justify-content-center">
+                        <Col lg={3} xl={3} md={3} sm={6} xs={6}>
+                            <Form.Group className="mt-2" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Date</Form.Label>
+                                <Form.Control type="date"/>
+                            </Form.Group>
+                        </Col>
+                        <Col lg={3} xl={3} md={3} sm={6} xs={6}>
+                            <Form.Group className="mt-2" controlId="exampleForm.ControlInput1">
+                                <Form.Label>Time</Form.Label>
+                                <Form.Control type="time"/>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="warning" onClick={props.onHide}>Gigawatts!?</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
 
 
 function EmployeeSidebar(props) {
@@ -99,9 +158,9 @@ function EmployeeSidebar(props) {
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text"  href="/clients" >All farmers</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/clients" >All farmers</Nav.Link>
                 <Nav.Link className="sidebar-text" role="Farmer" onClick href="/signupEmployee">
-                        New farmer
+                    New farmer
                 </Nav.Link>
             </Nav>
 
@@ -127,9 +186,6 @@ function FarmerSidebar(props) {
         </>
     );
 }
-
-
-
 
 
 

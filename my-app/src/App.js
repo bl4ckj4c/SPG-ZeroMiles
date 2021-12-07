@@ -24,10 +24,10 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [sidebarCollapse, setSidebarCollapse] = useState(true);
   const [userList, setUserList] = useState([]);
-  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [userListUpdated, setUserListUpdated] = useState(true); 
 
+  const timedev = true; //set at false to disable the time machine
 
   useEffect(() => {
     if (loggedIn && userListUpdated === true) {
@@ -72,20 +72,13 @@ function App() {
     }
   }
 
-  /*
-    const login = (email, password) => {
-    API.userLogin(email, password).then((response) => {
-  
-    }
-    ); //handle login error
-  }  */
-
   const logout = () => {
     API.userLogout().then(() => {
       setUser({});
       setLoggedIn(false);
     });
   }
+
   const register = () => {
     API.userLogout().then(() => {
       setUser({});
@@ -111,8 +104,8 @@ function App() {
         isLoggedIn={loggedIn}
         user={user}
         logout={logout}
-        sidebarCollapse={sidebarCollapse}
-        setSidebarCollapse={setSidebarCollapse} />
+        timedev={timedev}
+        />
 
       <Switch>
 
@@ -164,8 +157,6 @@ function App() {
         <Route exact path="/orders/:status" render={({ match }) => (
           <EmployeeView
             users={userList}
-            sidebarCollapse={sidebarCollapse}
-            setSidebarCollapse={setSidebarCollapse}
             status={match.params.status} />)} />
 
         <Route exact path="/clients">
