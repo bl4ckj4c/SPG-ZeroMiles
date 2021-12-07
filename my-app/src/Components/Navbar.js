@@ -80,8 +80,6 @@ function ZeroNavbar(props) {
 
                             </Offcanvas.Body>
 
-                            <WelcomeFarmerSidebar className="side-farmer" />
-
                         </Navbar.Offcanvas>
                     </>}
 
@@ -178,6 +176,8 @@ function EmployeeSidebar(props) {
                 </Nav.Link>
             </Nav>
 
+            <WelcomeFarmerSidebar className="side-farmer" />
+
         </>
     );
 }
@@ -197,6 +197,8 @@ function FarmerSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
+
+            <WelcomeFarmerSidebar className="side-farmer" />
         </>
     );
 }
@@ -220,6 +222,8 @@ function ClientSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
+
+            <WelcomeFarmerSidebar className="side-farmer" />
         </>
     );
 }
