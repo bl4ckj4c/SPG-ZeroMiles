@@ -20,7 +20,10 @@ function ProductTable(props) {
     const triggerUpdate = () => setUpdate(true);
     const [loading, setLoading] = useState(true);
 
+    var dayjs = require('dayjs');
+    let date = dayjs().format('DD-MM-YYYY HH:mm:ss');
 
+    console.log(date);
 
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
@@ -28,7 +31,10 @@ function ProductTable(props) {
             setProductByFarmerListUpdated(true);
             setFarmerListUpdated(true);
             setLoading(true);
-            API.getAllProductsByFarmers()
+
+            date = props.timeMachine ? props.timeMachine.toString() : date;
+
+            API.getAllProductsByFarmers(date)
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);

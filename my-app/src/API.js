@@ -22,10 +22,10 @@ async function getProductInOrder() {
     return data.map((pio) => new ProductInOrder(...Object.values(pio)));
 }
 
-async function getAllProductsByFarmers() {
+async function getAllProductsByFarmers(spg_date) {
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/allProductsByFarmers', { method: 'GET' });
+        const res = await fetch(BASEURL + '/allProductsByFarmers/'+spg_date, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }

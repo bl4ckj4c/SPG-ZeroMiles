@@ -537,7 +537,8 @@ app.use(function (err, req, res, next) {
 });
 
 /* GET all products by farmers */
-app.get('/api/allProductsByFarmers', async (req, res) => {
+app.get('/api/allProductsByFarmers/:date', async (req, res) => {
+    console.log(req);
     try {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {

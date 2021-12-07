@@ -134,7 +134,7 @@ function App() {
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
             */}
             
-            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} />
+            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={timeMachine} />
 
           </Col>
         </Route>
