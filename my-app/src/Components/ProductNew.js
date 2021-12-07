@@ -1,17 +1,16 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Spinner, Card, Modal, Button } from 'react-bootstrap';
+import { Table, Row, Col,Form, ListGroup, Spinner, Card, Modal, Button } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import "./ClientView.css";
 
-function Profile(props) {
+function ProductNew(props) {
+   const [name , setName] = useState('');
+    const [description, setDescription] = useState('');
     const [loggedClient, setloggedClient] = useState([]);
     const [loggedClientUpdated, setloggedClientUpdated] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [wallet, setWallet] = useState({ Wallet: 0, Money: 0 });
-    const [modalShow, setModalShow] = useState(false);
-
-    const amountInsufficient = false;
+    const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -45,18 +44,6 @@ function Profile(props) {
 
 
 
-    useEffect(() => {
-        if (loggedClientUpdated === false) {
-            API.clientCheck({ ClientID: loggedClient.UserID }).then(w => {
-                setWallet(w);
-                if (w.Wallet - w.Money <= 0 ) {
-                    console.log("pochihi");
-                    setModalShow(true);
-                }
-            }).catch(err => handleErrors(err));
-        }
-
-    }, [loggedClientUpdated]);
 
 
 
@@ -66,21 +53,30 @@ function Profile(props) {
         console.log(err);
     }
 
+    async function submitNewProduct() {
+
+        let object = {
+            "Name": name,
+            "Description": description
+        }
+   console.log(object)
+    }
+
     return (
         <>
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
             </Row > </> :
                 <>
-                    {/* <Col className="mt-3">
+                     <Col className="mt-3">
                         <Table className="d-flex justify-content-center">
                             <tbody id="client-table" align="center">
-                                <ClientRow wallet={wallet} client={loggedClient} />
+                                <NewProductBottom client={loggedClient} onShow={() => setModalShowProductNew(true)}/>
                             </tbody>
                         </Table>
-                    </Col> */}
+                    </Col>
 
-                    <InsufficientWallet wallet={wallet} show={modalShow} onHide={() => setModalShow(false)} />
+                    <ModalProductNew setName={setName} setDescription={setDescription} submitNewProduct={submitNewProduct} show={modalShowProductNew} onHide={() => setModalShowProductNew(false)} />
 
                 </>
             }
@@ -88,38 +84,15 @@ function Profile(props) {
     );
 }
 
-function ClientRow(props) {
+function NewProductBottom(props) {
     return (
         <>
-            <Card className="client-card mt-3">
-
-                <Card.Body>
-                    <Row>
-                        <Col md={4}>
-                            <PersonCircle size={60} style={{ marginBottom: '6px', marginRight: '5px' }} />
-                        </Col>
-                        <Col md={8}>
-                            <Card.Title style={{ fontSize: 28 }}> {props.client.Name} {props.client.Surname} </Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{props.client.Email}</Card.Subtitle>
-                        </Col>
-                    </Row>
-                </Card.Body>
-
-
-                <Card.Body>
-                    <ListGroup style={{ textAlign: "left" }}>
-                        <ListGroup.Item><GeoAltFill /> Address: {props.client.Address}</ListGroup.Item>
-                        <ListGroup.Item><MapFill /> City: {props.client.City}, {props.client.State}</ListGroup.Item>
-                    </ListGroup>
-                </Card.Body>
-
-                <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <WalletFill /> Wallet balance: €{props.wallet.Wallet.toFixed(2)}</Card.Body>
-            </Card>
+                <Button onClick={props.onShow}>new product</Button>
         </>
     );
 }
 
-function InsufficientWallet(props) {
+function ModalProductNew(props) {
 
     return (
         <Modal show={props.show} onHide={props.onHide} size="sm" aria-labelledby="contained-modal-title-vcenter" centered>
@@ -133,13 +106,21 @@ function InsufficientWallet(props) {
             <Modal.Body>
                            </Modal.Body>
             <Modal.Body>
-            <form>
-            The name of new product <input type="text" id="credit-scoring"/>
-            Enter the description of product <input type="text" id="credit-scoring"/>
-            </form>
+            <Form onSubmit={(e) => props.submitNewProduct(e)} controlId="my-form">
+                <Form.Group className="mb-3" controlId="name">
+                                <Form.Label className="label">The name of new product:</Form.Label>
+                                <Form.Control type="text" placeholder="Enter name" onChange={(e) => props.setName(e.target.value)} />
+                            </Form.Group>
+                <Form.Group className="mb-3">
+                     <Form.Label className="label">Enter the description of product:</Form.Label>
+                    <Form.Control type="text" controlId="description" placeholder="Enter description" onChange={(e) => props.setDescription(e.target.value)} />
+                 </Form.Group>
+                 <Button onClick={props.submitNewProduct} variant="success">Save</Button>
+                <Button onClick={props.onHide}>Close</Button>
+            </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Close</Button>
+
             </Modal.Footer>
         </Modal>
     );
@@ -147,4 +128,4 @@ function InsufficientWallet(props) {
 
 
 
-export default Profile;
+export default ProductNew;

@@ -74,6 +74,7 @@ function FarmerProducts(props) {
 function ProductCard(props){
     const [show, setShow] = useState(false);
 
+
     return (
         <>
         <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>

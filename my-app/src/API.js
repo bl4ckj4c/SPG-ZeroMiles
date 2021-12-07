@@ -42,7 +42,9 @@ async function getProductsByFarmer(){
     let data = [];
     try {
         const res = await fetch(BASEURL + '/productsByFarmer', { method: 'GET' });
+        console.log("HERE "+res.statusText);
         if (!res.ok) {
+            
             throw new Error(res.statusText);
         }
         data = await res.json();
