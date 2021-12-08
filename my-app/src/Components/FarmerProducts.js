@@ -1,7 +1,5 @@
 import { Form, Card, InputGroup, Button, Col, Container, Modal } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-
-
 import API from '../API';
 import { useState, useEffect } from 'react'
 
@@ -12,6 +10,11 @@ function FarmerProducts(props) {
     const [productsByFarmer, setProductsByFarmer] = useState(false);
     const [addProdShow, setAddProdShow] = useState(false);
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
+
+    var dayjs = require('dayjs');
+    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
+
+    //example of usage: {date = props.timeMachine ? props.timeMachine.toString() : date}
 
     async function addProdTest(prod){
 
