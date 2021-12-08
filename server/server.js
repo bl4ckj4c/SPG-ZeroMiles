@@ -986,7 +986,7 @@ app.post('/api/order', async (req, res) => {
         console.log(quantity);
         let newOrder = {}
         newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",).tz("Italia/Roma");
+        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;

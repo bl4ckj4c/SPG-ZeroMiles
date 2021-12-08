@@ -1,6 +1,6 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner,Dropdown, DropdownButton, ProgressBar  } from 'react-bootstrap';
+import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
@@ -48,23 +48,23 @@ function EmployeeView(props) {
 
     return (
         <>
-        <Container>
-            <Row className="mt-3 margine-cerca-desktop">
-                <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-            </Row>
-        </Container>
+            <Container>
+                <Row className="mt-3 margine-cerca-desktop">
+                    <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                </Row>
+            </Container>
 
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
-                        </Row > </> :
+            </Row > </> :
                 <>
                     <Row>
                         <Col>
                             <Table className="d-flex justify-content-center">
                                 <tbody id="employee-table" align="center">
-                                    {
-                                        ordersList.slice(0).reverse().map(o => {
-                                            if(selectedUser.length >0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0 ){
+                                    {ordersList.length > 0 ? <>
+                                        {ordersList.slice(0).reverse().map(o => {
+                                            if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
                                                 if (o.Status == "open" && props.status == "open") {
                                                     return <OrderRow order={o} />
                                                 }
@@ -77,11 +77,10 @@ function EmployeeView(props) {
                                                 if (props.status == "all") {
                                                     return <OrderRow order={o} />
                                                 }
+                                            }
                                         }
-                                        }
-
                                         )
-                                    }
+                                        } </> : <NoOrders />}
                                 </tbody>
                             </Table>
                         </Col>
@@ -92,8 +91,8 @@ function EmployeeView(props) {
     );
 }
 
-let progressRate=0;
-let progressType="success";
+let progressRate = 0;
+let progressType = "success";
 
 
 function OrderRow(props) {
@@ -105,20 +104,20 @@ function OrderRow(props) {
     // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
-        progressType="info";   
+        progressType = "info";
         buttonstatus = "outline-primary";
-        progressRate=10;
+        progressRate = 33;
     } else if (props.order.Status == "pending") {
         buttonstatus = "outline-danger";
         stat = 'p';
-        progressType="danger";   
-        progressRate=49;
+        progressType = "danger";
+        progressRate = 66;
 
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
         stat = 'c';
-        progressType="success";   
-        progressRate=100;
+        progressType = "success";
+        progressRate = 100;
 
     }
 
@@ -148,43 +147,48 @@ function OrderRow(props) {
                             </Row>
                         </Row>
 
-                        {props.order.ProductInOrder.map(p => (
-                            <ProductList product={p} />
-                        ))}
+                        <Table className="d-flex justify-content-center">
+                            <tbody align="center">
+                                {props.order.ProductInOrder.map(p => (
+                                    <ProductList product={p} />
+                                ))}
+                            </tbody>
+                        </Table>
+
+                        <ProgressBar variant={progressType} now={progressRate} />
 
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{fontSize: 15, marginTop: 10}}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {return sum + parseInt(p.number)* parseInt(p.Price)},0)}</h1>
+                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
                             <Col>
-                                <DropdownButton onClick={()=>{alert("You click to change the status of order with orderID:"+ props.order.OrderID)}} title={props.order.Status}  variant={buttonstatus} size="sm">
+                                <DropdownButton onClick={() => { alert("You click to change the status of order with orderID:" + props.order.OrderID) }} title={props.order.Status} variant={buttonstatus} size="sm">
 
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
                                         setStat('o');
                                         API.modifyOrderStatus(props.order);
-                                        progressRate=10;
-                                        
+                                        progressRate = 10;
 
-                                    } }>Open</Dropdown.Item>
-                                    <Dropdown.Item onClick={() =>  {
+
+                                    }}>Open</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => {
                                         props.order.Status = "pending";
                                         setStat('p');
-                                        progressRate=49;
+                                        progressRate = 49;
                                         API.modifyOrderStatus(props.order);
-                                        }
-                                    
-                                      }>Pending</Dropdown.Item>
-                                    <Dropdown.Item onClick={() =>{
+                                    }
+
+                                    }>Pending</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => {
                                         props.order.Status = "closed";
                                         setStat('c');
 
-                                        progressRate=99;
+                                        progressRate = 99;
 
                                         API.modifyOrderStatus(props.order);
-                                        
-                                    } }>Closed</Dropdown.Item>
-                                    
+
+                                    }}>Closed</Dropdown.Item>
 
 
                                 </DropdownButton >
@@ -204,25 +208,36 @@ function ProductList(props) {
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
 
     return (
-        <Table >
-        <Row className="mb-2 align-items-center">
-            <Col>
-                <Image src={newSrc} height={"60 px"} rounded />
-            </Col>
-            <Col>
-                <center>{props.product.NameProduct}</center>
-            </Col>
-            <Col>
-                Quantity: {props.product.number}
-            </Col>
-            <Col>
-                Price: €{props.product.Price.toFixed(2)}
-            </Col>
-        </Row>
-        <Row>
-        <ProgressBar striped variant={progressType} animated now={progressRate} /> 
+        <tr>
+            <td>
+                <Container>
+                    <Row className="mb-2 align-items-center">
+                        <Col>
+                            <Image src={newSrc} height={"60 px"} rounded />
+                        </Col>
+                        <Col>
+                            <center>{props.product.NameProduct}</center>
+                        </Col>
+                        <Col>
+                            Quantity: {props.product.number}
+                        </Col>
+                        <Col>
+                            Price: €{props.product.Price.toFixed(2)}
+                        </Col>
+                    </Row>
+                </Container>
+            </td>
+        </tr>
+    );
+}
 
-</Row></Table>
+function NoOrders() {
+    return (
+        <tr>
+            <td>
+                <h3 className="mt-5 mb-5">There are no orders yet</h3>
+            </td>
+        </tr>
     );
 }
 
