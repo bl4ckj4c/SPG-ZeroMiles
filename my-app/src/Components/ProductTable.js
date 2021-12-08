@@ -301,7 +301,7 @@ function CartCheckoutModal(props) {
                 <Table className="d-flex justify-content-center">
                             <tbody align="center">
                             {props.prodNum.map(p => p.number !== 0 ? 
-                <ProductListOrder key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
+                <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
                             </tbody>
             </Table>
             </Modal.Body>
@@ -311,36 +311,6 @@ function CartCheckoutModal(props) {
             </Modal.Footer>
         </Modal>);
 }
-
-function ProductListOrder(props) {
-
-    let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
-
-    return (
-        <tr>
-            <td>
-                <Container>
-                    <Row className="mb-2 align-items-center">
-                        <Col>
-                            <Image src={newSrc} height={"60 px"} rounded />
-                        </Col>
-                        <Col>
-                            <center>{props.product.NameProduct}</center>
-                        </Col>
-                        <Col>
-                            Quantity: {props.product.number}
-                        </Col>
-                        <Col>
-                            Price: €{props.product.Price.toFixed(2)}
-                        </Col>
-                    </Row>
-                </Container>
-            </td>
-        </tr>
-    );
-}
-
-
 
 function ErrorModal(props) {
     return (
