@@ -1,7 +1,8 @@
-import { Form, Card, InputGroup, Button, Col, Container, Modal } from 'react-bootstrap';
+import { Form, Card, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import API from '../API';
 import { useState, useEffect } from 'react'
+import "./FarmerProducts.css";
 
 function FarmerProducts(props) {
     const [products, setProducts] = useState([]);
@@ -71,13 +72,15 @@ function FarmerProducts(props) {
 
 
     if (updated) return (
-    <Container>
-        <Col>
+        <Container className= "search-container"  >
+        <Row><Col className="poss"><Button >Add Product for Next Week</Button></Col>
+        <Col  lg={9} >
+
     <ProductsDropdown products={productsByFarmer.length >0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products  } setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
-    <Button disabled={selectedProduct.length > 0 ? false : true } onClick={() => setAddProdShow(true)}>Add product</Button>
+    <Button className="search-button"  disabled={selectedProduct.length > 0 ? false : true } onClick={() => setAddProdShow(true)}>Add product</Button>
             {productsByFarmer!==false ? productsByFarmer.map( p=>  <div><ProductCard key={p.ProdByFarmerID} p={p}  deleteProductByFarmer={deleteProductByFarmer} addProdTest={addProdTest}/></div> ) : "" } 
 <AddProductModal addProdTest={addProdTest}  product={selectedProduct.length > 0 ? selectedProduct[0] : null } show={addProdShow} onHide={() => setAddProdShow(false)}/>
-</Col>
+</Col></Row>
     </Container>)
     else return "";
 
