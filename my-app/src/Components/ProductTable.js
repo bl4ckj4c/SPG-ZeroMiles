@@ -21,7 +21,7 @@ function ProductTable(props) {
     const [loading, setLoading] = useState(true);
 
     var dayjs = require('dayjs');
-    let date = dayjs().format('DD-MM-YYYY HH:mm:ss');
+    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
 
     console.log(date);
 

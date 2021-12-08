@@ -106,7 +106,7 @@ function TimeMachine(props) {
 
 
     function onSubmit() {
-        newdate = (dayjs(date.value).format('DD-MM-YYYY') + " " + time.value + ":00").toString();
+        newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
         props.onHide(newdate);
     }
 
