@@ -1190,6 +1190,29 @@ app.post('/api/addProduct', async (req, res) => {
 });
 
 
+app.post('/api/deleteProduct', async (req, res) => {
+    
+    const user = req.user && req.user.user;
+    console.log(user);
+    try {
+
+        
+    await db.collection('Product by Farmers').doc("" + req.body.productByFarmerID).delete();
+   
+          
+        res.status(201).end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+
+});
+
+
 app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);

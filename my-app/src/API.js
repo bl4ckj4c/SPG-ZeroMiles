@@ -330,7 +330,24 @@ async function addProduct(product){
     });  
   
     if(response.ok){
-        return { 'msg': 'Order succesfully added' };
+        return { 'msg': 'Product succesfully added' };
+    }
+    return { 'err': 'POST error' };
+  }
+
+
+  async function deleteProduct(product){
+
+    const response = await fetch(BASEURL + "/deleteProduct", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...product})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Product succesfully deleted' };
     }
     return { 'err': 'POST error' };
   }
@@ -345,6 +362,7 @@ const API = {
     getFarmer,
     addOrder,
     addProduct,
+    deleteProduct,
     
     clientCheck,
     getProductInOrder, 
