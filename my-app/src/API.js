@@ -290,20 +290,18 @@ async function modifyOrderStatus(order){
     return { 'err': 'POST error' };
   }
 
-  async function createProduct(newProduct) {
+  async function createProduct(newProduct, newImage) {
       const formData  = new FormData();
 
-      formData.append('productJson', newProduct);
-      formData.append('image', 'imagePlaceholder');
-
+      formData.append('productJson', JSON.stringify(newProduct));
+      formData.append('newproductimage', newImage);
 
       const response = await fetch(BASEURL + "/newproduct", {
           method: 'POST',
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          },
           body: formData
       });
+
+      return response;
   }
 
 

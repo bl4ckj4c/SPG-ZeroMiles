@@ -1225,7 +1225,12 @@ app.get('/api/sessions/current', (req, res) => {
 app.post('/api/newproduct',
     upload.single('newproductimage'),
     async (req, res) => {
-        const newProduct = JSON.parse(req.body.newProduct);
+
+        console.log(req)
+        //console.log(req.body.newProduct)
+
+
+        const newProduct = JSON.parse(req.body.productJson);
         const newImage = req.file;
 
         // Generate a new random id for the new image
