@@ -491,23 +491,41 @@ app.post('/api/farmerRegister',
         }
     });
 
-/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
+/* GET all products */
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await db.collection('Product').get();
+        if (products.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Product)"});
+        } else {
+            let result = [];
+            products.forEach(product => {
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: product.data().Name,
+                        Description: product.data().Description,
+                        ImageID: product.data().ImageID,
+                        ProductID: product.id
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all products)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
-// (async () => {
-//     try {
-//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (products.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             products.forEach(prod => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
 
 /*
  * ********************************************
@@ -808,41 +826,6 @@ app.get('/api/farmers', async (req, res) => {
                 .then(r => res.json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all farmers)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
-/* GET all products */
-app.get('/api/products', async (req, res) => {
-    try {
-        const products = await db.collection('Product').get();
-        if (products.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({error: "No entries (Table: Product)"});
-        } else {
-            let result = [];
-            products.forEach(product => {
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: product.data().Name,
-                        Description: product.data().Description,
-                        ImageID: product.data().ImageID,
-                        ProductID: product.id
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all products)",
                     error: error
                 }));
         }
