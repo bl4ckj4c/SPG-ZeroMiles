@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 import Sidebar from "./Sidebar";
-
+import Modal from 'react-bootstrap/Modal'
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -99,6 +99,10 @@ function OrderRow(props) {
     let [stat, setStat] = useState(props.order.Status || 'o');
 
 
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     let buttonstatus;
     // let stat;
@@ -162,29 +166,33 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
                             <Col>
-                                <DropdownButton onClick={() => { alert("You click to change the status of order with orderID:" + props.order.OrderID) }} title={props.order.Status} variant={buttonstatus} size="sm">
+                            
+                                <DropdownButton  title={props.order.Status} variant={buttonstatus} size="sm">
 
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
                                         setStat('o');
                                         API.modifyOrderStatus(props.order);
                                         progressRate = 10;
+                                        handleShow();
 
 
                                     }}>Open</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
+                                    <Dropdown.Item  onClick={() => {
                                         props.order.Status = "pending";
                                         setStat('p');
                                         progressRate = 49;
                                         API.modifyOrderStatus(props.order);
+                                        handleShow();
+
                                     }
 
                                     }>Pending</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
+                                    <Dropdown.Item  onClick={() => {
                                         props.order.Status = "closed";
                                         setStat('c');
-
                                         progressRate = 99;
+                                        handleShow();
 
                                         API.modifyOrderStatus(props.order);
 
@@ -192,6 +200,17 @@ function OrderRow(props) {
 
 
                                 </DropdownButton >
+                                <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} >
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Modal title</Modal.Title>
+                                    </Modal.Header>
+                                        <Modal.Body>
+                                        Ther order status has been changed to {props.order.Status}
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleClose}> Close </Button>
+                                        </Modal.Footer>
+                                </Modal>
                             </Col>
                         </Row>
 
