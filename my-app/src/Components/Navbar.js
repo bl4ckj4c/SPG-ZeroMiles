@@ -6,6 +6,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { House, DoorOpen, Stopwatch } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
+import API from '../API';
 
 function ZeroNavbar(props) {
     const location = useLocation();
@@ -107,6 +108,7 @@ function TimeMachine(props) {
 
     function onSubmit() {
         newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
+        API.setTimeMachine(newdate);
         props.onHide(newdate);
     }
 

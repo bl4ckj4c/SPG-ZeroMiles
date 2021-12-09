@@ -1029,7 +1029,8 @@ app.post('/api/order', async (req, res) => {
 
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
-
+    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
+    res.status(200).end();
 })
 
 //MODIFY ORDER
