@@ -351,6 +351,23 @@ async function addProduct(product){
   }
 
 
+  async function setTimeMachine(newdate){
+
+    const response = await fetch(BASEURL + "/timeMachine", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({newdate: newdate})
+    })
+
+    if(response.ok){
+        console.log("Time machine successfully set")
+        return { 'msg': 'Time machine successfully set' };
+    }
+    console.log("Something went wrong, Doc")
+    return { 'err': 'Something went wrong, Doc ' };
+  }
   
 
 const API = {   
@@ -380,5 +397,6 @@ const API = {
     getClientOrders,
     getClient,
     farmerRegister,
+    setTimeMachine,
 };
 export default API;

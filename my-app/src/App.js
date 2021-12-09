@@ -183,7 +183,7 @@ function App() {
         </Route>
 
         <Route exact path="/farmerview">
-          <FarmerProducts user={user} />
+          <FarmerProducts user={user} timeMachine={timeMachine}/>
         </Route>
 
 

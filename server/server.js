@@ -319,7 +319,7 @@ app.post('/api/register',
 
 
 
-    app.post('/api/farmerRegister',
+app.post('/api/farmerRegister',
     body('name')
         // Check if the name parameter is not null
         .exists({checkNull: true})
@@ -986,14 +986,16 @@ app.post('/api/order', async (req, res) => {
         console.log(quantity);
         let newOrder = {}
         newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",).tz("Italia/Roma");
+        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
+        newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
+        newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
 
         (async () => {
             try {
-                console.log(newOrder);
+                //console.log(newOrder);
                 await db.collection("Order").add(newOrder);
             } catch (error) {
                 console.log(error);
@@ -1025,6 +1027,11 @@ app.post('/api/order', async (req, res) => {
     }
 })
 
+/* POST set Time machine */
+app.post('/api/timeMachine',async(req,res)=>{
+    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
+    res.status(200).end();
+})
 
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
