@@ -27,6 +27,14 @@ function ZeroNavbar(props) {
         setModalShow(true);
     }
 
+    function handleLogin() {
+        history.push('/login');
+    }
+
+    function handleSignup() {
+        history.push('/signupClient');
+    }
+
     function handleClose(newdate) {
         setModalShow(false);
         props.setTimeMachine(newdate);
@@ -41,7 +49,12 @@ function ZeroNavbar(props) {
                         <Image id="logo" src="/images/logo.png" />
                     </Navbar.Brand>
 
-                    {!props.isLoggedIn ? <></> : <>
+                    {!props.isLoggedIn ? <>
+                        <div style={{ marginTop: '0.9rem' }}>
+                            <Button style={{ marginRight: '0.5rem', fontSize: "14px" }} variant="outline-secondary" onClick={handleSignup}>Signup</Button>
+                            <Button style={{ fontSize: "14px" }} variant="secondary" onClick={handleLogin}>Login</Button>
+                        </div>
+                    </> : <>
 
                         <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
                         <Navbar.Offcanvas
@@ -81,8 +94,8 @@ function ZeroNavbar(props) {
 
                             </Offcanvas.Body>
 
-                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
-                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
+                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
+                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
 
                         </Navbar.Offcanvas>
                     </>}
