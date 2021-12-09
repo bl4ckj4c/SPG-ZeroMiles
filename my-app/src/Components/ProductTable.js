@@ -220,7 +220,7 @@ function ProductTableWrapped(props) {
             <Col className="justify-content-center">
                 {
 
-                    filteredProducts.length===0 ? <NoProductFound/> :
+                    filteredProducts.length===0 || props.productByFarmer.length=== 0 ? <NoProductFound/> :
                     <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
