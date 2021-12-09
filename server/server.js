@@ -1211,7 +1211,7 @@ app.get('/api/sessions/current', (req, res) => {
     } else res.status(401).json({error: 'User non authenticated'});
 });
 
-// POST for store a new product with realted image into the server
+// POST for store a new product with related image into the server
 app.post('/api/newproduct',
     upload.single('newproductimage'),
     async (req, res) => {
@@ -1267,11 +1267,18 @@ app.post('/api/newproduct',
 
 
 // Activate the server
-app.listen(port, () => {
+let server = app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
 
-module.exports = app;
+function stop() {
+    server.close();
+}
+
+//module.exports = app;
+module.exports = server;
+module.exports.stop = stop;
+module.exports.firebase = firebaseappBackup;
 
 
 
