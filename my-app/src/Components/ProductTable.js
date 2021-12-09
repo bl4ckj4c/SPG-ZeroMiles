@@ -218,19 +218,40 @@ function ProductTableWrapped(props) {
             </Container>
 
             <Col className="justify-content-center">
-                <Table className="d-flex justify-content-center">
+                {
+
+                    filteredProducts.length===0 ? <NoProductFound/> :
+                    <Table className="d-flex justify-content-center">
                     <tbody id="farmer-table" align="center">
                         {props.farmers.map(f =>
                             <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
                         )}
                     </tbody>
                 </Table>
+
+
+
+                }
+
             </Col>
 
             {props.isLoggedIn ? <CartBottomButton isLoggedIn={props.isLoggedIn} user={props.user} selectedUser={selectedUser} handleCartCheckoutModalShow={handleCartCheckoutModalShow} prodNum={prodNum} /> : ""}
         </>
     );
 };
+
+
+function NoProductFound(){
+    return (<Row style={{ height: "50vh" }} className="align-items-center">
+    
+    <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+    <div className="d-flex justify-content-center "><h4>No products found</h4></div>
+    </div>
+    </Row>
+            
+    );
+}
+
 
 function AvailableAmountButton(props) {
     return (

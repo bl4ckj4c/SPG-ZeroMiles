@@ -58,33 +58,27 @@ function EmployeeView(props) {
                 < Spinner animation="border" size="xl" variant="secondary" />
             </Row > </> :
                 <>
-                    <Row>
-                        <Col>
-                            <Table className="d-flex justify-content-center">
-                                <tbody id="employee-table" align="center">
-                                    {ordersList.length > 0 ? <>
-                                        {ordersList.slice(0).reverse().map(o => {
-                                            if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
-                                                if (o.Status == "open" && props.status == "open") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (o.Status == "pending" && props.status == "pending") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (o.Status == "closed" && props.status == "closed") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (props.status == "all") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                            }
+                <Row>
+                    <Col>
+                        <Table className="d-flex justify-content-center">
+                            <tbody id="employee-table" align="center">
+                                {ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 ? <>
+                                    {  
+                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 && selectedUser.length  > 0 && !ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).some(ord=> ord.ClientID === selectedUser[0].UserID)  ?  <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders for the selected user"}/> : 
+                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).slice(0).reverse().map(o => {
+
+                                        if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
+
+                                                return <OrderRow order={o} />
+                                            
                                         }
-                                        )
-                                        } </> : <NoOrders />}
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
+                                    }
+                                    )
+                                    } </> : <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders yet"}/>}
+                            </tbody>
+                        </Table>
+                    </Col>
+                     </Row>
                 </>
             }
         </>
@@ -250,13 +244,14 @@ function ProductList(props) {
     );
 }
 
-function NoOrders() {
-    return (
-        <tr>
-            <td>
-                <h3 className="mt-5 mb-5">There are no orders yet</h3>
-            </td>
-        </tr>
+function NoOrders(props){
+    return (<Row style={{ height: "50vh" }} className="align-items-center">
+    
+    <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+    <div className="d-flex justify-content-center "><h4>{props.message}</h4></div>
+    </div>
+    </Row>
+            
     );
 }
 
