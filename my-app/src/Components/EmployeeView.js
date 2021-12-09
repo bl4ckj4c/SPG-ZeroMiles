@@ -202,7 +202,7 @@ function OrderRow(props) {
                                 </DropdownButton >
                                 <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} >
                                     <Modal.Header closeButton>
-                                        <Modal.Title>Modal title</Modal.Title>
+                                        <Modal.Title>Status Change!</Modal.Title>
                                     </Modal.Header>
                                         <Modal.Body>
                                         Ther order status has been changed to {props.order.Status}
