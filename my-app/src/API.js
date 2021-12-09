@@ -351,6 +351,21 @@ async function addProduct(product){
   }
 
 
+  async function setTimeMachine(){
+
+    const response = await fetch(BASEURL + "/timeMachine", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({/* new date */})
+    })
+
+    if(response.ok){
+        return { 'msg': 'Time machine successfully set' };
+    }
+    return { 'err': 'Something went wrong, Doc ' };
+  }
   
 
 const API = {   
