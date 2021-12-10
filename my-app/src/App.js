@@ -18,7 +18,7 @@ import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
 import ProductNew from './Components/ProductNew';
-
+import Deliver from './Components/Deliver';
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -176,7 +176,10 @@ function App() {
         <Route exact path="/myorders">
           <ClientOrders />
         </Route>
- 
+
+        <Route exact path="/deliver">
+          <Deliver />
+        </Route>
 
         <Route exact path="/profile">
           <Profile />
