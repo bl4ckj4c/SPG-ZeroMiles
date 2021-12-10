@@ -16,11 +16,11 @@ function ZeroNavbar(props) {
 
     function handleLogout() {
         props.logout();
-        history.push('/login');
+        history.push('/signout');
     }
 
     function handleHome() {
-        history.push('/products');
+        history.push('/');
     }
 
     function handleTime() {
@@ -41,67 +41,66 @@ function ZeroNavbar(props) {
     }
 
     return (
-        location.pathname === "/" ? <></> :
-            <Navbar bg="warning" expand={false}>
-                <Container>
+        <Navbar bg="warning" expand={false}>
+            <Container>
 
-                    <Navbar.Brand className="logo" onClick={handleHome}>
-                        <Image id="logo" src="/images/logo.png" />
-                    </Navbar.Brand>
+                <Navbar.Brand className="logo" onClick={handleHome}>
+                    <Image id="logo" src="/images/logo.png" />
+                </Navbar.Brand>
 
-                    {!props.isLoggedIn ? <>
-                        <div style={{ marginTop: '0.9rem' }}>
-                            <Button style={{ marginRight: '0.5rem', fontSize: "14px" }} variant="outline-secondary" onClick={handleSignup}>Signup</Button>
-                            <Button style={{ fontSize: "14px" }} variant="secondary" onClick={handleLogin}>Login</Button>
-                        </div>
-                    </> : <>
+                {!props.isLoggedIn ? <>
+                    <div style={{ marginTop: '0.9rem' }} className="posizionamento-login">
+                        <Button style={{ marginRight: '0.5rem', fontSize: "14px" }} variant="outline-secondary" onClick={handleSignup}>Signup</Button>
+                        <Button style={{ fontSize: "14px" }} variant="secondary" onClick={handleLogin}>Login</Button>
+                    </div>
+                </> : <>
 
-                        <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
-                        <Navbar.Offcanvas
-                            id="offcanvasNavbar"
-                            aria-labelledby="offcanvasNavbarLabel"
-                            placement="end"
-                            className="bg-sidebar"
-                        >
-                            <Offcanvas.Header closeButton>
-                                <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
-                            </Offcanvas.Header>
+                    <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
+                    <Navbar.Offcanvas
+                        id="offcanvasNavbar"
+                        aria-labelledby="offcanvasNavbarLabel"
+                        placement="end"
+                        className="bg-sidebar"
+                    >
+                        <Offcanvas.Header closeButton>
+                            <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
+                        </Offcanvas.Header>
 
-                            <Offcanvas.Body>
-                                <Row style={{ textAlign: 'center' }}>
+                        <Offcanvas.Body>
+                            <Row style={{ textAlign: 'center' }}>
+                                <Col>
+                                    <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
+                                </Col>
+
+                                {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
+                                        <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
+                                </>}
 
-                                    {!props.timedev ? <></> : <>
-                                        <Col>
-                                            <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
-                                            <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
-                                        </Col>
-                                    </>}
-
-                                    <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
-                                    </Col>
-                                </Row>
+                                <Col>
+                                    <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
+                                </Col>
+                            </Row>
 
 
-                                {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
+                            {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
 
-                                {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
+                            {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
 
-                                {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
+                            {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
 
-                            </Offcanvas.Body>
+                        </Offcanvas.Body>
 
-                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
-                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
+                        {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
+                        {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
 
-                        </Navbar.Offcanvas>
-                    </>}
+                    </Navbar.Offcanvas>
+                </>}
 
-                </Container >
-            </Navbar >
+            </Container >
+        </Navbar >
 
     );
 };

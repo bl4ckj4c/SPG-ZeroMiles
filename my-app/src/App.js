@@ -27,6 +27,7 @@ function App() {
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
   const [timeMachine, setTimeMachine] = useState('');
+  let history = useHistory();
 
   const timedev = true; //set at false to disable the time machine
   useEffect(() => {
@@ -90,7 +91,6 @@ function App() {
     });
   }
 
-  let history = useHistory();
 
   return (
     <Router>
@@ -114,60 +114,45 @@ function App() {
 
       <Switch>
 
-        <Route exact path="/">
-          {loggedIn ? <Redirect to="/products" /> : ''}
-          <Welcome />
+        <Route exact path="/signout">
+          {loggedIn ? <Redirect to="/" /> : ''}
+          <Welcome/>
         </Route>
 
-        <Route exact path="/products">
-          <Col as="main">
+        <Route exact path="/">
 
-            {!loggedIn ? <Redirect to="/" /> : ''}
-
-            {/* Stampa della lista dei prodotti o animazione di caricamento se necessaria
-            {loading ? <Row className="justify-content-center mt-5">
-            
+            {/*loading ? <Row className="justify-content-center mt-5">
               <Spinner animation="border" size="xl" variant="secondary" />
             </Row> :
-              
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
             */}
             
             <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={timeMachine} />
-
-          </Col>
         </Route>
 
         <Route exact path="/login">
-          {loggedIn ? <Redirect to="/products" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} />}
+          {loggedIn ? <Redirect to="/" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} />}
         </Route>
-            {/* Signup by user
-            */}
+
+          {/* Signup by user */}
         <Route exact path="/signupClient">
           <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
-            { /* Signup by employee (allow create farmer and user with wallet asignation)
-            */}
+
+        { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
         <Route exact path="/signupEmployee">
           <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
 
 
 
-            { /* Signup by employee (allow create farmer and user with wallet asignation)
-            */}
-
+        { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
         <Route exact path="/signupEmployee">
           <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
-
-
-
 
         <Route exact path="/orders/:status" render={({ match }) => (
-          <EmployeeView
-            users={userList}
-            status={match.params.status} />)} />
+          <EmployeeView users={userList} status={match.params.status} />)} />
 
         <Route exact path="/clients">
           <ClientView users={userList} triggerUpdate={() => setUserListUpdated(true)} />
@@ -192,8 +177,6 @@ function App() {
         <Route exact path="/farmerview">
           <FarmerProducts user={user} timeMachine={timeMachine}/>
         </Route>
-
-
 
       </Switch>
     </Router >
