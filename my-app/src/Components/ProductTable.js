@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, InputGroup,FormControl, Form, Button, Collapse, Modal } from 'react-bootstrap';
+import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Collapse, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -8,6 +8,7 @@ import "./ProductTable.css";
 import API from '../API';
 import { ProductList } from './EmployeeView'
 import UserDropdown from "./CustomerSearchBar"
+import WelcomeModal from './WelcomeModal'
 
 
 function ProductTable(props) {
@@ -18,9 +19,11 @@ function ProductTable(props) {
     const [farmerList, setFarmerList] = useState([]);
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
+    const [welcomeShow, setWelcomeShow] = useState(false);
     const [loading, setLoading] = useState(true);
 
-
+    var dayjs = require('dayjs');
+    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
 
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
@@ -28,7 +31,10 @@ function ProductTable(props) {
             setProductByFarmerListUpdated(true);
             setFarmerListUpdated(true);
             setLoading(true);
-            API.getAllProductsByFarmers()
+
+            date = props.timeMachine ? props.timeMachine.toString() : date;
+
+            API.getAllProductsByFarmers(date)
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
@@ -42,9 +48,17 @@ function ProductTable(props) {
 
 
             setUpdate(false);
-
+            
         }
     }, [update]);
+
+     useEffect(() => {
+        if (!props.isLoggedIn)
+        setWelcomeShow(true);
+        else
+        setWelcomeShow(false);
+
+    }, [props.isLoggedIn]);
 
     useEffect(() => {
         if (!farmerListUpdated && !productByFarmerListUpdated)
@@ -53,7 +67,10 @@ function ProductTable(props) {
     }, [farmerListUpdated, productByFarmerListUpdated]);
 
     if (!loading)
-        return <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} />;
+        return (<>
+            <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
+            <WelcomeModal show={welcomeShow} onHide={() => setWelcomeShow(false)} />
+        </>)
     else return "";
 }
 
@@ -117,22 +134,21 @@ function ProductTableWrapped(props) {
 
         setProdNum(prodNumCopy);
     }
-    function UpdateNumberInput(i, num, product){
+    function UpdateNumberInput(i, num, product) {
         let prodNumCopy = [...prodNum];
-        console.log("upd "+ num);
+        console.log("upd " + num);
         let input = parseInt(num);
-        if(isNaN(input) || input < 0){
+        if (isNaN(input) || input < 0) {
 
             prodNumCopy[i].number = 0;
-            console.log("updN "+ input + prodNumCopy[i].number);
+            console.log("updN " + input + prodNumCopy[i].number);
 
         }
-        else
-        {
-            if(input > product.Quantity)
-                 prodNumCopy[i].number = product.Quantity;
+        else {
+            if (input > product.Quantity)
+                prodNumCopy[i].number = product.Quantity;
             else
-                 prodNumCopy[i].number = input;
+                prodNumCopy[i].number = input;
 
 
         }
@@ -145,6 +161,8 @@ function ProductTableWrapped(props) {
 
         try {
             let customerID;
+            var dayjs = require('dayjs');
+            let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
 
             if (props.isLoggedIn)
                 if (props.user.Role === "Employee") {
@@ -160,10 +178,13 @@ function ProductTableWrapped(props) {
             if (items.length === 0)
                 throw { err: "No products selected" };
 
+            date = props.timeMachine ? props.timeMachine.toString() : date;
+
             if (items.length > 0 && (selectedUser.length > 0 || props.user.Role !== "Employee")) {
                 let object = {
                     "UserID": customerID,
-                    "items": items
+                    "items": items,
+                    "timestamp": date
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
@@ -209,19 +230,40 @@ function ProductTableWrapped(props) {
             </Container>
 
             <Col className="justify-content-center">
-                <Table className="d-flex justify-content-center">
-                    <tbody id="farmer-table" align="center">
-                        {props.farmers.map(f =>
-                            <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
-                        )}
-                    </tbody>
-                </Table>
+                {
+
+                    filteredProducts.length === 0 || props.productByFarmer.length === 0 ? <NoProductFound /> :
+                        <Table className="d-flex justify-content-center">
+                            <tbody id="farmer-table" align="center">
+                                {props.farmers.map(f =>
+                                    <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
+                                )}
+                            </tbody>
+                        </Table>
+
+
+
+                }
+
             </Col>
 
             {props.isLoggedIn ? <CartBottomButton isLoggedIn={props.isLoggedIn} user={props.user} selectedUser={selectedUser} handleCartCheckoutModalShow={handleCartCheckoutModalShow} prodNum={prodNum} /> : ""}
         </>
     );
 };
+
+
+function NoProductFound() {
+    return (<Row style={{ height: "50vh" }} className="align-items-center">
+
+        <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+            <div className="d-flex justify-content-center "><h4>No products found</h4></div>
+        </div>
+    </Row>
+
+    );
+}
+
 
 function AvailableAmountButton(props) {
     return (
@@ -250,7 +292,7 @@ function OrderConfirmedModal(props) {
             <Modal.Header closeButton>
                 <Modal.Title>Order submitted! 🎉</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Total of your "open" orders: €{(props.walletAndTotal.Money).toFixed(2)}</Modal.Body>
+            <Modal.Body>Total of your "open" orders: €{(props.walletAndTotal.Money)}</Modal.Body>
             <Modal.Body>Your wallet amount: €{(props.walletAndTotal.Wallet)}</Modal.Body>
             <Modal.Footer>
                 <Button variant="warning" onClick={props.handleCloseConfirm}>
@@ -284,11 +326,17 @@ function CartCheckoutModal(props) {
             <Modal.Header closeButton>
                 <Modal.Title>Checkout cart 🛒</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body >
                 {props.prodNum.some(p => p.number > 0) && total > props.walletAndTotal.Wallet - props.walletAndTotal.Money ? <p>⚠️ The total is more than the wallet availability (€{(props.walletAndTotal.Wallet - props.walletAndTotal.Money).toFixed(2)})</p> : ""}
 
                 {props.prodNum.some(p => p.number > 0) ? "" : "The cart is empty"}
-                {props.prodNum.map(p => p.number !== 0 ? <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
+
+                <Table className="d-flex justify-content-center">
+                    <tbody align="center">
+                        {props.prodNum.map(p => p.number !== 0 ?
+                            <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
+                    </tbody>
+                </Table>
             </Modal.Body>
             <Modal.Footer>
                 <Col><Button onClick={props.submitOrder} disabled={props.prodNum.some(p => p.number > 0) ? false : true} variant="success">Submit Order</Button></Col>
@@ -296,9 +344,6 @@ function CartCheckoutModal(props) {
             </Modal.Footer>
         </Modal>);
 }
-
-
-
 
 function ErrorModal(props) {
     return (
@@ -403,9 +448,9 @@ function ProductCard(props) {
                     <Col><Cash /></Col>
                 </Row>
                 <Row className="mb-4">
-                    <Col>Available {props.prodottoDelFarmer.Quantity}</Col>
+                    <Col>Available: {props.prodottoDelFarmer.Quantity}</Col>
                     <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
-                    <Col>€{props.prodottoDelFarmer.Price.toFixed(2)}</Col>
+                    <Col>€{props.prodottoDelFarmer.Price}</Col>
                 </Row>
             </Container>
             <Card.Footer>
@@ -459,11 +504,11 @@ function DescriptionModal(props) {
 function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
-        <InputGroup>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
+        <InputGroup style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '3px', borderBottomLeftRadius: '3px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
-            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer ) } disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign : "center", maxHeight: "2.2rem", fontSize: 15, maxWidth: "3.5rem" }} value={props.prodNum[i].number}   />          
+            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.2rem", fontSize: 14, maxWidth: "2.7rem" }} value={props.prodNum[i].number} />
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="warning" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>

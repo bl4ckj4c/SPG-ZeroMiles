@@ -103,12 +103,13 @@ function UserLogin(props) {
 
             <Row className="justify-content-center mt-1 mb-1">
                 <Col xs={8} lg={4}>
-                    <Row className="justify-content-center mt-3 mb-4" style={{ display: "flex", justifyContent: "center", fontSize: "22px" }}>
-                        <Image id="logo" src="/images/logo.png" />
+                    <Row className="justify-content-center mt-3 mb-3">
+                        <Image style={{marginLeft:'-3px'}} id="logo" src="/images/logo.png"/>
+                        <h2 style={{textAlign:'center'}}>We missed you!</h2>
                     </Row>
                     <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal} handleLoginResponseModalClose={handleLoginResponseModalClose} />
                     <Form onSubmit={(e) => validform(e)}>
-                        <Form.Group className="mt-8 mb-4" controlId="formBasicEmail">
+                        <Form.Group className="mb-4" controlId="formBasicEmail">
                             <Form.Label>Email user</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
@@ -118,7 +119,7 @@ function UserLogin(props) {
                         </Form.Group>
                         <Row className="mt-5">
                             <Col style={{ textAlign: 'left' }}>
-                                <Button variant="secondary" onClick={handleSignUp} >
+                                <Button style={{fontSize: '19px'}} variant="secondary" onClick={handleSignUp} >
                                     Signup
                                 </Button>
                             </Col>
@@ -156,6 +157,7 @@ function SubmitButton(props) {
 
     return (
         <Button
+            style={{fontSize: '19px'}}
             type="submit"
             variant="warning"
             onClick={props.handleLoginResponseModalShow}

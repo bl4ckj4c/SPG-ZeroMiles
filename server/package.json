@@ -35,6 +35,15 @@
   },
   "devDependencies": {
     "chai": "*",
-    "jest": "^27.3.1"
+    "jest": "^27.3.1",
+    "jest-sonar-reporter": "^2.0.0"
+  },
+  "jest": {
+    "testResultsProcessor": "jest-sonar-reporter"
+  },
+  "jestSonar": {
+    "reportPath": "../coverage-reports/backend",
+    "reportFile": "coverage.xml",
+    "indent": 4
   }
 }

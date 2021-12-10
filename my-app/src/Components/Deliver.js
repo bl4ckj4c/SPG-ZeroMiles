@@ -4,10 +4,17 @@ import {Table, Row, Col, Form, ListGroup, Spinner, Card, Modal, Button, Containe
 import {PersonCircle, GeoAltFill, MapFill, WalletFill} from 'react-bootstrap-icons';
 import "./ClientView.css";
 import {useDropzone} from 'react-dropzone'
+//import React, { useState } from "react";
+import DatePicker from "react-datepicker";
+import TimePicker from 'react-time-picker';
 
-function ProductNew(props) {
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
+
+import "react-datepicker/dist/react-datepicker.css";
+
+function Deliver(props) {
+    const [address, setAddress] = useState('');
+    const [timeDelivery, setTimeDelivery] = useState('');
+    const [hourDelivery, setHourDelivery] = useState('');
     const [image, setImage] = useState(undefined);
     const [loggedClient, setloggedClient] = useState([]);
     const [loggedClientUpdated, setloggedClientUpdated] = useState(true);
@@ -55,8 +62,8 @@ function ProductNew(props) {
         console.log(image);
 
         let object = {
-            "Name": name,
-            "Description": description
+            "Name": address,
+            "Description": timeDelivery
         }
         let res = await API.createProduct(object, image);
         console.log(object);
@@ -78,9 +85,8 @@ function ProductNew(props) {
                     </Col>
 
                     <ModalProductNew
-                        setName={setName}
-                        setDescription={setDescription}
-                        setImage={setImage}
+                        setAddress={setAddress}
+                        setTimeDelivery={setTimeDelivery}
                         submitNewProduct={submitNewProduct}
                         show={modalShowProductNew}
                         onHide={() => setModalShowProductNew(false)}/>
@@ -94,10 +100,32 @@ function ProductNew(props) {
 function NewProductBottom(props) {
     return (
         <>
-            <Button onClick={props.onShow}>New product</Button>
+            <Button onClick={props.onShow}>Schedule delivery</Button>
         </>
     );
 }
+
+const Example = () => {
+    const [startDate, setStartDate] = useState(new Date());
+    return (
+      <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+    );
+  };
+
+  const TimeForm = () => {
+    const [value, onChange] = useState('10:00');
+  
+    return (
+      <div>
+        <TimePicker
+          onChange={onChange}
+          value={value}
+        />
+      </div>
+    );
+  };
+
+
 
 function ModalProductNew(props) {
 
@@ -106,24 +134,24 @@ function ModalProductNew(props) {
                centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    New product
+                Schedule delivery
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={(e) => props.submitNewProduct(e)} controlId="my-form">
-                    <Form.Group className="mb-3" controlId="name">
-                        <Form.Label className="label">Name of new product</Form.Label>
-                        <Form.Control type="text" placeholder="Enter name"
-                                      onChange={(e) => props.setName(e.target.value)}/>
+                    <Form.Group className="mb-3" controlId="address">
+                        <Form.Label className="label">Address</Form.Label>
+                        <Form.Control type="text" placeholder="Enter address"
+                                      onChange={(e) => props.setAddress(e.target.value)}/>
                     </Form.Group>
-                    <Form.Group className="mb-3">
-                        <Form.Label className="label">Description of the new product</Form.Label>
-                        <Form.Control type="text" controlId="description" placeholder="Enter description"
-                                      onChange={(e) => props.setDescription(e.target.value)}/>
-                    </Form.Group>
-                    <Row className='my-3 my-3'>
-                        <Previews setImage={props.setImage}/>
-                    </Row>
+                    <Form.Group className="mb-3" controlId="timeDelivery">
+                        <Form.Label className="label">Date for delivery</Form.Label>
+                   <Example></Example>
+                   </Form.Group>
+                   <Form.Group className="mb-3" controlId="hourDelivery">
+                        <TimePicker />
+                   </Form.Group>
+                    
                     <Button onClick={props.submitNewProduct} variant="success">Create</Button>
                     {' '}{' '}
                     <Button variant='danger' onClick={props.onHide}>Close</Button>
@@ -212,4 +240,4 @@ function Previews(props) {
 }
 
 
-export default ProductNew;
+export default Deliver;

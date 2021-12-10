@@ -1,12 +1,12 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner,Dropdown, DropdownButton, ProgressBar  } from 'react-bootstrap';
+import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 import Sidebar from "./Sidebar";
-
+import Modal from 'react-bootstrap/Modal'
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -48,77 +48,74 @@ function EmployeeView(props) {
 
     return (
         <>
-        <Container>
-            <Row className="mt-3 margine-cerca-desktop">
-                <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-            </Row>
-        </Container>
+            <Container>
+                <Row className="mt-3 margine-cerca-desktop">
+                    <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                </Row>
+            </Container>
 
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
-                        </Row > </> :
+            </Row > </> :
                 <>
-                    <Row>
-                        <Col>
-                            <Table className="d-flex justify-content-center">
-                                <tbody id="employee-table" align="center">
-                                    {
-                                        ordersList.slice(0).reverse().map(o => {
-                                            if(selectedUser.length >0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0 ){
-                                                if (o.Status == "open" && props.status == "open") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (o.Status == "pending" && props.status == "pending") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (o.Status == "closed" && props.status == "closed") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                                if (props.status == "all") {
-                                                    return <OrderRow order={o} />
-                                                }
-                                        }
-                                        }
+                <Row>
+                    <Col>
+                        <Table className="d-flex justify-content-center">
+                            <tbody id="employee-table" align="center">
+                                {ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 ? <>
+                                    {  
+                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 && selectedUser.length  > 0 && !ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).some(ord=> ord.ClientID === selectedUser[0].UserID)  ?  <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders for the selected user"}/> : 
+                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).slice(0).reverse().map(o => {
 
-                                        )
+                                        if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
+
+                                                return <OrderRow order={o} />
+                                            
+                                        }
                                     }
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
+                                    )
+                                    } </> : <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders yet"}/>}
+                            </tbody>
+                        </Table>
+                    </Col>
+                     </Row>
                 </>
             }
         </>
     );
 }
 
-let progressRate=0;
-let progressType="success";
+let progressRate = 0;
+let progressType = "success";
 
 
 function OrderRow(props) {
     let [stat, setStat] = useState(props.order.Status || 'o');
 
 
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     let buttonstatus;
     // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
-        progressType="info";   
+        progressType = "info";
         buttonstatus = "outline-primary";
-        progressRate=10;
+        progressRate = 33;
     } else if (props.order.Status == "pending") {
         buttonstatus = "outline-danger";
         stat = 'p';
-        progressType="danger";   
-        progressRate=49;
+        progressType = "danger";
+        progressRate = 66;
 
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
         stat = 'c';
-        progressType="success";   
-        progressRate=100;
+        progressType = "success";
+        progressRate = 100;
 
     }
 
@@ -148,46 +145,66 @@ function OrderRow(props) {
                             </Row>
                         </Row>
 
-                        {props.order.ProductInOrder.map(p => (
-                            <ProductList product={p} />
-                        ))}
+                        <Table className="d-flex justify-content-center">
+                            <tbody align="center">
+                                {props.order.ProductInOrder.map(p => (
+                                    <ProductList product={p} />
+                                ))}
+                            </tbody>
+                        </Table>
+
+                        <ProgressBar variant={progressType} now={progressRate} />
 
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{fontSize: 15, marginTop: 10}}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {return sum + parseInt(p.number)* parseInt(p.Price)},0)}</h1>
+                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
                             <Col>
-                                <DropdownButton onClick={()=>{alert("You click to change the status of order with orderID:"+ props.order.OrderID)}} title={props.order.Status}  variant={buttonstatus} size="sm">
+                            
+                                <DropdownButton  title={props.order.Status} variant={buttonstatus} size="sm">
 
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
                                         setStat('o');
                                         API.modifyOrderStatus(props.order);
-                                        progressRate=10;
-                                        
+                                        progressRate = 10;
+                                        handleShow();
 
-                                    } }>Open</Dropdown.Item>
-                                    <Dropdown.Item onClick={() =>  {
+
+                                    }}>Open</Dropdown.Item>
+                                    <Dropdown.Item  onClick={() => {
                                         props.order.Status = "pending";
                                         setStat('p');
-                                        progressRate=49;
+                                        progressRate = 49;
                                         API.modifyOrderStatus(props.order);
-                                        }
-                                    
-                                      }>Pending</Dropdown.Item>
-                                    <Dropdown.Item onClick={() =>{
+                                        handleShow();
+
+                                    }
+
+                                    }>Pending</Dropdown.Item>
+                                    <Dropdown.Item  onClick={() => {
                                         props.order.Status = "closed";
                                         setStat('c');
-
-                                        progressRate=99;
+                                        progressRate = 99;
+                                        handleShow();
 
                                         API.modifyOrderStatus(props.order);
-                                        
-                                    } }>Closed</Dropdown.Item>
-                                    
+
+                                    }}>Closed</Dropdown.Item>
 
 
                                 </DropdownButton >
+                                <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} >
+                                    <Modal.Header closeButton>
+                                        <Modal.Title>Status Change!</Modal.Title>
+                                    </Modal.Header>
+                                        <Modal.Body>
+                                        Ther order status has been changed to {props.order.Status}
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={handleClose}> Close </Button>
+                                        </Modal.Footer>
+                                </Modal>
                             </Col>
                         </Row>
 
@@ -204,25 +221,37 @@ function ProductList(props) {
     let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
 
     return (
-        <Table >
-        <Row className="mb-2 align-items-center">
-            <Col>
-                <Image src={newSrc} height={"60 px"} rounded />
-            </Col>
-            <Col>
-                <center>{props.product.NameProduct}</center>
-            </Col>
-            <Col>
-                Quantity: {props.product.number}
-            </Col>
-            <Col>
-                Price: €{props.product.Price.toFixed(2)}
-            </Col>
-        </Row>
-        <Row>
-        <ProgressBar striped variant={progressType} animated now={progressRate} /> 
+        <tr>
+            <td>
+                <Container>
+                    <Row className="mb-2 align-items-center">
+                        <Col>
+                            <Image src={newSrc} height={"60 px"} rounded />
+                        </Col>
+                        <Col>
+                            <center>{props.product.NameProduct}</center>
+                        </Col>
+                        <Col>
+                            Quantity: {props.product.number}
+                        </Col>
+                        <Col>
+                            Price: €{props.product.Price.toFixed(2)}
+                        </Col>
+                    </Row>
+                </Container>
+            </td>
+        </tr>
+    );
+}
 
-</Row></Table>
+function NoOrders(props){
+    return (<Row style={{ height: "50vh" }} className="align-items-center">
+    
+    <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+    <div className="d-flex justify-content-center "><h4>{props.message}</h4></div>
+    </div>
+    </Row>
+            
     );
 }
 

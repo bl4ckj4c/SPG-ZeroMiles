@@ -6,6 +6,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { House, DoorOpen, Stopwatch } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
+import API from '../API';
 
 function ZeroNavbar(props) {
     const location = useLocation();
@@ -15,78 +16,91 @@ function ZeroNavbar(props) {
 
     function handleLogout() {
         props.logout();
-        history.push('/login');
+        history.push('/signout');
     }
 
     function handleHome() {
-        history.push('/products');
+        history.push('/');
     }
 
     function handleTime() {
         setModalShow(true);
     }
 
-    function handleClose (newdate) {
+    function handleLogin() {
+        history.push('/login');
+    }
+
+    function handleSignup() {
+        history.push('/signupClient');
+    }
+
+    function handleClose(newdate) {
         setModalShow(false);
         props.setTimeMachine(newdate);
     }
 
     return (
-        location.pathname === "/" ? <></> :
-            <Navbar bg="warning" expand={false}>
-                <Container>
+        <Navbar bg="warning" expand={false}>
+            <Container>
 
-                    <Navbar.Brand className="logo" onClick={handleHome}>
-                        <Image id="logo" src="/images/logo.png" />
-                    </Navbar.Brand>
+                <Navbar.Brand className="logo" onClick={handleHome}>
+                    <Image id="logo" src="/images/logo.png" />
+                </Navbar.Brand>
 
-                    {!props.isLoggedIn ? <></> : <>
+                {!props.isLoggedIn ? <>
+                    <div style={{ marginTop: '0.9rem' }} className="posizionamento-login">
+                        <Button style={{ marginRight: '0.5rem', fontSize: "14px" }} variant="outline-secondary" onClick={handleSignup}>Signup</Button>
+                        <Button style={{ fontSize: "14px" }} variant="secondary" onClick={handleLogin}>Login</Button>
+                    </div>
+                </> : <>
 
-                        <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
-                        <Navbar.Offcanvas
-                            id="offcanvasNavbar"
-                            aria-labelledby="offcanvasNavbarLabel"
-                            placement="end"
-                            className="bg-sidebar"
-                        >
-                            <Offcanvas.Header closeButton>
-                                <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
-                            </Offcanvas.Header>
+                    <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
+                    <Navbar.Offcanvas
+                        id="offcanvasNavbar"
+                        aria-labelledby="offcanvasNavbarLabel"
+                        placement="end"
+                        className="bg-sidebar"
+                    >
+                        <Offcanvas.Header closeButton>
+                            <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
+                        </Offcanvas.Header>
 
-                            <Offcanvas.Body>
-                                <Row style={{ textAlign: 'center' }}>
+                        <Offcanvas.Body>
+                            <Row style={{ textAlign: 'center' }}>
+                                <Col>
+                                    <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
+                                </Col>
+
+                                {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
+                                        <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
+                                </>}
 
-                                    {!props.timedev ? <></> : <>
-                                        <Col>
-                                            <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
-                                            <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
-                                        </Col>
-                                    </>}
-
-                                    <Col>
-                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
-                                    </Col>
-                                </Row>
+                                <Col>
+                                    <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
+                                </Col>
+                            </Row>
 
 
-                                {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
+                            {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
 
-                                {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
+                            {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
 
-                                {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
+                            {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
 
-                            </Offcanvas.Body>
+                        </Offcanvas.Body>
 
-                            <WelcomeFarmerSidebar className="side-farmer" />
+                        {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
+                        {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
 
-                        </Navbar.Offcanvas>
-                    </>}
+                    </Navbar.Offcanvas>
+                </>}
 
-                </Container >
-            </Navbar >
+            </Container >
+        </Navbar >
 
     );
 };
@@ -102,10 +116,11 @@ function TimeMachine(props) {
 
     const [time, setTime] = useState(now_time);
     const [date, setDate] = useState(now_date);
-    
+
 
     function onSubmit() {
-        newdate = (dayjs(date.value).format('DD/MM/YYYY') + " " + time.value + ":00").toString();
+        newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
+        API.setTimeMachine(newdate);
         props.onHide(newdate);
     }
 
@@ -117,24 +132,24 @@ function TimeMachine(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h6 style={{textAlign:'center'}}>
+                <h6 style={{ textAlign: 'center' }}>
                     “Are you telling me you built a time machine...out of a DeLorean?”
                 </h6>
                 <Form>
                     <Row className="mt-3">
-                        <DeLorean/>
+                        <DeLorean />
                     </Row>
                     <Row className="justify-content-center">
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosendate">
                                 <Form.Label>Date</Form.Label>
-                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({value: e.target.value})}/>
+                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosentime">
                                 <Form.Label>Time</Form.Label>
-                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({value: e.target.value})}/>
+                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
                     </Row>
@@ -178,6 +193,8 @@ function EmployeeSidebar(props) {
                 </Nav.Link>
             </Nav>
 
+            <WelcomeFarmerSidebar className="side-farmer" />
+
         </>
     );
 }
@@ -189,6 +206,7 @@ function FarmerSidebar(props) {
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/productNew">My products</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/deliver">Delivery</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
@@ -197,6 +215,7 @@ function FarmerSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
+
         </>
     );
 }
@@ -220,6 +239,7 @@ function ClientSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
             </Nav>
+
         </>
     );
 }

@@ -256,7 +256,7 @@ function UserRegisterEmployee(props) {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="company">
                                 <Form.Label className="label">Company:</Form.Label>
-                                <Form.Control type="text" placeholder="Enter a company name" onChange={(e) => setCompany(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter copany name" onChange={(e) => setCompany(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="password">
                                 <Form.Label className="label">Password:</Form.Label>

@@ -16,9 +16,13 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+
 var timezone = require('dayjs/plugin/timezone');
+const weekOfYear = require('dayjs/plugin/weekOfYear')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
+dayjs.extend(weekOfYear)
+
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
@@ -317,9 +321,7 @@ app.post('/api/register',
         }
     });
 
-
-
-    app.post('/api/farmerRegister',
+app.post('/api/farmerRegister',
     body('name')
         // Check if the name parameter is not null
         .exists({checkNull: true})
@@ -491,53 +493,53 @@ app.post('/api/register',
         }
     });
 
-/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
-
-// (async () => {
-//     try {
-//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (products.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             products.forEach(prod => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
-
-/*
- * ********************************************
- * ******** AUTHENTICATED APIs: ***************
- * ********************************************
- * 
- * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
- * BACK 401 (UnauthorizedError: No authorization 
- * token was found) IF THE REQUEST DOES NOT 
- * TRANSPORT ANY TOKEN
- * 
- * 
- */
-
-app.use(jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
-);
-
-app.use(function (err, req, res, next) {
-    if (err.name === 'UnauthorizedError') {
-        console.log("Invalid token");
-        res.redirect(401, "/api/login");
+/* GET all products */
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await db.collection('Product').get();
+        if (products.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Product)"});
+        } else {
+            let result = [];
+            products.forEach(product => {
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: product.data().Name,
+                        Description: product.data().Description,
+                        ImageID: product.data().ImageID,
+                        ProductID: product.id
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all products)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
 
 /* GET all products by farmers */
-app.get('/api/allProductsByFarmers', async (req, res) => {
+  app.get('/api/allProductsByFarmers/:date', async (req, res) => {
+
+
+    let day2 = dayjs(req.params.date);
+   
+    let weekOfYear= dayjs(day2).week();
+    console.log(weekOfYear);
+
+
+    
+
     try {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
@@ -559,7 +561,15 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
-                    } else {
+                    }
+                    if (prodfarm.data().Week != weekOfYear){
+                        console.log("No Settimana");
+                        resolve({
+                    });
+
+                    
+                        
+                }else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
                             // Farmer
@@ -591,7 +601,7 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
                 }));
             });
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(201).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error
@@ -604,11 +614,86 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
             error: error
         });
     }
+   });
+
+/* GET all farmers */
+app.get('/api/farmers', async (req, res) => {
+    try {
+        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (farmers.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Farmer)"});
+        } else {
+            let result = [];
+            farmers.forEach(farmer => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: farmer.data().Name,
+                        Surname: farmer.data().Surname,
+                        Company: farmer.data().Company,
+                        FarmerID: farmer.id,
+                        Email: farmer.data().Email,
+                        Phoneno: farmer.data().Phoneno,
+                        Address: farmer.data().Address,
+                        State: farmer.data().State,
+                        Zipcode: farmer.data().Zipcode,
+                        Distance: farmer.data().Distance,
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all farmers)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+/*
+ * ********************************************
+ * ******** AUTHENTICATED APIs: ***************
+ * ********************************************
+ * 
+ * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
+ * BACK 401 (UnauthorizedError: No authorization 
+ * token was found) IF THE REQUEST DOES NOT 
+ * TRANSPORT ANY TOKEN
+ * 
+ * 
+ */
+
+app.use(jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        console.log("Invalid token");
+        res.redirect(401, "/api/login");
+    }
 });
 
 /* GET products by the authenticated farmer (one farmer) */
-app.get('/api/productsByFarmer', async (req, res) => {
+app.get('/api/productsByFarmer/:date', async (req, res) => {
     const user = req.user && req.user.user;
+    let day2 = dayjs(req.params.date);
+   
+    let weekOfYear= dayjs(day2).week();
+    console.log(weekOfYear);
+    
     if(user.Role != "Farmer"){
         console.log("GET productsByFarmer - 401 Unauthorized (Maybe you are not a farmer)")
         res.status(401).json({error: "401 Unauthorized"})
@@ -636,7 +721,15 @@ app.get('/api/productsByFarmer', async (req, res) => {
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
-                    } else {
+                    }
+                    
+                    if (prodfarm.data().Week != weekOfYear){
+                        console.log("No Settimana");
+                        resolve({
+                    });
+
+                    
+                 } else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
                             // Farmer
@@ -766,84 +859,6 @@ app.get('/api/userinfo', async (req, res) => {
             const response = Promise.all(result)
                 .then(r => res.json(r))
                 .catch(r => res.status(500).end());
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
-/* GET all farmers */
-app.get('/api/farmers', async (req, res) => {
-    try {
-        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (farmers.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({error: "No entries (Table: Farmer)"});
-        } else {
-            let result = [];
-            farmers.forEach(farmer => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: farmer.data().Name,
-                        Surname: farmer.data().Surname,
-                        Company: farmer.data().Company,
-                        FarmerID: farmer.id,
-                        Email: farmer.data().Email,
-                        Phoneno: farmer.data().Phoneno,
-                        Address: farmer.data().Address,
-                        State: farmer.data().State,
-                        Zipcode: farmer.data().Zipcode,
-                        Distance: farmer.data().Distance,
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all farmers)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
-/* GET all products */
-app.get('/api/products', async (req, res) => {
-    try {
-        const products = await db.collection('Product').get();
-        if (products.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({error: "No entries (Table: Product)"});
-        } else {
-            let result = [];
-            products.forEach(product => {
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: product.data().Name,
-                        Description: product.data().Description,
-                        ImageID: product.data().ImageID,
-                        ProductID: product.id
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all products)",
-                    error: error
-                }));
         }
     } catch (error) {
         console.log(error);
@@ -985,14 +1000,16 @@ app.post('/api/order', async (req, res) => {
         console.log(quantity);
         let newOrder = {}
         newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",).tz("Italia/Roma");
+        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
+        newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
+        newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
 
         (async () => {
             try {
-                console.log(newOrder);
+                //console.log(newOrder);
                 await db.collection("Order").add(newOrder);
             } catch (error) {
                 console.log(error);
@@ -1024,6 +1041,87 @@ app.post('/api/order', async (req, res) => {
     }
 })
 
+/* POST set Time machine */
+app.post('/api/timeMachine',async(req,res)=>{
+    let newdate = req.body.newdate ? req.body.newdate : "";
+    let farmerProductsEstimationDeadline = "";      //Farmers provide procucts estimations by Saturday at 9am
+    let clientOrdersDeadlineDOW = "0";                  //Orders from clients are accepted until Sunday at 11pm
+    let clientOrdersDeadlineHour = "23:00"
+    let farmerProductsConfirmationDeadline = "";    //Farmers confirm available products by Monday at 9am
+    let farmerProductsDeliverDeadline = "";         //Farmers deliver their products (to SPG organization) by Tuesday evening
+
+    /*
+    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
+    console.log("Today: " + dayjs())
+    console.log(dayjs(req.body.newdate).day()==0 );  //0=Sunday
+    console.log(dayjs(req.body.newdate).isAfter(dayjs()))
+    console.log(dayjs().week())
+    console.log(dayjs(req.body.newdate).week())
+    console.log(dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour)
+    console.log(dayjs(newdate).day()==clientOrdersDeadlineDOW)
+    */
+
+    //If it's clientOrdersDeadline, i have to fullfill the order by all clients
+    //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
+    //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
+
+    if(dayjs(newdate).day()==clientOrdersDeadlineDOW &&  
+       dayjs(newdate).week() == dayjs().week()+1 && 
+       dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour){  //if it's the next Sunday (0=Sunday)
+
+        console.log("It's the next Sunday! It's time to fullfill clients' orders...");
+
+    }
+
+/*
+    if(...){
+        try {
+            const orders = await db.collection('Order').orderBy('Timestamp').get();
+            if (orders.empty) {
+                console.log("No matching documents.");
+                res.status(404).json({error: "No entries (Table: Order)"});
+            } else {
+    
+                let result = [];
+                orders.forEach(order => {
+                    //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                    //console.log(farmer.data());
+    
+                    result.push(new Promise(async (resolve, reject) => {
+                        const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                            console.log("No matching users for " + order.data().ClientID);
+                        }
+    
+                        resolve({
+                            OrderID: order.id,  //maybe it's "order.id"
+                            Status: order.data().Status,
+                            ClientID: client.id,
+                            Client: client.data(),
+                            Timestamp: order.data().Timestamp,
+                            ListOfProducts: order.data().Products
+                        });
+                    }));
+                })
+                const response = Promise.all(result)
+                    .then(r => res.json(r))
+                    .catch(r => res.status(500).json({
+                        info: "Promises error (get all orders)",
+                        error: error
+                    }));
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                info: "The server cannot process the request",
+                error: error
+            });
+        }
+    }
+*/
+
+    res.status(200).end();
+})
 
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
@@ -1166,6 +1264,7 @@ app.post('/api/addProduct', async (req, res) => {
         newprodFarmer.Price = parseFloat(req.body.Price);
         newprodFarmer.Quantity = parseInt(req.body.Quantity);
         newprodFarmer.Unitofmeasurement = req.body.UnitOfMeasurement;
+        newprodFarmer.Week= dayjs().week();
 
         
         await db.collection('Product by Farmers').add(newprodFarmer);
@@ -1189,6 +1288,29 @@ app.post('/api/addProduct', async (req, res) => {
 });
 
 
+app.post('/api/deleteProduct', async (req, res) => {
+    
+    const user = req.user && req.user.user;
+    console.log(user);
+    try {
+
+        
+    await db.collection('Product by Farmers').doc("" + req.body.productByFarmerID).delete();
+   
+          
+        res.status(201).end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+
+});
+
+
 app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
@@ -1197,11 +1319,17 @@ app.get('/api/sessions/current', (req, res) => {
     } else res.status(401).json({error: 'User non authenticated'});
 });
 
-// POST for store a new product with realted image into the server
+// POST for store a new product with related image into the server
+
 app.post('/api/newproduct',
     upload.single('newproductimage'),
     async (req, res) => {
-        const newProduct = JSON.parse(req.body.newProduct);
+
+        console.log(req)
+        //console.log(req.body.newProduct)
+
+
+        const newProduct = JSON.parse(req.body.productJson);
         const newImage = req.file;
 
         // Generate a new random id for the new image
@@ -1248,11 +1376,18 @@ app.post('/api/newproduct',
 
 
 // Activate the server
-app.listen(port, () => {
+let server = app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
 
-module.exports = app;
+function stop() {
+    server.close();
+}
+
+//module.exports = app;
+module.exports = server;
+module.exports.stop = stop;
+module.exports.firebase = firebaseappBackup;
 
 
 
