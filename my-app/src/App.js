@@ -17,15 +17,22 @@ import Welcome from './Components/Welcome';
 import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
+import ProductNew from './Components/ProductNew';
+
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
-  const [sidebarCollapse, setSidebarCollapse] = useState(true);
   const [userList, setUserList] = useState([]);
-  const [userListUpdated, setUserListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+  const [userListUpdated, setUserListUpdated] = useState(true); 
+  const [timeMachine, setTimeMachine] = useState('');
 
+  const timedev = true; //set at false to disable the time machine
+  useEffect(() => {
+    if(timeMachine)
+    console.log(timeMachine);
+  }, [timeMachine]);
 
   useEffect(() => {
     if (loggedIn && userListUpdated === true) {
@@ -70,20 +77,19 @@ function App() {
     }
   }
 
-  /*
-    const login = (email, password) => {
-    API.userLogin(email, password).then((response) => {
-  
-    }
-    ); //handle login error
-  }  */
-
   const logout = () => {
     API.userLogout().then(() => {
       setUser({});
       setLoggedIn(false);
     });
   }
+  const register = () => {
+    API.userLogout().then(() => {
+      setUser({});
+      setLoggedIn(false);
+    });
+  }
+
   const register = () => {
     API.userLogout().then(() => {
       setUser({});
@@ -109,8 +115,9 @@ function App() {
         isLoggedIn={loggedIn}
         user={user}
         logout={logout}
-        sidebarCollapse={sidebarCollapse}
-        setSidebarCollapse={setSidebarCollapse} />
+        timedev={timedev}
+        setTimeMachine={setTimeMachine}
+        />
 
       <Switch>
 
@@ -133,7 +140,7 @@ function App() {
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
             */}
             
-            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} />
+            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={timeMachine} />
 
           </Col>
         </Route>
@@ -152,11 +159,21 @@ function App() {
           <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
 
+
+
+            { /* Signup by employee (allow create farmer and user with wallet asignation)
+            */}
+
+        <Route exact path="/signupEmployee">
+          <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+        </Route>
+
+
+
+
         <Route exact path="/orders/:status" render={({ match }) => (
           <EmployeeView
             users={userList}
-            sidebarCollapse={sidebarCollapse}
-            setSidebarCollapse={setSidebarCollapse}
             status={match.params.status} />)} />
 
         <Route exact path="/clients">
@@ -172,9 +189,15 @@ function App() {
           <Profile />
         </Route>
 
-        <Route exact path="/farmerview">
-          <FarmerProducts user={user} />
+        <Route exact path="/productNew">
+          <ProductNew/>
         </Route>
+
+        <Route exact path="/farmerview">
+          <FarmerProducts user={user} timeMachine={timeMachine}/>
+        </Route>
+
+
 
       </Switch>
     </Router >

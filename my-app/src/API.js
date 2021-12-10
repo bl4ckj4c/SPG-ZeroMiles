@@ -22,10 +22,10 @@ async function getProductInOrder() {
     return data.map((pio) => new ProductInOrder(...Object.values(pio)));
 }
 
-async function getAllProductsByFarmers() {
+async function getAllProductsByFarmers(spg_date) {
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/allProductsByFarmers', { method: 'GET' });
+        const res = await fetch(BASEURL + '/allProductsByFarmers/'+spg_date, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -290,20 +290,18 @@ async function modifyOrderStatus(order){
     return { 'err': 'POST error' };
   }
 
-  async function createProduct(newProduct) {
+  async function createProduct(newProduct, newImage) {
       const formData  = new FormData();
 
-      formData.append('productJson', newProduct);
-      formData.append('image', 'imagePlaceholder');
-
+      formData.append('productJson', JSON.stringify(newProduct));
+      formData.append('newproductimage', newImage);
 
       const response = await fetch(BASEURL + "/newproduct", {
           method: 'POST',
-          headers: {
-              'Content-Type': 'multipart/form-data',
-          },
           body: formData
       });
+
+      return response;
   }
 
 
@@ -330,12 +328,46 @@ async function addProduct(product){
     });  
   
     if(response.ok){
-        return { 'msg': 'Order succesfully added' };
+        return { 'msg': 'Product succesfully added' };
     }
     return { 'err': 'POST error' };
   }
 
 
+  async function deleteProduct(product){
+
+    const response = await fetch(BASEURL + "/deleteProduct", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...product})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Product succesfully deleted' };
+    }
+    return { 'err': 'POST error' };
+  }
+
+
+  async function setTimeMachine(newdate){
+
+    const response = await fetch(BASEURL + "/timeMachine", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({newdate: newdate})
+    })
+
+    if(response.ok){
+        console.log("Time machine successfully set")
+        return { 'msg': 'Time machine successfully set' };
+    }
+    console.log("Something went wrong, Doc")
+    return { 'err': 'Something went wrong, Doc ' };
+  }
   
 
 const API = {   
@@ -345,6 +377,7 @@ const API = {
     getFarmer,
     addOrder,
     addProduct,
+    deleteProduct,
     
     clientCheck,
     getProductInOrder, 
@@ -364,5 +397,6 @@ const API = {
     getClientOrders,
     getClient,
     farmerRegister,
+    setTimeMachine,
 };
 export default API;

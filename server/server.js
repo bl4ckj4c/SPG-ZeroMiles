@@ -319,7 +319,7 @@ app.post('/api/register',
 
 
 
-    app.post('/api/farmerRegister',
+app.post('/api/farmerRegister',
     body('name')
         // Check if the name parameter is not null
         .exists({checkNull: true})
@@ -491,53 +491,44 @@ app.post('/api/register',
         }
     });
 
-/* GET all products (supposed to be unauthenticated -> everyone, also non-authenticated users, can see the products)*/
-
-// (async () => {
-//     try {
-//         const products = await db.collection('Product').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-//         if (products.empty) {
-//             console.log("No matching documents.");
-//         } else {
-//             products.forEach(prod => {
-//                 //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-//                 console.log(prod.data());  //prod.data() returns a Json -> fields can be accessed with "." (e.g. prod.data().Name returns the 'Name' field in Firebase)
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//     }
-// })();
-
-/*
- * ********************************************
- * ******** AUTHENTICATED APIs: ***************
- * ********************************************
- * 
- * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
- * BACK 401 (UnauthorizedError: No authorization 
- * token was found) IF THE REQUEST DOES NOT 
- * TRANSPORT ANY TOKEN
- * 
- * 
- */
-
-app.use(jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
-        secret: jwtSecret,
-        getToken: req => req.cookies.token
-    })
-);
-
-app.use(function (err, req, res, next) {
-    if (err.name === 'UnauthorizedError') {
-        console.log("Invalid token");
-        res.redirect(401, "/api/login");
+/* GET all products */
+app.get('/api/products', async (req, res) => {
+    try {
+        const products = await db.collection('Product').get();
+        if (products.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Product)"});
+        } else {
+            let result = [];
+            products.forEach(product => {
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: product.data().Name,
+                        Description: product.data().Description,
+                        ImageID: product.data().ImageID,
+                        ProductID: product.id
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all products)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
     }
 });
 
 /* GET all products by farmers */
-app.get('/api/allProductsByFarmers', async (req, res) => {
+app.get('/api/allProductsByFarmers/:date', async (req, res) => {
+    console.log(req);
     try {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
@@ -603,6 +594,76 @@ app.get('/api/allProductsByFarmers', async (req, res) => {
             info: "The server cannot process the request",
             error: error
         });
+    }
+});
+
+/* GET all farmers */
+app.get('/api/farmers', async (req, res) => {
+    try {
+        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        if (farmers.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Farmer)"});
+        } else {
+            let result = [];
+            farmers.forEach(farmer => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+                result.push(new Promise(async (resolve, reject) => {
+                    resolve({
+                        Name: farmer.data().Name,
+                        Surname: farmer.data().Surname,
+                        Company: farmer.data().Company,
+                        FarmerID: farmer.id,
+                        Email: farmer.data().Email,
+                        Phoneno: farmer.data().Phoneno,
+                        Address: farmer.data().Address,
+                        State: farmer.data().State,
+                        Zipcode: farmer.data().Zipcode,
+                        Distance: farmer.data().Distance,
+                    });
+                }));
+            })
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all farmers)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+/*
+ * ********************************************
+ * ******** AUTHENTICATED APIs: ***************
+ * ********************************************
+ * 
+ * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
+ * BACK 401 (UnauthorizedError: No authorization 
+ * token was found) IF THE REQUEST DOES NOT 
+ * TRANSPORT ANY TOKEN
+ * 
+ * 
+ */
+
+app.use(jwt({
+        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        secret: jwtSecret,
+        getToken: req => req.cookies.token
+    })
+);
+
+app.use(function (err, req, res, next) {
+    if (err.name === 'UnauthorizedError') {
+        console.log("Invalid token");
+        res.redirect(401, "/api/login");
     }
 });
 
@@ -776,84 +837,6 @@ app.get('/api/userinfo', async (req, res) => {
     }
 });
 
-/* GET all farmers */
-app.get('/api/farmers', async (req, res) => {
-    try {
-        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
-        if (farmers.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({error: "No entries (Table: Farmer)"});
-        } else {
-            let result = [];
-            farmers.forEach(farmer => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: farmer.data().Name,
-                        Surname: farmer.data().Surname,
-                        Company: farmer.data().Company,
-                        FarmerID: farmer.id,
-                        Email: farmer.data().Email,
-                        Phoneno: farmer.data().Phoneno,
-                        Address: farmer.data().Address,
-                        State: farmer.data().State,
-                        Zipcode: farmer.data().Zipcode,
-                        Distance: farmer.data().Distance,
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all farmers)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
-/* GET all products */
-app.get('/api/products', async (req, res) => {
-    try {
-        const products = await db.collection('Product').get();
-        if (products.empty) {
-            console.log("No matching documents.");
-            res.status(404).json({error: "No entries (Table: Product)"});
-        } else {
-            let result = [];
-            products.forEach(product => {
-                result.push(new Promise(async (resolve, reject) => {
-                    resolve({
-                        Name: product.data().Name,
-                        Description: product.data().Description,
-                        ImageID: product.data().ImageID,
-                        ProductID: product.id
-                    });
-                }));
-            })
-            const response = Promise.all(result)
-                .then(r => res.json(r))
-                .catch(r => res.status(500).json({
-                    info: "Promises error (get all products)",
-                    error: error
-                }));
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            info: "The server cannot process the request",
-            error: error
-        });
-    }
-});
-
 /* GET all orders of the authenticated user*/
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
@@ -985,14 +968,16 @@ app.post('/api/order', async (req, res) => {
         console.log(quantity);
         let newOrder = {}
         newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs().format("DD-MM-YYYY hh:mm:ss",).tz("Italia/Roma");
+        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
+        newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
+        newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
 
         (async () => {
             try {
-                console.log(newOrder);
+                //console.log(newOrder);
                 await db.collection("Order").add(newOrder);
             } catch (error) {
                 console.log(error);
@@ -1024,6 +1009,11 @@ app.post('/api/order', async (req, res) => {
     }
 })
 
+/* POST set Time machine */
+app.post('/api/timeMachine',async(req,res)=>{
+    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
+    res.status(200).end();
+})
 
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
@@ -1189,6 +1179,29 @@ app.post('/api/addProduct', async (req, res) => {
 });
 
 
+app.post('/api/deleteProduct', async (req, res) => {
+    
+    const user = req.user && req.user.user;
+    console.log(user);
+    try {
+
+        
+    await db.collection('Product by Farmers').doc("" + req.body.productByFarmerID).delete();
+   
+          
+        res.status(201).end();
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+
+});
+
+
 app.get('/api/sessions/current', (req, res) => {
     const user = req.user && req.user.user;
     console.log(req.user.user.Email);
@@ -1197,11 +1210,16 @@ app.get('/api/sessions/current', (req, res) => {
     } else res.status(401).json({error: 'User non authenticated'});
 });
 
-// POST for store a new product with realted image into the server
+// POST for store a new product with related image into the server
 app.post('/api/newproduct',
     upload.single('newproductimage'),
     async (req, res) => {
-        const newProduct = JSON.parse(req.body.newProduct);
+
+        console.log(req)
+        //console.log(req.body.newProduct)
+
+
+        const newProduct = JSON.parse(req.body.productJson);
         const newImage = req.file;
 
         // Generate a new random id for the new image
@@ -1248,11 +1266,18 @@ app.post('/api/newproduct',
 
 
 // Activate the server
-app.listen(port, () => {
+let server = app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
 
-module.exports = app;
+function stop() {
+    server.close();
+}
+
+//module.exports = app;
+module.exports = server;
+module.exports.stop = stop;
+module.exports.firebase = firebaseappBackup;
 
 
 
