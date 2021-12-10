@@ -14,15 +14,15 @@ function FarmerProducts(props) {
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
 
     var dayjs = require('dayjs');
-    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
+    let date = dayjs().format('MM-DD-YYYY');
 
-    //example of usage: {date = props.timeMachine ? props.timeMachine.toString() : date}
+    
 
     async function addProdTest(prod){
 
         try{
-
-        let result = await API.addProduct(prod);
+        let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
+        let result = await API.addProduct(prod, passedDate);
         setProductsByFarmerUpdate(true);
         setSelectedProduct([]);
         }
@@ -54,11 +54,12 @@ function FarmerProducts(props) {
                 setUpdated(true);
             }).catch(f => console.log(f));
     }
-        , []);
+        , [props.timeMachine]);
 
     useEffect(() => {
+      let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
         if (ProductsByFarmerUpdate) {
-        API.getProductsByFarmer()
+        API.getProductsByFarmer(passedDate)
             .then(p => {
                 setProductsByFarmer(p);
                 setProductsByFarmerUpdate(false);
