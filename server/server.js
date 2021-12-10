@@ -16,13 +16,13 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-const LocalizedFormat = require('dayjs/plugin/LocalizedFormat')
+//const LocalizedFormat = require('dayjs/plugin/LocalizedFormat')
 var timezone = require('dayjs/plugin/timezone');
 const weekOfYear = require('dayjs/plugin/weekOfYear')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
-dayjs.extend(LocalizedFormat)
+//dayjs.extend(LocalizedFormat)
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
