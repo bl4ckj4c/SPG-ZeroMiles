@@ -16,13 +16,12 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-const LocalizedFormat = require('dayjs/plugin/LocalizedFormat')
 var timezone = require('dayjs/plugin/timezone');
 const weekOfYear = require('dayjs/plugin/weekOfYear')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
-dayjs.extend(LocalizedFormat)
+
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
@@ -689,8 +688,13 @@ app.use(function (err, req, res, next) {
 });
 
 /* GET products by the authenticated farmer (one farmer) */
-app.get('/api/productsByFarmer', async (req, res) => {
+app.get('/api/productsByFarmer/:date', async (req, res) => {
     const user = req.user && req.user.user;
+    let day2 = dayjs(req.params.date);
+   
+    let weekOfYear= dayjs(day2).week();
+    console.log(weekOfYear);
+    
     if(user.Role != "Farmer"){
         console.log("GET productsByFarmer - 401 Unauthorized (Maybe you are not a farmer)")
         res.status(401).json({error: "401 Unauthorized"})
@@ -718,7 +722,15 @@ app.get('/api/productsByFarmer', async (req, res) => {
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
-                    } else {
+                    }
+                    
+                    if (prodfarm.data().Week != weekOfYear){
+                        console.log("No Settimana");
+                        resolve({
+                    });
+
+                    
+                 } else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
                             // Farmer
