@@ -155,6 +155,11 @@ async function getClient(){
 
 async function getClientOrders(clientid){
     let data = [];
+
+
+
+
+
     try {
         const res = await fetch(BASEURL + '/clientorders', { method: 'GET' });
         if (!res.ok) {
@@ -306,7 +311,7 @@ async function modifyOrderStatus(order){
 
 
   async function farmerRegister(farmer) {
-
+    
     const response = await fetch(BASEURL + "/farmerRegister", {
         method: 'POST',
         headers: {

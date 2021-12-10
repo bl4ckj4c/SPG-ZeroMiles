@@ -5,6 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import API from '../API';
 import "./user.css";
+import { Farmer } from '../Products/Products.js';
 
 function UserRegisterEmployee(props) {
     const [name, setName] = useState('');
@@ -96,18 +97,16 @@ function UserRegisterEmployee(props) {
             "email": email,
             "address": address,
             "company": company,
-            "company": "Name of company",
             "phone": phone,
             "city": city,
             "password": password,
             "zipcode": zipcode,
             "stateCaps": stateCaps
         }
-        try {
-            console.log("Req",farmer)
-            let res = await API.farmerRegister(JSON.parse(farmer));
-            console.log("HERE farmer",farmer);
-            console.log("HERE response",res);
+        
+            let res = await API.farmerRegister(farmer);
+            console.log("HERE response",farmer);
+            console.log("HERE response",res.json());
             if (res.ok){
                 //props.setLoggedIn(true);
                 handleShowConfirm();
@@ -117,9 +116,6 @@ function UserRegisterEmployee(props) {
                 handleRegisterResponseModalShow();
               
             }
-        } catch(err){
-            console.log("MY FAULT :", err)
-        }
     }
 
     function RegisterResponseModal(props) {
@@ -246,7 +242,7 @@ function UserRegisterEmployee(props) {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="email">
                                 <Form.Label className="label">Email:</Form.Label>
-                                <Form.Control type="email" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)} />
+                                <Form.Control type="text" placeholder="Enter Email" onChange={(e) => setEmail(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="address">
                                 <Form.Label className="label">Address:</Form.Label>
@@ -268,9 +264,9 @@ function UserRegisterEmployee(props) {
                             </Form.Group>
                         </Col>
                         <Col xs={6}>
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3" controlId="surname">
                                 <Form.Label className="label">Surname:</Form.Label>
-                                <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={(e) => setSurname(e.target.value)} />
+                                <Form.Control type="text"  placeholder="Enter Surname" onChange={(e) => setSurname(e.target.value)} />
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="phone">
                                 <Form.Label className="label">Phone:</Form.Label>
