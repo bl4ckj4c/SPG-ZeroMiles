@@ -18,13 +18,14 @@ function ProductByFarmer(FarmerID, Name, Surname, Company, Email, Phoneno, Addre
     this.Price = Price;
 }
 
-function ProductByFarmerLITE( ProdByFarmerID, ProductID, NameProduct, Quantity, UnitOfMeasurement, Price) {
+function ProductByFarmerLITE( ProdByFarmerID, ProductID, NameProduct, Quantity, UnitOfMeasurement, Price, ImageID) {
     this.ProdByFarmerID = ProdByFarmerID;
     this.ProductID = ProductID;
     this.NameProduct = NameProduct;
     this.Quantity = Quantity;
     this.UnitOfMeasurement = UnitOfMeasurement;
     this.Price = Price;
+    this.ImageID = ImageID;
 }
 
 function Farmer(Name, Surname, Company, FarmerID, Email, Phoneno, Address, State, Zipcode){

@@ -1,4 +1,4 @@
-import { Form, Card,ListGroup,  Table, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
+import { Form, Image, Card,ListGroup,  Table, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import API from '../API';
 import { useState, useEffect } from 'react'
@@ -96,19 +96,24 @@ function FarmerProducts(props) {
 
 function ProductCard(props) {
   const [show, setShow] = useState(false);
+  const [showPic, setShowPic] = useState(false);
 
+  let newSrc = "http://localhost:3001/images/" + props.p.ImageID + ".png"
+
+
+//TODO: see if we can make the image responsive using className="img-fluid"
 
   return (
       <>
-          <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
-
+      <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
+      <PictureModal src={newSrc} show={showPic} onHide={()=> setShowPic(false)} />
       <Card className="client-card mt-3">
 
           <Card.Body>
               <Row>
                   <Col md={4}>
-{/*                      <PersonCircle size={60} style={{ marginBottom: '6px', marginRight: '5px' }} />
- */}                  </Col>
+                  <Image onClick={()=> setShowPic(true)} src={newSrc} height={"80 px"} rounded />
+                  </Col>
                   <Col md={8}>
                       <Card.Title style={{ fontSize: 28 }}> {props.p.NameProduct}</Card.Title>
                   </Col>
@@ -290,6 +295,27 @@ function AddProductModal(props) {
   }
   
 
+function PictureModal(props){
+  return (
+    <Modal
+      show={props.show}
+      onHide={props.onHide}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton></Modal.Header>
+      <Modal.Body>
+            <Image className="img-fluid" src={props.src} />
+      </Modal.Body>
+
+    </Modal>
+  );
+
+
+
+
+}
 
 function ProductsDropdown(props) {
 
