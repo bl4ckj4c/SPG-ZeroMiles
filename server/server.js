@@ -16,9 +16,13 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
+const LocalizedFormat = require('dayjs/plugin/LocalizedFormat')
 var timezone = require('dayjs/plugin/timezone');
+const weekOfYear = require('dayjs/plugin/weekOfYear')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
+dayjs.extend(weekOfYear)
+dayjs.extend(LocalizedFormat)
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
@@ -537,8 +541,17 @@ app.use(function (err, req, res, next) {
 });
 
 /* GET all products by farmers */
-app.get('/api/allProductsByFarmers/:date', async (req, res) => {
-    console.log(req);
+  app.get('/api/allProductsByFarmers/:date', async (req, res) => {
+
+
+    let day2 = dayjs(req.params.date);
+   
+    let weekOfYear= dayjs(day2).week();
+    console.log(weekOfYear);
+
+
+    
+
     try {
         const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
         if (productbyfarmer.empty) {
@@ -560,6 +573,12 @@ app.get('/api/allProductsByFarmers/:date', async (req, res) => {
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
+                    }
+                    if (prodfarm.data().Week != weekOfYear){
+                        console.log("No Settimana");
+
+                    
+                        
                     } else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
@@ -605,7 +624,7 @@ app.get('/api/allProductsByFarmers/:date', async (req, res) => {
             error: error
         });
     }
-});
+   });
 
 /* GET products by the authenticated farmer (one farmer) */
 app.get('/api/productsByFarmer', async (req, res) => {
@@ -1167,6 +1186,7 @@ app.post('/api/addProduct', async (req, res) => {
         newprodFarmer.Price = parseFloat(req.body.Price);
         newprodFarmer.Quantity = parseInt(req.body.Quantity);
         newprodFarmer.Unitofmeasurement = req.body.UnitOfMeasurement;
+        newprodFarmer.Week= dayjs().week();
 
         
         await db.collection('Product by Farmers').add(newprodFarmer);
@@ -1220,6 +1240,9 @@ app.get('/api/sessions/current', (req, res) => {
         res.status(200).json(req.user);
     } else res.status(401).json({error: 'User non authenticated'});
 });
+
+
+
 
 // POST for store a new product with realted image into the server
 app.post('/api/newproduct',
