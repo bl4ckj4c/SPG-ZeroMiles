@@ -38,10 +38,10 @@ async function getAllProductsByFarmers(spg_date) {
 
 
 //get products by a single farmer
-async function getProductsByFarmer(){
+async function getProductsByFarmer(spg_date1){
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/productsByFarmer', { method: 'GET' });
+        const res = await fetch(BASEURL + '/productsByFarmer/'+ spg_date1, { method: 'GET' });
         console.log("HERE "+res.statusText);
         if (!res.ok) {
             
