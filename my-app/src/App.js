@@ -18,7 +18,7 @@ import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
 import ProductNew from './Components/ProductNew';
-
+import Deliver from './Components/Deliver';
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -83,7 +83,6 @@ function App() {
       setLoggedIn(false);
     });
   }
-
   const register = () => {
     API.userLogout().then(() => {
       setUser({});
@@ -147,6 +146,11 @@ function App() {
         <Route exact path="/signupClient">
           <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
+            { /* Signup by employee (allow create farmer and user with wallet asignation)
+            */}
+        <Route exact path="/signupEmployee">
+          <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
+        </Route>
 
 
 
@@ -172,7 +176,10 @@ function App() {
         <Route exact path="/myorders">
           <ClientOrders />
         </Route>
- 
+
+        <Route exact path="/deliver">
+          <Deliver />
+        </Route>
 
         <Route exact path="/profile">
           <Profile />
@@ -183,7 +190,7 @@ function App() {
         </Route>
 
         <Route exact path="/farmerview">
-          <FarmerProducts user={user} />
+          <FarmerProducts user={user} timeMachine={timeMachine}/>
         </Route>
 
 

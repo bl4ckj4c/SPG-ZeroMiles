@@ -1,11 +1,11 @@
-import { Form, Card, InputGroup, Button, Col, Container, Modal } from 'react-bootstrap';
+import { Form, Card,ListGroup,  Table, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
-
-
 import API from '../API';
 import { useState, useEffect } from 'react'
+import "./FarmerProducts.css";
 
 function FarmerProducts(props) {
+    console.log("HERE");
     const [products, setProducts] = useState([]);
     const [updated, setUpdated] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState([]);
@@ -13,24 +13,37 @@ function FarmerProducts(props) {
     const [addProdShow, setAddProdShow] = useState(false);
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
 
+    var dayjs = require('dayjs');
+    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
+
+    //example of usage: {date = props.timeMachine ? props.timeMachine.toString() : date}
+
     async function addProdTest(prod){
 
         try{
 
         let result = await API.addProduct(prod);
-        if( await result.hasOwnProperty('err') )
-            throw { err: result.err }
-
         setProductsByFarmerUpdate(true);
         setSelectedProduct([]);
-
         }
         catch (err) {
             console.log(err);
             //TODO Error message
         }
+    }
 
 
+    async function deleteProductByFarmer(PbFid){
+      try{
+        let result = await API.deleteProduct({ productByFarmerID : PbFid })
+        setProductsByFarmerUpdate(true);
+        setSelectedProduct([]);
+
+        }
+        catch (err) {
+          console.log(err);
+          //TODO Error message
+        }
     }
 
     useEffect(() => {
@@ -49,29 +62,79 @@ function FarmerProducts(props) {
             .then(p => {
                 setProductsByFarmer(p);
                 setProductsByFarmerUpdate(false);
-            }).catch(f => console.log(f));
+            }).catch(f => {
+              setProductsByFarmer([]);
+                setProductsByFarmerUpdate(false);
+                console.log(f)
+            });
     }
 }
         , [ProductsByFarmerUpdate]);
 
 
-    if (updated && productsByFarmer!==false) return (
-    <Container>
-        <Col>
-    <ProductsDropdown products={products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)   )} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
-    <Button disabled={selectedProduct.length > 0 ? false : true } onClick={() => setAddProdShow(true)}>Add product</Button>
-            {   productsByFarmer.map( p=>  <div><ProductCard key={p.ProdByFarmerID} p={p} addProdTest={addProdTest}/></div>   )} 
-<AddProductModal addProdTest={addProdTest}  product={selectedProduct.length > 0 ? selectedProduct[0] : null } show={addProdShow} onHide={() => setAddProdShow(false)}/>
-</Col>
-    </Container>)
+  if (updated) return (
+    <Container className="search-container"  >
+
+          <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
+          <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)}>Add product</Button>
+
+          <Table className="d-flex justify-content-center">
+          <tbody id="prod-table" align="center">
+            {productsByFarmer !== false ? productsByFarmer.map(p => 
+              <ProductCard key={p.ProdByFarmerID} p={p} deleteProductByFarmer={deleteProductByFarmer} addProdTest={addProdTest} />
+           ) : ""}
+            </tbody>
+          </Table>
+        <AddProductModal addProdTest={addProdTest} product={selectedProduct.length > 0 ? selectedProduct[0] : null} show={addProdShow} onHide={() => setAddProdShow(false)} />
+      
+    </Container >)
     else return "";
 
 }
 
 
+function ProductCard(props) {
+  const [show, setShow] = useState(false);
 
 
-function ProductCard(props){
+  return (
+      <>
+          <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
+
+      <Card className="client-card mt-3">
+
+          <Card.Body>
+              <Row>
+                  <Col md={4}>
+{/*                      <PersonCircle size={60} style={{ marginBottom: '6px', marginRight: '5px' }} />
+ */}                  </Col>
+                  <Col md={8}>
+                      <Card.Title style={{ fontSize: 28 }}> {props.p.NameProduct}</Card.Title>
+                  </Col>
+              </Row>
+          </Card.Body>
+
+
+          <Card.Body>
+              <ListGroup style={{ textAlign: "left" }}>
+                  <ListGroup.Item> Quantity: {props.p.Quantity}</ListGroup.Item>
+                  <ListGroup.Item> Unit: {props.p.UnitOfMeasurement}</ListGroup.Item>
+                  <ListGroup.Item> Price: {props.p.Price}</ListGroup.Item>
+              </ListGroup>
+          </Card.Body>
+
+          <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}>
+          <Button style={{ "marginRight" : "0.3rem"}}  variant="outline-dark" size="sm" onClick={() => setShow(true)}>Edit</Button>
+          <Button variant="danger" size="sm" onClick={() => props.deleteProductByFarmer(props.p.ProdByFarmerID)}>Delete</Button>
+          </Card.Body>
+      </Card>
+      </>
+  );
+}
+
+
+
+function ProductCard2(props){
     const [show, setShow] = useState(false);
 
 
@@ -235,7 +298,6 @@ function ProductsDropdown(props) {
     const filterByFields = ['Name'];
     return (
         <>
-        <p>+++ATTENTION+++ Right now it only shows products from farmer Gerry Scotti (id: JJeuoVa8fpl4wHGLK8FO) </p>
             <Form.Group>
                 <Typeahead
                     filterBy={filterByFields}

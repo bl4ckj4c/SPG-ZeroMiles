@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Form, Table, InputGroup, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
+import { Image, Form, Table, InputGroup, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import API from '../API';
 import "./ClientView.css";
@@ -22,11 +22,16 @@ function ClientView(props) {
             </Container>
 
             <Col>
-                <Table className="d-flex justify-content-center">
-                    <tbody id="client-table" align="center">
-                        {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c} triggerUpdate={props.triggerUpdate} /> : <></>)}
-                    </tbody>
-                </Table>
+            {filteredClients.filter( client => client.Role === "Client" ).length > 0 ?
+            <Table className="d-flex justify-content-center">
+            <tbody id="client-table" align="center">
+                {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c} triggerUpdate={props.triggerUpdate} /> : <></>)}
+            </tbody>
+        </Table>
+        : 
+        <NoClients/>
+            }
+                
             </Col>
         </>
     );
@@ -199,6 +204,17 @@ function UserSearchBar(props) {
 
         </Form>
 
+    );
+}
+
+function NoClients(props){
+    return (<Row style={{ height: "50vh" }} className="align-items-center">
+    
+    <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+    <div className="d-flex justify-content-center "><h4>No clients found</h4></div>
+    </div>
+    </Row>
+            
     );
 }
 

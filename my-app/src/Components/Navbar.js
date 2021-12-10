@@ -6,6 +6,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { House, DoorOpen, Stopwatch } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
+import API from '../API';
 
 function ZeroNavbar(props) {
     const location = useLocation();
@@ -26,6 +27,14 @@ function ZeroNavbar(props) {
         setModalShow(true);
     }
 
+    function handleLogin() {
+        history.push('/login');
+    }
+
+    function handleSignup() {
+        history.push('/signupClient');
+    }
+
     function handleClose(newdate) {
         setModalShow(false);
         props.setTimeMachine(newdate);
@@ -40,7 +49,12 @@ function ZeroNavbar(props) {
                         <Image id="logo" src="/images/logo.png" />
                     </Navbar.Brand>
 
-                    {!props.isLoggedIn ? <></> : <>
+                    {!props.isLoggedIn ? <>
+                        <div style={{ marginTop: '0.9rem' }}>
+                            <Button style={{ marginRight: '0.5rem', fontSize: "14px" }} variant="outline-secondary" onClick={handleSignup}>Signup</Button>
+                            <Button style={{ fontSize: "14px" }} variant="secondary" onClick={handleLogin}>Login</Button>
+                        </div>
+                    </> : <>
 
                         <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
                         <Navbar.Offcanvas
@@ -80,8 +94,8 @@ function ZeroNavbar(props) {
 
                             </Offcanvas.Body>
 
-                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
-                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer"/> : <></>}
+                            {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
+                            {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="side-farmer" /> : <></>}
 
                         </Navbar.Offcanvas>
                     </>}
@@ -107,6 +121,7 @@ function TimeMachine(props) {
 
     function onSubmit() {
         newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
+        API.setTimeMachine(newdate);
         props.onHide(newdate);
     }
 
@@ -192,6 +207,7 @@ function FarmerSidebar(props) {
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" href="/productNew">My products</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/deliver">Delivery</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
