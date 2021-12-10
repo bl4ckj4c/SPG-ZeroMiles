@@ -11,16 +11,9 @@ import API from '../API';
 function ZeroNavbar(props) {
     const location = useLocation();
     const history = useHistory();
-<<<<<<< HEAD
-    function handlerRegister() {
-        props.logout();
-        history.push('/login');
-    }
-=======
 
     const [modalShow, setModalShow] = useState(false);
 
->>>>>>> 493ec3ab3dbe6c6bddd0da8e100c07f1919067a5
     function handleLogout() {
         props.logout();
         history.push('/login');
@@ -195,15 +188,9 @@ function EmployeeSidebar(props) {
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-<<<<<<< HEAD
-                <Nav.Link className="sidebar-text"  href="/clients" >All farmers</Nav.Link>
-                <Nav.Link className="sidebar-text" role="Farmer" onClick href="/signupEmployee">
-                        New farmer
-=======
                 <Nav.Link className="sidebar-text" href="/clients" >All farmers</Nav.Link>
                 <Nav.Link className="sidebar-text" role="Farmer" onClick href="/signupEmployee">
                     New farmer
->>>>>>> 493ec3ab3dbe6c6bddd0da8e100c07f1919067a5
                 </Nav.Link>
             </Nav>
 
