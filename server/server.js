@@ -17,6 +17,8 @@ const {toJSON} = require("express-session/session/cookie"); // module for access
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 var timezone = require('dayjs/plugin/timezone');
+var weekOfYear = require('dayjs/plugin/weekOfYear')
+dayjs.extend(weekOfYear)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
 const {v4: uuidv4} = require('uuid');
@@ -316,8 +318,6 @@ app.post('/api/register',
             })()
         }
     });
-
-
 
 app.post('/api/farmerRegister',
     body('name')
@@ -1011,7 +1011,83 @@ app.post('/api/order', async (req, res) => {
 
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
+    let newdate = req.body.newdate ? req.body.newdate : "";
+    let farmerProductsEstimationDeadline = "";      //Farmers provide procucts estimations by Saturday at 9am
+    let clientOrdersDeadlineDOW = "0";                  //Orders from clients are accepted until Sunday at 11pm
+    let clientOrdersDeadlineHour = "23:00"
+    let farmerProductsConfirmationDeadline = "";    //Farmers confirm available products by Monday at 9am
+    let farmerProductsDeliverDeadline = "";         //Farmers deliver their products (to SPG organization) by Tuesday evening
+
+    /*
     console.log("Time machine ACTIVATED! -> "+req.body.newdate)
+    console.log("Today: " + dayjs())
+    console.log(dayjs(req.body.newdate).day()==0 );  //0=Sunday
+    console.log(dayjs(req.body.newdate).isAfter(dayjs()))
+    console.log(dayjs().week())
+    console.log(dayjs(req.body.newdate).week())
+    console.log(dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour)
+    console.log(dayjs(newdate).day()==clientOrdersDeadlineDOW)
+    */
+
+    //If it's clientOrdersDeadline, i have to fullfill the order by all clients
+    //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
+    //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
+
+    if(dayjs(newdate).day()==clientOrdersDeadlineDOW &&  
+       dayjs(newdate).week() == dayjs().week()+1 && 
+       dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour){  //if it's the next Sunday (0=Sunday)
+
+        console.log("It's the next Sunday! It's time to fullfill clients' orders...");
+
+    }
+
+/*
+    if(...){
+        try {
+            const orders = await db.collection('Order').orderBy('Timestamp').get();
+            if (orders.empty) {
+                console.log("No matching documents.");
+                res.status(404).json({error: "No entries (Table: Order)"});
+            } else {
+    
+                let result = [];
+                orders.forEach(order => {
+                    //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                    //console.log(farmer.data());
+    
+                    result.push(new Promise(async (resolve, reject) => {
+                        const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                            console.log("No matching users for " + order.data().ClientID);
+                        }
+    
+                        resolve({
+                            OrderID: order.id,  //maybe it's "order.id"
+                            Status: order.data().Status,
+                            ClientID: client.id,
+                            Client: client.data(),
+                            Timestamp: order.data().Timestamp,
+                            ListOfProducts: order.data().Products
+                        });
+                    }));
+                })
+                const response = Promise.all(result)
+                    .then(r => res.json(r))
+                    .catch(r => res.status(500).json({
+                        info: "Promises error (get all orders)",
+                        error: error
+                    }));
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                info: "The server cannot process the request",
+                error: error
+            });
+        }
+    }
+*/
+
     res.status(200).end();
 })
 
