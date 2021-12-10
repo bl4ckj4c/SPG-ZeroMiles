@@ -35,6 +35,10 @@ const fakeClient = {
     username: 'abc.def@polito.it',
     password: 'test'
 }
+const wrongPasswordClient = {
+    username: 'testname.testsurname3@polito.it',
+    password: 'wrongPassword'
+}
 
 describe("GET for /api/users", () => {
     test('Unauthorized request', (done) => {
@@ -114,78 +118,19 @@ describe("GET for /api/users", () => {
     });
 });
 
-//2 GET productByFarmer
-describe("GET for /api/productByFarmer", () => {
-    test('Unauthorized request', (done) => {
-        chai.request(app)
-            .get('/api/productByFarmer')
-            .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 401
-                expect(res.status).to.be.equal(401);
-                done();
-            });
-    });
-    test('Authorized request', (done) => {
-        //const requester = chai.request(app).keepOpen();
-
-        chai.request(app)
-            .post('/api/login')
-            .type('application/json')
-            .send(JSON.stringify(client))
-            .end((err, res) => {
-                // Now that we are authenticated we send the actual GET
-                chai.request(app)
-                    .get('/api/allProductsByFarmers/12-08-2021%10:32:29')
-                    .set('Cookie', res.header['set-cookie'][0])
-                    .end((err, res) => {
-                        // We should not have error
-                        expect(err).to.be.null;
-                        // Check that the response status is 200
-                        expect(res.status).to.be.equal(200);
-                        // The body received should be an array
-                        expect(res.body).to.be.an("array");
-                        done();
-                    });
-            });
-    });
-});
-
 //3 GET all Farmers
 describe("GET for /api/farmers", () => {
-    test('Unauthorized request', (done) => {
+    test('Get all farmers', (done) => {
         chai.request(app)
             .get('/api/farmers')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
-                // Check that the response status is 401
-                expect(res.status).to.be.equal(401);
+                // Check that the response status is 200
+                expect(res.status).to.be.equal(200);
+                // The body received should be an array
+                expect(res.body).to.be.an("array");
                 done();
-            });
-    });
-    test('Authorized request', (done) => {
-        //const requester = chai.request(app).keepOpen();
-
-        chai.request(app)
-            .post('/api/login')
-            .type('application/json')
-            .send(JSON.stringify(employee))
-            .end((err, res) => {
-                // Now that we are authenticated we send the actual GET
-                chai.request(app)
-                    .get('/api/farmers')
-                    .set('Cookie', res.header['set-cookie'][0])
-                    .end((err, res) => {
-                        // We should not have error
-                        expect(err).to.be.null;
-                        // Check that the response status is 200
-                        expect(res.status).to.be.equal(200);
-                        // The body received should be an array
-                        expect(res.body).to.be.an("array");
-                        done();
-                    });
             });
 
     });
@@ -274,14 +219,14 @@ describe("GET for /api/productsByFarmer", () => {
                     .end((err, res) => {
                         // We should not have error
                         expect(err).to.be.null;
-                        // Check that the response status is 200
+                        // Check that the response status is 401
                         expect(res.status).to.be.equal(401);
                         done();
                     });
             });
     });
 
-    /*test('Authorized request', (done) => {
+    test('Authorized request', (done) => {
         //const requester = chai.request(app).keepOpen();
 
         chai.request(app)
@@ -303,7 +248,7 @@ describe("GET for /api/productsByFarmer", () => {
                         done();
                     });
             });
-    });*/
+    });
 });
 
 //7 GET information about the authenticated user
@@ -347,39 +292,17 @@ describe("GET for /api/userinfo", () => {
 
 //8 GET all products
 describe("GET for /api/products", () => {
-    test('Unauthorized request', (done) => {
+    test('Get all products', (done) => {
         chai.request(app)
             .get('/api/products')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
-                // Check that the response status is 401
-                expect(res.status).to.be.equal(401);
+                // Check that the response status is 200
+                expect(res.status).to.be.equal(200);
+                // The body received should be an array
+                expect(res.body).to.be.an("array");
                 done();
-            });
-    });
-
-    test('Authorized request', (done) => {
-        //const requester = chai.request(app).keepOpen();
-
-        chai.request(app)
-            .post('/api/login')
-            .type('application/json')
-            .send(JSON.stringify(employee))
-            .end((err, res) => {
-                // Now that we are authenticated we send the actual GET
-                chai.request(app)
-                    .get('/api/products')
-                    .set('Cookie', res.header['set-cookie'][0])
-                    .end((err, res) => {
-                        // We should not have error
-                        expect(err).to.be.null;
-                        // Check that the response status is 200
-                        expect(res.status).to.be.equal(200);
-                        // The body received should be an array
-                        expect(res.body).to.be.an("array");
-                        done();
-                    });
             });
     });
 });
@@ -523,11 +446,25 @@ describe("GET for /api/sessions/current", () => {
 
 // POST for login
 describe("POST for /api/login", () => {
-    test('Login with a fake user', (done) => {
+    test('User not found', (done) => {
         chai.request(app)
             .post('/api/login')
             .type('application/json')
             .send(JSON.stringify(fakeClient))
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 404
+                expect(res.status).to.be.equal(404);
+                done();
+            });
+    });
+
+    test('Login with a fake user', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(wrongPasswordClient))
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -632,7 +569,7 @@ describe("POST for /api/register", () => {
     });
 });
 
-// POST farmer registration (add user to database)
+/*// POST farmer registration (add user to database)
 describe("POST for /api/farmerRegister", () => {
     test('Create a new farmer', (done) => {
         chai.request(app)
@@ -660,9 +597,9 @@ describe("POST for /api/farmerRegister", () => {
                 done();
             });
     });
-});
+});*/
 
-// POST place an order in the database
+/*// POST place an order in the database
 describe("POST for /api/order", () => {
     test('Create a new order', (done) => {
         chai.request(app)
@@ -681,9 +618,9 @@ describe("POST for /api/order", () => {
                 done();
             });
     });
-});
+});*/
 
-// POST modify an order in the database
+/*// POST modify an order in the database
 describe("POST for /api/modifyorder", () => {
     test('Modify an order', (done) => {
         chai.request(app)
@@ -702,9 +639,9 @@ describe("POST for /api/modifyorder", () => {
                 done();
             });
     });
-});
+});*/
 
-// POST modify wallet of a user
+/*// POST modify wallet of a user
 describe("POST for /api/modifywallet", () => {
     test('Modify a wallet', (done) => {
         chai.request(app)
@@ -723,9 +660,9 @@ describe("POST for /api/modifywallet", () => {
                 done();
             });
     });
-});
+});*/
 
-// POST check a user
+/*// POST check a user
 describe("POST for /api/checkClient", () => {
     test('Check a user', (done) => {
         chai.request(app)
@@ -749,9 +686,9 @@ describe("POST for /api/checkClient", () => {
                     });
             });
     });
-});
+});*/
 
-// POST add a product
+/*// POST add a product
 describe("POST for /api/addProduct", () => {
     test('Add new product', (done) => {
         chai.request(app)
@@ -837,9 +774,9 @@ describe("POST for /api/addProduct", () => {
                     });
             });
     });
-});
+});*/
 
-// POST delete a product
+/*// POST delete a product
 describe("POST for /api/deleteProduct", () => {
     test('Delete a product', (done) => {
         chai.request(app)
@@ -858,8 +795,9 @@ describe("POST for /api/deleteProduct", () => {
                 done();
             });
     });
-});
+});*/
 
+/*
 // // POST for store a new product with related image into the server
 describe("POST for /api/newproduct", () => {
     test('Create new product', (done) => {
@@ -879,4 +817,4 @@ describe("POST for /api/newproduct", () => {
                 done();
             });
     });
-});
+});*/
