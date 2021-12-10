@@ -571,7 +571,7 @@ app.get('/api/products', async (req, res) => {
 
                     
                         
-                }else {
+                 }else {
                         //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
                             // Farmer
