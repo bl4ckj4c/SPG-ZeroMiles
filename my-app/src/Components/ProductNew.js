@@ -1,6 +1,6 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col,Form, ListGroup, Spinner, Card, Modal, Button } from 'react-bootstrap';
+import { Table, Row, Col,Form, FloatingLabel, ListGroup, Spinner, Card, Modal, Button, FormGroup } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import "./ClientView.css";
 
@@ -106,19 +106,26 @@ function ModalProductNew(props) {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                           </Modal.Body>
-            <Modal.Body>
             <Form onSubmit={(e) => props.submitNewProduct(e)} controlId="my-form">
                 <Form.Group className="mb-3" controlId="name">
-                                <Form.Label className="label">The name of new product:</Form.Label>
-                                <Form.Control type="text" placeholder="Enter name" onChange={(e) => props.setName(e.target.value)} />
-                            </Form.Group>
-                <Form.Group className="mb-3">
-                     <Form.Label className="label">Enter the description of product:</Form.Label>
-                    <Form.Control type="text" controlId="description" placeholder="Enter description" onChange={(e) => props.setDescription(e.target.value)} />
-                 </Form.Group>
-                 <Button onClick={props.submitNewProduct} variant="success">Save</Button>
-                <Button onClick={props.onHide}>Close</Button>
+                    <Form.Label className="label">Name of new product:</Form.Label>
+                    <Form.Control type="text" placeholder="Enter the name of your product" onChange={(e) => props.setName(e.target.value)} />
+                </Form.Group>
+                <Form.Group className="mb-12">
+                    <Form.Label className="label">Enter the description of product:</Form.Label>
+                    <FloatingLabel controlId="floatingTextarea2">
+                       {/* <Form.Control
+                       as="textarea"
+                       placeholder="Leave a comment here"
+                       style={{ height: '100px' }}
+                       /> */}
+                    <Form.Control type="text" as="textarea" style={{ height: '20vh' }} controlid="description" onChange={(e) => props.setDescription(e.target.value)} />
+                    </FloatingLabel>
+                </Form.Group>
+                <Row className="mb-3">
+                  <Button onClick={props.submitNewProduct} variant="success">Save</Button>
+                  {/* <Button onClick={props.onHide}>Close</Button> */}
+                </Row>
             </Form>
             </Modal.Body>
             <Modal.Footer>
