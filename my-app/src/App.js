@@ -90,13 +90,6 @@ function App() {
     });
   }
 
-  const register = () => {
-    API.userLogout().then(() => {
-      setUser({});
-      setLoggedIn(false);
-    });
-  }
-
   let history = useHistory();
 
   return (

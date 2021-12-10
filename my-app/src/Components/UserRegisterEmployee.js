@@ -324,8 +324,4 @@ function UserRegisterEmployee(props) {
 
     // TODO: Catch the server response to show a message with the status   
 }
-<<<<<<< HEAD
-export default UserRegister;
-=======
 export default UserRegisterEmployee;
->>>>>>> 493ec3ab3dbe6c6bddd0da8e100c07f1919067a5
