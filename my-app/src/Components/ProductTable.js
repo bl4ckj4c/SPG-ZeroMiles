@@ -48,9 +48,17 @@ function ProductTable(props) {
 
 
             setUpdate(false);
-            props.isLoggedIn ? <></> : setWelcomeShow(true);
+            
         }
     }, [update]);
+
+     useEffect(() => {
+        if (!props.isLoggedIn)
+        setWelcomeShow(true);
+        else
+        setWelcomeShow(false);
+
+    }, [props.isLoggedIn]);
 
     useEffect(() => {
         if (!farmerListUpdated && !productByFarmerListUpdated)

@@ -750,11 +750,12 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
                             ProductID: prodfarm.data().ProductID,
                             NameProduct: product.data().Name,
 /*                             Description: product.data().Description,
-                          ImageID: product.data().ImageID, */  
+                          */  
                             // Product by farmer
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
-                            Price: prodfarm.data().Price
+                            Price: prodfarm.data().Price,
+                            ImageID: product.data().ImageID
                         });
 
                         //  console.log(farmer.data().Name + " offers " +
@@ -764,7 +765,8 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
                 }));
             });
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                            res.json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error

@@ -1,12 +1,14 @@
-import { Form, Card,ListGroup,  Table, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
+import { Form, Image, Card,ListGroup,  Table, InputGroup, Button, Col, Container, Modal,Row } from 'react-bootstrap';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import API from '../API';
 import { useState, useEffect } from 'react'
 import "./FarmerProducts.css";
+import ProductNew from "./ProductNew"
 
 function FarmerProducts(props) {
     console.log("HERE");
     const [products, setProducts] = useState([]);
+    const [updateProducts, setUpdateProducts] = useState(true);
     const [updated, setUpdated] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState([]);
     const [productsByFarmer, setProductsByFarmer] = useState(false);
@@ -14,15 +16,15 @@ function FarmerProducts(props) {
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
 
     var dayjs = require('dayjs');
-    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
+    let date = dayjs().format('MM-DD-YYYY');
 
-    //example of usage: {date = props.timeMachine ? props.timeMachine.toString() : date}
+    
 
     async function addProdTest(prod){
 
         try{
-
-        let result = await API.addProduct(prod);
+        let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
+        let result = await API.addProduct(prod, passedDate);
         setProductsByFarmerUpdate(true);
         setSelectedProduct([]);
         }
@@ -47,18 +49,22 @@ function FarmerProducts(props) {
     }
 
     useEffect(() => {
+      if(updateProducts){
         API.getAllProducts()
             .then(p => {
                 // filter the products that are already present in ProductByFarmer table
                 setProducts(p); 
                 setUpdated(true);
+                setUpdateProducts(false);
             }).catch(f => console.log(f));
+          }
     }
-        , []);
+        , [props.timeMachine, updateProducts]);
 
     useEffect(() => {
+      let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
         if (ProductsByFarmerUpdate) {
-        API.getProductsByFarmer()
+        API.getProductsByFarmer(passedDate)
             .then(p => {
                 setProductsByFarmer(p);
                 setProductsByFarmerUpdate(false);
@@ -77,7 +83,7 @@ function FarmerProducts(props) {
 
           <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
           <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)}>Add product</Button>
-
+          <ProductNew UpdateProdList={() => setUpdateProducts(true)}/>
           <Table className="d-flex justify-content-center">
           <tbody id="prod-table" align="center">
             {productsByFarmer !== false ? productsByFarmer.map(p => 
@@ -95,19 +101,24 @@ function FarmerProducts(props) {
 
 function ProductCard(props) {
   const [show, setShow] = useState(false);
+  const [showPic, setShowPic] = useState(false);
 
+  let newSrc = "http://localhost:3001/images/" + props.p.ImageID + ".png"
+
+
+//TODO: see if we can make the image responsive using className="img-fluid"
 
   return (
       <>
-          <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
-
+      <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
+      <PictureModal src={newSrc} show={showPic} onHide={()=> setShowPic(false)} />
       <Card className="client-card mt-3">
 
           <Card.Body>
               <Row>
                   <Col md={4}>
-{/*                      <PersonCircle size={60} style={{ marginBottom: '6px', marginRight: '5px' }} />
- */}                  </Col>
+                  <Image className="img-fluid" onClick={()=> setShowPic(true)} src={newSrc} height={"80 px"} rounded />
+                  </Col>
                   <Col md={8}>
                       <Card.Title style={{ fontSize: 28 }}> {props.p.NameProduct}</Card.Title>
                   </Col>
@@ -289,6 +300,27 @@ function AddProductModal(props) {
   }
   
 
+function PictureModal(props){
+  return (
+    <Modal
+      show={props.show}
+      onHide={props.onHide}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Header closeButton></Modal.Header>
+      <Modal.Body>
+            <Image className="img-fluid" src={props.src} />
+      </Modal.Body>
+
+    </Modal>
+  );
+
+
+
+
+}
 
 function ProductsDropdown(props) {
 
