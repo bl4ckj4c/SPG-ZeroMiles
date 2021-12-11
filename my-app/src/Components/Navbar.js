@@ -41,7 +41,8 @@ function ZeroNavbar(props) {
     function handleClose(newdate) {
         setModalShow(false);
         handleCloseSide();
-        props.setTimeMachine(newdate);
+        if(newdate)
+             props.setTimeMachine(newdate);
     }
 
     return (

@@ -603,7 +603,8 @@ app.get('/api/products', async (req, res) => {
                 }));
             });
             const response = Promise.all(result)
-                .then(r => res.status(201).json(r))
+                .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                res.status(201).json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error

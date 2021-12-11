@@ -6,7 +6,7 @@ import "./FarmerProducts.css";
 import ProductNew from "./ProductNew"
 
 function FarmerProducts(props) {
-    console.log("HERE");
+    console.log("tempo"+props.timeMachine().toString());
     const [products, setProducts] = useState([]);
     const [updateProducts, setUpdateProducts] = useState(true);
     const [updated, setUpdated] = useState(false);
@@ -16,12 +16,10 @@ function FarmerProducts(props) {
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
     const [isAllowedAddProduct, setIsAllowedAddProduct] = useState(false)
     var dayjs = require('dayjs');
-    let date = dayjs().format('MM-DD-YYYY');
-
 
 useEffect(() => {
 
-    const currentDay = dayjs(props.timeMachine)
+    const currentDay = dayjs(props.timeMachine().toString())
     const day = currentDay.day()
     
     if (day === 6 || day === 0){
@@ -40,8 +38,7 @@ useEffect(() => {
     async function addProdTest(prod){
 
         try{
-        let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
-        let result = await API.addProduct(prod, passedDate);
+        let result = await API.addProduct(prod, props.timeMachine().toString());
         setProductsByFarmerUpdate(true);
         setSelectedProduct([]);
         }
@@ -79,9 +76,8 @@ useEffect(() => {
         , [props.timeMachine, updateProducts]);
 
     useEffect(() => {
-      let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
         if (ProductsByFarmerUpdate) {
-        API.getProductsByFarmer(passedDate)
+        API.getProductsByFarmer(props.timeMachine().toString())
             .then(p => {
                 setProductsByFarmer(p);
                 setProductsByFarmerUpdate(false);
