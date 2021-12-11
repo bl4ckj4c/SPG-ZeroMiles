@@ -617,52 +617,137 @@ describe("POST for /api/register", () => {
     });
 });
 
-/*// POST farmer registration (add user to database)
+// POST farmer registration (add user to database)
 describe("POST for /api/farmerRegister", () => {
     test('Create a new farmer', (done) => {
         chai.request(app)
-            .post('/api/farmerRegister')
+            .post('/api/register')
             .type('application/json')
             .send(JSON.stringify({
                 name: 'testName',
                 surname: 'testSurname',
                 email: 'abcdef.polito@polito.it',
                 address: 'Via Test 42',
+                company: 'Company Test',
                 phone: '0123456789',
                 city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 201
+                expect(res.status).to.be.equal(201);
+
+                // Remove the new user from firebase
+                const users = await db.collection("User").where("Email", "==", 'abcdef.polito@polito.it').get();
+                users.forEach(user => {
+                    db.collection('User').doc('' + user.id).delete();
+                });
+
+                // Remove the new farmer from firebase
+                const farmers = await db.collection("Farmer").where("Email", "==", 'abcdef.polito@polito.it').get();
+                farmers.forEach(farmer => {
+                    db.collection('Farmer').doc('' + farmer.id).delete();
+                });
+                done();
+            });
+    });
+
+    test('Create a new farmer with an email already used', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'testName',
+                surname: 'testSurname',
+                email: 'mara.maionchi@hotmail.com',
+                address: 'Via Test 42',
                 company: 'Company Test',
-                password: 'test'
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
             }))
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
+                // Check that the response status is 409
+                expect(res.status).to.be.equal(409);
                 done();
             });
     });
-});*/
+
+    test('Create a new farmer with one wrong field', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: '123',
+                surname: 'testSurname',
+                email: 'abcdef.polito@polito.it',
+                address: 'Via Test 42',
+                company: 'Company Test',
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+
+    test('Create a new farmer with wrong fields', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: '123',
+                surname: '456',
+                email: 'wrongEmail',
+                address: 'x',
+                company: '',
+                phone: 'qwerty',
+                city: 'Torino',
+                password: '',
+                zipcode: 'efg',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+});
 
 /*// POST place an order in the database
 describe("POST for /api/order", () => {
-    test('Create a new order', (done) => {
+    test('Create an order', (done) => {
         chai.request(app)
             .post('/api/order')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify({
+                "UserID": 'WhHsq8VYFB2Uoyc1sSst',
+                "items": [],
+                "timestamp": '08-12-2021 14:30'
+            }))
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
+                // Check that the response status is 201
+                expect(res.status).to.be.equal(201);
                 done();
             });
     });
@@ -845,21 +930,27 @@ describe("POST for /api/deleteProduct", () => {
     });
 });*/
 
-/*
-// // POST for store a new product with related image into the server
+
+/*// POST for store a new product with related image into the server
 describe("POST for /api/newproduct", () => {
     test('Create new product', (done) => {
         chai.request(app)
             .post('/api/newproduct')
-            .type('application/json')
-            .send(JSON.stringify({}))
+            .field({
+                productJson: JSON.stringify({
+                    Name: 'testProduct',
+                    Description: 'testDescription'
+                }),
+                newproductimage: ''
+            })
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
+                // Check that the response status is 201
+                expect(res.status).to.be.equal(201);
 
-                // Remove the new farmer from firebase
+                // Remove the new product from firebase
+                let imageId = JSON.parse(res.body).split('-> ')[1];
 
 
                 done();
