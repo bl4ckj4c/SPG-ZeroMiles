@@ -9,10 +9,12 @@ import DeLorean from "../Images/DeLorean.js";
 import API from '../API';
 
 function ZeroNavbar(props) {
+    const [modalShow, setModalShow] = useState(false); //for the time machine
+    const handleOpenSide = () => props.setSideShow(true);
+    const handleCloseSide = () => props.setSideShow(false);
+
     const location = useLocation();
     const history = useHistory();
-
-    const [modalShow, setModalShow] = useState(false);
 
     function handleLogout() {
         props.logout();
@@ -20,6 +22,7 @@ function ZeroNavbar(props) {
     }
 
     function handleHome() {
+        handleCloseSide();
         history.push('/');
     }
 
@@ -37,6 +40,7 @@ function ZeroNavbar(props) {
 
     function handleClose(newdate) {
         setModalShow(false);
+        handleCloseSide();
         props.setTimeMachine(newdate);
     }
 
@@ -55,12 +59,14 @@ function ZeroNavbar(props) {
                     </div>
                 </> : <>
 
-                    <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" />
+                    <Navbar.Toggle aria-controls="offcanvasNavbar" className="posizionamento-pulsante" onClick={handleOpenSide}/>
                     <Navbar.Offcanvas
                         id="offcanvasNavbar"
                         aria-labelledby="offcanvasNavbarLabel"
                         placement="end"
                         className="bg-sidebar"
+                        show={props.sideShow}
+                        onHide={handleCloseSide}
                     >
                         <Offcanvas.Header closeButton>
                             <Offcanvas.Title id="offcanvasNavbarLabel" style={{ fontSize: 25, color: "black" }}>Welcome back, {props.user.Name}!</Offcanvas.Title>
@@ -68,9 +74,13 @@ function ZeroNavbar(props) {
 
                         <Offcanvas.Body>
                             <Row style={{ textAlign: 'center' }}>
-                                <Col>
-                                    <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
-                                </Col>
+
+                                {location.pathname === '/' ? <></> : <>
+                                    <Col>
+                                        <Button className="logout-button" variant="outline-dark" size="sm" onClick={handleHome}><House style={{ marginTop: '-4px', marginRight: '4px' }} />Home</Button>
+                                    </Col>
+                                </>
+                                }
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
@@ -85,11 +95,11 @@ function ZeroNavbar(props) {
                             </Row>
 
 
-                            {props.user.Role === "Employee" ? <EmployeeSidebar /> : <></>}
+                            {props.user.Role === "Employee" ? <EmployeeSidebar setSideShow={props.setSideShow}/> : <></>}
 
-                            {props.user.Role === "Client" ? <ClientSidebar /> : <></>}
+                            {props.user.Role === "Client" ? <ClientSidebar setSideShow={props.setSideShow}/> : <></>}
 
-                            {props.user.Role === "Farmer" ? <FarmerSidebar /> : <></>}
+                            {props.user.Role === "Farmer" ? <FarmerSidebar setSideShow={props.setSideShow}/> : <></>}
 
                         </Offcanvas.Body>
 
@@ -164,33 +174,33 @@ function TimeMachine(props) {
 
 
 function EmployeeSidebar(props) {
+    const history = useHistory();
+
     return (
         <>
             <Offcanvas.Title className="mt-3 nav-subtitle">ORDERS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/orders/all" >All</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/orders/open">Open</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/orders/pending">Pending</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/orders/closed">Closed</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/all');}} >All</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/open');}}>Open</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/pending');}}>Pending</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/closed');}}>Closed</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">CLIENTS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/clients" >All clients</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/signup">New client</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/clients');}} >All clients</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/signupClient');}}>New client</Nav.Link>
             </Nav>
             <Offcanvas.Title className="mt-3 nav-subtitle">FARMER</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/clients" >All farmers</Nav.Link>
-                <Nav.Link className="sidebar-text" role="Farmer" onClick href="/signupEmployee">
-                    New farmer
-                </Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/farmers');}} >All farmers</Nav.Link>
+                <Nav.Link className="sidebar-text" role="Farmer" onClick={() => {props.setSideShow(false); history.push('/signupEmployee');}}>New farmer</Nav.Link>
             </Nav>
 
             <WelcomeFarmerSidebar className="side-farmer" />
@@ -199,20 +209,21 @@ function EmployeeSidebar(props) {
     );
 }
 function FarmerSidebar(props) {
+    const history = useHistory();
     return (
         <>
             <Offcanvas.Title className="mt-3 nav-subtitle">PRODUCTS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/farmerview">My products</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/farmerview');}}>My products</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/profile');}}>My profile</Nav.Link>
             </Nav>
 
         </>
@@ -222,22 +233,22 @@ function FarmerSidebar(props) {
 
 
 function ClientSidebar(props) {
-
+    const history = useHistory();
     return (
         <>
             <Offcanvas.Title className="mt-3 nav-subtitle">ORDERS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/myorders">My orders</Nav.Link>
-                <Nav.Link className="sidebar-text" href="/deliver">Delivery</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/myorders');}}>My orders</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/deliver');}}>Delivery</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/profile">My profile</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/profile');}}>My profile</Nav.Link>
             </Nav>
 
         </>

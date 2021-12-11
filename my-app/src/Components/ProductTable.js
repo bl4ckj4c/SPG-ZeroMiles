@@ -52,18 +52,16 @@ function ProductTable(props) {
         }
     }, [update]);
 
-     useEffect(() => {
+    useEffect(() => {
         if (!props.isLoggedIn)
         setWelcomeShow(true);
         else
-        setWelcomeShow(false);
-
+        props.setSideShow(false); 
     }, [props.isLoggedIn]);
 
     useEffect(() => {
         if (!farmerListUpdated && !productByFarmerListUpdated)
             setLoading(false);
-
     }, [farmerListUpdated, productByFarmerListUpdated]);
 
     if (!loading)
@@ -120,7 +118,6 @@ function ProductTableWrapped(props) {
         let tmp = []
         props.productByFarmer.forEach(p => tmp.push({ "number": 0, "ProductID": p.ProductID, "FarmerID": p.FarmerID, "NameProduct": p.NameProduct, "ImageID": p.ImageID, "Price": p.Price }))
         return tmp;
-
     }
 
     //this function updates the number in the array, also allows to display the current number in the counter
@@ -143,22 +140,16 @@ function ProductTableWrapped(props) {
             prodNumCopy[i].number = 0;
             console.log("updN " + input + prodNumCopy[i].number);
 
-        }
-        else {
+        } else {
             if (input > product.Quantity)
                 prodNumCopy[i].number = product.Quantity;
             else
                 prodNumCopy[i].number = input;
-
-
         }
-
         setProdNum(prodNumCopy);
-
     }
 
     async function submitOrder() {
-
         try {
             let customerID;
             var dayjs = require('dayjs');
@@ -190,7 +181,6 @@ function ProductTableWrapped(props) {
                 let res = await API.addOrder(object);
                 handleCartCheckoutModalClose();
                 handleShowConfirm(); //show the modal
-
             }
             else {
                 handleShowError(); //Se non ho selezionato alcun prodotto o cliente
@@ -211,7 +201,6 @@ function ProductTableWrapped(props) {
                 </Row>
 
                 {props.isLoggedIn ?
-
 
                     props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
