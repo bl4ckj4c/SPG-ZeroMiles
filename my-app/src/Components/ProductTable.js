@@ -22,9 +22,6 @@ function ProductTable(props) {
     const [welcomeShow, setWelcomeShow] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    var dayjs = require('dayjs');
-    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
-
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
@@ -32,9 +29,7 @@ function ProductTable(props) {
             setFarmerListUpdated(true);
             setLoading(true);
 
-            date = props.timeMachine ? props.timeMachine.toString() : date;
-
-            API.getAllProductsByFarmers(date)
+            API.getAllProductsByFarmers(props.timeMachine().toString())
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
@@ -152,8 +147,6 @@ function ProductTableWrapped(props) {
     async function submitOrder() {
         try {
             let customerID;
-            var dayjs = require('dayjs');
-            let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
 
             if (props.isLoggedIn)
                 if (props.user.Role === "Employee") {
@@ -169,13 +162,11 @@ function ProductTableWrapped(props) {
             if (items.length === 0)
                 throw { err: "No products selected" };
 
-            date = props.timeMachine ? props.timeMachine.toString() : date;
-
             if (items.length > 0 && (selectedUser.length > 0 || props.user.Role !== "Employee")) {
                 let object = {
                     "UserID": customerID,
                     "items": items,
-                    "timestamp": date
+                    "timestamp": props.timeMachine().toString()
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
