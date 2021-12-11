@@ -297,7 +297,7 @@ async function modifyOrderStatus(order){
 
   async function createDelivery(newDelivery) {
     const formData  = new FormData();
-    formData.append('productJson', JSON.stringify(newDelivery));
+    formData.append('deliveryJson', JSON.stringify(newDelivery));
 
 
     const response = await fetch(BASEURL + "/ ", {
