@@ -14,12 +14,29 @@ function FarmerProducts(props) {
     const [productsByFarmer, setProductsByFarmer] = useState(false);
     const [addProdShow, setAddProdShow] = useState(false);
     const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] =  useState(true);
-
+    const [isAllowedAddProduct, setIsAllowedAddProduct] = useState(false)
     var dayjs = require('dayjs');
     let date = dayjs().format('MM-DD-YYYY');
 
-    
 
+useEffect(() => {
+
+    const currentDay = dayjs(props.timeMachine)
+    const day = currentDay.day()
+    
+    if (day === 6 || day === 0){
+        setIsAllowedAddProduct(false);
+    }
+    else{
+        setIsAllowedAddProduct(true)
+    }
+
+    console.log('dsafasgfhsaklfsafsaf')
+
+
+},[])
+
+    
     async function addProdTest(prod){
 
         try{
@@ -81,9 +98,9 @@ function FarmerProducts(props) {
   if (updated) return (
     <Container className="search-container"  >
 
-          <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
+          <ProductsDropdown isAllowedAddProduct = {isAllowedAddProduct} products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
           <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)}>Add product</Button>
-          <ProductNew UpdateProdList={() => setUpdateProducts(true)}/>
+          <ProductNew isAllowedAddProduct={isAllowedAddProduct} UpdateProdList={() => setUpdateProducts(true)}/>
           <Table className="d-flex justify-content-center">
           <tbody id="prod-table" align="center">
             {productsByFarmer !== false ? productsByFarmer.map(p => 
@@ -332,6 +349,7 @@ function ProductsDropdown(props) {
         <>
             <Form.Group>
                 <Typeahead
+                    disabled = {props.isAllowedAddProduct ? false :true}
                     filterBy={filterByFields}
                     id="basic-typeahead-single"
                     labelKey={(option) => `${option.Name}`}
