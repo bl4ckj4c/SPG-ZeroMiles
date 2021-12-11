@@ -85,7 +85,7 @@ function App() {
       setLoggedIn(false);
     });
   }
-  
+
   const register = () => {
     API.userLogout().then(() => {
       setUser({});
@@ -132,11 +132,6 @@ function App() {
           {/* Signup by user */}
         <Route exact path="/signupClient">
           <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-        </Route>
-
-        { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
-        <Route exact path="/signupEmployee">
-          <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
 
         { /* Signup by employee (allow create farmer and user with wallet asignation)*/}

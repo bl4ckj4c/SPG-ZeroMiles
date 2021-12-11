@@ -231,7 +231,6 @@ function FarmerSidebar(props) {
 }
 
 
-
 function ClientSidebar(props) {
     const history = useHistory();
     return (
