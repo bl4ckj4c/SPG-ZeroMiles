@@ -1035,66 +1035,68 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
-        let result = [];
-
-
-        let productByFarmer = await db.collection('Product by Farmers').get()
-        //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
-
-        if (productByFarmer.empty) {
-            console.log("No entries (Table: product by farmers)");
-            res.status(404).json({error: "No entries (Table: product by farmers)"});
+        const order = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()
+        if(!order.empty){  //if the client has an open order, add products to that order
+            //create a new ListOfProducts with order.ListOfProducts + new products and update it
         }
+        else{  //otherwise let's create a new one
+            let result = [];
 
-        //for each product in the order
-        let quantity = 0;
-        req.body.items.forEach(product => {
-            quantity = quantity + product.number * product.Price;
-            productByFarmer.forEach(prodfarm => {
-                if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
-                    console.log("Not enough products (" + product.NameProduct + ")");
-                    res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
-                }
-            })
-
-        })
-        
-        console.log("creating new order");
-        console.log(quantity);
-        let newOrder = {}
-        newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
-        newOrder.Status = "open";
-        newOrder.ClientID = req.body.UserID;
-        newOrder.Products = req.body.items;
-        newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
-        newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
-
-        (async () => {
-            try {
-                //console.log(newOrder);
-                await db.collection("Order").add(newOrder);
-            } catch (error) {
-                console.log(error);
-                res.json(error);
+            let productByFarmer = await db.collection('Product by Farmers').get()
+            //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
+            if (productByFarmer.empty) {
+                console.log("No entries (Table: product by farmers)");
+                res.status(404).json({error: "No entries (Table: product by farmers)"});
             }
-        })()
 
-        req.body.items.forEach(product => {
-            productByFarmer.forEach(prodfarm => {
-                if (product.ProductID == prodfarm.data().ProductID) {
-                    let newQuantity = prodfarm.data().Quantity - product.number;
-                    result.push(new Promise(async (resolve, reject) => {
-
-                        await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
-                        resolve("QUANTITYUPDATE");
-                    }))
-                }
+            //for each product in the order
+            let quantity = 0;
+            req.body.items.forEach(product => {
+                quantity = quantity + product.number * product.Price;
+                productByFarmer.forEach(prodfarm => {
+                    if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
+                        console.log("Not enough products (" + product.NameProduct + ")");
+                        res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
+                    }
+                })
             })
-        })
-        Promise.all(result);
-        res.status(201).end();
+            
+            console.log("creating new order");
+            console.log(quantity);
+            let newOrder = {}
+            newOrder.Price = quantity;
+            newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
+            newOrder.Status = "open";
+            newOrder.ClientID = req.body.UserID;
+            newOrder.Products = req.body.items;
+            newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
+            newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
 
+            (async () => {
+                try {
+                    //console.log(newOrder);
+                    await db.collection("Order").add(newOrder);
+                } catch (error) {
+                    console.log(error);
+                    res.json(error);
+                }
+            })()
+
+            req.body.items.forEach(product => {
+                productByFarmer.forEach(prodfarm => {
+                    if (product.ProductID == prodfarm.data().ProductID) {
+                        let newQuantity = prodfarm.data().Quantity - product.number;
+                        result.push(new Promise(async (resolve, reject) => {
+
+                            await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
+                            resolve("QUANTITYUPDATE");
+                        }))
+                    }
+                })
+            })
+            Promise.all(result);
+            res.status(201).end();
+        }
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -1110,27 +1112,9 @@ app.post('/api/timeMachine',async(req,res)=>{
     let purchaseTriggerDOW = "1";   
     let purchaseTriggerHour = "9:00";
 
-    //let response = await db.collection('User').doc("9RSQKtDkcfB949GDA3SX").update({Wallet: 0});
-    
-    /*orders.docs.map(order => order.data())
-    for(const order of orders){
-        console.log(order)
-    }*/
-    /*
-    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
-    console.log("Today: " + dayjs())
-    console.log(dayjs(req.body.newdate).day()==0 );  //0=Sunday
-    console.log(dayjs(req.body.newdate).isAfter(dayjs()))
-    console.log(dayjs().week())
-    console.log(dayjs(req.body.newdate).week())
-    console.log(dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour)
-    console.log(dayjs(newdate).day()==clientOrdersDeadlineDOW)
-    */
-
     //If it's clientOrdersDeadline, i have to fullfill the order by all clients
     //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
     //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
-
 
     if(dayjs(newdate).day()==purchaseTriggerDOW &&  
        dayjs(newdate).week() == dayjs().week() && 
@@ -1161,7 +1145,32 @@ app.post('/api/timeMachine',async(req,res)=>{
                     let responseresult = [];
 
                     for(const entry of result){
-
+                        responseresult.push(
+                            new Promise(async (resolve, reject) => {
+                                let client = await db.collection('User').doc("" + entry.ClientID).get();
+                                if (!client.exists) {
+                                    console.log("No matching users for " + entry.data().ClientID);
+                                }
+                                else{
+                                    if(entry.Wallet > entry.Price){
+                                        let newwallet = entry.Wallet - entry.Price;
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
+                                        await db.collection('User').doc(entry.ClientID).update({Wallet: newwallet});
+                                        resolve({
+                                            orderID: entry.OrderID,
+                                            status: "fullfilled"
+                                        })
+                                    }
+                                    else{
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                        resolve({
+                                            orderID: entry.OrderID,
+                                            status: "cancelled"
+                                        })
+                                    }
+                                }
+                            })
+                        )
                         /*
                         let client = await db.collection('User').doc("" + entry.ClientID).get();
                         if (!client.exists) {  
@@ -1178,32 +1187,15 @@ app.post('/api/timeMachine',async(req,res)=>{
                             }
                         }
                         */
-
-                        /*
-                        responseresult.push(
-                            new Promise(async (resolve, reject) => {
-                                let client = await db.collection('User').doc("" + entry.ClientID).get();
-                                if (!client.exists) {  
-                                    console.log("No matching users for " + order.data().ClientID);
-                                }
-                                else{
-                                    if(entry.Wallet){
-                                        await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
-                                        await db.collection('User').doc(entry.ClientID).update({Wallet: 0});
-                                    }
-                                    else{
-                                        await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
-                                        //* warning in response: order cancelled due to insufficient wallet balance 
-                                    }
-                                }
-                            })
-                        )
-                        */
-
                     }
+                    Promise.all(responseresult).then(responseresult => res.json(responseresult))
+                    .catch(r => res.status(500).json({
+                        info: "Promises error (process orders)",
+                        error: error
+                    }))
                 })
                 .catch(r => res.status(500).json({
-                    info: "Promises error (get all cancelled orders)",
+                    info: "Promises error (get all orders)",
                     error: error
                 }));
             }
