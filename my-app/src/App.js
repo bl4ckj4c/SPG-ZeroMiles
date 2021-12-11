@@ -27,7 +27,7 @@ function App() {
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
   const [sideShow, setSideShow] = useState(false); //for the sidebar
-  const [timeMachine, setTimeMachine] = useState('');
+  const [timeMachine, setTimeMachine] = useState(dayjs('12-15-2021')); //this is now static, implement time mach. functionality
   let history = useHistory();
 
   const timedev = true; //set at false to disable the time machine
