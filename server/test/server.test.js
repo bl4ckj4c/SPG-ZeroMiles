@@ -567,6 +567,54 @@ describe("POST for /api/register", () => {
                 done();
             });
     });
+
+    test('Create a new user with one wrong field', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: '123',
+                surname: 'testSurname',
+                email: 'abcdef.polito@polito.it',
+                address: 'Via Test 42',
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+
+    test('Create a new user with wrong fields', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: '123',
+                surname: '456',
+                email: 'wrongEmail',
+                address: 'x',
+                phone: 'a',
+                city: '123',
+                password: '',
+                zipcode: 'asd',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
 });
 
 /*// POST farmer registration (add user to database)
