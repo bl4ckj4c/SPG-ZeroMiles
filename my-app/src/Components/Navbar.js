@@ -239,7 +239,7 @@ function ClientSidebar(props) {
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/orders/myorders');}}>My orders</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/myorders');}}>My orders</Nav.Link>
                 <Nav.Link className="sidebar-text" onClick={() => {props.setSideShow(false); history.push('/deliver');}}>Delivery</Nav.Link>
             </Nav>
 
