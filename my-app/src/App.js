@@ -26,6 +26,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
+  const [sideShow, setSideShow] = useState(false); //for the sidebar
   const [timeMachine, setTimeMachine] = useState('');
   let history = useHistory();
 
@@ -84,6 +85,7 @@ function App() {
       setLoggedIn(false);
     });
   }
+
   const register = () => {
     API.userLogout().then(() => {
       setUser({});
@@ -104,21 +106,9 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-      <ZeroNavbar
-        isLoggedIn={loggedIn}
-        user={user}
-        logout={logout}
-        timedev={timedev}
-        setTimeMachine={setTimeMachine}
-        />
+      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
 
       <Switch>
-
-        <Route exact path="/signout">
-          {loggedIn ? <Redirect to="/" /> : ''}
-          <Welcome/>
-        </Route>
-
         <Route exact path="/">
 
             {/*loading ? <Row className="justify-content-center mt-5">
@@ -127,7 +117,12 @@ function App() {
               <ProductTable  isLoggedIn={loggedIn} user={user} />}
             */}
             
-            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={timeMachine} />
+            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={timeMachine} setSideShow={setSideShow}/>
+        </Route>
+
+        <Route exact path="/signout">
+          {loggedIn ? <Redirect to="/" /> : ''}
+          <Welcome/>
         </Route>
 
         <Route exact path="/login">
@@ -138,13 +133,6 @@ function App() {
         <Route exact path="/signupClient">
           <UserRegister setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
         </Route>
-
-        { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
-        <Route exact path="/signupEmployee">
-          <UserRegisterEmployee setLoggedIn={setLoggedIn} loggedIn={loggedIn} />
-        </Route>
-
-
 
         { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
         <Route exact path="/signupEmployee">
