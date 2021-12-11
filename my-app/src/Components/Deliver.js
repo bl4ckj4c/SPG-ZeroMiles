@@ -13,9 +13,8 @@ import "react-datepicker/dist/react-datepicker.css";
 
 function Deliver(props) {
     const [address, setAddress] = useState('');
-    const [startDateDelivery, setStartDateDelivery] = useState(new Date());
+    const [dateDelivery, setDateDelivery] = useState(new Date());
     const [timeDelivery, setTimeDelivery] = useState('');
-    const [hourDelivery, setHourDelivery] = useState('');
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
   
@@ -33,7 +32,8 @@ function Deliver(props) {
 
         let object = {
             "address": address,
-            "date": startDateDelivery
+            "date": dateDelivery,
+            "time": timeDelivery
         }
         //let res = await API.createProduct(object);
         console.log(object);
@@ -54,7 +54,8 @@ function Deliver(props) {
                     <ModalDeliveryNew
                          setAddress={setAddress}
                       /*  setStartDate={setStartDate} */
-                        setStartDateDelivery={setStartDateDelivery}
+                        setDateDelivery={setDateDelivery}
+                        setTimeDelivery={setTimeDelivery}
                         submitDelivery={submitDelivery}
                         show={modalShowProductNew}
                         onHide={() => setModalShowProductNew(false)}/>
@@ -73,23 +74,24 @@ function DeliveryBottom(props) {
     );
 }
 
-const TimeDeliveryRow = (props) => {
+const DateDeliveryRow = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     return (                                   
       <DatePicker selected={startDate}
        onChange={(date) => setStartDate(date)}
-       onChange={(date) => props.setStartDateDelivery(date)}
+       onChange={(date) => props.setDateDelivery(date)}
        />
     );
   };
 
-  const TimeForm = () => {
+  const TimeDeliveryRow = (props) => {
     const [value, onChange] = useState('10:00');
   
     return (
       <div>
         <TimePicker
           onChange={onChange}
+          onChange={(time) => props.setTimeDelivery(time)}
           value={value}
         />
       </div>
@@ -115,12 +117,12 @@ function ModalDeliveryNew(props) {
                         <Form.Control type="text" placeholder="Enter address"
                                       onChange={(e) => props.setAddress(e.target.value)}/>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="timeDelivery">
+                    <Form.Group className="mb-3" controlId="dateDelivery">
                         <Form.Label className="label">Date for delivery</Form.Label>
-                   <TimeDeliveryRow setStartDateDelivery={props.setStartDateDelivery} ></TimeDeliveryRow>
+                   <DateDeliveryRow setDateDelivery={props.setDateDelivery} ></DateDeliveryRow>
                    </Form.Group>
-                   <Form.Group className="mb-3" controlId="hourDelivery">
-                        <TimeForm />
+                   <Form.Group className="mb-3" controlId="timeDelivery">
+                        <TimeDeliveryRow setTimeDelivery={props.setTimeDelivery} />
                   </Form.Group>
                     
                     <Button onClick={props.submitDelivery} variant="success">Create</Button>
