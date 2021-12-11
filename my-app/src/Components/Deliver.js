@@ -30,13 +30,13 @@ function Deliver(props) {
     async function submitDelivery() {
 
 
-        let object = {
+        let objectDelivery = {
             "address": address,
             "date": dateDelivery,
             "time": timeDelivery
         }
-        //let res = await API.createProduct(object);
-        console.log(object);
+        let res = await API.createDelivery(objectDelivery);
+        console.log(objectDelivery);
     }
 
     return (
