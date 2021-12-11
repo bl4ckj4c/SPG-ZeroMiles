@@ -104,8 +104,8 @@ useEffect(() => {
            ) : ""}
             </tbody>
           </Table>
-        <AddProductModal addProdTest={addProdTest} product={selectedProduct.length > 0 ? selectedProduct[0] : null} show={addProdShow} onHide={() => setAddProdShow(false)} />
-      
+        <ProductByFarmerModal Edit={false} addProdTest={addProdTest} p={selectedProduct.length > 0 ? selectedProduct[0] : null} show={addProdShow} onHide={() => setAddProdShow(false)} />
+
     </Container >)
     else return "";
 
@@ -123,7 +123,7 @@ function ProductCard(props) {
 
   return (
       <>
-      <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
+      <ProductByFarmerModal Edit={true} addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)} />
       <PictureModal src={newSrc} show={showPic} onHide={()=> setShowPic(false)} />
       <Card className="client-card mt-3">
 
@@ -156,111 +156,16 @@ function ProductCard(props) {
   );
 }
 
+  function ProductByFarmerModal(props){
+    
 
-
-function ProductCard2(props){
-    const [show, setShow] = useState(false);
-
-
-    return (
-        <>
-        <EditProductModal addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)}/>
-        <Card  className="createSurCardMargin">
-          <Card.Header >
-            <svg onClick={() => setShow(true)} xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-            </svg>
-            <svg  xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-trash createSurUpDownDeleteMargin" viewBox="0 0 16 16">
-              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-              <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-            </svg>
-            {props.p.NameProduct}
-            <Card.Subtitle  >
-            Quantity: {props.p.Quantity} Unit: {props.p.UnitOfMeasurement} Price: {props.p.Price}
-             </Card.Subtitle>
-
-          </Card.Header>
-
-        </Card>
-</>
-      );
-
-}
-
-
-function AddProductModal(props) {
-    const [price, setPrice] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [unit, setUnit] = useState("");
+    const [price, setPrice] = useState(props.Edit ? props.p.Price : "" );
+    const [quantity, setQuantity] = useState(props.Edit ? props.p.Quantity : "" );
+    const [unit, setUnit] = useState(props.Edit ? props.p.UnitOfMeasurement : "" );
 
     function AddProduct(){
         let prod = {
-            productByFarmerID : false,
-            UnitOfMeasurement : unit,
-            Quantity : parseInt(quantity),
-            Price : parseFloat(price),
-            ProductID : props.product.ProductID
-        }
-
-        props.addProdTest(prod);
-        props.onHide();
-        setPrice("");
-        setQuantity("");
-        setUnit("");
-    }
-
-
-
-
-    //TODO VALIDATION
-    if(!props.product)
-    return ""
-    else
-    return (
-      <Modal
-        show={props.show}
-        onHide={props.onHide}
-        size="sm"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            {props.product.Name}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-
-           <Form onSubmit={(event) => event.preventDefault()}>
-                    <Form.Label>Enter the price</Form.Label>
-                    <InputGroup>
-                    <InputGroup.Text>€</InputGroup.Text>
-                    <Form.Control value={price}  onChange={(event) => { setPrice(event.target.value) }}  /><br />
-                    </InputGroup>
-
-                    <Form.Label>Enter the quantity</Form.Label>
-                    <Form.Control value={quantity}  onChange={(event) => { setQuantity(event.target.value) }}  /><br />
-                    <Form.Label>Enter the unitofmeasurement</Form.Label>
-                    <Form.Control value={unit}  onChange={(event) => { setUnit(event.target.value) }} /><br />
-
-          </Form>
-
-        </Modal.Body>
-        <Button onClick={AddProduct} variant="success">Add the product</Button>
-
-      </Modal>
-    );
-  }
-  
-  function EditProductModal(props) {
-    const [price, setPrice] = useState(props.p.Price);
-    const [quantity, setQuantity] = useState(props.p.Quantity);
-    const [unit, setUnit] = useState(props.p.UnitOfMeasurement);
-
-    function AddProduct(){
-        let prod = {
-            productByFarmerID : props.p.ProdByFarmerID,
+            productByFarmerID : props.Edit ? props.p.ProdByFarmerID : false,
             UnitOfMeasurement : unit,
             Quantity : parseInt(quantity),
             Price : parseFloat(price),
@@ -269,13 +174,21 @@ function AddProductModal(props) {
 
         props.addProdTest(prod);
         props.onHide();
+        if(!props.Edit){
+          setPrice("");
+          setQuantity("");
+          setUnit("");  
+        }
+
     }
 
 
 
 
     //TODO VALIDATION
-
+    if(!props.p && !props.Edit)
+    return ""
+    else
     return (
       <Modal
         show={props.show}
@@ -300,16 +213,19 @@ function AddProductModal(props) {
 
                     <Form.Label>Enter the quantity</Form.Label>
                     <Form.Control value={quantity}  onChange={(event) => { setQuantity(event.target.value) }}  /><br />
-                    <Form.Label>Enter the unitofmeasurement</Form.Label>
+                    <Form.Label>Enter the unit of measurement</Form.Label>
                     <Form.Control value={unit}  onChange={(event) => { setUnit(event.target.value) }} /><br />
 
           </Form>
 
         </Modal.Body>
-        <Button onClick={AddProduct} variant="success">Add the product</Button>
+        <Button onClick={AddProduct} variant="success">{props.Edit ? "Add the product" : "Edit the product"}</Button>
 
       </Modal>
     );
+
+
+
   }
   
 
