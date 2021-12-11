@@ -19,9 +19,11 @@ const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 
 var timezone = require('dayjs/plugin/timezone');
 const weekOfYear = require('dayjs/plugin/weekOfYear')
+const customparseformat = require('dayjs/plugin/customParseFormat')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
+dayjs.extend(customparseformat)
 
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
@@ -969,6 +971,65 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
+/* GET all cancelled orders of this week of all users */
+app.get('/api/cancelledorders/:date', async (req, res) => {
+    const user = req.user && req.user.user;
+    if(user.Role == "Client"){
+        console.log("GET all cancelled orders - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+    let date = dayjs(req.params.date);
+    try {
+        const orders = await db.collection('Order').where("Status","==","open").orderBy('Timestamp').get();
+        if (orders.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+            let result = [];
+            orders.forEach(order => {
+                let parsedorderdate = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss')  //parse order format from dd:mm:yyyy to mm:dd:yyyy
+                
+                if(parsedorderdate.week() == date.week() && 
+                    parsedorderdate.day() >= 1 && 
+                    parsedorderdate.day() <= date.day() &&
+                    parsedorderdate.format("HH:mm") >= "9:00" &&
+                    parsedorderdate.format("HH:mm") <= date.format("HH:mm")){
+                        
+                        result.push(new Promise(async (resolve, reject) => {
+                            const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                            if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                                console.log("No matching users for " + order.data().ClientID);
+                            }
+
+                            resolve({
+                                OrderID: order.id,
+                                Status: order.data().Status,
+                                ClientID: client.id,
+                                Client: client.data(),
+                                Timestamp: order.data().Timestamp,
+                                ListOfProducts: order.data().Products
+                            });
+                        }));
+                   }
+                    
+                })
+            }
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all cancelled orders of that week)",
+                    error: error
+                }));
+        }
+     catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
@@ -1045,12 +1106,15 @@ app.post('/api/order', async (req, res) => {
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
     let newdate = req.body.newdate ? req.body.newdate : "";
-    let farmerProductsEstimationDeadline = "";      //Farmers provide procucts estimations by Saturday at 9am
-    let clientOrdersDeadlineDOW = "0";                  //Orders from clients are accepted until Sunday at 11pm
-    let clientOrdersDeadlineHour = "23:00"
-    let farmerProductsConfirmationDeadline = "";    //Farmers confirm available products by Monday at 9am
-    let farmerProductsDeliverDeadline = "";         //Farmers deliver their products (to SPG organization) by Tuesday evening
+    let purchaseTriggerDOW = "1";   
+    let purchaseTriggerHour = "9:00";
 
+    //let response = await db.collection('User').doc("9RSQKtDkcfB949GDA3SX").update({Wallet: 0});
+    
+    /*orders.docs.map(order => order.data())
+    for(const order of orders){
+        console.log(order)
+    }*/
     /*
     console.log("Time machine ACTIVATED! -> "+req.body.newdate)
     console.log("Today: " + dayjs())
@@ -1066,50 +1130,81 @@ app.post('/api/timeMachine',async(req,res)=>{
     //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
     //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
 
-    if(dayjs(newdate).day()==clientOrdersDeadlineDOW &&  
-       dayjs(newdate).week() == dayjs().week()+1 && 
-       dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour){  //if it's the next Sunday (0=Sunday)
 
-        console.log("It's the next Sunday! It's time to fullfill clients' orders...");
+    if(dayjs(newdate).day()==purchaseTriggerDOW &&  
+       dayjs(newdate).week() == dayjs().week() && 
+       dayjs(newdate).format("HH:mm") >= purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
 
-    }
-
-/*
-    if(...){
         try {
             const orders = await db.collection('Order').orderBy('Timestamp').get();
             if (orders.empty) {
                 console.log("No matching documents.");
                 res.status(404).json({error: "No entries (Table: Order)"});
             } else {
-    
+
                 let result = [];
                 orders.forEach(order => {
-                    //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                    //console.log(farmer.data());
     
                     result.push(new Promise(async (resolve, reject) => {
-                        const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                        /*const client = await db.collection('User').doc("" + order.data().ClientID).get();
                         if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                             console.log("No matching users for " + order.data().ClientID);
-                        }
-    
+                        }*/
                         resolve({
-                            OrderID: order.id,  //maybe it's "order.id"
-                            Status: order.data().Status,
-                            ClientID: client.id,
-                            Client: client.data(),
-                            Timestamp: order.data().Timestamp,
-                            ListOfProducts: order.data().Products
+                            OrderID: order.id,
+                            ...order.data()
                         });
                     }));
                 })
-                const response = Promise.all(result)
-                    .then(r => res.json(r))
-                    .catch(r => res.status(500).json({
-                        info: "Promises error (get all orders)",
-                        error: error
-                    }));
+                Promise.all(result).then(result => {
+                    let responseresult = [];
+
+                    for(const entry of result){
+
+                        /*
+                        let client = await db.collection('User').doc("" + entry.ClientID).get();
+                        if (!client.exists) {  
+                            console.log("No matching users for " + order.data().ClientID);
+                        }
+                        else{
+                             if(entry.Wallet){
+                                await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
+                                await db.collection('User').doc(entry.ClientID).update({Wallet: 0});
+                            }
+                            else{
+                                await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                //* warning in response: order cancelled due to insufficient wallet balance 
+                            }
+                        }
+                        */
+
+                        /*
+                        responseresult.push(
+                            new Promise(async (resolve, reject) => {
+                                let client = await db.collection('User').doc("" + entry.ClientID).get();
+                                if (!client.exists) {  
+                                    console.log("No matching users for " + order.data().ClientID);
+                                }
+                                else{
+                                    if(entry.Wallet){
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
+                                        await db.collection('User').doc(entry.ClientID).update({Wallet: 0});
+                                    }
+                                    else{
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                        //* warning in response: order cancelled due to insufficient wallet balance 
+                                    }
+                                }
+                            })
+                        )
+                        */
+
+                    }
+                })
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all cancelled orders)",
+                    error: error
+                }));
             }
         } catch (error) {
             console.log(error);
@@ -1119,7 +1214,6 @@ app.post('/api/timeMachine',async(req,res)=>{
             });
         }
     }
-*/
 
     res.status(200).end();
 })
