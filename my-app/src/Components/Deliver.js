@@ -32,8 +32,8 @@ function Deliver(props) {
 
 
         let object = {
-            "Name": address,
-            "Description": startDateDelivery
+            "address": address,
+            "date": startDateDelivery
         }
         //let res = await API.createProduct(object);
         console.log(object);
@@ -51,7 +51,7 @@ function Deliver(props) {
                         </Table>
                     </Col>
 
-                    <ModalProductNew
+                    <ModalDeliveryNew
                          setAddress={setAddress}
                       /*  setStartDate={setStartDate} */
                         setStartDateDelivery={setStartDateDelivery}
@@ -98,7 +98,7 @@ const TimeDeliveryRow = (props) => {
 
 
 
-function ModalProductNew(props) {
+function ModalDeliveryNew(props) {
 
     return (
         <Modal show={props.show} onHide={props.onHide} size="md" aria-labelledby="contained-modal-title-vcenter"
