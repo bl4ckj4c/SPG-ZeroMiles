@@ -205,7 +205,7 @@ function FarmerSidebar(props) {
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link className="sidebar-text" href="/productNew">My products</Nav.Link>
+                <Nav.Link className="sidebar-text" href="/farmerview">My products</Nav.Link>
             </Nav>
 
             <Offcanvas.Title className="mt-3 nav-subtitle">PROFILE</Offcanvas.Title>

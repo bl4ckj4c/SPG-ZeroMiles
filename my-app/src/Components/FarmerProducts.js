@@ -3,10 +3,12 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import API from '../API';
 import { useState, useEffect } from 'react'
 import "./FarmerProducts.css";
+import ProductNew from "./ProductNew"
 
 function FarmerProducts(props) {
     console.log("HERE");
     const [products, setProducts] = useState([]);
+    const [updateProducts, setUpdateProducts] = useState(true);
     const [updated, setUpdated] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState([]);
     const [productsByFarmer, setProductsByFarmer] = useState(false);
@@ -47,14 +49,17 @@ function FarmerProducts(props) {
     }
 
     useEffect(() => {
+      if(updateProducts){
         API.getAllProducts()
             .then(p => {
                 // filter the products that are already present in ProductByFarmer table
                 setProducts(p); 
                 setUpdated(true);
+                setUpdateProducts(false);
             }).catch(f => console.log(f));
+          }
     }
-        , [props.timeMachine]);
+        , [props.timeMachine, updateProducts]);
 
     useEffect(() => {
       let passedDate = props.timeMachine ? props.timeMachine.toString().split(" ")[0] : date
@@ -78,7 +83,7 @@ function FarmerProducts(props) {
 
           <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
           <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)}>Add product</Button>
-
+          <ProductNew UpdateProdList={() => setUpdateProducts(true)}/>
           <Table className="d-flex justify-content-center">
           <tbody id="prod-table" align="center">
             {productsByFarmer !== false ? productsByFarmer.map(p => 
@@ -112,7 +117,7 @@ function ProductCard(props) {
           <Card.Body>
               <Row>
                   <Col md={4}>
-                  <Image onClick={()=> setShowPic(true)} src={newSrc} height={"80 px"} rounded />
+                  <Image className="img-fluid" onClick={()=> setShowPic(true)} src={newSrc} height={"80 px"} rounded />
                   </Col>
                   <Col md={8}>
                       <Card.Title style={{ fontSize: 28 }}> {props.p.NameProduct}</Card.Title>
