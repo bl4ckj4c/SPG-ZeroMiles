@@ -91,7 +91,7 @@ useEffect(() => {
         , [ProductsByFarmerUpdate]);
 
 
-  if (updated) return (
+  if (updated && props.user.Role==="Farmer") return (
     <Container className="search-container"  >
 
           <ProductsDropdown isAllowedAddProduct = {isAllowedAddProduct} products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
