@@ -1077,10 +1077,10 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
 
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
-     let day = dayjs(req.body.timestamp);
-     let weekOfYear=dayjs(req.body.timestamp).week();
-     if(dayjs(day).day()==0 && dayjs(day).hour() <23){
-        weekOfYear= weekOfYear - 1;
+     let reqday = dayjs(req.body.timestamp);
+     let reqweekOfYear=dayjs(req.body.timestamp).week();
+     if(dayjs(reqday).day()==0 && dayjs(reqday).hour() <23){
+        reqweekOfYear= reqweekOfYear - 1;
      }
    
    
@@ -1109,9 +1109,12 @@ app.post('/api/order', async (req, res) => {
         const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()  //get all order by that client
         if(!orders.empty){  //if the client has an open order, add products to that order
             orders.forEach(order => {
-                console.log(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week())
-                console.log(dayjs().week())
-                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == weekOfYear){ //if it's the order of current week, update it
+                let orderday = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss');
+                let orderweekOfYear = dayjs(orderday).week();
+                if(dayjs(orderday).day()==0 && dayjs(orderday).hour() <23){
+                    orderweekOfYear= orderweekOfYear - 1;
+                }
+                if(orderweekOfYear == reqweekOfYear){ //if it's the order of current week, update it
                     sameweekorder = 1;
                     let newlist = [
                         ...order.data().Products,
@@ -1200,78 +1203,94 @@ app.post('/api/modifyDelivery', async (req, res) => {
 
 
 
-
-
-
-
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
     let newdate = req.body.newdate ? req.body.newdate : "";
-    let farmerProductsEstimationDeadline = "";      //Farmers provide procucts estimations by Saturday at 9am
-    let clientOrdersDeadlineDOW = "0";                  //Orders from clients are accepted until Sunday at 11pm
-    let clientOrdersDeadlineHour = "23:00"
-    let farmerProductsConfirmationDeadline = "";    //Farmers confirm available products by Monday at 9am
-    let farmerProductsDeliverDeadline = "";         //Farmers deliver their products (to SPG organization) by Tuesday evening
-
-    /*
-    console.log("Time machine ACTIVATED! -> "+req.body.newdate)
-    console.log("Today: " + dayjs())
-    console.log(dayjs(req.body.newdate).day()==0 );  //0=Sunday
-    console.log(dayjs(req.body.newdate).isAfter(dayjs()))
-    console.log(dayjs().week())
-    console.log(dayjs(req.body.newdate).week())
-    console.log(dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour)
-    console.log(dayjs(newdate).day()==clientOrdersDeadlineDOW)
-    */
-
+    let purchaseTriggerDOW = "1";   
+    let purchaseTriggerHour = "9:00";
     //If it's clientOrdersDeadline, i have to fullfill the order by all clients
     //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
     //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
-
-    if(dayjs(newdate).day()==clientOrdersDeadlineDOW &&  
-       dayjs(newdate).week() == dayjs().week()+1 && 
-       dayjs(newdate).format("HH:mm")>=clientOrdersDeadlineHour){  //if it's the next Sunday (0=Sunday)
-
-        console.log("It's the next Sunday! It's time to fullfill clients' orders...");
-
-    }
-
-/*
-    if(...){
+    if(dayjs(newdate).day()==purchaseTriggerDOW &&  
+       dayjs(newdate).week() == dayjs().week() && 
+       dayjs(newdate).format("HH:mm") >= purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
+        
         try {
             const orders = await db.collection('Order').orderBy('Timestamp').get();
             if (orders.empty) {
                 console.log("No matching documents.");
                 res.status(404).json({error: "No entries (Table: Order)"});
             } else {
-    
                 let result = [];
                 orders.forEach(order => {
-                    //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                    //console.log(farmer.data());
     
                     result.push(new Promise(async (resolve, reject) => {
-                        const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                        /*const client = await db.collection('User').doc("" + order.data().ClientID).get();
                         if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                             console.log("No matching users for " + order.data().ClientID);
-                        }
-    
+                        }*/
                         resolve({
-                            OrderID: order.id,  //maybe it's "order.id"
-                            Status: order.data().Status,
-                            ClientID: client.id,
-                            Client: client.data(),
-                            Timestamp: order.data().Timestamp,
-                            ListOfProducts: order.data().Products
+                            OrderID: order.id,
+                            ...order.data()
                         });
                     }));
                 })
-                const response = Promise.all(result)
-                    .then(r => res.json(r))
+                Promise.all(result).then(result => {
+                    let responseresult = [];
+                    for(const entry of result){
+                        responseresult.push(
+                            new Promise(async (resolve, reject) => {
+                                let client = await db.collection('User').doc("" + entry.ClientID).get();
+                                if (!client.exists) {
+                                    console.log("No matching users for " + entry.data().ClientID);
+                                }
+                                else{
+                                    if(entry.Wallet > entry.Price){
+                                        let newwallet = entry.Wallet - entry.Price;
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
+                                        await db.collection('User').doc(entry.ClientID).update({Wallet: newwallet});
+                                        resolve({
+                                            orderID: entry.OrderID,
+                                            status: "fullfilled"
+                                        })
+                                    }
+                                    else{
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                        resolve({
+                                            orderID: entry.OrderID,
+                                            status: "cancelled"
+                                        })
+                                    }
+                                }
+                            })
+                        )
+                        /*
+                        let client = await db.collection('User').doc("" + entry.ClientID).get();
+                        if (!client.exists) {  
+                            console.log("No matching users for " + order.data().ClientID);
+                        }
+                        else{
+                             if(entry.Wallet){
+                                await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
+                                await db.collection('User').doc(entry.ClientID).update({Wallet: 0});
+                            }
+                            else{
+                                await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                //* warning in response: order cancelled due to insufficient wallet balance 
+                            }
+                        }
+                        */
+                    }
+                    Promise.all(responseresult).then(responseresult => res.json(responseresult))
                     .catch(r => res.status(500).json({
-                        info: "Promises error (get all orders)",
+                        info: "Promises error (process orders)",
                         error: error
-                    }));
+                    }))
+                })
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all orders)",
+                    error: error
+                }));
             }
         } catch (error) {
             console.log(error);
@@ -1281,11 +1300,8 @@ app.post('/api/timeMachine',async(req,res)=>{
             });
         }
     }
-*/
-
     res.status(200).end();
 })
-
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
     let result = [];
