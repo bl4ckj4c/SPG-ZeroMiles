@@ -25,6 +25,9 @@ function ProductTable(props) {
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
+
+            console.log(props.reloadTime);
+
             setLoading(true);
 
             setProductByFarmerListUpdated(true);
@@ -43,9 +46,15 @@ function ProductTable(props) {
                     setFarmerListUpdated(false);
                 }).catch(f => console.log(f));
 
+            console.log("numero chiamate");
             setUpdate(false);
         }
     }, [update]);
+
+    useEffect(() => {
+        if(props.reloadTime)
+            setUpdate(true);
+    }, [props.reloadTime])
 
     useEffect(() => {
         if (!props.isLoggedIn)
@@ -236,7 +245,7 @@ function NoProductFound() {
     return (<Row style={{ height: "50vh" }} className="align-items-center">
 
         <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
-            <div className="d-flex justify-content-center "><h4>No products found</h4></div>
+            <div className="d-flex justify-content-center mt-4"><h4>No products found</h4></div>
         </div>
     </Row>
 

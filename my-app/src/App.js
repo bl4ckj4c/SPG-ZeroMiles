@@ -56,7 +56,6 @@ function App() {
 
     let now = (now_date + " " + now_time + ":00");
 
-
     if (timeMachine)
       return timeMachine;
       else
@@ -126,7 +125,7 @@ function App() {
 
       <Switch>
         <Route exact path="/">
-            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={ReturnTimeMachine} setSideShow={setSideShow}/>
+            <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={ReturnTimeMachine} setSideShow={setSideShow} reloadTime={timeMachine}/>
         </Route>
 
         <Route exact path="/signout">
@@ -172,7 +171,7 @@ function App() {
         </Route>
 
         <Route exact path="/farmerview">
-          <FarmerProducts user={user} timeMachine={ReturnTimeMachine}/>
+          <FarmerProducts user={user} timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
         </Route>
 
       </Switch>
