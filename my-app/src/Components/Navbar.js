@@ -69,7 +69,7 @@ function ZeroNavbar(props) {
                         show={props.sideShow}
                         onHide={handleCloseSide}
                     >
-                        <Offcanvas.Header style={{ background: '#2C2E33' }}>
+                        <Offcanvas.Header style={{ background: '#6c757d' }}>
                             <Container>
                                 <Row>
                                     <Col xl={2} lg={2} className="justify-content-center d-none d-md-block">
