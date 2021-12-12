@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Collapse, Modal } from 'react-bootstrap';
+import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Spinner, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -20,19 +20,21 @@ function ProductTable(props) {
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
     const [welcomeShow, setWelcomeShow] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
+            setLoading(true);
+
             setProductByFarmerListUpdated(true);
             setFarmerListUpdated(true);
-            setLoading(true);
 
             API.getAllProductsByFarmers(props.timeMachine().toString())
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
+                    setLoading(false);
                 }).catch(pbf => console.log(pbf));
 
             API.getFarmer()
@@ -40,31 +42,26 @@ function ProductTable(props) {
                     setFarmerList(farmer);
                     setFarmerListUpdated(false);
                 }).catch(f => console.log(f));
-
-
+                
             setUpdate(false);
-            
         }
     }, [update]);
 
     useEffect(() => {
         if (!props.isLoggedIn)
-        setWelcomeShow(true);
+            setWelcomeShow(true);
         else
-        props.setSideShow(false); 
+            props.setSideShow(false);
     }, [props.isLoggedIn]);
 
-    useEffect(() => {
-        if (!farmerListUpdated && !productByFarmerListUpdated)
-            setLoading(false);
-    }, [farmerListUpdated, productByFarmerListUpdated]);
-
-    if (!loading)
         return (<>
-            <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
+            {loading ? <> <Row className="justify-content-center mt-5">
+                < Spinner animation="border" size="xl" variant="secondary" />
+            </Row > </> :
+                <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
+            }
             <WelcomeModal show={welcomeShow} onHide={() => setWelcomeShow(false)} />
-        </>)
-    else return "";
+        </>);
 }
 
 

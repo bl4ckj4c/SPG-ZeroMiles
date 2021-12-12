@@ -126,13 +126,6 @@ function App() {
 
       <Switch>
         <Route exact path="/">
-
-            {/*loading ? <Row className="justify-content-center mt-5">
-              <Spinner animation="border" size="xl" variant="secondary" />
-            </Row> :
-              <ProductTable  isLoggedIn={loggedIn} user={user} />}
-            */}
-            
             <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={ReturnTimeMachine} setSideShow={setSideShow}/>
         </Route>
 
