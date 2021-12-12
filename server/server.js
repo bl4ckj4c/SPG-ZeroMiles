@@ -999,7 +999,9 @@ app.get('/api/orders', async (req, res) => {
                         ClientID: client.id,
                         Client: client.data(),
                         Timestamp: order.data().Timestamp,
-                        ListOfProducts: order.data().Products
+                        ListOfProducts: order.data().Products,
+                        DeliveryDate: order.data().DeliveryDate,
+                        DeliveryPlace: order.data().DeliveryPlace
                     });
                 }));
             })

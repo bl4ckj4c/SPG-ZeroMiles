@@ -130,6 +130,8 @@ function ZeroNavbar(props) {
 
 function TimeMachine(props) {
     var dayjs = require('dayjs');
+    var customParseFormat = require('dayjs/plugin/customParseFormat');
+    dayjs.extend(customParseFormat);
 
     const now_time = new Object();
     const now_date = new Object();
@@ -145,6 +147,10 @@ function TimeMachine(props) {
         newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
         API.setTimeMachine(newdate);
         props.onHide(newdate);
+        //Se e' lunedi ricarico la pagina per mostrare i nuovi ordini confermati
+        if(dayjs(date.value).day() == 1 && time.value == "09:00"){
+            window.location.reload(false);
+        }
     }
 
     return (
@@ -175,7 +181,11 @@ function TimeMachine(props) {
                                 <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
+                        <Row className="justify-content-center mt-2">
+                            Set Monday at 09:00 to confirm available products.
+                        </Row>
                     </Row>
+
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -191,7 +201,7 @@ function EmployeeSidebar(props) {
 
     return (
         <>
-            <Offcanvas.Title className="mt-3 nav-subtitle"><BoxSeam style={{marginTop:'-3px'}}/>  ORDERS</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><BoxSeam style={{ marginTop: '-3px' }} />  ORDERS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
@@ -199,16 +209,17 @@ function EmployeeSidebar(props) {
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/orders/open'); }}>Open</Nav.Link>
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/orders/pending'); }}>Pending</Nav.Link>
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/orders/closed'); }}>Closed</Nav.Link>
+                <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/orders/cancelled'); }}>Cancelled</Nav.Link>
             </Nav>
 
-            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{marginTop:'-3px'}}/>  CLIENTS</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  CLIENTS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/clients'); }} >All clients</Nav.Link>
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/signupClient'); }}>New client</Nav.Link>
             </Nav>
-            <Offcanvas.Title className="mt-3 nav-subtitle"><Bucket style={{marginTop:'-5px'}}/>  FARMERS</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><Bucket style={{ marginTop: '-5px' }} />  FARMERS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
@@ -223,14 +234,14 @@ function FarmerSidebar(props) {
     const history = useHistory();
     return (
         <>
-            <Offcanvas.Title className="mt-3 nav-subtitle"><Bucket style={{marginTop:'-5px'}}/>  PRODUCTS</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><Bucket style={{ marginTop: '-5px' }} />  PRODUCTS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmerview'); }}>My products</Nav.Link>
             </Nav>
 
-            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{marginTop:'-3px'}}/>  PROFILE</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
@@ -246,15 +257,14 @@ function ClientSidebar(props) {
     const history = useHistory();
     return (
         <>
-            <Offcanvas.Title className="mt-3 nav-subtitle"><BoxSeam style={{marginTop:'-3px'}}/> ORDERS</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><BoxSeam style={{ marginTop: '-3px' }} /> ORDERS</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/myorders'); }}>My orders</Nav.Link>
-                <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/deliver'); }}>Delivery</Nav.Link>
             </Nav>
 
-            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{marginTop:'-3px'}}/>  PROFILE</Offcanvas.Title>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
 
             <Nav className="justify-content-end flex-grow-1 pe-3">

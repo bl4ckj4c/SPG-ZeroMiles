@@ -171,6 +171,12 @@ function OrderRow(props) {
                                 <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
                             </> : <></>}
 
+                            {props.order.DeliveryDate != '' ? <>
+                            <Col>
+                                    Delivery requested for {props.order.DeliveryDate}
+                            </Col>
+                            </> : <></>}
+
                             <Col>
                             
                                 <DropdownButton  title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">

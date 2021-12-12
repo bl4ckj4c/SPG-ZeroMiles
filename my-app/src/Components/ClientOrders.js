@@ -76,9 +76,11 @@ function OrderRow(props) {
     if (props.order.Status === "open") {
         buttonstatus = "outline-primary";
     } else if (props.order.Status === "pending") {
-        buttonstatus = "outline-danger";
+        buttonstatus = "outline-warning";
     } else if (props.order.Status === "closed") {
         buttonstatus = "outline-success";
+    } else if (props.order.Status === "cancelled") {
+        buttonstatus = "outline-danger";
     }
 
     return (
@@ -118,6 +120,12 @@ function OrderRow(props) {
                             {props.order.Status === 'pending' ? <>
                             <Col>
                                     <Deliver orderId={props.order.OrderID}></Deliver>
+                            </Col>
+                            </> : <></>}
+
+                            {props.order.DeliveryDate != '' ? <>
+                            <Col>
+                                    Delivery requested for {props.order.DeliveryDate}
                             </Col>
                             </> : <></>}
                             
