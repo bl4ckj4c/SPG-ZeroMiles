@@ -116,7 +116,11 @@ function OrderRow(props) {
         stat = 'c';
         progressType = "success";
         progressRate = 100;
-
+    } else if (props.order.Status === "cancelled"){
+        stat = 'canc'
+        buttonstatus = "outline-danger";
+        progressType = "danger"
+        progressRate = 100;
     }
 
 
@@ -198,6 +202,16 @@ function OrderRow(props) {
                                         API.modifyOrderStatus(props.order);
 
                                     }}>Closed</Dropdown.Item>
+                                    <Dropdown.Item  onClick={() => {
+                                        props.order.Status = "cancelled";
+                                        setStat('canc');
+                                        progressRate = 100;
+                                        API.modifyOrderStatus(props.order);
+                                        handleShow();
+
+                                    }
+
+                                    }>Cancelled</Dropdown.Item>
 
 
                                 </DropdownButton >
