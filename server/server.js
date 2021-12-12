@@ -883,6 +883,9 @@ app.get('/api/userinfo', async (req, res) => {
 /* GET all orders of the authenticated user*/
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
+    
+    
+    
     try {
         const orders = await db.collection('Order').where("ClientID", "==", "" + user.userID).orderBy("Timestamp").get();
         if (orders.empty) {
