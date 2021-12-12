@@ -1104,7 +1104,7 @@ app.post('/api/order', async (req, res) => {
         req.body.items.forEach(product => {
             quantity = quantity + product.number * product.Price;
             productByFarmer.forEach(prodfarm => {
-                if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity) { //check if there are enough unities for the product requested
+                if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity && prodfarm.data().Week == reqweekOfYear) { //check if there are enough unities for the product requested
                     console.log("Not enough products (" + product.NameProduct + ")");
                     res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
                 }
