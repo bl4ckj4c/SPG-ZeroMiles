@@ -917,6 +917,9 @@ app.get('/api/userinfo', async (req, res) => {
 /* GET all orders of the authenticated user*/
 app.get('/api/clientorders', async (req, res) => {
     const user = req.user && req.user.user;
+    
+    
+    
     try {
         const orders = await db.collection('Order').where("ClientID", "==", "" + user.userID).orderBy("Timestamp").get();
         if (orders.empty) {
@@ -1074,6 +1077,13 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
 
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
+     let day = dayjs(req.body.timestamp);
+     let weekOfYear=dayjs(req.body.timestamp).week();
+     if(dayjs(day).day()==0 && dayjs(day).hour() <23){
+        weekOfYear= weekOfYear - 1;
+     }
+   
+   
     try {
         let sameweekorder = 0;
         let result = [];
@@ -1101,7 +1111,7 @@ app.post('/api/order', async (req, res) => {
             orders.forEach(order => {
                 console.log(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week())
                 console.log(dayjs().week())
-                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == dayjs().week()-1){ //if it's the order of current week, update it
+                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == weekOfYear){ //if it's the order of current week, update it
                     sameweekorder = 1;
                     let newlist = [
                         ...order.data().Products,
