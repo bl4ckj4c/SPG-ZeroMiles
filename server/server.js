@@ -1101,7 +1101,7 @@ app.post('/api/order', async (req, res) => {
             orders.forEach(order => {
                 console.log(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week())
                 console.log(dayjs().week())
-                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == dayjs().week()-1){ //if it's the order of current week, update it
+                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == dayjs().week()){ //if it's the order of current week, update it
                     sameweekorder = 1;
                     let newlist = [
                         ...order.data().Products,
