@@ -21,7 +21,7 @@ function Deliver(props) {
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     async function submitDelivery() {
-                console.log(props.order.OrderID);
+              //  console.log(props.order.OrderID);
         /*         let objectDelivery = {
                     "address": address,
                     "date": dateDelivery,
@@ -29,6 +29,7 @@ function Deliver(props) {
                 }
                 let res = await API.createDelivery(objectDelivery);
                 console.log(objectDelivery); */
+                setModalShowProductNew(false)
             }
     return (
         <>
