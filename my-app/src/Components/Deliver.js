@@ -29,9 +29,8 @@ function Deliver(props) {
             "DeliveryDate": datestring
         }
         let res = await API.modifyDelivery(objectDelivery);
-        console.log(objectDelivery);
-        console.log(res);
-        setModalShowProductNew(false)
+        setModalShowProductNew(false);
+        window.location.reload(false);
     }
 
 
