@@ -1025,7 +1025,7 @@ app.post('/api/order', async (req, res) => {
                 }
             })
         }
-
+        else{
         //for each product in the order
         let quantity = 0;
         req.body.items.forEach(product => {
