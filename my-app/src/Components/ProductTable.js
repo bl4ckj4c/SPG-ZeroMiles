@@ -1,6 +1,6 @@
 import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Collapse, Modal } from 'react-bootstrap';
+import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Spinner, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
@@ -20,19 +20,24 @@ function ProductTable(props) {
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
     const [welcomeShow, setWelcomeShow] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
+
+            console.log(props.reloadTime);
+
+            setLoading(true);
+
             setProductByFarmerListUpdated(true);
             setFarmerListUpdated(true);
-            setLoading(true);
 
             API.getAllProductsByFarmers(props.timeMachine().toString())
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
+                    setLoading(false);
                 }).catch(pbf => console.log(pbf));
 
             API.getFarmer()
@@ -41,30 +46,33 @@ function ProductTable(props) {
                     setFarmerListUpdated(false);
                 }).catch(f => console.log(f));
 
-
+            console.log("numero chiamate");
             setUpdate(false);
-            
         }
     }, [update]);
 
     useEffect(() => {
-        if (!props.isLoggedIn)
-        setWelcomeShow(true);
-        else
-        props.setSideShow(false); 
-    }, [props.isLoggedIn]);
+        if(props.reloadTime)
+            setUpdate(true);
+    }, [props.reloadTime])
 
     useEffect(() => {
-        if (!farmerListUpdated && !productByFarmerListUpdated)
-            setLoading(false);
-    }, [farmerListUpdated, productByFarmerListUpdated]);
+        if (!props.isLoggedIn)
+            setWelcomeShow(true);
+        else
+            setWelcomeShow(false);
+            props.setSideShow(false);
+    }, [props.isLoggedIn]);
 
-    if (!loading)
-        return (<>
+    return (<>
+        {loading ? <> <Row className="justify-content-center mt-5">
+            < Spinner animation="border" size="xl" variant="secondary" />
+        </Row > </> : <>
             <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
             <WelcomeModal show={welcomeShow} onHide={() => setWelcomeShow(false)} />
-        </>)
-    else return "";
+        </>
+        }
+    </>);
 }
 
 
@@ -237,7 +245,7 @@ function NoProductFound() {
     return (<Row style={{ height: "50vh" }} className="align-items-center">
 
         <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
-            <div className="d-flex justify-content-center "><h4>No products found</h4></div>
+            <div className="d-flex justify-content-center mt-4"><h4>No products found</h4></div>
         </div>
     </Row>
 
@@ -485,11 +493,11 @@ function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
         <InputGroup style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '3px', borderBottomLeftRadius: '3px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px'}} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
-            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.2rem", fontSize: 14, maxWidth: "2.7rem" }} value={props.prodNum[i].number} />
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="warning" onClick={() => props.UpdateNumber(i, +1)} >
+            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background:'white', color:'black'}} value={props.prodNum[i].number} />
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>
         </InputGroup >
