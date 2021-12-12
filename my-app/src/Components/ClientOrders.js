@@ -130,7 +130,7 @@ function OrderRow(props) {
 
 function ProductList(props) {
 
-    let newSrc = "http://localhost:3001/images/" + props.prodottoDelFarmer.ImageID + ".png"
+    let newSrc = "http://localhost:3001/images/" + props.product.ImageID + ".png"
 
     return (
 
