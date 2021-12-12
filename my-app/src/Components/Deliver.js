@@ -9,6 +9,8 @@ import {useDropzone} from 'react-dropzone'
 //import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
+
+
 import "react-datepicker/dist/react-datepicker.css";
 
 function Deliver(props) {
@@ -17,6 +19,31 @@ function Deliver(props) {
     const [timeDelivery, setTimeDelivery] = useState('');
     const [orderId, setOrderId] = useState('');
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
+    const [ordersList, setOrdersList] = useState([]);
+    const [ordersListUpdated, setOrdersListUpdated] = useState(true);
+    const [loading, setLoading] = useState(false);
+  
+    useEffect(() => {
+        setLoading(true);
+        API.getClientOrders()
+            .then(orders => {
+                setOrdersList(orders);
+                setOrdersListUpdated(false);
+                setLoading(false);
+            }).catch(o => handleErrors(o));
+    }, []);
+
+    useEffect(() => {
+        if (ordersListUpdated === true) {
+            setLoading(true);
+            API.getClientOrders()
+                .then(orders => {
+                    setOrdersList(orders);
+                    setOrdersListUpdated(false);
+                    setLoading(false);
+                }).catch(o => handleErrors(o));
+        }
+    }, [ordersListUpdated]);
 
 
     const handleErrors = (err) => {
@@ -28,13 +55,13 @@ function Deliver(props) {
     async function submitDelivery() {
 
 
-        let objectDelivery = {
+/*         let objectDelivery = {
             "address": address,
             "date": dateDelivery,
             "time": timeDelivery
         }
         let res = await API.createDelivery(objectDelivery);
-        console.log(objectDelivery);
+        console.log(objectDelivery); */
     }
 
     return (
@@ -45,6 +72,13 @@ function Deliver(props) {
                         <Table className="d-flex justify-content-center">
                             <tbody id="client-table" align="center">
                             <DeliveryBottom  onShow={() => setModalShowProductNew(true)}/>
+                            <ModalDeliveryNew
+                                        setAddress={setAddress}
+                                        setDateDelivery={setDateDelivery}
+                                        setTimeDelivery={setTimeDelivery}
+                                        submitDelivery={submitDelivery}
+                                        show={modalShowProductNew}
+                                        onHide={() => setModalShowProductNew(false)}/>
                             </tbody>
                         </Table>
                     </Col>
@@ -208,13 +242,7 @@ function OrderRow(props) {
                             </Col>
                             <Col>
                                 <Button variant={buttonstatus} size="sm" onClick={props.onShow} disable={buttonDeliveryDisabled}>Delivery</Button>
-                                <ModalDeliveryNew
-                                        setAddress={setAddress}
-                                        setDateDelivery={setDateDelivery}
-                                        setTimeDelivery={setTimeDelivery}
-                                        submitDelivery={submitDelivery}
-                                        show={modalShowProductNew}
-                                        onHide={() => setModalShowProductNew(false)}/>
+                               
                             </Col>
                         </Row>
 
