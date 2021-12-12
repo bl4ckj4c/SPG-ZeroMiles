@@ -20,12 +20,13 @@ const cookieParser = require('cookie-parser');
 const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
-
+const customparseformat = require('dayjs/plugin/customParseFormat')
 var timezone = require('dayjs/plugin/timezone');
 const weekOfYear = require('dayjs/plugin/weekOfYear')
 dayjs.extend(isSameOrAfter)
 dayjs.extend(timezone)
 dayjs.extend(weekOfYear)
+dayjs.extend(customparseformat)
 
 const {v4: uuidv4} = require('uuid');
 //const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
@@ -1012,20 +1013,77 @@ app.get('/api/orders', async (req, res) => {
     }
 });
 
+/* GET all cancelled orders of this week of all users */
+app.get('/api/cancelledorders/:date', async (req, res) => {
+    const user = req.user && req.user.user;
+    if(user.Role == "Client"){
+        console.log("GET all cancelled orders - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+    let date = dayjs(req.params.date);
+    try {
+        const orders = await db.collection('Order').where("Status","==","open").orderBy('Timestamp').get();
+        if (orders.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+            let result = [];
+            orders.forEach(order => {
+                let parsedorderdate = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss')  //parse order format from dd:mm:yyyy to mm:dd:yyyy
+                
+                if(parsedorderdate.week() == date.week() && 
+                    parsedorderdate.day() >= 1 && 
+                    parsedorderdate.day() <= date.day() &&
+                    parsedorderdate.format("HH:mm") >= "9:00" &&
+                    parsedorderdate.format("HH:mm") <= date.format("HH:mm")){
+                        
+                        result.push(new Promise(async (resolve, reject) => {
+                            const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                            if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                                console.log("No matching users for " + order.data().ClientID);
+                            }
+                            resolve({
+                                OrderID: order.id,
+                                Status: order.data().Status,
+                                ClientID: client.id,
+                                Client: client.data(),
+                                Timestamp: order.data().Timestamp,
+                                ListOfProducts: order.data().Products
+                            });
+                        }));
+                   }
+                    
+                })
+            }
+            const response = Promise.all(result)
+                .then(r => res.json(r))
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all cancelled orders of that week)",
+                    error: error
+                }));
+        }
+     catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
-        const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()  //get all order by that client
-        if(!orders.empty){  //if the client has an open order, add products to that order
-            orders.forEach(order => {
-                console.log(dayjs(order.data().Timestamp).week())
-                if(dayjs(order.data().Timestamp).week() == dayjs().week()){ //if it's the order of current week...
-                    //update the db with a new ListOfProducts entry
-                }
-            })
+        let sameweekorder = 0;
+        let result = [];
+        let productByFarmer = await db.collection('Product by Farmers').get()
+        //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
+        if (productByFarmer.empty) {
+            console.log("No entries (Table: product by farmers)");
+            res.status(404).json({error: "No entries (Table: product by farmers)"});
         }
-        else{
+
         //for each product in the order
         let quantity = 0;
         req.body.items.forEach(product => {
@@ -1036,36 +1094,56 @@ app.post('/api/order', async (req, res) => {
                     res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
                 }
             })
-
         })
+
+        const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()  //get all order by that client
+        if(!orders.empty){  //if the client has an open order, add products to that order
+            orders.forEach(order => {
+                console.log(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week())
+                console.log(dayjs().week())
+                if(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() == dayjs().week()-1){ //if it's the order of current week, update it
+                    sameweekorder = 1;
+                    let newlist = [
+                        ...order.data().Products,
+                        ...req.body.items
+                    ]
+                    let newprice = order.data().Price + quantity
+                    
+                    db.collection("Order").doc(order.id).update({Products: newlist});
+                    db.collection("Order").doc(order.id).update({Price: newprice});
+                    res.status(200).end()
+                    return
+                }
+            })
+        }
+            
+        if(orders.empty || !sameweekorder){
+            console.log("creating new order");
+            console.log(quantity);
+            let newOrder = {}
+            newOrder.Price = quantity;
+            newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
+            newOrder.Status = "open";
+            newOrder.ClientID = req.body.UserID;
+            newOrder.Products = req.body.items;
+            newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
+            newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
+            (async () => {
+                try {
+                    //console.log(newOrder);
+                    await db.collection("Order").add(newOrder);
+                } catch (error) {
+                    console.log(error);
+                    res.json(error);
+                }
+            })()
+        }
         
-        console.log("creating new order");
-        console.log(quantity);
-        let newOrder = {}
-        newOrder.Price = quantity;
-        newOrder.Timestamp = dayjs(req.body.timestamp).format('DD-MM-YYYY HH:mm:ss');
-        newOrder.Status = "open";
-        newOrder.ClientID = req.body.UserID;
-        newOrder.Products = req.body.items;
-        newOrder.DeliveryDate = "";
-        newOrder.DeliveryPlace ="";
-
-        (async () => {
-            try {
-                //console.log(newOrder);
-                await db.collection("Order").add(newOrder);
-            } catch (error) {
-                console.log(error);
-                res.json(error);
-            }
-        })()
-
         req.body.items.forEach(product => {
             productByFarmer.forEach(prodfarm => {
                 if (product.ProductID == prodfarm.data().ProductID) {
                     let newQuantity = prodfarm.data().Quantity - product.number;
                     result.push(new Promise(async (resolve, reject) => {
-
                         await db.collection('Product by Farmers').doc(prodfarm.id).update({Quantity: newQuantity});
                         resolve("QUANTITYUPDATE");
                     }))
@@ -1074,7 +1152,7 @@ app.post('/api/order', async (req, res) => {
         })
         Promise.all(result);
         res.status(201).end();
-    }
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -1334,6 +1412,8 @@ app.post('/api/addProduct', async (req, res) => {
     
     let day2 = dayjs(req.body.date);
     let weekOfYear=0;
+    let returned;
+    let PrdId;
 
     if(dayjs(day2).day()==6 && dayjs(day2).hour() >8){
     weekOfYear= dayjs(day2).week() +1;
@@ -1353,15 +1433,17 @@ app.post('/api/addProduct', async (req, res) => {
         newprodFarmer.Week= weekOfYear;
 
         
-        await db.collection('Product by Farmers').add(newprodFarmer);
+        returned = await db.collection('Product by Farmers').add(newprodFarmer);
+        PrdId = returned.id
         }else{
             
             
             await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, Unitofmeasurement: req.body.UnitOfMeasurement});
-
+            PrdId = req.body.productByFarmerID;
 
         }
-        res.status(201).end();
+        res.status(201).json({ productByFarmerID : PrdId }).end();
+        console.log(returned);
 
     } catch (error) {
         console.log(error);

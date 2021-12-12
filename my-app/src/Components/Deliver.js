@@ -9,8 +9,6 @@ import {useDropzone} from 'react-dropzone'
 //import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
-
-
 import "react-datepicker/dist/react-datepicker.css";
 
 function Deliver(props) {
@@ -19,31 +17,6 @@ function Deliver(props) {
     const [timeDelivery, setTimeDelivery] = useState('');
     const [orderId, setOrderId] = useState('');
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
-    const [ordersList, setOrdersList] = useState([]);
-    const [ordersListUpdated, setOrdersListUpdated] = useState(true);
-    const [loading, setLoading] = useState(false);
-  
-    useEffect(() => {
-        setLoading(true);
-        API.getClientOrders()
-            .then(orders => {
-                setOrdersList(orders);
-                setOrdersListUpdated(false);
-                setLoading(false);
-            }).catch(o => handleErrors(o));
-    }, []);
-
-    useEffect(() => {
-        if (ordersListUpdated === true) {
-            setLoading(true);
-            API.getClientOrders()
-                .then(orders => {
-                    setOrdersList(orders);
-                    setOrdersListUpdated(false);
-                    setLoading(false);
-                }).catch(o => handleErrors(o));
-        }
-    }, [ordersListUpdated]);
 
 
     const handleErrors = (err) => {

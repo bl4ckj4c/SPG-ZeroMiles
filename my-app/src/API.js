@@ -350,7 +350,7 @@ async function addProduct(product,dayOfWeek){
     });  
   
     if(response.ok){
-        return { 'msg': 'Product succesfully added' };
+        return response.json();
     }
     return { 'err': 'POST error' };
   }
