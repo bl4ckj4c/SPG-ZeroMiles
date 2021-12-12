@@ -218,7 +218,7 @@ function OrderRow(props) {
 
 function ProductList(props) {
 
-    let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
+    let newSrc = "http://localhost:3001/images/" + props.prodottoDelFarmer.ImageID + ".png"
 
     return (
         <tr>
