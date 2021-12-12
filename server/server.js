@@ -3,8 +3,12 @@
 const firebasefunctions = require('firebase-functions');
 const firebase = require('firebase-admin');
 const firebaseBackup = require('firebase-admin');
+const firebaseBackup2 = require('firebase-admin');
+const firebaseBackup3 = require('firebase-admin');
 const {firebaseconf} = require('./firebase-server/config.js');
 const {firebaseconf_backup} = require('./firebase-server/config.js');
+const {firebaseconf_backup_2} = require('./firebase-server/config.js');
+const {firebaseconf_backup_3} = require('./firebase-server/config.js');
 const userDao = require('./userDAO');
 const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
 const express = require('express');
@@ -81,10 +85,39 @@ const firebaseappBackup = firebaseBackup.initializeApp({
     storageBucket: "gs://polito-se2-21-01-spg-backup.appspot.com"
 }, "firebase_backup");
 
+
+const firebaseappBackup2 = firebaseBackup2.initializeApp({
+    credential: firebaseBackup2.credential.cert(firebaseconf_backup_2),
+    databaseURL: "https://polito-se2-21-01-spg-backup-2.europe-west1.firebasedatabase.app",
+    storageBucket: "gs://polito-se2-21-01-spg-backup-2.appspot.com"
+}, "firebase_backup_2");
+
+const firebaseappBackup3 = firebaseBackup3.initializeApp({
+    credential: firebaseBackup3.credential.cert(firebaseconf_backup_3),
+    databaseURL: "https://polito-se2-21-01-spg-backup-3.europe-west1.firebasedatabase.app",
+    storageBucket: "gs://polito-se2-21-01-spg-backup-3.appspot.com"
+}, "firebase_backup_3");
+
+
 /* get reference a reference to the firestore database */
 //var db = firebase.firestore();
 //var db_backup = firebaseBackup.firestore(firebaseappBackup);
+//var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
+//var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
 var db = firebaseBackup.firestore(firebaseappBackup);
+
+//use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
+//BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
+/*
+(async()=>{
+    let entries = await db.collection("User").get()
+    if(!entries.empty){
+        entries.forEach(entry => {
+            db_backup_3.collection("User").doc(entry.id).create(entry.data());
+        })
+    }
+})()
+*/
 
 /*
 const bucket = firebase.storage().bucket();
@@ -1036,9 +1069,14 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
-        const order = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()
-        if(!order.empty){  //if the client has an open order, add products to that order
-            //create a new ListOfProducts with order.ListOfProducts + new products and update it
+        const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()  //get all order by that client
+        if(!orders.empty){  //if the client has an open order, add products to that order
+            orders.forEach(order => {
+                console.log(dayjs(order.data().Timestamp).week())
+                if(dayjs(order.data().Timestamp).week() == dayjs().week()){ //if it's the order of current week...
+                    //update the db with a new ListOfProducts entry
+                }
+            })
         }
         else{  //otherwise let's create a new one
             let result = [];
