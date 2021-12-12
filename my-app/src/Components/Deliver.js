@@ -22,6 +22,7 @@ function Deliver(props) {
     async function submitDelivery() {
                var datestring = dateDelivery.getDate()  + "-" + (dateDelivery.getMonth()+1) + "-" + dateDelivery.getFullYear()
                datestring = datestring + " " +timeDelivery
+               datestring = datestring+":00" //Add the seconds to the datetime delivery
                  let objectDelivery = {
                     "OrderID": props.orderId,
                     "DeliveryPlace": address,
