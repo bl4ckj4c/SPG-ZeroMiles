@@ -243,6 +243,9 @@ async function getUserInfo() {
     }
   }
 
+
+
+
 async function modifyOrderStatus(order){
 
     const response = await fetch(BASEURL + "/modifyorder", {
@@ -336,14 +339,14 @@ async function modifyOrderStatus(order){
     return response;
 }
 
-async function addProduct(product){
+async function addProduct(product,dayOfWeek){
 
     const response = await fetch(BASEURL + "/addProduct", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...product})
+        body: JSON.stringify({ ...product, date :dayOfWeek })
     });  
   
     if(response.ok){
@@ -368,6 +371,24 @@ async function addProduct(product){
     }
     return { 'err': 'POST error' };
   }
+
+
+  async function modifyDelivery(delivery){
+
+    const response = await fetch(BASEURL + "/modifyDelivery", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...delivery})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Order update' };
+    }
+    return { 'err': 'POST error' };
+  }
+  
 
 
   async function setTimeMachine(newdate){
@@ -397,7 +418,7 @@ const API = {
     addOrder,
     addProduct,
     deleteProduct,
-    
+    modifyDelivery,
     clientCheck,
     getProductInOrder, 
     getAllUsers,
@@ -408,6 +429,7 @@ const API = {
 
     createProduct,
     createDelivery,
+
 
 
     userRegister,
