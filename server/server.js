@@ -530,11 +530,14 @@ app.get('/api/products', async (req, res) => {
 
 /* GET all products by farmers */
   app.get('/api/allProductsByFarmers/:date', async (req, res) => {
-
+    let weekOfYear=0;
 
     let day2 = dayjs(req.params.date);
+    if(dayjs(day2).day()==0 && dayjs(day2).hour() !=23){
+        weekOfYear= dayjs(day2).week() -1;
+    }else{
    
-    let weekOfYear= dayjs(day2).week();
+     weekOfYear= dayjs(day2).week();}
     console.log(weekOfYear);
 
 
@@ -601,7 +604,8 @@ app.get('/api/products', async (req, res) => {
                 }));
             });
             const response = Promise.all(result)
-                .then(r => res.status(201).json(r))
+                .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                res.json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error
@@ -690,8 +694,14 @@ app.use(function (err, req, res, next) {
 app.get('/api/productsByFarmer/:date', async (req, res) => {
     const user = req.user && req.user.user;
     let day2 = dayjs(req.params.date);
-   
-    let weekOfYear= dayjs(day2).week();
+    let weekOfYear=0;
+
+    if(dayjs(day2).day()==6 && dayjs(day2).hour() >8){
+    weekOfYear= dayjs(day2).week() +1;
+    }else{
+        weekOfYear= dayjs(day2).week();
+    }
+    weekOfYear= dayjs(day2).week();
     console.log(weekOfYear);
     
     if(user.Role != "Farmer"){
@@ -725,8 +735,7 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
                     
                     if (prodfarm.data().Week != weekOfYear){
                         console.log("No Settimana");
-                        resolve({
-                    });
+                        resolve({});
 
                     
                  } else {
@@ -1006,8 +1015,8 @@ app.post('/api/order', async (req, res) => {
         newOrder.Status = "open";
         newOrder.ClientID = req.body.UserID;
         newOrder.Products = req.body.items;
-        newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
-        newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
+        newOrder.DeliveryDate = "";
+        newOrder.DeliveryPlace ="";
 
         (async () => {
             try {
@@ -1042,6 +1051,38 @@ app.post('/api/order', async (req, res) => {
         });
     }
 })
+
+
+app.post('/api/modifyDelivery', async (req, res) => {
+
+    try {
+        const order = await db.collection('Order').get();
+        if (order.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+
+            
+                let day = dayjs( req.body.DeliveryDate).format("DD-MM-YYYY HH-MM-SS");
+                await db.collection('Order').doc(req.body.OrderID).update({DeliveryDate: day, DeliveryPlace: req.body.DeliveryPlace });
+            
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+    res.status(201).end();
+
+});
+
+
+
+
+
+
 
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
@@ -1258,6 +1299,17 @@ app.post('/api/checkClient', async (req, res) => {
 app.post('/api/addProduct', async (req, res) => {
     const user = req.user && req.user.user;
     console.log(user);
+    
+    let day2 = dayjs(req.body.date);
+    let weekOfYear=0;
+
+    if(dayjs(day2).day()==6 && dayjs(day2).hour() >8){
+    weekOfYear= dayjs(day2).week() +1;
+    }else{
+        weekOfYear= dayjs(day2).week();
+    }
+    console.log(weekOfYear);
+    
     try {
         if (req.body.productByFarmerID ==false){
         let newprodFarmer = {}
@@ -1266,7 +1318,7 @@ app.post('/api/addProduct', async (req, res) => {
         newprodFarmer.Price = parseFloat(req.body.Price);
         newprodFarmer.Quantity = parseInt(req.body.Quantity);
         newprodFarmer.Unitofmeasurement = req.body.UnitOfMeasurement;
-        newprodFarmer.Week= dayjs().week();
+        newprodFarmer.Week= weekOfYear;
 
         
         await db.collection('Product by Farmers').add(newprodFarmer);
@@ -1311,6 +1363,12 @@ app.post('/api/deleteProduct', async (req, res) => {
     }
 
 });
+
+
+
+
+
+
 
 
 app.get('/api/sessions/current', (req, res) => {
