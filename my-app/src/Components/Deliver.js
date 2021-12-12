@@ -21,10 +21,10 @@ function Deliver(props) {
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     async function submitDelivery() {
-               console.log(props.OrderID);
+               console.log(props.orderId);
                console.log("HERE");
                  let objectDelivery = {
-                     "orderId": props.OrderID,
+                     "orderId": props.orderId,
                     "address": address,
                     "date": dateDelivery,
                     "time": timeDelivery
