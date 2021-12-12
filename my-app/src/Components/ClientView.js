@@ -149,17 +149,14 @@ function ButtonBalance(props) {
                     <Container>
                         <Row>
                             <Col style={{ textAlign: "right" }} ><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(-1)}>-</Button></Col>
-                            <Col style={{ fontSize: 24, textAlign: "center" }} xs={6}>
+                            <Col style={{ fontSize: 24, textAlign: "center" }} xl={3} lg={3} md={3} sm={3} xs={5}>
                                 
                             <InputGroup>
                                 <InputGroup.Text>€</InputGroup.Text>
-                                <Form.Control value={amount}  onChange={(event) => { UpdateNumberInput(event.target.value)} }   />
+                                <Form.Control value={amount} onChange={(event) => { UpdateNumberInput(event.target.value)} } />
                             </InputGroup>
 
-                                
-                                
-                                
-                                € {amount}</Col>
+                            </Col>
                             <Col style={{ textAlign: "left" }}><Button className="btn-circle" variant="warning" onClick={() => UpdateNumber(+1)}>+</Button></Col>
                         </Row>
                     </Container>
