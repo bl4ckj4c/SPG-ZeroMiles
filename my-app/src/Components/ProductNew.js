@@ -43,7 +43,7 @@ function ProductNew(props) {
 
     return (
         <>
-           <Button disabled={props.isAllowedAddProduct ? false : true} className="search-button" onClick={() => setModalShowProductNew(true)}>Create new product</Button>
+           <Button disabled={props.isAllowedAddProduct ? false : true} className="search-button" onClick={() => setModalShowProductNew(true)} variant="secondary">Create new product</Button>
             <ModalProductNew
                 setName={setName}
                 setDescription={setDescription}
