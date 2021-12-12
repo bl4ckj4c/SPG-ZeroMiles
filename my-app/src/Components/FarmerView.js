@@ -11,8 +11,7 @@ function ClientView(props) {
     useEffect(() => {
         if (props.users.length > 0)
             setFilteredClients([...props.users])
-    }
-        , [props.users]);
+    }, [props.users]);
 
     return (
         <>

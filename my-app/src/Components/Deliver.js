@@ -7,8 +7,6 @@ import {useDropzone} from 'react-dropzone'
 //import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
-
-
 import "react-datepicker/dist/react-datepicker.css";
 
 function Deliver(props) {
@@ -16,9 +14,6 @@ function Deliver(props) {
     const [dateDelivery, setDateDelivery] = useState(new Date());
     const [timeDelivery, setTimeDelivery] = useState('');
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
-
-  
-
 
 
     const handleErrors = (err) => {
