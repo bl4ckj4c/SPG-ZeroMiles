@@ -208,10 +208,7 @@ function OrderRow(props) {
                                         progressRate = 100;
                                         API.modifyOrderStatus(props.order);
                                         handleShow();
-
-                                    }
-
-                                    }>Cancelled</Dropdown.Item>
+                                    }}>Cancelled</Dropdown.Item>
 
 
                                 </DropdownButton >
