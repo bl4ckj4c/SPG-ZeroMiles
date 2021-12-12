@@ -983,6 +983,12 @@ app.get('/api/orders', async (req, res) => {
 /* POST place an order in the database */
 app.post('/api/order', async (req, res) => {
     try {
+        const order = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()
+        if(!order.empty){  //if the client has an open order, add products to that order
+            //create a new ListOfProducts with order.ListOfProducts + new products and update it
+        }else{
+        
+        
         let result = [];
 
 
@@ -1042,7 +1048,7 @@ app.post('/api/order', async (req, res) => {
         })
         Promise.all(result);
         res.status(201).end();
-
+    }
     } catch (error) {
         console.log(error);
         res.status(500).json({

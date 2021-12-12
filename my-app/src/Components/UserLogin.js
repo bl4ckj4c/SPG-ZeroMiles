@@ -2,6 +2,7 @@ import { Col, Row, Container, Form, Button, Toast, ToastContainer, Image } from 
 import { useHistory } from 'react-router-dom'
 import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
+import "./UserLogin.css";
 import API from '../API';
 
 
@@ -101,36 +102,31 @@ function UserLogin(props) {
                 </ToastContainer>
             )}
 
-            <Row className="justify-content-center mt-1 mb-1">
-                <Col xs={8} lg={4}>
+            <Row className="justify-content-center mt-3 mb-1">
+                <Col xs={9} lg={4}>
                     <Row className="justify-content-center mt-3 mb-3">
-                        <Image style={{marginLeft:'-3px'}} id="logo" src="/images/logo.png"/>
-                        <h2 style={{textAlign:'center'}}>We missed you!</h2>
+                        <Image style={{ marginLeft: '-3px' }} id="logo" src="/images/logo.png" />
+                        <h2 className="mt-1" style={{ textAlign: 'center' }}>We missed you!</h2>
                     </Row>
                     <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal} handleLoginResponseModalClose={handleLoginResponseModalClose} />
                     <Form onSubmit={(e) => validform(e)}>
-                        <Form.Group className="mb-4" controlId="formBasicEmail">
-                            <Form.Label>Email user</Form.Label>
+                        <Form.Group className="mb-4 distanza" controlId="formBasicEmail">
+                            <Form.Label>Email</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
-                        </Form.Group>
-                        <Row className="mt-5">
-                            <Col style={{ textAlign: 'left' }}>
-                                <Button style={{fontSize: '19px'}} variant="secondary" onClick={handleSignUp} >
-                                    Signup
-                                </Button>
+                        <Row>
+                            <Col>
+                                <Form.Group className="mb-3" controlId="formBasicPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
+                                </Form.Group>
                             </Col>
-                            <Col style={{ textAlign: 'right' }}>
-                                <SubmitButton />
-                            </Col>
+                            <Col className="login-placement" xl={2} lg={2} md={2} sm={3} xs={3}><SubmitButton /></Col>
                         </Row>
-                    </Form>
-                </Col>
-            </Row>
-        </Container>
+                </Form>
+            </Col>
+        </Row>
+        </Container >
     )
 }
 
@@ -157,10 +153,11 @@ function SubmitButton(props) {
 
     return (
         <Button
-            style={{fontSize: '19px'}}
+            style={{ fontSize: '18px' }}
             type="submit"
             variant="warning"
             onClick={props.handleLoginResponseModalShow}
+            size="sm"
         >
             Login
         </Button>

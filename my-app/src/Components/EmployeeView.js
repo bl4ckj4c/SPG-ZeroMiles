@@ -102,13 +102,13 @@ function OrderRow(props) {
     // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
-        progressType = "info";
+        progressType = "primary";
         buttonstatus = "outline-primary";
         progressRate = 33;
     } else if (props.order.Status == "pending") {
-        buttonstatus = "outline-danger";
+        buttonstatus = "outline-warning";
         stat = 'p';
-        progressType = "danger";
+        progressType = "warning";
         progressRate = 66;
 
     } else if (props.order.Status === "closed") {
@@ -161,7 +161,7 @@ function OrderRow(props) {
                             </Col>
                             <Col>
                             
-                                <DropdownButton  title={props.order.Status} variant={buttonstatus} size="sm">
+                                <DropdownButton  title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
 
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
@@ -218,7 +218,7 @@ function OrderRow(props) {
 
 function ProductList(props) {
 
-    let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.product.ImageID + "/view/large"
+    let newSrc = "http://localhost:3001/images/" + props.prodottoDelFarmer.ImageID + ".png"
 
     return (
         <tr>

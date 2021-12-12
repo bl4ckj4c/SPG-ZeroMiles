@@ -27,13 +27,13 @@
   }
 
   .bg-sidebar{
-    background-color:#ffbf02  ;
+    background-color:#fafafc  ;
   }
 
   .sidebar-text{
-    color: white;
+    color: black;
     font-size: 24;
-    font-weight: bold;
+    font-family: Helvetica;
   }
 
   .logout-button{
@@ -42,11 +42,17 @@
  
 
   .nav-subtitle{
-    color: white;
+    color: black;
+    font-family: Helvetica;
+    font-weight: bold;
   } 
 
   .side-farmer{
     opacity: 0.4;
   }
+
+  .btn-close{
+    color: #ffffff !important;
+}
 
   /*background-color: blanchedalmond;*/

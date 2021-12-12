@@ -298,6 +298,20 @@ async function modifyOrderStatus(order){
     return { 'err': 'POST error' };
   }
 
+  async function createDelivery(newDelivery) {
+    const formData  = new FormData();
+    formData.append('deliveryJson', JSON.stringify(newDelivery));
+
+
+    const response = await fetch(BASEURL + "/ ", {
+        method: 'POST',
+        body: formData
+    });
+
+    return response;
+  }
+
+
   async function createProduct(newProduct, newImage) {
       const formData  = new FormData();
 
@@ -414,6 +428,7 @@ const API = {
     modifyWallet,
 
     createProduct,
+    createDelivery,
 
 
 

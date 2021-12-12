@@ -22,9 +22,6 @@ function ProductTable(props) {
     const [welcomeShow, setWelcomeShow] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    var dayjs = require('dayjs');
-    let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
-
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
@@ -32,9 +29,7 @@ function ProductTable(props) {
             setFarmerListUpdated(true);
             setLoading(true);
 
-            date = props.timeMachine ? props.timeMachine.toString() : date;
-
-            API.getAllProductsByFarmers(date)
+            API.getAllProductsByFarmers(props.timeMachine().toString())
                 .then(productByFarmer => {
                     setProductByFarmerList(productByFarmer);
                     setProductByFarmerListUpdated(false);
@@ -52,18 +47,16 @@ function ProductTable(props) {
         }
     }, [update]);
 
-     useEffect(() => {
+    useEffect(() => {
         if (!props.isLoggedIn)
         setWelcomeShow(true);
         else
-        setWelcomeShow(false);
-
+        props.setSideShow(false); 
     }, [props.isLoggedIn]);
 
     useEffect(() => {
         if (!farmerListUpdated && !productByFarmerListUpdated)
             setLoading(false);
-
     }, [farmerListUpdated, productByFarmerListUpdated]);
 
     if (!loading)
@@ -120,7 +113,6 @@ function ProductTableWrapped(props) {
         let tmp = []
         props.productByFarmer.forEach(p => tmp.push({ "number": 0, "ProductID": p.ProductID, "FarmerID": p.FarmerID, "NameProduct": p.NameProduct, "ImageID": p.ImageID, "Price": p.Price }))
         return tmp;
-
     }
 
     //this function updates the number in the array, also allows to display the current number in the counter
@@ -143,26 +135,18 @@ function ProductTableWrapped(props) {
             prodNumCopy[i].number = 0;
             console.log("updN " + input + prodNumCopy[i].number);
 
-        }
-        else {
+        } else {
             if (input > product.Quantity)
                 prodNumCopy[i].number = product.Quantity;
             else
                 prodNumCopy[i].number = input;
-
-
         }
-
         setProdNum(prodNumCopy);
-
     }
 
     async function submitOrder() {
-
         try {
             let customerID;
-            var dayjs = require('dayjs');
-            let date = dayjs().format('MM-DD-YYYY HH:mm:ss');
 
             if (props.isLoggedIn)
                 if (props.user.Role === "Employee") {
@@ -178,19 +162,16 @@ function ProductTableWrapped(props) {
             if (items.length === 0)
                 throw { err: "No products selected" };
 
-            date = props.timeMachine ? props.timeMachine.toString() : date;
-
             if (items.length > 0 && (selectedUser.length > 0 || props.user.Role !== "Employee")) {
                 let object = {
                     "UserID": customerID,
                     "items": items,
-                    "timestamp": date
+                    "timestamp": props.timeMachine().toString()
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
                 handleCartCheckoutModalClose();
                 handleShowConfirm(); //show the modal
-
             }
             else {
                 handleShowError(); //Se non ho selezionato alcun prodotto o cliente
@@ -211,7 +192,6 @@ function ProductTableWrapped(props) {
                 </Row>
 
                 {props.isLoggedIn ?
-
 
                     props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
