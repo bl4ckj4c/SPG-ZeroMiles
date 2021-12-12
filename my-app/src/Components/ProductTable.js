@@ -42,7 +42,7 @@ function ProductTable(props) {
                     setFarmerList(farmer);
                     setFarmerListUpdated(false);
                 }).catch(f => console.log(f));
-                
+
             setUpdate(false);
         }
     }, [update]);
@@ -51,17 +51,19 @@ function ProductTable(props) {
         if (!props.isLoggedIn)
             setWelcomeShow(true);
         else
+            setWelcomeShow(false);
             props.setSideShow(false);
     }, [props.isLoggedIn]);
 
-        return (<>
-            {loading ? <> <Row className="justify-content-center mt-5">
-                < Spinner animation="border" size="xl" variant="secondary" />
-            </Row > </> :
-                <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
-            }
+    return (<>
+        {loading ? <> <Row className="justify-content-center mt-5">
+            < Spinner animation="border" size="xl" variant="secondary" />
+        </Row > </> : <>
+            <ProductTableWrapped users={props.userList} triggerUpdate={triggerUpdate} productByFarmer={productByFarmerList} farmers={farmerList} isLoggedIn={props.isLoggedIn} user={props.user} timeMachine={props.timeMachine} />
             <WelcomeModal show={welcomeShow} onHide={() => setWelcomeShow(false)} />
-        </>);
+        </>
+        }
+    </>);
 }
 
 
@@ -482,11 +484,11 @@ function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
         <InputGroup style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '3px', borderBottomLeftRadius: '3px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant='warning' onClick={() => props.UpdateNumber(i, -1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px'}} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
-            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.2rem", fontSize: 14, maxWidth: "2.7rem" }} value={props.prodNum[i].number} />
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="warning" onClick={() => props.UpdateNumber(i, +1)} >
+            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background:'white', color:'black'}} value={props.prodNum[i].number} />
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>
         </InputGroup >
