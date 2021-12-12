@@ -24,12 +24,12 @@ function Deliver(props) {
                console.log(props.orderId);
                console.log("HERE");
                  let objectDelivery = {
-                     "orderId": props.orderId,
-                    "address": address,
+                     "OrderID": props.orderId,
+                    "DeliveryPlace": address,
                     "date": dateDelivery,
                     "time": timeDelivery
                 }
-             //   let res = await API.createDelivery(objectDelivery);
+                let res = await API.modifyDelivery(objectDelivery);
                 console.log(objectDelivery); 
                 setModalShowProductNew(false)
             }

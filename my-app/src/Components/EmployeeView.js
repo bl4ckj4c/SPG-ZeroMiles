@@ -7,6 +7,8 @@ import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 import Sidebar from "./Sidebar";
 import Modal from 'react-bootstrap/Modal'
+import Deliver from "./Deliver.js"
+
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -166,8 +168,7 @@ function OrderRow(props) {
 
                             {props.order.Status === 'pending' ? <>
                             <Col>
-                                    <Button size="sm" variant="outline-secondary">Request delivery</Button>
-                            </Col>
+                                <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
                             </> : <></>}
 
                             <Col>
