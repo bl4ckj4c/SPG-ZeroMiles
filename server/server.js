@@ -1190,8 +1190,9 @@ app.post('/api/modifyDelivery', async (req, res) => {
             res.status(404).json({error: "No entries (Table: Order)"});
         } else {
 
-            
-                let day = dayjs( req.body.DeliveryDate).format("DD-MM-YYYY HH-MM-SS");
+                console.log(req.body.DeliveryDate);
+                let day = dayjs(req.body.DeliveryDate).format("DD-MM-YYYY HH:MM");
+                console.log(day);
                 await db.collection('Order').doc(req.body.OrderID).update({DeliveryDate: day, DeliveryPlace: req.body.DeliveryPlace });
             
         }

@@ -20,7 +20,7 @@ function Deliver(props) {
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     async function submitDelivery() {
-               var datestring = dateDelivery.getDate()  + "-" + (dateDelivery.getMonth()+1) + "-" + dateDelivery.getFullYear()
+               var datestring = dateDelivery.getMonth()+1  + "-" + (dateDelivery.getDate()) + "-" + dateDelivery.getFullYear()
                datestring = datestring + " " +timeDelivery
                datestring = datestring+":00" //Add the seconds to the datetime delivery
                  let objectDelivery = {
