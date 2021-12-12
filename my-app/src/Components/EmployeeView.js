@@ -166,9 +166,15 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
 
-                            {props.order.Status === 'pending' ? <>
+                            {(props.order.Status === 'pending' && props.order.DeliveryDate === '') ? <>
                             <Col>
                                 <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
+                            </> : <></>}
+
+                            {props.order.DeliveryDate != '' ? <>
+                            <Col>
+                                    Delivery requested for {props.order.DeliveryDate}
+                            </Col>
                             </> : <></>}
 
                             <Col>
