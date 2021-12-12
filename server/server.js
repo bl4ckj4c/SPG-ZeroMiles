@@ -1189,7 +1189,7 @@ app.post('/api/modifyDelivery', async (req, res) => {
         } else {
 
                 console.log(req.body.DeliveryDate);
-                let day = dayjs(req.body.DeliveryDate).format("DD-MM-YYYY HH:MM");
+                let day = dayjs(req.body.DeliveryDate).format("DD-MM-YYYY HH:MM:ss");
                 console.log(day);
                 await db.collection('Order').doc(req.body.OrderID).update({DeliveryDate: day, DeliveryPlace: req.body.DeliveryPlace });
             
