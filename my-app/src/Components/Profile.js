@@ -5,29 +5,24 @@ import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-i
 import "./ClientView.css";
 
 function Profile(props) {
-    const [loggedClient, setloggedClient] = useState([]);
-    const [loggedClientUpdated, setloggedClientUpdated] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [wallet, setWallet] = useState({ Wallet: 0, Money: 0 });
     const [walletUpdated, setWalletUpdated] = useState(false);
     const [modalShow, setModalShow] = useState(false);
 
 
     useEffect(() => {
-        setLoading(true);
-        API.getClient()
-            .then(client => {
-                setloggedClient(client);
-                setloggedClientUpdated(true);
-                checkWallet(client);
-                setLoading(false);
-            })
-            .catch(c => handleErrors(c));
-    }, []);
+        
+        if(props.user.hasOwnProperty("Role")){
+            setLoading(false);
+            checkWallet(props.user.userID)
+        }
+        
+    }, [props.user]);
 
-    const checkWallet = (client) => {
+    const checkWallet = (UserID) => {
         try {
-            API.clientCheck({ ClientID: client.UserID })
+            API.clientCheck({ ClientID: UserID })
                 .then(w => {
                     setWallet(w);
                     setWalletUpdated(true);
@@ -53,12 +48,12 @@ function Profile(props) {
                     <Col className="mt-3">
                         <Table className="d-flex justify-content-center">
                             <tbody id="client-table" align="center">
-                                <ClientRow wallet={wallet} client={loggedClient} />
+                                <ClientRow wallet={wallet} client={props.user} />
                             </tbody>
                         </Table>
                     </Col>
 
-                    <InsufficientWallet wallet={wallet} show={modalShow} onHide={() => setModalShow(false)} />
+                    {props.user.Role === "Client" ? <InsufficientWallet wallet={wallet} show={modalShow} onHide={() => setModalShow(false)} /> : "" }
 
                 </>
             }
@@ -92,7 +87,7 @@ function ClientRow(props) {
                     </ListGroup>
                 </Card.Body>
 
-                <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <WalletFill />Wallet balance: €{props.client.Wallet}</Card.Body>
+                {props.client.Role === "Client" ? <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <WalletFill />Wallet balance: €{props.client.Wallet}</Card.Body> : "" }
             </Card>
         </>
     );

@@ -17,8 +17,9 @@ import Welcome from './Components/Welcome';
 import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
-import ProductNew from './Components/ProductNew';
 import Deliver from './Components/Deliver';
+
+
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
@@ -151,7 +152,11 @@ function App() {
           <EmployeeView users={userList} status={match.params.status} />)} />
 
         <Route exact path="/clients">
-          <ClientView users={userList} triggerUpdate={() => setUserListUpdated(true)} />
+          <ClientView users={userList} filterBy={"Client"} triggerUpdate={() => setUserListUpdated(true)} />
+        </Route>
+
+        <Route exact path="/farmers">
+          <ClientView users={userList} filterBy={"Farmer"} triggerUpdate={() => setUserListUpdated(true)} />
         </Route>
 
         <Route exact path="/myorders">
@@ -163,11 +168,7 @@ function App() {
         </Route>
 
         <Route exact path="/profile">
-          <Profile />
-        </Route>
-
-        <Route exact path="/productNew">
-          <ProductNew/>
+          <Profile user={user} />
         </Route>
 
         <Route exact path="/farmerview">

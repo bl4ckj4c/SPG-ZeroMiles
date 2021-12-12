@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Image, Form, Table, InputGroup, Row, Col, ListGroup, Container, Modal, Button, Card } from 'react-bootstrap';
+import { Image, Form, Table, InputGroup, Row, Col, ListGroup, Spinner, Container, Modal, Button, Card } from 'react-bootstrap';
 import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
 import API from '../API';
 import "./ClientView.css";
@@ -7,25 +7,52 @@ import "./ClientView.css";
 function ClientView(props) {
     const [searchParameter, setSearchParameter] = useState("");
     const [filteredClients, setFilteredClients] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [farmerList, setFarmerList] = useState([]);
 
     useEffect(() => {
-        if (props.users.length > 0)
-            setFilteredClients([...props.users])
-    }, [props.users]);
+        setLoading(true);
+        if (props.filterBy === "Farmer") {
+            API.getFarmer()
+                .then(farmer => {
+                    setFarmerList(farmer);
+                    setLoading(false);
+                }).catch(f => console.log(f));
+        }else{ //in this case I show all clients
+            setLoading(false);
+        }
 
-    return (
+    }, [props.filterBy])
+
+
+    useEffect(() => {
+        if (props.users.length > 0){
+            setFilteredClients([...props.users])
+            setSearchParameter("");
+        }
+    }, [props.users, props.filterBy]);
+
+    if(loading)
+        return (<Row className="justify-content-center mt-5">
+        < Spinner animation="border" size="xl" variant="secondary" />
+    </Row >);
+    else
+         return (
         <>
+            {props.filterBy === "Farmer" ? "" : 
             <Container>
-                <Row className="mt-3 margin-search-desktop">
-                    <UserSearchBar searchParameter={searchParameter} setSearchParameter={setSearchParameter} users={props.users} setFilteredClients={setFilteredClients} />
-                </Row>
-            </Container>
+            <Row className="mt-3 margin-search-desktop">
+                <UserSearchBar farmerList={farmerList} filterBy={props.filterBy} searchParameter={searchParameter} setSearchParameter={setSearchParameter} users={props.users} setFilteredClients={setFilteredClients} />
+            </Row>
+        </Container>
+        }
+            
 
             <Col>
-            {filteredClients.filter( client => client.Role === "Client" ).length > 0 ?
+            {filteredClients.filter( client => client.Role === props.filterBy ).length > 0 ?
             <Table className="d-flex justify-content-center">
             <tbody id="client-table" align="center">
-                {filteredClients.map((c,i) => c.Role === "Client" ? <ClientRow key={i} client={c} triggerUpdate={props.triggerUpdate} /> : <></>)}
+                {filteredClients.map((c,i) => c.Role === props.filterBy ? <ClientRow farmer={props.filterBy ==="Farmer" ? farmerList.find(f => f.FarmerID === c.UserID) : "" } filterBy={props.filterBy} key={i} client={c} triggerUpdate={props.triggerUpdate} /> : <></>)}
             </tbody>
         </Table>
         : 
@@ -34,6 +61,7 @@ function ClientView(props) {
                 
             </Col>
         </>
+    
     );
 }
 
@@ -49,7 +77,8 @@ function ClientRow(props) {
                         <PersonCircle size={60} style={{ marginBottom: '6px', marginRight: '5px' }} />
                     </Col>
                     <Col md={8}>
-                        <Card.Title style={{ fontSize: 28 }}> {props.client.Name} {props.client.Surname} </Card.Title>
+                    {props.filterBy==="Client" ? <Card.Title style={{ fontSize: 28 }}> {props.client.Name} {props.client.Surname} </Card.Title> : "" }
+                    {props.filterBy==="Farmer" ? <Card.Title style={{ fontSize: 28 }}> {props.farmer.Company} </Card.Title> : "" }
                         <Card.Subtitle className="mb-2 text-muted">{props.client.Email}</Card.Subtitle>
                     </Col>
                 </Row>
@@ -60,11 +89,13 @@ function ClientRow(props) {
                 <ListGroup style={{ textAlign: "left" }}>
                     <ListGroup.Item><GeoAltFill /> Address: {props.client.Address}</ListGroup.Item>
                     <ListGroup.Item><MapFill /> City: {props.client.City}, {props.client.State}</ListGroup.Item>
-                    <ListGroup.Item><WalletFill /> Wallet balance: €{props.client.Wallet}</ListGroup.Item>
+                    {props.filterBy==="Client" ? 
+                         <ListGroup.Item><WalletFill /> Wallet balance: €{props.client.Wallet}</ListGroup.Item> : "" }
                 </ListGroup>
             </Card.Body>
 
-            <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <ButtonBalance client={props.client} triggerUpdate={props.triggerUpdate} /></Card.Body>
+            {props.filterBy==="Client" ? 
+            <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}> <ButtonBalance client={props.client} triggerUpdate={props.triggerUpdate} /></Card.Body> : ""}
         </Card>
         </>
     );
