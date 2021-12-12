@@ -4,13 +4,12 @@ import { Table, Row, Col, Container, FormControl, Form, Button, Image, ButtonGro
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
 import "./ClientOrders.css";
+import Deliver from "./Deliver.js"
 
 function ClientOrders(props) {
-
     const [ordersList, setOrdersList] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
     const [loading, setLoading] = useState(false);
-
     useEffect(() => {
         setLoading(true);
         API.getClientOrders()
@@ -118,7 +117,7 @@ function OrderRow(props) {
 
                             {props.order.Status === 'pending' ? <>
                             <Col>
-                                    <Button size="sm" variant="outline-secondary">Request delivery</Button>
+                                    <Deliver orderId={props.order.OrderID}></Deliver>
                             </Col>
                             </> : <></>}
                             
