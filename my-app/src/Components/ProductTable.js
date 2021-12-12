@@ -2,7 +2,6 @@ import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-boo
 import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
 import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Spinner, Modal } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
-import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 import API from '../API';
@@ -203,7 +202,7 @@ function ProductTableWrapped(props) {
 
                     props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
-                        <Col> <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                        <Col> <UserDropdown users={props.users.filter(u => u.Role === "Client")} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                         </Col>
                         <Col xs={3} sm={2} md={2} lg={1} xl={1} xxl={1} style={{ textAlign: 'right' }}>
                             <AvailableAmountButton walletAndTotal={walletAndTotal} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} />
