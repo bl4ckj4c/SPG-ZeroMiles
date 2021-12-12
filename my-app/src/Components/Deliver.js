@@ -17,20 +17,19 @@ function Deliver(props) {
     const [address, setAddress] = useState('');
     const [dateDelivery, setDateDelivery] = useState(new Date());
     const [timeDelivery, setTimeDelivery] = useState('');
-    //sconst [orderId, setOrderId] = useState(props.order.OrderID);
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     async function submitDelivery() {
-               console.log(props.orderId);
-               console.log("HERE");
+               var datestring = dateDelivery.getDate()  + "-" + (dateDelivery.getMonth()+1) + "-" + dateDelivery.getFullYear()
+               datestring = datestring + " " +timeDelivery
                  let objectDelivery = {
-                     "OrderID": props.orderId,
+                    "OrderID": props.orderId,
                     "DeliveryPlace": address,
-                    "date": dateDelivery,
-                    "time": timeDelivery
+                    "DeliveryDate": datestring
                 }
                 let res = await API.modifyDelivery(objectDelivery);
-                console.log(objectDelivery); 
+                console.log(objectDelivery);
+                console.log(res);
                 setModalShowProductNew(false)
             }
 
@@ -80,12 +79,9 @@ function ModalDeliveryNew(props) {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="dateDelivery">
                         <Form.Label className="label">Date for delivery</Form.Label>
-                   <DateDeliveryRow setDateDelivery={props.setDateDelivery} ></DateDeliveryRow>
+                        <DateDeliveryRow setDateDelivery={props.setDateDelivery} ></DateDeliveryRow>
+                        <TimeDeliveryRow setTimeDelivery={props.setTimeDelivery} ></TimeDeliveryRow>
                    </Form.Group>
-                   <Form.Group className="mb-3" controlId="timeDelivery">
-                        <TimeDeliveryRow setTimeDelivery={props.setTimeDelivery} />
-                  </Form.Group>
-                    
                     <Button onClick={props.submitDelivery} variant="success">Create</Button>
                     {' '}{' '}
                     <Button variant='danger' onClick={props.onHide}>Close</Button>
@@ -108,6 +104,7 @@ const DateDeliveryRow = (props) => {
     const [startDate, setStartDate] = useState(new Date());
     return (                                   
       <DatePicker selected={startDate}
+      format="dd-MM-yyyy" 
        onChange={(date) => setStartDate(date)}
        onChange={(date) => props.setDateDelivery(date)}
        />
@@ -115,13 +112,13 @@ const DateDeliveryRow = (props) => {
   };
 
   const TimeDeliveryRow = (props) => {
-    const [value, onChange] = useState('10:00');
+    const [value, onChange] = useState('10:00:00');
   
     return (
       <div>
         <TimePicker
           onChange={onChange}
-          onChange={(time) => props.setTimeDelivery(time)}
+          onChange={(value) =>props.setTimeDelivery(value)}
           value={value}
         />
       </div>
