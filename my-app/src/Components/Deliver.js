@@ -21,16 +21,22 @@ function Deliver(props) {
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
 
     async function submitDelivery() {
-              //  console.log(props.order.OrderID);
-        /*         let objectDelivery = {
+               console.log(props.OrderID);
+               console.log("HERE");
+                 let objectDelivery = {
+                     "orderId": props.OrderID,
                     "address": address,
                     "date": dateDelivery,
                     "time": timeDelivery
                 }
-                let res = await API.createDelivery(objectDelivery);
-                console.log(objectDelivery); */
+             //   let res = await API.createDelivery(objectDelivery);
+                console.log(objectDelivery); 
                 setModalShowProductNew(false)
             }
+
+
+
+
     return (
         <>
             {
@@ -93,7 +99,7 @@ function ModalDeliveryNew(props) {
 function DeliveryBottom(props) {
     return (
         <>
-            <Button onClick={props.onShow}>Schedule delivery</Button>
+            <Button onClick={props.onShow} size="sm" variant="outline-secondary">delivery</Button>
         </>
     );
 }

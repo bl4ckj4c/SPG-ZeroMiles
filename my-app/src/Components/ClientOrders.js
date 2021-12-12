@@ -117,7 +117,7 @@ function OrderRow(props) {
 
                             {props.order.Status === 'pending' ? <>
                             <Col>
-                                    <Deliver orderId={props.order.OrderID} size="sm" variant="outline-secondary"></Deliver>
+                                    <Deliver orderId={props.order.OrderID}></Deliver>
                             </Col>
                             </> : <></>}
                             
