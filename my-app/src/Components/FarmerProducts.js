@@ -6,14 +6,13 @@ import "./FarmerProducts.css";
 import ProductNew from "./ProductNew"
 
 function FarmerProducts(props) {
-  console.log("tempo" + props.timeMachine().toString());
   const [products, setProducts] = useState([]);
   const [updateProducts, setUpdateProducts] = useState(true);
   const [updated, setUpdated] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState([]);
   const [productsByFarmer, setProductsByFarmer] = useState(false);
   const [addProdShow, setAddProdShow] = useState(false);
-  const [ProductsByFarmerUpdate, setProductsByFarmerUpdate] = useState(true);
+  const [productsByFarmerUpdate, setProductsByFarmerUpdate] = useState(true);
   const [isAllowedAddProduct, setIsAllowedAddProduct] = useState(false)
   var dayjs = require('dayjs');
 
@@ -29,18 +28,44 @@ function FarmerProducts(props) {
       setIsAllowedAddProduct(true)
     }
 
-    console.log('dsafasgfhsaklfsafsaf')
+  }, [productsByFarmerUpdate])
 
 
-  }, [ProductsByFarmerUpdate])
-
-
-  async function addProdTest(prod) {
+  async function addProdTest(p, prod) {
 
     try {
+      
+      let updatedPrd = {
+        "ImageID" : p.ImageID ,
+        "NameProduct" : prod.productByFarmerID===false ? p.Name : p.NameProduct,
+        "Price" : prod.Price, 
+        "ProdByFarmerID" : "" ,
+        "ProductID" : prod.ProductID, 
+        "Quantity" : prod.Quantity ,
+        "UnitOfMeasurement" : prod.UnitOfMeasurement, 
+      }
+  
+
+
       let result = await API.addProduct(prod, props.timeMachine().toString());
-      setProductsByFarmerUpdate(true);
+      if (await !result.hasOwnProperty('productByFarmerID'))
+        throw ({ "err" : "errore" });
+      
+      if(prod.productByFarmerID !== false){ //if the product is EDITED
+          let copy = JSON.parse(JSON.stringify(productsByFarmer));
+          let index = copy.findIndex(p => p.ProdByFarmerID === prod.productByFarmerID )
+          updatedPrd.ProdByFarmerID = await result.productByFarmerID;
+          copy[index]=updatedPrd;
+          console.log("index" + index);
+          setProductsByFarmer(copy);
+      }
+      else{
+        updatedPrd.ProdByFarmerID = await result.productByFarmerID;
+        setProductsByFarmer([...productsByFarmer, updatedPrd]);
+      }
+
       setSelectedProduct([]);
+
     }
     catch (err) {
       console.log(err);
@@ -52,7 +77,13 @@ function FarmerProducts(props) {
   async function deleteProductByFarmer(PbFid) {
     try {
       let result = await API.deleteProduct({ productByFarmerID: PbFid })
-      setProductsByFarmerUpdate(true);
+      if (await result.hasOwnProperty('err')){
+          throw (result.err);
+      }
+
+      let newproducts = productsByFarmer.filter(pbf => pbf.ProdByFarmerID !== PbFid);
+      console.log(productsByFarmer)
+      setProductsByFarmer(newproducts);
       setSelectedProduct([]);
 
     }
@@ -75,7 +106,7 @@ function FarmerProducts(props) {
   }, [updateProducts]);
 
   useEffect(() => {
-    if (ProductsByFarmerUpdate) {
+    if (productsByFarmerUpdate) {
       API.getProductsByFarmer(props.timeMachine().toString())
         .then(p => {
           setProductsByFarmer(p);
@@ -86,7 +117,7 @@ function FarmerProducts(props) {
           console.log(f)
         });
     }
-  }, [ProductsByFarmerUpdate]);
+  }, [productsByFarmerUpdate]);
 
   useEffect(() => {
     if(props.reloadTime)
@@ -99,7 +130,7 @@ function FarmerProducts(props) {
 
       <ProductsDropdown isAllowedAddProduct={isAllowedAddProduct} products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
       <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)} variant="secondary">Add product</Button>
-      <ProductNew isAllowedAddProduct={isAllowedAddProduct} UpdateProdList={() => setUpdateProducts(true)} />
+      <ProductNew UpdateProdList={() => setUpdateProducts(true)} />
       <Table className="d-flex justify-content-center">
         <tbody id="prod-table" align="center">
           {productsByFarmer !== false ? productsByFarmer.map(p =>
@@ -175,7 +206,7 @@ function ProductByFarmerModal(props) {
       ProductID: props.p.ProductID
     }
 
-    props.addProdTest(prod);
+    props.addProdTest(props.p, prod);
     props.onHide();
     if (!props.Edit) {
       setPrice("");
@@ -222,7 +253,7 @@ function ProductByFarmerModal(props) {
           </Form>
 
         </Modal.Body>
-        <Button onClick={AddProduct} variant="success">{props.Edit ? "Add the product" : "Edit the product"}</Button>
+        <Button onClick={AddProduct} variant="success">{!props.Edit ? "Add the product" : "Edit the product"}</Button>
 
       </Modal>
     );
