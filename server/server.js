@@ -103,7 +103,7 @@ const firebaseappBackup3 = firebaseBackup3.initializeApp({
 //var db_backup = firebaseBackup.firestore(firebaseappBackup);
 //var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
 //var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
-var db = firebaseBackup.firestore(firebaseappBackup);
+var db = firebaseBackup2.firestore(firebaseappBackup2);
 
 //use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
 //BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
@@ -1214,7 +1214,7 @@ app.post('/api/timeMachine',async(req,res)=>{
     if(dayjs(newdate).day()==purchaseTriggerDOW &&  
        dayjs(newdate).week() == dayjs().week() && 
        dayjs(newdate).format("HH:mm") >= purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
-        
+
         try {
             const orders = await db.collection('Order').orderBy('Timestamp').get();
             if (orders.empty) {
