@@ -1111,7 +1111,7 @@ app.post('/api/order', async (req, res) => {
             })
         })
 
-        const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).get()  //get all order by that client
+        const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).where("Status","==","open").get()  //get all open orders by that client
         if(!orders.empty){  //if the client has an open order, add products to that order
             orders.forEach(order => {
                 let orderday = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss');
@@ -1119,7 +1119,7 @@ app.post('/api/order', async (req, res) => {
                 if(dayjs(orderday).day()==0 && dayjs(orderday).hour() <23){
                     orderweekOfYear= orderweekOfYear - 1;
                 }
-                if(orderweekOfYear == reqweekOfYear){ //if it's the order of current week, update it
+                if(orderweekOfYear == reqweekOfYear){ //if it's the order of current week, update it (actually, if i selected previously all "open" orders, they must belong to the current week)
                     sameweekorder = 1;
                     let newlist = [
                         ...order.data().Products,
