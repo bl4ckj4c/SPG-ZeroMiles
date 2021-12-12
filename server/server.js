@@ -1334,6 +1334,8 @@ app.post('/api/addProduct', async (req, res) => {
     
     let day2 = dayjs(req.body.date);
     let weekOfYear=0;
+    let returned;
+    let PrdId;
 
     if(dayjs(day2).day()==6 && dayjs(day2).hour() >8){
     weekOfYear= dayjs(day2).week() +1;
@@ -1353,15 +1355,17 @@ app.post('/api/addProduct', async (req, res) => {
         newprodFarmer.Week= weekOfYear;
 
         
-        await db.collection('Product by Farmers').add(newprodFarmer);
+        returned = await db.collection('Product by Farmers').add(newprodFarmer);
+        PrdId = returned.id
         }else{
             
             
             await db.collection('Product by Farmers').doc(req.body.productByFarmerID).update({Price: req.body.Price, Quantity: req.body.Quantity, Unitofmeasurement: req.body.UnitOfMeasurement});
-
+            PrdId = req.body.productByFarmerID;
 
         }
-        res.status(201).end();
+        res.status(201).json({ productByFarmerID : PrdId }).end();
+        console.log(returned);
 
     } catch (error) {
         console.log(error);
