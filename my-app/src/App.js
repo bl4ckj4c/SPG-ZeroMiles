@@ -5,7 +5,6 @@ import API from './API';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
 import UserRegister from './Components/UserRegister.js';
-import UserRegisterEmployee from './Components/UserRegisterEmployee.js';
 import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
 import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
