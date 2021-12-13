@@ -22,7 +22,7 @@ function Profile(props) {
 
     const checkWallet = (UserID) => {
         try {
-            API.clientCheck({ ClientID: UserID })
+            await API.clientCheck({ ClientID: UserID })
                 .then(w => {
                     setWallet(w);
                     setWalletUpdated(true);
