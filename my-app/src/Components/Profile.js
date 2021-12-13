@@ -20,7 +20,7 @@ function Profile(props) {
         
     }, [props.user]);
 
-    const checkWallet = (UserID) => {
+     async function checkWallet(UserID) {
         try {
             await API.clientCheck({ ClientID: UserID })
                 .then(w => {
