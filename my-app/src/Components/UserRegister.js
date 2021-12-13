@@ -11,6 +11,7 @@ function UserRegister(props) {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
+    const [company, setCompany] = useState('');
     const [password, setPassword] = useState('');
     const [confPassword, setConfPassword] = useState('');
     const [phone, setPhone] = useState('');
@@ -34,31 +35,35 @@ function UserRegister(props) {
 
     const handleCloseConfirm = () => {
         setShowConfirm(false);
-
         if(!props.loggedIn){
             history.push("/");
         }
 
         if(props.loggedIn){
-            history.push("/clients");
+            props.triggerUpdate()
+
+            if(props.registerFarmer)
+                history.push("/farmers");
+                else
+                history.push("/clients");
         }
     }
 
     function validForm(event) {
         event.preventDefault();
-        if (!name) {
+        if (!name.trim()) {
             setToast(true);
             setToastMessage("Please enter your name")
             return false;
-        } else if (!surname) {
+        } else if (!surname.trim()) {
             setToast(true);
             setToastMessage("Please enter your surname")
             return false;
-        } else if (!password) {
+        } else if (!password.trim()) {
             setToast(true);
             setToastMessage("Please enter a password")
             return false;
-        } else if (!confPassword) {
+        } else if (!confPassword.trim()) {
             setToast(true);
             setToastMessage("Please confirm your password")
             return false;
@@ -66,29 +71,68 @@ function UserRegister(props) {
             setToast(true);
             setToastMessage("Your two passwords are different!")
             return false;
-        } else if (!email) {
+        } else if (!email.trim()) {
             setToast(true);
             setToastMessage("Please enter your Email")
             return false;
-        } else if (!city) {
+        } else if (!company.trim() && props.registerFarmer === true) { //TODO
+            setToast(true);
+            setToastMessage("Please enter your company name")
+            return false;
+        } else if (!city.trim()) {
             setToast(true);
             setToastMessage("Please enter your City")
             return false;
-        } else if (!address) {
+        } else if (!address.trim()) {
             setToast(true);
             setToastMessage("Please enter your Address")
             return false;
-        } else if (!zipcode) {
+        } else if (!zipcode.trim()) {
             setToast(true);
             setToastMessage("Please confirm your Zipcode")
             return false;
         } else {
-            sendRegister(event);
+            if(props.registerFarmer === true)
+                sendRegisterFarmer(event);
+                else
+                sendRegisterClient(event);
+
             // handleShowConfirm();
         }
     }
 
-    async function sendRegister(event) {
+    async function sendRegisterFarmer(event) {
+        event.preventDefault();
+        let stateCaps = state.toUpperCase().toString();
+        let farmer = {
+            "name": name,
+            "surname": surname,
+            "email": email,
+            "address": address,
+            "company": company,
+            "phone": phone,
+            "city": city,
+            "password": password,
+            "zipcode": zipcode,
+            "stateCaps": stateCaps
+        }
+        
+            let res = await API.farmerRegister(farmer);
+            console.log("HERE response",farmer);
+            console.log("HERE response",res.json());
+            if (res.ok){
+                //props.setLoggedIn(true);
+                handleShowConfirm();
+            }
+            else{
+                setMessageErrorRegister(res.statusText);
+                handleRegisterResponseModalShow();
+              
+            }
+    }
+
+
+    async function sendRegisterClient(event) {
         event.preventDefault();
         let stateCaps = state.toUpperCase().toString();
         
@@ -127,6 +171,9 @@ function UserRegister(props) {
             );
     }
 
+    if(props.registerFarmer===true && props.user.Role!=="Employee")
+    return ""
+    else
     return (
         <Container>
             {toast && (
@@ -164,13 +211,19 @@ function UserRegister(props) {
                                     <SelectState></SelectState>
                                 </Form.Control>
                             </Form.Group>
+                            {props.registerFarmer ? 
+                            <Form.Group className="mb-3" controlId="company">
+                                <Form.Label className="label">Company:</Form.Label>
+                                <Form.Control type="text" placeholder="Enter company name" onChange={(e) => setCompany(e.target.value)} />
+                            </Form.Group>
+                            : "" }
                             <Form.Group className="mb-3" controlId="password">
                                 <Form.Label className="label">Password:</Form.Label>
                                 <Form.Control type="password" placeholder="Enter password" onChange={(e) => setPassword(e.target.value)} />
                             </Form.Group>
                         </Col>
                         <Col xs={6}>
-                            <Form.Group className="mb-3">
+                            <Form.Group className="mb-3" controlId="surname">
                                 <Form.Label className="label">Surname:</Form.Label>
                                 <Form.Control type="text" controlId="surname" placeholder="Enter Surname" onChange={(e) => setSurname(e.target.value)} />
                             </Form.Group>
