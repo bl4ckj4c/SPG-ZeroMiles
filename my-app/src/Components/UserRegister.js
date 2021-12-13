@@ -15,18 +15,11 @@ function UserRegister(props) {
     const [confPassword, setConfPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [city, setCity] = useState('');
-    const [state, setState] = useState('');
+    const [state, setState] = useState('ag');
     const [zipcode, setZipcode] = useState('');
-    const [toastName, setToastName] = useState(false);
-    const [toastSurname, setToastSurname] = useState(false);
-    const [toastEmail, setToastEmail] = useState(false);
-    const [toastAddress, setToastAddress] = useState(false);
-    const [toastPassword, setToastPassword] = useState(false);
-    const [toastConfPassword, setToastConfPassword] = useState(false);
-    const [toastPhone, setToastPhone] = useState(false);
-    const [toastCity, setToastCity] = useState(false);
-    const [toastZipcode, setToastZipcode] = useState(false);
-    const [toastPasswordNotEqual, setToastPasswordNotEqual] = useState(false);
+
+    const [toast, setToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
 
     const [messageErrorRegister, setMessageErrorRegister] = useState('');
     const [registerResponseModal, setRegisterResponseModal] = useState(false);
@@ -54,30 +47,40 @@ function UserRegister(props) {
     function validForm(event) {
         event.preventDefault();
         if (!name) {
-            setToastName(true)
+            setToast(true);
+            setToastMessage("Please enter your name")
             return false;
         } else if (!surname) {
-            setToastSurname(true)
+            setToast(true);
+            setToastMessage("Please enter your surname")
             return false;
         } else if (!password) {
-            setToastPassword(true)
+            setToast(true);
+            setToastMessage("Please enter a password")
             return false;
         } else if (!confPassword) {
-            setToastConfPassword(true)
+            setToast(true);
+            setToastMessage("Please confirm your password")
             return false;
-        } else if (!(password === confPassword)) {
-            alert("The password is not the same");
-        } else if (!(password === confPassword)) {
-            setToastPasswordNotEqual(true)
+        } else if (password !== confPassword) {
+            setToast(true);
+            setToastMessage("Your two passwords are different!")
             return false;
         } else if (!email) {
-            setToastEmail(true);
+            setToast(true);
+            setToastMessage("Please enter your Email")
             return false;
         } else if (!city) {
-            setToastCity(true)
+            setToast(true);
+            setToastMessage("Please enter your City")
+            return false;
+        } else if (!address) {
+            setToast(true);
+            setToastMessage("Please enter your Address")
             return false;
         } else if (!zipcode) {
-            setToastZipcode(true)
+            setToast(true);
+            setToastMessage("Please confirm your Zipcode")
             return false;
         } else {
             sendRegister(event);
@@ -126,93 +129,12 @@ function UserRegister(props) {
 
     return (
         <Container>
-            {toastName && (
-                <Toast className="toast-register" onClose={() => setToastName(false)} delay={5000} autohide>
+            {toast && (
+                <Toast className="toast-register" onClose={() => setToast(false)} delay={5000} autohide>
                     <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
+                        <strong className="me-auto">Attention!</strong>
                     </Toast.Header>
-                    <Toast.Body>Please enter your Name</Toast.Body>
-                </Toast>
-            )}
-
-            {toastSurname && (
-                <Toast className="toast-register" onClose={() => setToastSurname(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your surname</Toast.Body>
-                </Toast>
-            )}
-
-            {toastEmail && (
-                <Toast className="toast-register" onClose={() => setToastEmail(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your Email</Toast.Body>
-                </Toast>
-            )}
-
-            {toastAddress && (
-                <Toast className="toast-register" onClose={() => setToastAddress(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your Address</Toast.Body>
-                </Toast>
-            )}
-
-            {toastCity && (
-                <Toast className="toast-register" onClose={() => setToastCity(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your City</Toast.Body>
-                </Toast>
-            )}
-
-            {toastPhone && (
-                <Toast className="toast-register" onClose={() => setToastPhone(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your Phone</Toast.Body>
-                </Toast>
-            )}
-
-            {toastZipcode && (
-                <Toast className="toast-register" onClose={() => setToastZipcode(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your Zipcode</Toast.Body>
-                </Toast>
-            )}
-
-            {toastPassword && (
-                <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your password</Toast.Body>
-                </Toast>
-            )}
-
-            {toastConfPassword && (
-                <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Please enter your Password Confirmation</Toast.Body>
-                </Toast>
-            )}
-
-            {toastPasswordNotEqual && (
-                <Toast className="toast-register" onClose={() => setToastPassword(false)} delay={5000} autohide>
-                    <Toast.Header>
-                        <strong className="me-auto">Remembering</strong>
-                    </Toast.Header>
-                    <Toast.Body>Your Password is not confirmed properly</Toast.Body>
+                    <Toast.Body>{toastMessage}</Toast.Body>
                 </Toast>
             )}
 
