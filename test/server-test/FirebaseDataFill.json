@@ -8,33 +8,33 @@
 			"offers": [
 				{
 					"price": 2,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 2.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -46,33 +46,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -84,71 +84,71 @@
 			"offers": [
 				{
 					"price": 10,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 11,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 10,
 					"quantity": 2,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 11,
 					"quantity": 2,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 10,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 11,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
 		{
 			"id": "Mqn4HUlBrmA7gRw2Bly",
 			"name": "Wurstel di suino",
-			"description": "Prodotti a mano. Wurstel a base di carne suina, senza grassi aggiunti.\nOgni confezione contiene: 3 pezzi.\n\nIngredienti: Carne di suino, sale, spezie, aromi naturali, zucchero di canna.\n\nAntiossidante: ascorbato di sodio; conservante: nitrito di sodio.\n\nValore nutrizionale medio per 100 g: Energia ( 250 Kcal 1046 kj) Grassi (21,1 g di cui saturi 7,81 g) Carboidrati (1,9 g) Proteine ( 13,2 g ) Sale ( 2,5 g )",
+			"description": "Prodotti a mano. Wurstel a base di carne suina, senza grassi aggiunti.\nOgni confezione contiene: 3 pezzi.\n\nIngredienti: Carne di suino, sale, spezie, aromi naturali, zucchero di canna.\n\nAntiossidante: ascorbato di sodio; conservante: nitrito di sodio.\n\nValore nutrizionale medio per 100 200g: Energia ( 250 Kcal 1046 kj) Grassi (21,1 200g di cui saturi 7,81 200g) Carboidrati (1,9 200g) Proteine ( 13,2 200g ) Sale ( 2,5 200g )",
 			"photoId": "3a1e9e73-1df7-43ed-95ee-9b224e4f3a25",
 			"offers": [
 				{
 					"price": 2,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 2.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -161,70 +161,70 @@
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 7,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 12,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 15,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 20,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
 		{
 			"id": "Mqn4KCBPPhGtzPXHdkC",
 			"name": "Salsiccia fresca",
-			"description": "Ricetta classica piemontese, con sale pepe e noce moscata. Un capolavoro della tradizione e dell'innovazione. L'avete mai provata nel chili o nei nachos?\n\nIngredienti: carne suina, sale marino, spezie ed erbe aromatiche, zucchero di canna.\nSENZA ANTIOSSIDANTI E CONSERVANTI.\nValore nutrizionale medio per 100 g di prodotto: Energia 304 kCal 1273 kJ, Grassi 26.7 g di cui saturi 8.61 g, Carboidrati 0.6 g, Proteine 15.4 g, Sale 2.4 g.",
+			"description": "Ricetta classica piemontese, con sale pepe e noce moscata. Un capolavoro della tradizione e dell'innovazione. L'avete mai provata nel chili o nei nachos?\n\nIngredienti: carne suina, sale marino, spezie ed erbe aromatiche, zucchero di canna.\nSENZA ANTIOSSIDANTI E CONSERVANTI.\nValore nutrizionale medio per 100 200g di prodotto: Energia 304 kCal 1273 kJ, Grassi 26.7 200g di cui saturi 8.61 200g, Carboidrati 0.6 200g, Proteine 15.4 200g, Sale 2.4 200g.",
 			"photoId": "f71ad3f8-a346-4b6c-bb61-527e9fe019fc",
 			"offers": [
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 7,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 12,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 15,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 20,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
@@ -237,32 +237,32 @@
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 7,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 12,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 15,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 20,
 					"quantity": 500,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
@@ -274,33 +274,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -312,33 +312,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -351,32 +351,32 @@
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 7,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 12,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 15,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 20,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -389,32 +389,32 @@
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 7,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 12,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 15,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 20,
 					"quantity": 5,
-					"unitofmeasurement": "kg"
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -427,32 +427,32 @@
 				{
 					"price": 3,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 3.5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 4.5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				},
 				{
 					"price": 5.5,
 					"quantity": 200,
-					"unitofmeasurement": "g"
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
@@ -464,33 +464,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -502,109 +502,109 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
 		{
 			"id": "Mqn4Ymqe9LQrZTKjnDp",
-			"name": "Bagnetto verde alla piemontese",
+			"name": "1 Bagnetto verde alla piemontese",
 			"description": "Prezzemolo, olio Evo, aceto, sale, aglio.",
 			"photoId": "38ba0c1e-fb10-4654-a797-f542534ae8ae",
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
 		{
 			"id": "Mqn4aQvxePe1NoWirsM",
 			"name": "Zucca bio sottovuoto",
-			"description": "Zucca del nostro orto confezionata sottovuoto in pacchi da 1 kg.",
+			"description": "Zucca del nostro orto confezionata sottovuoto in pacchi da 1 1kg.",
 			"photoId": "b54d75be-ca61-49e8-9795-e61e8db5f792",
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -616,33 +616,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -654,33 +654,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -692,33 +692,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -730,33 +730,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -768,33 +768,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -806,33 +806,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -844,33 +844,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -882,33 +882,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -920,33 +920,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -958,33 +958,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -996,33 +996,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1034,33 +1034,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1072,33 +1072,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1110,33 +1110,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1148,33 +1148,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1186,33 +1186,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1224,33 +1224,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1262,33 +1262,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1300,33 +1300,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1338,33 +1338,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1376,33 +1376,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1414,33 +1414,33 @@
 			"offers": [
 				{
 					"price": 15,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 15.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 16,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 16.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 17,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 17.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1452,33 +1452,33 @@
 			"offers": [
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 6.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1490,33 +1490,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1528,33 +1528,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1566,33 +1566,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1604,33 +1604,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1642,33 +1642,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1680,71 +1680,71 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
 		{
 			"id": "Mqn5Fe57EePWUW6WeoI",
 			"name": "Costine",
-			"description": "Costina da taglio verde dal sapore molto dolce. Da sbollentare un attimo in padelle e condire con olio, sale e limone oppure poi da ripassare in padella con aglio e olio.\n\nMazzo costine da mezzo kg, prodotto biologico, da agricoltura sociale.",
+			"description": "Costina da taglio verde dal sapore molto dolce. Da sbollentare un attimo in padelle e condire con olio, sale e limone oppure poi da ripassare in padella con aglio e olio.\n\nMazzo costine da mezzo 1kg, prodotto biologico, da agricoltura sociale.",
 			"photoId": "6fd5e5df-5fd3-4f15-98b3-8a75824ae14a",
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1756,33 +1756,33 @@
 			"offers": [
 				{
 					"price": 7,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 7.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 8.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				},
 				{
 					"price": 9.5,
-					"quantity": 1,
-					"unitofmeasurement": "kg"
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1794,33 +1794,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1832,71 +1832,71 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
 		{
 			"id": "Mqn5LC3cRpyZMwk6bvz",
 			"name": "Conserva di Pomodoro",
-			"description": "Sugo pronto, per preparare un primo velocemente.\n\nINGREDIENTI: Pomodoro (90%), cipolla, carota, sedano, olio extra vergine d’oliva, sale, aglio.\n\nOrigine del pomodoro: Italia (Asti)\n\nValori nutrizionali medi per 100 gr. : Energia 191 KJ/46 kcal, Grassi 1,9 g di cui acidi grassi saturi 0,3 g, Carboidrati 4 g di cui zuccheri 3,6 g, Proteine 1,8 g, Sale 0,7 g",
+			"description": "Sugo pronto, per preparare un primo velocemente.\n\nINGREDIENTI: Pomodoro (90%), cipolla, carota, sedano, olio extra vergine d’oliva, sale, aglio.\n\nOrigine del pomodoro: Italia (Asti)\n\nValori nutrizionali medi per 100 gr. : Energia 191 KJ/46 kcal, Grassi 1,9 200g di cui acidi grassi saturi 0,3 200g, Carboidrati 4 200g di cui zuccheri 3,6 200g, Proteine 1,8 200g, Sale 0,7 200g",
 			"photoId": "40432af5-4cea-4ca1-8eab-229c0b4ec193",
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1908,33 +1908,33 @@
 			"offers": [
 				{
 					"price": 3,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 3.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 4.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				},
 				{
 					"price": 5.5,
-					"quantity": 1,
-					"unitofmeasurement": "bag"
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		}
