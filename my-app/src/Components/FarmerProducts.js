@@ -225,13 +225,13 @@ function ProductByFarmerModal(props) {
             <Form.Label>Enter the price in the 0.00 format</Form.Label>
             <InputGroup>
               <InputGroup.Text>€</InputGroup.Text>
-              <Form.Control value={price} onChange={(event) => { setPrice(event.target.value) }} /><br />
+              <Form.Control value={price} type="number" placeholder="enter a price (e.g: 10.00)" onChange={(event) => { setPrice(event.target.value) }} /><br />
             </InputGroup>
 
             <Form.Label>Enter the quantity</Form.Label>
-            <Form.Control value={quantity} onChange={(event) => { setQuantity(event.target.value) }} /><br />
+            <Form.Control value={quantity}  type="number"  placeholder="enter a qunatity number" onChange={(event) => { setQuantity(event.target.value) }} /><br />
             <Form.Label>Enter the unit of measurement</Form.Label>
-            <Form.Control value={unit} onChange={(event) => { setUnit(event.target.value) }} /><br />
+            <Form.Control value={unit}  placeholder="enter a unit value (e.g: kg,bag)" onChange={(event) => { setUnit(event.target.value) }} /><br />
 
           </Form>
 
