@@ -44,7 +44,7 @@ function FarmerProducts(props) {
       }
       else{
         updatedPrd.ProdByFarmerID = await result.productByFarmerID;
-        setProductsByFarmer([...productsByFarmer, updatedPrd]);
+        setProductsByFarmer([updatedPrd, ...productsByFarmer]);
       }
 
       setSelectedProduct([]);
