@@ -1223,8 +1223,7 @@ app.post('/api/timeMachine',async(req,res)=>{
     //If it's clientOrdersDeadline, i have to fullfill the order by all clients
     //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
     //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
-    if(dayjs(newdate).day()==purchaseTriggerDOW &&  
-       dayjs(newdate).week() == dayjs().week() && 
+    if(dayjs(newdate).day()==purchaseTriggerDOW &&   
        dayjs(newdate).format("HH:mm") == purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
 
         console.log("******TRIGGER!*****");
