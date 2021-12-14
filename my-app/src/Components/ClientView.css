@@ -1,0 +1,29 @@
+@media (min-width: 1200px) {
+    .client-card {
+        width: 27rem;
+    }
+    .margin-search-desktop{
+        margin-left: 18px;
+        margin-right: 18px;
+    }
+  }
+
+@media (max-width: 1200px) {
+    .client-card {
+        width: 22rem;
+    }
+  }
+
+.sfondo-footer{
+    background: #ffc107 !important;
+}
+
+.btn-circle {
+    width: 40px;
+    height: 40px;
+    padding: 6px 0px;
+    border-radius: 35px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.42857;
+}

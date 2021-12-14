@@ -1,0 +1,58 @@
+/* posizionamento del logo in modalità desktop */
+@media only screen and (min-width: 600px) {
+    #logo{
+      width: 180px;
+      margin-left: 22px;
+    }
+    .posizionamento-pulsante{
+      margin-right: 30px;
+    }
+    .posizionamento-login{
+      margin-right: 30px;
+    }
+  }
+  
+  /*posizionamento del logo in modalità smartphone*/
+  @media only screen and (max-width: 600px) {
+    #logo{
+      width: 180px;
+    }
+    .posizionamento-pulsante{
+      margin-top: 10px;
+    }
+  }
+  
+  .posizionamento{
+    margin-top: 24px;
+  }
+
+  .bg-sidebar{
+    background-color:#fafafc  ;
+  }
+
+  .sidebar-text{
+    color: black;
+    font-size: 24;
+    font-family: Helvetica, sans-serif;
+  }
+
+  .logout-button{
+    margin-top: -25px;
+  }
+ 
+
+  .nav-subtitle{
+    color: black;
+    font-family: Helvetica, sans-serif;
+    font-weight: bold;
+  } 
+
+  .side-farmer{
+    opacity: 0.4;
+  }
+
+  .btn-close{
+    color: #ffffff !important;
+}
+
+  /*background-color: blanchedalmond;*/

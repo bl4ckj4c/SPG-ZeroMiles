@@ -1,0 +1,56 @@
+ .bordo{
+     border-radius: 10px;
+ }
+
+ .centrami {
+    margin: auto;
+ }
+
+ @media (max-width: 1200px) {
+   .column-margin {
+     margin-bottom: 10px;
+   }
+   .row-style {
+    margin-right: 8px;
+  }
+  .fixed-button-bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 1030;
+    margin: 0 0 1rem 1rem ;
+  }
+  .desc-mobile-margin {
+    margin-top: 20px;
+  }
+ }
+
+ @media (min-width: 1200px) {
+  .row-style {
+   margin-left: 18px;
+   margin-right: 28px;
+  }
+ .margine-cerca-desktop{
+  margin-left: 18px;
+  margin-right: 18px;
+  }
+  .fixed-button-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1030;
+    margin: 0 1rem 1rem 0 ;
+  }
+ }
+
+ .cover {
+  object-fit: cover;
+  width: 334px;
+  height: 120px;
+}
+
+/* @media screen and (max-width: 400px) {
+  .fixed-right-bottom {
+    margin: 0 1rem 5rem 0;
+  }
+} */
