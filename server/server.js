@@ -42,7 +42,11 @@ const storage = multer.diskStorage({
         cb(null, file.originalname)
     }
 })
-const upload = multer({storage: storage});
+const upload = multer({storage: storage,
+    limits: {
+        fileSize: 8000000 // Compliant: 8MB
+     }
+});
 
 //jwt parameters
 const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
