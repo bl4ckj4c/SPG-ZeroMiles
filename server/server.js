@@ -547,7 +547,7 @@ app.get('/api/products', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all products)",
                     error: error
@@ -639,7 +639,7 @@ app.get('/api/products', async (req, res) => {
             });
             const response = Promise.all(result)
                 .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
-                res.json(a)})
+                res.status(200).json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error
@@ -682,7 +682,7 @@ app.get('/api/farmers', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all farmers)",
                     error: error
@@ -809,7 +809,7 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
             });
             const response = Promise.all(result)
                 .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
-                            res.json(a)})
+                            res.status(200).json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get productbyfarmer)",
                     error: error
@@ -860,7 +860,7 @@ app.get('/api/users', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).end());
         }
     } catch (error) {
@@ -902,7 +902,7 @@ app.get('/api/userinfo', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).end());
         }
     } catch (error) {
@@ -950,7 +950,7 @@ app.get('/api/clientorders', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all client orders)",
                     error: error
@@ -1006,7 +1006,7 @@ app.get('/api/orders', async (req, res) => {
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all orders)",
                     error: error
@@ -1065,7 +1065,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
                 })
             }
             const response = Promise.all(result)
-                .then(r => res.json(r))
+                .then(r => res.status(200).json(r))
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all cancelled orders of that week)",
                     error: error
@@ -1152,7 +1152,7 @@ app.post('/api/order', async (req, res) => {
                     await db.collection("Order").add(newOrder);
                 } catch (error) {
                     console.log(error);
-                    res.json(error);
+                    res.status(500).json(error);
                 }
             })()
         }
