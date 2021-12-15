@@ -1,6 +1,9 @@
 'use strict';
 
 const firebasefunctions = require('firebase-functions');
+const fetch = require("node-fetch");
+const TelegramBot = require('node-telegram-bot-api');
+const {telegramToken, chatID} = require("./telegram/config.js");
 const firebase = require('firebase-admin');
 const firebaseBackup = require('firebase-admin');
 const firebaseBackup2 = require('firebase-admin');
@@ -107,7 +110,7 @@ const firebaseappBackup3 = firebaseBackup3.initializeApp({
 //var db_backup = firebaseBackup.firestore(firebaseappBackup);
 //var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
 //var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
-var db = firebaseBackup3.firestore(firebaseappBackup3);
+var db = firebaseBackup2.firestore(firebaseappBackup2);
 
 //use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
 //BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
@@ -156,6 +159,10 @@ bucket.getFiles(function(err,files){
 
 // const firebaseApp = firebase.apps[0];
 // console.log(JSON.stringify(firebaseApp.options, null, 2));
+
+
+/* Telegram bot - only if you are using node-telegram-bot-api */
+//const bot = new TelegramBot(telegramToken, {polling: true});
 
 
 // *********************
@@ -1218,15 +1225,17 @@ app.post('/api/timeMachine',async(req,res)=>{
     let purchaseTriggerDOW = "1";   
     let purchaseTriggerHour = "09:00";
 
-    //console.log(dayjs(newdate).format('DD-MM-YYYY HH:mm:ss') + " " + dayjs(newdate).hour() + " " + dayjs(newdate).day() + " " + dayjs(newdate).week())
-    //console.log(dayjs(newdate).format("HH:mm") >= purchaseTriggerHour)
-    //If it's clientOrdersDeadline, i have to fullfill the order by all clients
-    //Logic: i process orders ordered by timestamp, for each client -> i start fullfill orders until the wallet is insufficient
-    //this means that it's sufficient to get all orders ordered by timestamp and process them one after the other in a sinchronous way
+    let newProductsTriggerDOW = "6";
+    let newProductsTriggerHour = "09:00";
+
+    /**** TIME MACHINE - orders processing ****/
+
+    //Logic: i process all open orders (there should be one for each client, at most) -> i fulfill (open -> pending) only orders by clients that have enough money on the wallet
+    //If the client does not have enough money, the order is cancelled
     if(dayjs(newdate).day()==purchaseTriggerDOW &&   
        dayjs(newdate).format("HH:mm") == purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
 
-        console.log("******TRIGGER!*****");
+        console.log("******TRIGGER - Orders processing*****");
 
         try {
             const orders = await db.collection('Order').where("Status","==","open").get();  //take all "open" orders
@@ -1306,8 +1315,36 @@ app.post('/api/timeMachine',async(req,res)=>{
             });
         }
     }
+    
+
+    /**** TIME MACHINE - send notification message on telegram ****/
+
+    if(dayjs(newdate).day() == newProductsTriggerDOW &&
+       dayjs(newdate).format("HH:mm") == newProductsTriggerHour){
+
+        console.log("******TRIGGER - New products available*****");
+    
+        const response = await fetch("https://api.telegram.org/bot"+telegramToken+"/sendMessage?text=New%20Products%20are%20online!%20Come%20and%20have%20a%20look.&chat_id="+chatID, 
+            { method: 'GET' }
+        );  
+      
+        if(response.ok){
+            console.log("Message sent on the telegram channel!");
+        }
+        else {
+            console.log("Error in sending the message on the telegram channel");
+        }
+    
+    
+        /* Another way to do the same thing */
+        //bot.sendMessage(chatID, "New Products are online! Come and have a look.", {parse_mode: 'Markdown'});
+    
+    }
+
     res.status(200).end();
 })
+
+
 //MODIFY ORDER
 app.post('/api/modifyorder', async (req, res) => {
     let result = [];
