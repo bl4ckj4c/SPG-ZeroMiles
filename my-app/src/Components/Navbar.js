@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { useEffect, useState } from 'react';
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 import { useLocation, useHistory } from 'react-router-dom';
-import { House, DoorOpen, Stopwatch, PersonCircle, BoxSeam, PersonVideo2, Bucket } from 'react-bootstrap-icons';
+import { House, DoorOpen, Stopwatch, PersonCircle, BoxSeam, PersonVideo2, Bucket, Telegram } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
 import API from '../API';
@@ -43,6 +43,10 @@ function ZeroNavbar(props) {
         handleCloseSide();
         if (newdate)
             props.setTimeMachine(newdate);
+    }
+
+    function handleTelegram() {
+        window.open('https://t.me/zeromiles_spg', '_blank');
     }
 
     return (
@@ -114,6 +118,11 @@ function ZeroNavbar(props) {
 
                             {props.user.Role === "Farmer" ? <FarmerSidebar setSideShow={props.setSideShow} /> : <></>}
 
+                            <Nav className="justify-content-end flex-grow-1 pe-3 mt-4">
+                                <NavDropdown.Divider />
+                                <Nav.Link className="nav-subtitle" onClick={handleTelegram}><Telegram style={{ marginTop: '-3px', fontSize: '21px' }} /> Join our Telegram channel</Nav.Link>
+                            </Nav>
+
                         </Offcanvas.Body>
 
                         {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
@@ -148,7 +157,7 @@ function TimeMachine(props) {
         API.setTimeMachine(newdate);
         props.onHide(newdate);
         //Se e' lunedi ricarico la pagina per mostrare i nuovi ordini confermati
-        if(dayjs(date.value).day() == 1 && time.value == "09:00"){
+        if (dayjs(date.value).day() == 1 && time.value == "09:00") {
             window.location.reload(false);
         }
     }
@@ -181,8 +190,12 @@ function TimeMachine(props) {
                                 <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
-                        <Row className="justify-content-center mt-2">
+
+                        <Row className="justify-content-center mt-3" style={{fontSize:'12px'}}>
                             Set Monday at 09:00 to confirm available products.
+                        </Row>
+                        <Row className="justify-content-center mt-1" style={{fontSize:'12px'}}>
+                            Set Saturday at 09:00 to send Telegram notification.
                         </Row>
                     </Row>
 
@@ -226,7 +239,6 @@ function EmployeeSidebar(props) {
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmers'); }} >All farmers</Nav.Link>
                 <Nav.Link className="sidebar-text" role="Farmer" onClick={() => { props.setSideShow(false); history.push('/signupEmployee'); }}>New farmer</Nav.Link>
             </Nav>
-
         </>
     );
 }
