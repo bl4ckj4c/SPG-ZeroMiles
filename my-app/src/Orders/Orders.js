@@ -7,7 +7,7 @@ function ProductInOrder(ProductinorderID, OrderID, ProductbyfarmerID, ProductNam
    
 }
 
-function Order(OrderID, Status, ClientID, Client, Timestamp, ProductInOrder, DeliveryDate, DeliveryPlace){
+function Order(OrderID, Status, ClientID, Client, Timestamp, ProductInOrder, DeliveryDate, DeliveryPlace, pickupTimestamp, notRetired){
     this.OrderID = OrderID;
     this.Status = Status;
     this.ClientID = ClientID;
@@ -25,6 +25,8 @@ function Order(OrderID, Status, ClientID, Client, Timestamp, ProductInOrder, Del
     this.ProductInOrder = ProductInOrder;
     this.DeliveryDate = DeliveryDate;
     this.DeliveryPlace = DeliveryPlace;
+    this.pickupTimestamp = pickupTimestamp;
+    this.notRetired = notRetired;
 }
 
 
