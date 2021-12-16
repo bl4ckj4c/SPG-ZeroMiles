@@ -17,32 +17,32 @@ function FarmerProducts(props) {
   async function addProdTest(p, prod) {
 
     try {
-      
+
       let updatedPrd = {
-        "ImageID" : p.ImageID ,
-        "NameProduct" : prod.productByFarmerID===false ? p.Name : p.NameProduct,
-        "Price" : prod.Price, 
-        "ProdByFarmerID" : "" ,
-        "ProductID" : prod.ProductID, 
-        "Quantity" : prod.Quantity ,
-        "UnitOfMeasurement" : prod.UnitOfMeasurement, 
+        "ImageID": p.ImageID,
+        "NameProduct": prod.productByFarmerID === false ? p.Name : p.NameProduct,
+        "Price": prod.Price,
+        "ProdByFarmerID": "",
+        "ProductID": prod.ProductID,
+        "Quantity": prod.Quantity,
+        "UnitOfMeasurement": prod.UnitOfMeasurement,
       }
-  
+
 
 
       let result = await API.addProduct(prod, props.timeMachine().toString());
       if (await !result.hasOwnProperty('productByFarmerID'))
-        throw ({ "err" : "errore" });
-      
-      if(prod.productByFarmerID !== false){ //if the product is EDITED
-          let copy = JSON.parse(JSON.stringify(productsByFarmer));
-          let index = copy.findIndex(p => p.ProdByFarmerID === prod.productByFarmerID )
-          updatedPrd.ProdByFarmerID = await result.productByFarmerID;
-          copy[index]=updatedPrd;
-          console.log("index" + index);
-          setProductsByFarmer(copy);
+        throw ({ "err": "errore" });
+
+      if (prod.productByFarmerID !== false) { //if the product is EDITED
+        let copy = JSON.parse(JSON.stringify(productsByFarmer));
+        let index = copy.findIndex(p => p.ProdByFarmerID === prod.productByFarmerID)
+        updatedPrd.ProdByFarmerID = await result.productByFarmerID;
+        copy[index] = updatedPrd;
+        console.log("index" + index);
+        setProductsByFarmer(copy);
       }
-      else{
+      else {
         updatedPrd.ProdByFarmerID = await result.productByFarmerID;
         setProductsByFarmer([updatedPrd, ...productsByFarmer]);
       }
@@ -60,8 +60,8 @@ function FarmerProducts(props) {
   async function deleteProductByFarmer(PbFid) {
     try {
       let result = await API.deleteProduct({ productByFarmerID: PbFid })
-      if (await result.hasOwnProperty('err')){
-          throw (result.err);
+      if (await result.hasOwnProperty('err')) {
+        throw (result.err);
       }
 
       let newproducts = productsByFarmer.filter(pbf => pbf.ProdByFarmerID !== PbFid);
@@ -103,17 +103,23 @@ function FarmerProducts(props) {
   }, [productsByFarmerUpdate]);
 
   useEffect(() => {
-    if(props.reloadTime)
-        setProductsByFarmerUpdate(true);
-}, [props.reloadTime])
+    if (props.reloadTime)
+      setProductsByFarmerUpdate(true);
+  }, [props.reloadTime])
 
 
   if (updated && props.user.Role === "Farmer") return (
-    <Container className="search-container"  >
+    <Container className="search-container">
 
-      <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
-      <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)} variant="secondary">Add product</Button>
-      <ProductNew UpdateProdList={() => setUpdateProducts(true)} />
+      <div className="placement-top">
+        <h3>This week release</h3>
+        <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
+        <div className="mt-2" style={{ textAlign: "right", marginRight: "-10px" }}>
+          <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)} variant="secondary">Add</Button>
+          <ProductNew UpdateProdList={() => setUpdateProducts(true)} />
+        </div>
+      </div>
+
       <Table className="d-flex justify-content-center">
         <tbody id="prod-table" align="center">
           {productsByFarmer !== false ? productsByFarmer.map(p =>
@@ -143,30 +149,39 @@ function ProductCard(props) {
       <ProductByFarmerModal Edit={true} addProdTest={props.addProdTest} p={props.p} show={show} onHide={() => setShow(false)} />
       <PictureModal src={newSrc} show={showPic} onHide={() => setShowPic(false)} />
       <Card className="client-card mt-3">
-
         <Card.Body>
+
           <Row>
-            <Col md={4}>
-              <Image className="img-fluid" onClick={() => setShowPic(true)} src={newSrc} height={"80 px"} rounded />
+            <Col className="mt-1">
+              <Card.Title style={{ fontSize: 19, textAlign: 'left', marginLeft: '10px' }} className="mt-1"> {props.p.NameProduct}</Card.Title>
             </Col>
-            <Col md={8}>
-              <Card.Title style={{ fontSize: 28 }}> {props.p.NameProduct}</Card.Title>
+            <Col>
+              <div className="mt-2" style={{ textAlign: 'right', marginRight: "15px" }}>
+                <Button style={{ "marginRight": "0.3rem" }} variant="outline-danger" size="sm" onClick={() => props.deleteProductByFarmer(props.p.ProdByFarmerID)}>Delete</Button>
+                <Button variant="warning" size="sm" onClick={() => setShow(true)}>Edit</Button>
+              </div>
             </Col>
           </Row>
-        </Card.Body>
 
 
-        <Card.Body>
-          <ListGroup style={{ textAlign: "left" }}>
-            <ListGroup.Item> Quantity: {props.p.Quantity}</ListGroup.Item>
-            <ListGroup.Item> Unit: {props.p.UnitOfMeasurement}</ListGroup.Item>
-            <ListGroup.Item> Price: {props.p.Price}</ListGroup.Item>
-          </ListGroup>
-        </Card.Body>
+          <Row className="mt-3 mb-2">
 
-        <Card.Body className="sfondo-footer" style={{ textAlign: "right" }}>
-          <Button style={{ "marginRight": "0.3rem" }} variant="outline-dark" size="sm" onClick={() => setShow(true)}>Edit</Button>
-          <Button variant="danger" size="sm" onClick={() => props.deleteProductByFarmer(props.p.ProdByFarmerID)}>Delete</Button>
+            <Col>
+              <Col>
+                <Image onClick={() => setShowPic(true)} src={newSrc} height={"115 px"} rounded />
+              </Col>
+            </Col>
+
+            <Col>
+              <ListGroup style={{ textAlign: "left", marginRight: "15px", fontSize: '13px' }}>
+                <ListGroup.Item> Quantity: {props.p.Quantity}</ListGroup.Item>
+                <ListGroup.Item> Unit: {props.p.UnitOfMeasurement}</ListGroup.Item>
+                <ListGroup.Item> Price: {props.p.Price}€</ListGroup.Item>
+              </ListGroup>
+            </Col>
+
+          </Row>
+
         </Card.Body>
       </Card>
     </>
@@ -229,9 +244,9 @@ function ProductByFarmerModal(props) {
             </InputGroup>
 
             <Form.Label>Enter the quantity</Form.Label>
-            <Form.Control value={quantity}  type="number"  placeholder="enter a qunatity number" onChange={(event) => { setQuantity(event.target.value) }} /><br />
+            <Form.Control value={quantity} type="number" placeholder="enter a qunatity number" onChange={(event) => { setQuantity(event.target.value) }} /><br />
             <Form.Label>Enter the unit of measurement</Form.Label>
-            <Form.Control value={unit}  placeholder="enter a unit value (e.g: kg,bag)" onChange={(event) => { setUnit(event.target.value) }} /><br />
+            <Form.Control value={unit} placeholder="enter a unit value (e.g: kg,bag)" onChange={(event) => { setUnit(event.target.value) }} /><br />
 
           </Form>
 
