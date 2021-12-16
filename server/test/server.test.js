@@ -190,11 +190,11 @@ describe("GET for /api/productinorder", () => {
     });
 });
 
-//6 GET products of the authenticated farmer
-describe("GET for /api/productsByFarmer", () => {
+//6 GET products of the authenticated farmer by date
+describe("GET for /api/productsByFarmer/:date", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
-            .get('/api/productsByFarmer')
+            .get('/api/productsByFarmer/2021-12-08%11:11')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -214,7 +214,7 @@ describe("GET for /api/productsByFarmer", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/productsByFarmer')
+                    .get('/api/productsByFarmer/2021-12-08%11:11')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -236,7 +236,7 @@ describe("GET for /api/productsByFarmer", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/productsByFarmer')
+                    .get('/api/productsByFarmer/2021-12-16%11:11')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -444,6 +444,23 @@ describe("GET for /api/sessions/current", () => {
     });
 });
 
+// GET all products by farmers by date
+describe("GET for /api/allProductsByFarmers/:date", () => {
+    test('Get all products by farmers by date', (done) => {
+        chai.request(app)
+            .get('/api/allProductsByFarmers/2021-12-08%11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 200
+                expect(res.status).to.be.equal(200);
+                // The body received should be an array
+                expect(res.body).to.be.an("array");
+                done();
+            });
+    });
+});
+
 // POST for login
 describe("POST for /api/login", () => {
     test('User not found', (done) => {
@@ -626,7 +643,7 @@ describe("POST for /api/farmerRegister", () => {
             .send(JSON.stringify({
                 name: 'testName',
                 surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
+                email: 'abcdef2.polito@polito.it',
                 address: 'Via Test 42',
                 company: 'Company Test',
                 phone: '0123456789',
@@ -774,26 +791,37 @@ describe("POST for /api/modifyorder", () => {
     });
 });*/
 
-/*// POST modify wallet of a user
+// POST modify wallet of a user
 describe("POST for /api/modifywallet", () => {
     test('Modify a wallet', (done) => {
         chai.request(app)
-            .post('/api/modifywallet')
+            .post('/api/login')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify(employee))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/modifywallet')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        ClientID: '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216',
+                        Wallet: 10
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
 
-                // Remove the new farmer from firebase
+                        // Remove the new farmer from firebase
 
 
-                done();
+                        done();
+                    });
             });
     });
-});*/
+});
 
 /*// POST check a user
 describe("POST for /api/checkClient", () => {
