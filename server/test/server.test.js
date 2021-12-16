@@ -791,26 +791,37 @@ describe("POST for /api/modifyorder", () => {
     });
 });*/
 
-/*// POST modify wallet of a user
+// POST modify wallet of a user
 describe("POST for /api/modifywallet", () => {
     test('Modify a wallet', (done) => {
         chai.request(app)
-            .post('/api/modifywallet')
+            .post('/api/login')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify(employee))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/modifywallet')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        ClientID: '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216',
+                        Wallet: 10
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
 
-                // Remove the new farmer from firebase
+                        // Remove the new farmer from firebase
 
 
-                done();
+                        done();
+                    });
             });
     });
-});*/
+});
 
 /*// POST check a user
 describe("POST for /api/checkClient", () => {
