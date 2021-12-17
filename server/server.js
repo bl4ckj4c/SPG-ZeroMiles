@@ -1165,7 +1165,7 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
     }
 
     let reqday = dayjs(req.body.timestamp);
-    let reqweekOfYear = dayjs(reqday).day()==0 ? dayjs(req.body.timestamp).week()-1 : dayjs(req.body.timestamp).week();
+    let reqweekOfYear = reqday.day()==0 ? reqday.week()-1 : reqday.week();
 
     try {
         const orders = await db.collection('Order').orderBy('Timestamp').get();
@@ -1182,7 +1182,7 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
                     orderweekOfYear= orderweekOfYear - 1;
                 }
                 
-                if(orderweekOfYear == reqweekOfYear){
+                if(reqweekOfYear == orderweekOfYear+1){
                     result.push(new Promise(async (resolve, reject) => {
                         const client = await db.collection('User').doc("" + order.data().ClientID).get();
                         if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
@@ -1396,14 +1396,29 @@ app.post('/api/timeMachine',async(req,res)=>{
                         orderweekOfYear= orderweekOfYear - 1;
                     }
 
-                    if(orderweekOfYear == dayjs(newdate).week()-1){  //if it's an open order of the previous week
-                        result.push(new Promise(async (resolve, reject) => {
-                            resolve({
-                                OrderID: order.id,
-                                ...order.data()
-                            });
-                        }));
+                    if(order.data().Products.length > 0){  
+                        if(orderweekOfYear == dayjs(newdate).week()-1){  //if it's an open order of the previous week
+                            result.push(new Promise(async (resolve, reject) => {
+                                resolve({
+                                    OrderID: order.id,
+                                    ...order.data()
+                                });
+                            }));
+                        }
                     }
+                    else{  //if the order does not have any products
+                        try {
+                            console.log("Deleting from database order " + order.id + " due to empty list of products of the order.")
+                            db.collection('Order').doc("" + order.id).delete();
+                        } catch (error) {
+                            console.log(error);
+                            res.status(500).json({
+                                info: "The server cannot process the request",
+                                error: error
+                           });
+                        }
+                    }
+                        
                 })
 
                 Promise.all(result).then(result => {
@@ -1462,27 +1477,27 @@ app.post('/api/timeMachine',async(req,res)=>{
 
      /**** TIME MACHINE - send notification message on telegram ****/
 
-     if(dayjs(newdate).day() == newProductsTriggerDOW &&
-     dayjs(newdate).format("HH:mm") == newProductsTriggerHour){
+    if(dayjs(newdate).day() == newProductsTriggerDOW &&
+    dayjs(newdate).format("HH:mm") == newProductsTriggerHour){
+        
+        console.log("******TRIGGER - New products available*****");
 
-      console.log("******TRIGGER - New products available*****");
+        const response = await fetch("https://api.telegram.org/bot"+telegramToken+"/sendMessage?text=New%20Products%20are%20online!%20Come%20and%20have%20a%20look.&chat_id="+chatID, 
+            { method: 'GET' }
+        );  
 
-      const response = await fetch("https://api.telegram.org/bot"+telegramToken+"/sendMessage?text=New%20Products%20are%20online!%20Come%20and%20have%20a%20look.&chat_id="+chatID, 
-          { method: 'GET' }
-      );  
-
-      if(response.ok){
-          console.log("Message sent on the telegram channel!");
-      }
-      else {
-          console.log("Error in sending the message on the telegram channel");
-      }
+        if(response.ok){
+            console.log("Message sent on the telegram channel!");
+        }
+        else {
+            console.log("Error in sending the message on the telegram channel");
+        }
 
 
-      /* Another way to do the same thing */
-      //bot.sendMessage(chatID, "New Products are online! Come and have a look.", {parse_mode: 'Markdown'});
+        /* Another way to do the same thing */
+        //bot.sendMessage(chatID, "New Products are online! Come and have a look.", {parse_mode: 'Markdown'});
 
-  }
+    }
 
     res.status(200).end();
 })
