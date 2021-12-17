@@ -17,7 +17,14 @@ appBackup3 = firebase_admin.initialize_app(credBackup3, {
     'projectId': 'polito-se2-21-01-spg-backup-3'
 }, 'Backup3')
 
-db = firestore.client(appBackup3)
+credTest = credentials.Certificate(
+    './polito-se2-21-01-spg-test-firebase-adminsdk-r0o33-6fb9897bce.json'
+)
+appTest = firebase_admin.initialize_app(credTest, {
+    'projectId': 'polito-se2-21-01-spg-test'
+}, 'Test')
+
+db = firestore.client(appTest)
 
 # Global variables for products, users and farmers
 global JSONData
