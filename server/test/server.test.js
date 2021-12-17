@@ -749,6 +749,57 @@ describe("POST for /api/farmerRegister", () => {
     });
 });
 
+// POST set Time Machine
+describe("POST for /api/timeMachine", () => {
+    test('Set the time machine on Monday', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/timeMachine')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        newdate: '12-20-2021 09:00'
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+
+    test('Set the time machine on Saturday', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/timeMachine')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        newdate: '12-25-2021 09:00'
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+});
+
 /*// POST place an order in the database
 describe("POST for /api/order", () => {
     test('Create an order', (done) => {
@@ -813,10 +864,6 @@ describe("POST for /api/modifywallet", () => {
                         expect(err).to.be.null;
                         // Check that the response status is 201
                         expect(res.status).to.be.equal(201);
-
-                        // Remove the new farmer from firebase
-
-
                         done();
                     });
             });

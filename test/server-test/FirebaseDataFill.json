@@ -2170,19 +2170,6 @@
 			"OrderID": "SfqWm8XXSRPV9aee2vKf",
 			"Status": "open",
 			"ClientID": "fa6ecc89-4a74-4a05-9251-c89f8b0cbf41",
-			"Client": {
-				"Role": "Client",
-				"Wallet": 872.5,
-				"Password": "supersecret1",
-				"City": "Turin",
-				"Address": "Corso Francia 24",
-				"Name": "Mario",
-				"Phoneno": "011789675",
-				"State": "TO",
-				"Zipcode": "10129",
-				"Surname": "Rossi",
-				"Email": "mario.rossi@gmail.com"
-			},
 			"Timestamp": "13-12-2021 11:18:00",
 			"ListOfProducts": [
 				{
@@ -2226,19 +2213,6 @@
 			"OrderID": "bMGNcyuqkfE5NSfQztJF",
 			"Status": "open",
 			"ClientID": "36581648-5006-4416-aec8-73021b677bb7",
-			"Client": {
-				"State": "MI",
-				"Surname": "Costanzo",
-				"Phoneno": "3248967546",
-				"City": "Milan",
-				"Address": "Corso Torino 33",
-				"Password": "supersecret2",
-				"Email": "maurizio.costanzo@gmail.com",
-				"Role": "Client",
-				"Name": "Maurizio",
-				"Wallet": 604.5,
-				"Zipcode": "20019"
-			},
 			"Timestamp": "13-12-2021 11:20:00",
 			"ListOfProducts": [
 				{
@@ -2290,19 +2264,6 @@
 			"OrderID": "QZlhntHuto32ZtLAKtRA",
 			"Status": "open",
 			"ClientID": "213bcac1-f304-42ee-85ad-a6bab6229a11",
-			"Client": {
-				"Wallet": 487,
-				"Surname": "Snow",
-				"State": "TO",
-				"Password": "ciao",
-				"City": "Torino",
-				"Email": "game@example.com",
-				"Zipcode": "10141",
-				"Phoneno": "3466373622",
-				"Role": "Client",
-				"Name": "Jon",
-				"Address": "Via Politecnico 42"
-			},
 			"Timestamp": "13-12-2021 11:21:00",
 			"ListOfProducts": [
 				{
@@ -2330,19 +2291,6 @@
 			"OrderID": "ncdUioVy5heLRWLr7kXi",
 			"Status": "cancelled",
 			"ClientID": "d01f9dd2-91f4-4bba-a0c8-82b72197c1c8",
-			"Client": {
-				"Wallet": 1,
-				"Email": "eva.jobs@apple.com",
-				"City": "Turin",
-				"Password": "supersecret3",
-				"Zipcode": "10129",
-				"State": "TO",
-				"Phoneno": "2907654356",
-				"Role": "Client",
-				"Name": "Eva",
-				"Surname": "Jobs",
-				"Address": "Via Nizza 40"
-			},
 			"Timestamp": "13-12-2021 11:22:00",
 			"ListOfProducts": [
 				{
@@ -2355,6 +2303,16 @@
 				}
 			],
 			"Price": 4.5,
+			"DeliveryDate": "",
+			"DeliveryPlace": ""
+		},
+		{
+			"OrderID": "Mr8QyCAFLLnykY0DogY",
+			"Status": "open",
+			"ClientID": "9ba87f26-c850-43dc-addc-f660bde113a9",
+			"Timestamp": "13-12-2021 11:18:00",
+			"ListOfProducts": [],
+			"Price": 0,
 			"DeliveryDate": "",
 			"DeliveryPlace": ""
 		}
