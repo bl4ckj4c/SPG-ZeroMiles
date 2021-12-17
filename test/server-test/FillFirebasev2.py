@@ -31,6 +31,7 @@ global JSONData
 global JSONProducts
 global JSONUsers
 global JSONFarmers
+global JSONOrders
 
 # Load all data from JSON file
 file = open('FirebaseDataFill.json')
@@ -39,6 +40,7 @@ JSONData = json.load(file)
 JSONProducts = JSONData['products']
 JSONUsers = JSONData['users']
 JSONFarmers = JSONData['farmers']
+JSONOrders = JSONData['orders']
 
 # Remove old data from Firebase
 def cleanFirebase():
@@ -182,16 +184,41 @@ def loadProductsByFarmers():
         print('\n')
     print('- Product by Farmers uploaded')
 
+# Load orders inside 'Order' table in Firebase
+def loadOrders():
+
+    count = 0
+
+    for order in JSONOrders:
+        print(json.dumps(order, indent=4))
+        db.collection(u'Order').document(order['OrderID']).set({
+			'ClientID': order['ClientID'],
+            'DeliveryDate': order['DeliveryDate'],
+            'DeliveryPlace': order['DeliveryPlace'],
+            'Price': order['Price'],
+            'Products': order['ListOfProducts'],
+            'Status': order['Status'],
+            'Timestamp': order['Timestamp'],
+            'notRetired': 'false',
+            'pickupTimestamp': ''
+        })
+        count += 1
+
+        #print(count)
+    print('Inserted ' + str(count) + ' orders!')
+
 if __name__ == '__main__':
-    cleanFirebase()
-    print('Cleaning done')
+    #cleanFirebase()
+    #print('Cleaning done')
 
-    loadUsers()
+    #loadUsers()
 
-    loadFarmers()
+    #loadFarmers()
 
-    loadProducts()
+    #loadProducts()
 
-    loadProductsByFarmers()
+    #loadProductsByFarmers()
+
+    loadOrders()
 
     print('DONE')
