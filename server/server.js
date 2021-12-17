@@ -5,10 +5,12 @@ const firebase = require('firebase-admin');
 const firebaseBackup = require('firebase-admin');
 const firebaseBackup2 = require('firebase-admin');
 const firebaseBackup3 = require('firebase-admin');
+const firebaseTest = require('firebase-admin');
 const {firebaseconf} = require('./firebase-server/config.js');
 const {firebaseconf_backup} = require('./firebase-server/config.js');
 const {firebaseconf_backup_2} = require('./firebase-server/config.js');
 const {firebaseconf_backup_3} = require('./firebase-server/config.js');
+const {firebaseconf_test} = require('./firebase-server/config.js');
 
 const fetch = require("node-fetch");
 const TelegramBot = require('node-telegram-bot-api');
@@ -105,6 +107,12 @@ const firebaseappBackup3 = firebaseBackup3.initializeApp({
     databaseURL: "https://polito-se2-21-01-spg-backup-3.europe-west1.firebasedatabase.app",
     storageBucket: "gs://polito-se2-21-01-spg-backup-3.appspot.com"
 }, "firebase_backup_3");
+
+const firebaseappTest = firebaseTest.initializeApp({
+    credential: firebaseTest.credential.cert(firebaseconf_test),
+    databaseURL: "https://polito-se2-21-01-spg-test.europe-west1.firebasedatabase.app",
+    storageBucket: "gs://polito-se2-21-01-spg-test.appspot.com"
+}, "firebase_test");
 
 
 /* get reference a reference to the firestore database */
