@@ -51,10 +51,10 @@ function App() {
 
   function ReturnTimeMachine(){
 
-    let now_time = dayjs().format('HH:mm');
-    let now_date = dayjs().format('YYYY-MM-DD');
+    let now_time = dayjs().format('HH:mm:ss');
+    let now_date = dayjs().format('MM-DD-YYYY');
 
-    let now = (now_date + " " + now_time + ":00");
+    let now = (now_date + " " + now_time);
 
     if (timeMachine)
       return timeMachine;

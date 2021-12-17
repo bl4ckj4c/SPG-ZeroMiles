@@ -21,6 +21,7 @@ function ProductTable(props) {
     const [welcomeShow, setWelcomeShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
+   
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
@@ -91,6 +92,22 @@ function ProductTableWrapped(props) {
     const handleCartCheckoutModalClose = () => setCartCheckoutModal(false);
     const [walletAndTotal, setWalletAndTotal] = useState({ Wallet: 0, Money: 0 });
     const [showMoneyError, setShowMoneyError] = useState(false);
+
+    var dayjs = require('dayjs');
+    var customParseFormat = require('dayjs/plugin/customParseFormat');
+    dayjs.extend(customParseFormat);
+
+
+    async function CanOrder(){
+        let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
+        
+        console.log("data passata: "+props.timeMachine()+" data parsata: "+ giorno.toString());
+        if( (dayjs(giorno).day()==0 && dayjs(giorno).hour()< 23 ) || (dayjs(giorno).day()==6 && dayjs(giorno).hour()>8 ) )
+            return true;
+         
+            return false;
+    }
+
 
     useEffect(() => {
         if (props.user.Role !== "Employee") {
@@ -198,7 +215,7 @@ function ProductTableWrapped(props) {
                     <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} searchParameter={searchParameter} setSearchParameter={setSearchParameter} />
                 </Row>
 
-                {props.isLoggedIn ?
+                {props.isLoggedIn && CanOrder() ?
 
                     props.user.Role === "Employee" ? <Row className="mt-3 margine-cerca-desktop">
 
@@ -223,7 +240,7 @@ function ProductTableWrapped(props) {
                         <Table className="d-flex justify-content-center">
                             <tbody id="farmer-table" align="center">
                                 {props.farmers.map(f =>
-                                    <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
+                                    <FarmerRow isLoggedIn={props.isLoggedIn} key={f.FarmerID} CanOrder={CanOrder} UpdateNumber={UpdateNumber} UpdateNumberInput={UpdateNumberInput} unfilteredProductByFarmer={props.productByFarmer} prodNum={prodNum} farmer={f} productByFarmer={filteredProducts} />
                                 )}
                             </tbody>
                         </Table>
@@ -234,7 +251,7 @@ function ProductTableWrapped(props) {
 
             </Col>
 
-            {props.isLoggedIn ? <CartBottomButton isLoggedIn={props.isLoggedIn} user={props.user} selectedUser={selectedUser} handleCartCheckoutModalShow={handleCartCheckoutModalShow} prodNum={prodNum} /> : ""}
+            {props.isLoggedIn && CanOrder() ? <CartBottomButton isLoggedIn={props.isLoggedIn} user={props.user} selectedUser={selectedUser} handleCartCheckoutModalShow={handleCartCheckoutModalShow} prodNum={prodNum} /> : ""}
         </>
     );
 };
@@ -390,7 +407,7 @@ function FarmerRow(props) {
                             <Row key={index + "_" + props.farmer.FarmerID} className="mb-xl-4">
                                 {p.map(pf => (
                                     <Col key={pf.ProductID + "_" + pf.FarmerID} xl className="column-margin">
-                                        <ProductCard isLoggedIn={props.isLoggedIn} unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} />
+                                        <ProductCard CanOrder={props.CanOrder} isLoggedIn={props.isLoggedIn} unfilteredProductByFarmer={props.unfilteredProductByFarmer} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={pf} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} />
                                     </Col>
                                 )
                                 )
@@ -448,7 +465,7 @@ function ProductCard(props) {
                         onClick={handleShowDesc}>
                         See Description
                     </Button></Col>
-                    {props.isLoggedIn ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
+                    {props.isLoggedIn && props.CanOrder() ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
                 </Row>
                 <Modal show={showDesc} onHide={handleCloseDesc} centered size="lg">
                     <DescriptionModal handleCloseDesc={handleCloseDesc} prodotto={props.prodottoDelFarmer} imgProd={newSrc} />
