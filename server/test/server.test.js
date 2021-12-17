@@ -5,8 +5,8 @@ const chaiHttp = require('chai-http');
 
 let app = require('../server');
 
-const firebaseBackup = require('firebase-admin');
-var db = firebaseBackup.firestore(app.firebase);
+const firebaseTest = require('firebase-admin');
+var db = firebaseTest.firestore(app.firebase);
 
 chai.use(chaiHttp);
 
@@ -448,7 +448,7 @@ describe("GET for /api/sessions/current", () => {
 describe("GET for /api/allProductsByFarmers/:date", () => {
     test('Get all products by farmers by date', (done) => {
         chai.request(app)
-            .get('/api/allProductsByFarmers/2021-12-08%11:11')
+            .get('/api/allProductsByFarmers/2021-12-08 11:11')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -896,7 +896,7 @@ describe("POST for /api/checkClient", () => {
     });
 });*/
 
-/*// POST add a product
+// POST add a product
 describe("POST for /api/addProduct", () => {
     test('Add new product', (done) => {
         chai.request(app)
@@ -907,40 +907,32 @@ describe("POST for /api/addProduct", () => {
                 // Now that we are authenticated we send the actual POST
                 chai.request(app)
                     .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
                     .type('application/json')
                     .send(JSON.stringify({
-                        FarmerID: '9RSQKtDkcfB949GDA3SX',
-                        ProductID: 'kkSdM82lggnu24e7d24w',
+                        date: "2021-12-18 11:11",
+                        productByFarmerID: false,
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn50IEZa0jIngRbT5E",
                         Price: 5.5,
                         Quantity: 1,
-                        Unitofmeasurement: 'bag'
+                        UnitOfMeasurement: "bag"
                     }))
-                    .end((err, res) => {
+                    .end(async (err, res) => {
                         // We should not have error
                         expect(err).to.be.null;
                         // Check that the response status is 201
                         expect(res.status).to.be.equal(201);
 
                         // Remove the new product by farmer from firebase
-                        chai.request(app)
-                            .post('/api/deleteProduct')
-                            .type('application/json')
-                            .send(JSON.stringify({
-                                productByFarmerID: ''
-                            }))
-                            .end((err, res) => {
-                                // We should not have error
-                                expect(err).to.be.null;
-                                // Check that the response status is 200
-                                expect(res.status).to.be.equal(200);
-                                done();
-                            });
+                        console.log(res.body.productByFarmerID);
+                        const productsByFarmers = await db.collection("Product by Farmers").doc(res.body.productByFarmerID).delete();
                         done();
                     });
             });
     });
 
-    test('Add old product', (done) => {
+    test('Modify old product', (done) => {
         chai.request(app)
             .post('/api/login')
             .type('application/json')
@@ -949,40 +941,27 @@ describe("POST for /api/addProduct", () => {
                 // Now that we are authenticated we send the actual POST
                 chai.request(app)
                     .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
                     .type('application/json')
                     .send(JSON.stringify({
-                        productByFarmerID: 'Mca7G4FzXqxVSOmmKcVU',
-                        FarmerID: '9RSQKtDkcfB949GDA3SX',
-                        ProductID: 'kkSdM82lggnu24e7d24w',
+                        date: "18-12-2021 11:11",
+                        productByFarmerID: "OGwux1b1SShh4iBeN59f",
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn5HZlthFUAqri5HDT",
                         Price: 5.5,
                         Quantity: 1,
-                        Unitofmeasurement: 'bag'
+                        UnitOfMeasurement: "bag"
                     }))
                     .end((err, res) => {
                         // We should not have error
                         expect(err).to.be.null;
                         // Check that the response status is 201
                         expect(res.status).to.be.equal(201);
-
-                        // Remove the new product by farmer from firebase
-                        chai.request(app)
-                            .post('/api/deleteProduct')
-                            .type('application/json')
-                            .send(JSON.stringify({
-                                productByFarmerID: 'Mca7G4FzXqxVSOmmKcVU'
-                            }))
-                            .end((err, res) => {
-                                // We should not have error
-                                expect(err).to.be.null;
-                                // Check that the response status is 200
-                                expect(res.status).to.be.equal(200);
-                                done();
-                            });
                         done();
                     });
             });
     });
-});*/
+});
 
 /*// POST delete a product
 describe("POST for /api/deleteProduct", () => {
