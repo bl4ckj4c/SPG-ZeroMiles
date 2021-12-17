@@ -122,7 +122,8 @@ async function getProductByFarmer(counterID) {
     if(response.ok){
         return { 'msg': 'Order succesfully added' };
     }
-    return { 'err': 'POST error' };
+    let res = await response.json();
+    return res;
   }
 
   async function getOrders() {
@@ -155,10 +156,6 @@ async function getClient(){
 
 async function getClientOrders(clientid){
     let data = [];
-
-
-
-
 
     try {
         const res = await fetch(BASEURL + '/clientorders', { method: 'GET' });
@@ -397,6 +394,36 @@ async function addProduct(product,dayOfWeek){
   }
   
 
+async function getMonthlyNotRetiredOrders(timestamp){
+    let data = [];
+
+    try {
+        const res = await fetch(BASEURL + '/monthlyNotRetiredOrders', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
+async function getWeeklyNotRetiredOrders(timestamp){
+    let data = [];
+
+    try {
+        const res = await fetch(BASEURL + '/weeklyNotRetiredOrders', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
 const API = {   
    
     getAllProductsByFarmers,
@@ -426,5 +453,8 @@ const API = {
     getClient,
     farmerRegister,
     setTimeMachine,
+
+    getMonthlyNotRetiredOrders,
+    getWeeklyNotRetiredOrders
 };
 export default API;
