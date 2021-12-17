@@ -28,8 +28,8 @@ sections:
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 | ------ | ------- | ------ | ---------- | ------------ |
 | _#0_   | 31      | -      | 63h        | 59h 40m      |
-| SPG-9  | 13      | 8      | 26h 30m    | 33h 45m      |
-| SPG-10 | 5       | 13     | 11h 30m    | 9h 45m       |
+| SPG-9  | 13      | 13      | 26h 30m    | 33h 45m      |
+| SPG-10 | 5       | 8     | 11h 30m    | 9h 45m       |
 | SPG-11 | 2       | 5      | 5h         | 3h           |
 | SPG-12 | 2       | 8      | 7h         | 8h 45m       |
 
