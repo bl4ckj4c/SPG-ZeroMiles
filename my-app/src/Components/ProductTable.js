@@ -98,13 +98,15 @@ function ProductTableWrapped(props) {
     dayjs.extend(customParseFormat);
 
 
-    async function CanOrder(){
+    function CanOrder(){
         let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
         
         console.log("data passata: "+props.timeMachine()+" data parsata: "+ giorno.toString());
-        if( (dayjs(giorno).day()==0 && dayjs(giorno).hour()< 23 ) || (dayjs(giorno).day()==6 && dayjs(giorno).hour()>8 ) )
+        console.log("dayt:"+ giorno.day())
+        if( (giorno.day()==0 && giorno.hour()< 23 ) || (giorno.day()==6 && giorno.hour()>8 ) ){
             return true;
-         
+        }
+
             return false;
     }
 
