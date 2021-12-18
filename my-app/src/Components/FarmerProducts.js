@@ -5,6 +5,12 @@ import { useState, useEffect } from 'react'
 import "./FarmerProducts.css";
 import ProductNew from "./AddNewProduct"
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+
+
 function FarmerProducts(props) {
   const [products, setProducts] = useState([]);
   const [updateProducts, setUpdateProducts] = useState(true);
@@ -112,7 +118,7 @@ function FarmerProducts(props) {
     <Container className="search-container">
 
       <div className="placement-top">
-        <h3>This week release</h3>
+        <h3>Products orderable from {dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").day() === 6 && dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").hour() > 8 ?  dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").startOf('week').add(13, 'day').format("dddd D MMMM YYYY").toString() : dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").startOf('week').add(6, 'day').format("dddd D MMMM YYYY").toString()  }</h3>
         <ProductsDropdown products={productsByFarmer.length > 0 ? products.filter(pp => !productsByFarmer.some(pbf => pbf.ProductID === pp.ProductID)) : products} setSelectedProduct={setSelectedProduct} selectedProduct={selectedProduct} />
         <div className="mt-2" style={{ textAlign: "right", marginRight: "-10px" }}>
           <Button className="search-button" disabled={selectedProduct.length > 0 ? false : true} onClick={() => setAddProdShow(true)} variant="secondary">Add</Button>
@@ -194,8 +200,15 @@ function ProductByFarmerModal(props) {
   const [price, setPrice] = useState(props.Edit ? props.p.Price : "");
   const [quantity, setQuantity] = useState(props.Edit ? props.p.Quantity : "");
   const [unit, setUnit] = useState(props.Edit ? props.p.UnitOfMeasurement : "");
+  const [error, setError] = useState("");
+
 
   function AddProduct() {
+
+    if(!Validate())
+      return;
+
+
     let prod = {
       productByFarmerID: props.Edit ? props.p.ProdByFarmerID : false,
       UnitOfMeasurement: unit,
@@ -214,10 +227,22 @@ function ProductByFarmerModal(props) {
 
   }
 
+  function Validate(){
+    if(parseFloat(price) < 0 || parseFloat(price) === NaN){
+      setError("⚠️ Please, enter a valid price")
+      return false
+    }
+    else if(parseInt(quantity) === NaN || parseFloat(quantity)-parseInt(quantity) !== 0 || parseInt(quantity) < 0 ){
+      setError("⚠️ Please, enter a valid quantity")
+      return false
+    }
+    else if(unit.trim() === "" ){
+      setError("⚠️ Please, enter the unit");
+      return false
+    }
+    return true
+  }
 
-
-
-  //TODO VALIDATION
   if (!props.p && !props.Edit)
     return ""
   else
@@ -240,16 +265,16 @@ function ProductByFarmerModal(props) {
             <Form.Label>Enter the price in the 0.00 format</Form.Label>
             <InputGroup>
               <InputGroup.Text>€</InputGroup.Text>
-              <Form.Control value={price} type="number" placeholder="enter a price (e.g: 10.00)" onChange={(event) => { setPrice(event.target.value) }} /><br />
+              <Form.Control value={price} type="number" onChange={(event) => { setPrice(event.target.value) }} /><br />
             </InputGroup>
 
             <Form.Label>Enter the quantity</Form.Label>
-            <Form.Control value={quantity} type="number" placeholder="enter a qunatity number" onChange={(event) => { setQuantity(event.target.value) }} /><br />
+            <Form.Control value={quantity} type="number" onChange={(event) => { setQuantity(event.target.value) }} /><br />
             <Form.Label>Enter the unit of measurement</Form.Label>
-            <Form.Control value={unit} placeholder="enter a unit value (e.g: kg,bag)" onChange={(event) => { setUnit(event.target.value) }} /><br />
+            <Form.Control value={unit} placeholder="enter a unit value e.g: kg, bag, 200g/pz" onChange={(event) => { setUnit(event.target.value) }} /><br />
 
           </Form>
-
+            {error}
         </Modal.Body>
         <Button onClick={AddProduct} variant="success">{!props.Edit ? "Add the product" : "Edit the product"}</Button>
 
