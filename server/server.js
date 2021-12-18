@@ -120,6 +120,7 @@ const firebaseappTest = firebaseTest.initializeApp({
 //var db_backup = firebaseBackup.firestore(firebaseappBackup);
 //var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
 //var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
+//var db_test = firebaseTest.firestore(firebaseappTest);
 var db = firebaseBackup2.firestore(firebaseappBackup2);
 
 //use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
@@ -1103,7 +1104,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
     }
 });
 
-/* GET monthly not retired orders*/
+/* GET not retired orders (same month)*/
 app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -1115,7 +1116,7 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
     let reqday = dayjs(req.body.timestamp);
 
     try {
-        const orders = await db.collection('Order').orderBy('Timestamp').get();
+        const orders = await db.collection('Order').where("notRetired","==","true").get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: Order)"});
@@ -1148,7 +1149,11 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
                 }
             })
             const response = Promise.all(result)
-                .then(r => res.status(200).json(r))
+                .then(r => {
+                    if(r.length==0)
+                        res.status(404).json({error: "No entries (Table: Order)"});
+                    else res.status(200).json(r)
+                })
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all orders)",
                     error: error
@@ -1163,7 +1168,7 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
     }
 });
 
-/* GET weekly not retired orders*/
+/* GET not retired orders (previous week)*/
 app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -1174,9 +1179,10 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
 
     let reqday = dayjs(req.body.timestamp);
     let reqweekOfYear = reqday.day()==0 ? reqday.week()-1 : reqday.week();
+    console.log("reqweek: " + reqweekOfYear)
 
     try {
-        const orders = await db.collection('Order').orderBy('Timestamp').get();
+        const orders = await db.collection('Order').where("notRetired","==","true").get();
         if (orders.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: Order)"});
@@ -1189,7 +1195,7 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
                 if(dayjs(orderdate).day()==0 && dayjs(orderdate).hour() <23){
                     orderweekOfYear= orderweekOfYear - 1;
                 }
-                
+                console.log("order :" + orderdate + " " + orderweekOfYear)
                 if(reqweekOfYear == orderweekOfYear+1){
                     result.push(new Promise(async (resolve, reject) => {
                         const client = await db.collection('User').doc("" + order.data().ClientID).get();
@@ -1213,7 +1219,11 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
                 }
             })
             const response = Promise.all(result)
-                .then(r => res.status(200).json(r))
+            .then(r => {
+                if(r.length==0)
+                    res.status(404).json({error: "No entries (Table: Order)"});
+                else res.status(200).json(r)
+            })
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all orders)",
                     error: error
@@ -1462,7 +1472,7 @@ app.post('/api/timeMachine',async(req,res)=>{
                     }
                     Promise.all(responseresult).then(responseresult => {
                         console.log(responseresult);
-                        res.status(200).end();
+                        res.status(200).json(responseresult);
                     })
                     .catch(error => res.status(500).json({
                         info: "Promises error (get responseresult after order processing)",
@@ -1496,9 +1506,11 @@ app.post('/api/timeMachine',async(req,res)=>{
 
         if(response.ok){
             console.log("Message sent on the telegram channel!");
+            res.status(200).end();
         }
         else {
             console.log("Error in sending the message on the telegram channel");
+            res.status(502).json({error: "Cannot sent the message on the telegram channel"});
         }
 
 
@@ -1507,7 +1519,6 @@ app.post('/api/timeMachine',async(req,res)=>{
 
     }
 
-    res.status(200).end();
 })
 
 

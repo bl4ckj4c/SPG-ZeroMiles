@@ -399,6 +399,9 @@ async function getMonthlyNotRetiredOrders(timestamp){
 
     try {
         const res = await fetch(BASEURL + '/monthlyNotRetiredOrders', { method: 'GET' });
+        if(res.status==404){  //there are no entries 
+            return [];
+        }
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -414,6 +417,9 @@ async function getWeeklyNotRetiredOrders(timestamp){
 
     try {
         const res = await fetch(BASEURL + '/weeklyNotRetiredOrders', { method: 'GET' });
+        if(res.status==404){  //there are no entries 
+            return [];
+        }
         if (!res.ok) {
             throw new Error(res.statusText);
         }
