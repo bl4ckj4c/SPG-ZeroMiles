@@ -5,7 +5,7 @@ import {BrowserRouter as Router} from "react-router-dom";
 import ProductTable from "../Components/ProductTable";
 import API from "../API";
 
-export const ProductTableTest = () => describe('Test for ProductTable.js', () => {
+describe('Test for ProductTable.js', () => {
 
     const employee = {
         userID: "838916f8-2b22-4365-8172-7a40211f2514",

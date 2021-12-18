@@ -5,7 +5,7 @@ import {BrowserRouter as Router} from "react-router-dom";
 import ProductNew from "../Components/AddNewProduct";
 import API from "../API";
 
-export const AddNewProductTest = () =>describe('Test for AddNewProduct.js', () => {
+describe('Test for AddNewProduct.js', () => {
     test('Correct render of the component', async () => {
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
