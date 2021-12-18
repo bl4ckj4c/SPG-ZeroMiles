@@ -963,26 +963,48 @@ describe("POST for /api/addProduct", () => {
     });
 });
 
-/*// POST delete a product
+// POST delete a product
 describe("POST for /api/deleteProduct", () => {
-    test('Delete a product', (done) => {
+    test('Delete a product product', (done) => {
         chai.request(app)
-            .post('/api/deleteProduct')
+            .post('/api/login')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify(farmer))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
-                done();
+                const cookie = res.header['set-cookie'][0];
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        date: "2021-12-18 11:11",
+                        productByFarmerID: false,
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn50IEZa0jIngRbT5E",
+                        Price: 5.5,
+                        Quantity: 1,
+                        UnitOfMeasurement: "bag"
+                    }))
+                    .end(async (err, res) => {
+                        chai.request(app)
+                            .post('/api/deleteProduct')
+                            .set('Cookie', cookie)
+                            .type('application/json')
+                            .send(JSON.stringify({
+                                productByFarmerID: res.body.productByFarmerID
+                            }))
+                            .end(async (err, res) => {
+                                // We should not have error
+                                expect(err).to.be.null;
+                                // Check that the response status is 201
+                                expect(res.status).to.be.equal(201);
+                                done();
+                            });
+                    });
             });
     });
-});*/
+});
 
 
 /*// POST for store a new product with related image into the server
