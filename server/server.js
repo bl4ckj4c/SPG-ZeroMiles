@@ -754,11 +754,11 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
     let weekOfYear=0;
 
     if(dayjs(day2).day()==6 && dayjs(day2).hour() >8){
+        console.log(day2.toString())
     weekOfYear= dayjs(day2).week() +1;
     }else{
         weekOfYear= dayjs(day2).week();
     }
-    weekOfYear= dayjs(day2).week();
     console.log(weekOfYear);
     
     if(user.Role != "Farmer"){
