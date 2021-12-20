@@ -102,7 +102,7 @@ function ZeroNavbar(props) {
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
+                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
                                         <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
                                 </>}
