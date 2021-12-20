@@ -17,6 +17,7 @@ import ClientOrders from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
 import Deliver from './Components/Deliver';
+import Unretrieved from './Components/UnretrievedFood';
 
 
 function App() {
@@ -172,6 +173,10 @@ function App() {
 
         <Route exact path="/farmerview">
           <FarmerProducts user={user} timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
+        </Route>
+
+        <Route exact path="/unretrieved">
+          <Unretrieved timeMachine={ReturnTimeMachine}/>
         </Route>
 
       </Switch>

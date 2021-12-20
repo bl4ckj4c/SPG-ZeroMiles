@@ -337,7 +337,7 @@ function CartCheckoutModal(props) {
 
                 {props.prodNum.some(p => p.number > 0) ? "" : "The cart is empty"}
 
-                <Table className="d-flex justify-content-center">
+                <Table className="justify-content-center">
                     <tbody align="center">
                         {props.prodNum.map(p => p.number !== 0 ?
                             <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}

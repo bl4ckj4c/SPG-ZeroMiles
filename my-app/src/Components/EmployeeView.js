@@ -151,7 +151,7 @@ function OrderRow(props) {
                             </Row>
                         </Row>
 
-                        <Table className="d-flex justify-content-center">
+                        <Table className="justify-content-center">
                             <tbody align="center">
                                 {props.order.ProductInOrder.map(p => (
                                     <ProductList product={p} />
@@ -249,9 +249,9 @@ function ProductList(props) {
         <tr>
             <td>
                 <Container>
-                    <Row className="mb-2 align-items-center">
+                    <Row className="mb-2 align-items-center font-tabella">
                         <Col>
-                            <Image src={newSrc} height={"60 px"} rounded />
+                            <Image src={newSrc} height={"50 px"} rounded />
                         </Col>
                         <Col>
                             <center>{props.product.NameProduct}</center>
