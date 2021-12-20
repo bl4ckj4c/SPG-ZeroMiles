@@ -60,27 +60,25 @@ function EmployeeView(props) {
                 < Spinner animation="border" size="xl" variant="secondary" />
             </Row > </> :
                 <>
-                <Row>
                     <Col>
                         <Table className="d-flex justify-content-center">
                             <tbody id="employee-table" align="center">
-                                {ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 ? <>
-                                    {  
-                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 && selectedUser.length  > 0 && !ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).some(ord=> ord.ClientID === selectedUser[0].UserID)  ?  <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders for the selected user"}/> : 
-                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).slice(0).reverse().map(o => {
+                                {ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 ? <>
+                                    {
+                                        ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 && selectedUser.length > 0 && !ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).some(ord => ord.ClientID === selectedUser[0].UserID) ? <NoOrders message={"There are no" + (props.status === "all" ? "" : " " + props.status) + " orders for the selected user"} /> :
+                                            ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).slice(0).reverse().map(o => {
 
-                                        if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
+                                                if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 
-                                                return <OrderRow order={o} />
-                                            
-                                        }
-                                    }
-                                    )
-                                    } </> : <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders yet"}/>}
+                                                    return <OrderRow order={o} />
+
+                                                }
+                                            }
+                                            )
+                                    } </> : <NoOrders message={"There are no" + (props.status === "all" ? "" : " " + props.status) + " orders yet"} />}
                             </tbody>
                         </Table>
                     </Col>
-                     </Row>
                 </>
             }
         </>
@@ -118,7 +116,7 @@ function OrderRow(props) {
         stat = 'c';
         progressType = "success";
         progressRate = 100;
-    } else if (props.order.Status === "cancelled"){
+    } else if (props.order.Status === "cancelled") {
         stat = 'canc'
         buttonstatus = "outline-danger";
         progressType = "danger"
@@ -167,19 +165,19 @@ function OrderRow(props) {
                             </Col>
 
                             {(props.order.Status === 'pending' && props.order.DeliveryDate === '') ? <>
-                            <Col>
-                                <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
+                                <Col>
+                                    <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
                             </> : <></>}
 
                             {props.order.DeliveryDate != '' ? <>
-                            <Col>
+                                <Col>
                                     Delivery requested for {props.order.DeliveryDate}
-                            </Col>
+                                </Col>
                             </> : <></>}
 
                             <Col>
-                            
-                                <DropdownButton  title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
+
+                                <DropdownButton title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
 
                                     <Dropdown.Item onClick={() => {
                                         props.order.Status = "open";
@@ -190,7 +188,7 @@ function OrderRow(props) {
 
 
                                     }}>Open</Dropdown.Item>
-                                    <Dropdown.Item  onClick={() => {
+                                    <Dropdown.Item onClick={() => {
                                         props.order.Status = "pending";
                                         setStat('p');
                                         progressRate = 49;
@@ -200,7 +198,7 @@ function OrderRow(props) {
                                     }
 
                                     }>Pending</Dropdown.Item>
-                                    <Dropdown.Item  onClick={() => {
+                                    <Dropdown.Item onClick={() => {
                                         props.order.Status = "closed";
                                         setStat('c');
                                         progressRate = 99;
@@ -209,7 +207,7 @@ function OrderRow(props) {
                                         API.modifyOrderStatus(props.order);
 
                                     }}>Closed</Dropdown.Item>
-                                    <Dropdown.Item  onClick={() => {
+                                    <Dropdown.Item onClick={() => {
                                         props.order.Status = "cancelled";
                                         setStat('canc');
                                         progressRate = 100;
@@ -223,12 +221,12 @@ function OrderRow(props) {
                                     <Modal.Header closeButton>
                                         <Modal.Title>Status Change!</Modal.Title>
                                     </Modal.Header>
-                                        <Modal.Body>
+                                    <Modal.Body>
                                         Ther order status has been changed to {props.order.Status}
-                                        </Modal.Body>
-                                        <Modal.Footer>
-                                            <Button variant="secondary" onClick={handleClose}> Close </Button>
-                                        </Modal.Footer>
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleClose}> Close </Button>
+                                    </Modal.Footer>
                                 </Modal>
                             </Col>
                         </Row>
@@ -269,14 +267,14 @@ function ProductList(props) {
     );
 }
 
-function NoOrders(props){
+function NoOrders(props) {
     return (<Row style={{ height: "50vh" }} className="align-items-center">
-    
-    <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
-    <div className="d-flex justify-content-center "><h4>{props.message}</h4></div>
-    </div>
+
+        <div><Image className="d-block mx-auto img-fluid w-30" src="/images/logo.png" />
+            <div className="d-flex justify-content-center "><h4>{props.message}</h4></div>
+        </div>
     </Row>
-            
+
     );
 }
 

@@ -12,6 +12,9 @@
     .ridotto-mobile {
       font-size: 13px;
     }
+    .font-tabella{
+      font-size: 12px;
+    }
   }
 
   @media (min-width: 1200px) {
@@ -19,8 +22,11 @@
         margin-left: 18px;
         margin-right: 18px;
     }
+    .font-tabella{
+      font-size: 14px;
+    }
   }
 
-  .font-tabella{
-    font-size: 14px;
+  .no-scroll{
+    overflow: hidden;
   }

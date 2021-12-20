@@ -40,15 +40,19 @@ function Unretrieved(props) {
                 < Spinner animation="border" size="xl" variant="secondary" />
             </Row > </> :
                 <>
-                    <Row>
-                        <Col>
-                            <Table className="d-flex justify-content-center">
-                                <tbody id="employee-table" align="center">
+                    <Col>
+                        <Table className="d-flex justify-content-center">
+                            <tbody id="employee-table" align="center">
+                                <Row>
+                                    <Col><h3 className="mt-3" style = {{textAlign:'left', verticalAlign:'super'}}>Last week unretrived orders</h3></Col>
+                                    <Col xl={2} xs={2} style={{textAlign:'right'}} className="align-middle"> <Button size="sm">Change</Button></Col>
+                                </Row>
+                                
 
-                                    {farmerList.map(f =>
-                                        <FarmerRow key={f.FarmerID} farmer={f} ordersList={ordersList} />)}
+                                {farmerList.map(f =>
+                                    <FarmerRow key={f.FarmerID} farmer={f} ordersList={ordersList} />)}
 
-                                    {/*
+                                {/*
                                 {ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 ? <>
                                     {  
                                         ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 && selectedUser.length  > 0 && !ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).some(ord=> ord.ClientID === selectedUser[0].UserID)  ?  <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders for the selected user"}/> : 
@@ -63,10 +67,9 @@ function Unretrieved(props) {
                                     )
                                     } </> : <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders yet"}/>}
                                 */}
-                                </tbody>
-                            </Table>
-                        </Col>
-                    </Row>
+                            </tbody>
+                        </Table>
+                    </Col>
                 </>
             }
         </>
@@ -88,35 +91,33 @@ function FarmerRow(props) {
     if (product.length > 0)
         return (<>
             <tr>
-                <td className="producttable-col">
 
-                    <Container>
+                <Container>
 
-                        <Row className="mt-2">
-                            <h1 style={{ fontSize: 28 }} align={"left"}>{props.farmer.Company}</h1>
-                        </Row>
+                    <Row className="mt-2">
+                        <h1 style={{ fontSize: 24 }} align={"left"}>{props.farmer.Company}</h1>
+                    </Row>
 
-                        <Row className="mb-3">
-                            <section className="d-flex justify-content-between">
-                                <div> <PersonFill /><span>&nbsp;</span>
-                                    {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
-                                </div>
-                                <div>
-                                    <GeoAltFill className="ml-3" /><span>&nbsp;</span>
-                                    {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
-                                </div>
-                            </section>
-                        </Row>
+                    <Row className="mb-3">
+                        <section className="d-flex justify-content-between">
+                            <div> <PersonFill /><span>&nbsp;</span>
+                                {props.farmer.Name}<span>&nbsp;</span>{props.farmer.Surname}
+                            </div>
+                            <div>
+                                <GeoAltFill className="ml-3" /><span>&nbsp;</span>
+                                {props.farmer.Address}<span>,&nbsp;</span>{props.farmer.State}
+                            </div>
+                        </section>
+                    </Row>
 
-                        <Table className="justify-content-center">
-                            <tbody align="center">
-                                {product.map(p => (
-                                    <ProductList product={p} />))}
-                            </tbody>
-                        </Table>
+                    <Table className="justify-content-center">
+                        <tbody align="center">
+                            {product.map(p => (
+                                <ProductList product={p} />))}
+                        </tbody>
+                    </Table>
 
-                    </Container>
-                </td>
+                </Container>
             </tr>
         </>
         );
