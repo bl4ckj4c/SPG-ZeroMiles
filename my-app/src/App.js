@@ -175,7 +175,7 @@ function App() {
           <FarmerProducts user={user} timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
         </Route>
 
-        <Route exact path="/unretrieved">
+        <Route exact path="/manager">
           <Unretrieved timeMachine={ReturnTimeMachine}/>
         </Route>
 

@@ -1,0 +1,48 @@
+.sfondoriga{
+    /*background-color: #eaeaea;*/
+    background-color: #efefef;
+    border-radius: 10px;
+}
+
+.sfondosidebar{
+    background-color: #efefef;
+}
+
+@media (max-width: 1200px) {
+    .ridotto-mobile {
+      font-size: 13px;
+    }
+    .font-tabella{
+      font-size: 12px;
+    }
+    .margin-show{
+        margin-left: 48px;
+        margin-top: 2px;
+    }
+    .unretrieved-mobile{
+        margin-left: 10px;
+    }
+    .date-mobile{
+        margin-right: 13px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .margine-cerca-desktop{
+        margin-left: 18px;
+        margin-right: 18px;
+    }
+    .font-tabella{
+      font-size: 14px;
+    }
+    .margin-show{
+        margin-left: 8px;
+    }
+    .pill-placement{
+        margin-left: 10px;
+    }
+  }
+
+  .no-scroll{
+    overflow: hidden;
+  }

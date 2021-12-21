@@ -1,29 +1,48 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
+import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Badge, Collapse, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import { useLocation } from 'react-router-dom';
-import "./EmployeeView.css";
+import "./UnretrievedFood.css";
 import Modal from 'react-bootstrap/Modal'
 import { ProductList } from './EmployeeView';
+import dayjs from 'dayjs';
 
 function Unretrieved(props) {
 
-    const [ordersList, setOrdersList] = useState([]);
+    const [weeklyOrdersList, setWeeklyOrdersList] = useState([]);
+    const [monthlyOrdersList, setMonthlyOrdersList] = useState([]);
+    const [ordersDate, setOrdersDate] = useState(props.timeMachine());
     const [farmerList, setFarmerList] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [loadingWeek, setLoadingWeek] = useState(false);
+    const [loadingMonth, setLoadingMonth] = useState(false);
+    const [openWeek, setOpenWeek] = useState(false);
+    const [openMonth, setOpenMonth] = useState(false);
+
+    const customparseformat = require('dayjs/plugin/customParseFormat');
+    dayjs.extend(customparseformat);
 
     useEffect(() => {
-        setLoading(true);
-        API.getWeeklyNotRetiredOrders(props.timeMachine().toString())
+        setLoadingWeek(true);
+        setLoadingMonth(true);
+
+        API.getWeeklyNotRetiredOrders(ordersDate.toString())
             .then(orders => {
-                setOrdersList(orders);
-                setLoading(false);
+                setWeeklyOrdersList(orders);
+                setLoadingWeek(false);
             }).catch(o => handleErrors(o));
+
+        API.getMonthlyNotRetiredOrders(ordersDate.toString())
+            .then(orders => {
+                setMonthlyOrdersList(orders);
+                setLoadingMonth(false);
+            }).catch(o => handleErrors(o));
+
         API.getFarmer()
             .then(farmer => {
                 setFarmerList(farmer);
             }).catch(f => console.log(f));
+
     }, []);
 
 
@@ -35,46 +54,81 @@ function Unretrieved(props) {
 
     return (
         <>
+            <Row className="mt-3">
+                <h1 style={{ textAlign: 'center' }}>ZeroMiles Managing page</h1>
+            </Row>
 
-            {loading ? <> <Row className="justify-content-center mt-5">
+            {loadingWeek && loadingMonth ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
             </Row > </> :
                 <>
-                    <Col>
-                        <Table className="d-flex justify-content-center">
-                            <tbody id="employee-table" align="center">
-                                <Row>
-                                    <Col><h3 className="mt-3" style = {{textAlign:'left', verticalAlign:'super'}}>Last week unretrived orders</h3></Col>
-                                    <Col xl={2} xs={2} style={{textAlign:'right'}} className="align-middle"> <Button size="sm">Change</Button></Col>
-                                </Row>
-                                
+                    <Row className="mt-3">
+                        <Col className='d-none d-sm-block' lg={3}></Col>
+                        <Col className="unretrieved-mobile">
+                            <div className="d-flex justify-content-between">
+                                <h4>Unretrived orders</h4>
+                                <Button size="sm" variant="outline-secondary" className="date-mobile">Change date</Button>
+                            </div>
+                        </Col>
+                        <Col className='d-none d-sm-block' lg={3}></Col>
+                    </Row>
 
-                                {farmerList.map(f =>
-                                    <FarmerRow key={f.FarmerID} farmer={f} ordersList={ordersList} />)}
+                    <ListGroup className="mt-3">
 
-                                {/*
-                                {ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 ? <>
-                                    {  
-                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).length > 0 && selectedUser.length  > 0 && !ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).some(ord=> ord.ClientID === selectedUser[0].UserID)  ?  <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders for the selected user"}/> : 
-                                        ordersList.filter(ol => props.status=== "all" ? true : ol.Status === props.status ).slice(0).reverse().map(o => {
+                        <Row>
+                            <Col className='d-none d-sm-block' lg={3}></Col>
+                            <Col>
+                                <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                                    <h5 style={{ marginTop: '10px' }}>N° in the week before {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('DD MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{weeklyOrdersList.length}</Badge></h5>
+                                    <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenWeek(!openWeek)} aria-controls="example-collapse-text" aria-expanded={openWeek} >Show</Button>
+                                </ListGroup.Item>
+                            </Col>
+                            <Col className='d-none d-sm-block' lg={3}></Col>
 
-                                        if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
+                            <Collapse in={openWeek}>
+                                <div>
+                                    <Table className="d-flex justify-content-center">
+                                        <tbody id="employee-table" align="center">
 
-                                                return <OrderRow order={o} />
-                                            
-                                        }
-                                    }
-                                    )
-                                    } </> : <NoOrders message={"There are no"+(props.status === "all" ? "" : " "+props.status ) +" orders yet"}/>}
-                                */}
-                            </tbody>
-                        </Table>
-                    </Col>
+                                            {farmerList.map(f =>
+                                                <FarmerRow key={f.FarmerID} farmer={f} ordersList={weeklyOrdersList} />)}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </Collapse>
+                        </Row>
+
+
+                        <Row>
+                            <Col className='d-none d-sm-block' lg={3}></Col>
+                            <Col>
+                                <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                                    <h5 style={{ marginTop: '10px' }}>N° in the month of {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{monthlyOrdersList.length}</Badge></h5>
+                                    <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenMonth(!openMonth)} aria-controls="example-collapse-text" aria-expanded={openMonth} >Show</Button>
+                                </ListGroup.Item>
+                            </Col>
+                            <Col className='d-none d-sm-block' lg={3}></Col>
+
+                            <Collapse in={openMonth}>
+                                <div>
+                                    <Table className="d-flex justify-content-center">
+                                        <tbody id="employee-table" align="center">
+
+                                            {farmerList.map(f =>
+                                                <FarmerRow key={f.FarmerID} farmer={f} ordersList={monthlyOrdersList} />)}
+                                        </tbody>
+                                    </Table>
+                                </div>
+                            </Collapse>
+                        </Row>
+                    </ListGroup>
                 </>
             }
         </>
     );
 }
+
+
 function FarmerRow(props) {
     let product = [];
 
@@ -82,10 +136,6 @@ function FarmerRow(props) {
         o.ProductInOrder.map(po =>
             po.FarmerID === props.farmer.FarmerID ? product.push(po) : '')
     })
-
-    console.log(product);
-
-    //o.ProductInOrder.FarmerID === props.farmer.FarmerID ? product.push(o.ProductInOrder) : '')
 
 
     if (product.length > 0)
