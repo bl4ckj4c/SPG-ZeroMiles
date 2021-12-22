@@ -176,7 +176,8 @@ function App() {
         </Route>
 
         <Route exact path="/manager">
-          <Unretrieved timeMachine={ReturnTimeMachine}/>
+          {!loggedIn || user.Role !== "Manager" ? <Redirect to="/" /> : 
+          <Unretrieved timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/> }
         </Route>
 
       </Switch>
