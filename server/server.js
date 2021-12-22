@@ -1113,7 +1113,7 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
         return;
     }
 
-    let reqday = dayjs(req.body.timestamp);
+    let reqday = dayjs(req.body.newdate);
 
     try {
         const orders = await db.collection('Order').where("notRetired","==","true").get();
@@ -1177,7 +1177,7 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
         return;
     }
 
-    let reqday = dayjs(req.body.timestamp);
+    let reqday = dayjs(req.body.newdate);
     let reqweekOfYear = reqday.day()==0 ? reqday.week()-1 : reqday.week();
     console.log("reqweek: " + reqweekOfYear)
 

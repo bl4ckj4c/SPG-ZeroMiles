@@ -398,7 +398,15 @@ async function getMonthlyNotRetiredOrders(timestamp){
     let data = [];
 
     try {
-        const res = await fetch(BASEURL + '/monthlyNotRetiredOrders', { method: 'GET' });
+
+        const res = await fetch(BASEURL + "/monthlyNotRetiredOrders", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newdate: timestamp})
+        })
+
         if(res.status===404){  //there are no entries 
             return [];
         }
@@ -416,7 +424,13 @@ async function getWeeklyNotRetiredOrders(timestamp){
     let data = [];
 
     try {
-        const res = await fetch(BASEURL + '/weeklyNotRetiredOrders', { method: 'GET' });
+        const res = await fetch(BASEURL + "/monthlyNotRetiredOrders", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newdate: timestamp})
+        })
         if(res.status===404){  //there are no entries 
             return [];
         }
