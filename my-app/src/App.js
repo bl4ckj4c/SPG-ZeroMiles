@@ -1,13 +1,11 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import API from './API';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
 import UserRegister from './Components/UserRegister.js';
-import Main from './main.js';
 import ProductTable from './Components/ProductTable.js'
-import { Container, Row, Col, Toast, ToastContainer, Spinner, Navbar, Nav, NavDropdown, Image } from 'react-bootstrap';
 import "./App.css";
 import ZeroNavbar from './Components/Navbar';
 import { EmployeeView } from './Components/EmployeeView';
@@ -24,12 +22,10 @@ function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(true);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
   const [sideShow, setSideShow] = useState(false); //for the sidebar
   const [timeMachine, setTimeMachine] = useState(false); 
-  let history = useHistory();
   var dayjs = require('dayjs');
 
   const timedev = true; //set at false to disable the time machine

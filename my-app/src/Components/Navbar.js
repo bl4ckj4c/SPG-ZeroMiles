@@ -1,7 +1,6 @@
 import { Navbar, Nav, Button, Image, Container, Offcanvas, NavDropdown, Col, Row, Modal, Form, CloseButton } from 'react-bootstrap';
 import "./Navbar.css";
-import { useEffect, useState } from 'react';
-import NavbarCollapse from "react-bootstrap/NavbarCollapse";
+import { useState } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { House, DoorOpen, Stopwatch, PersonCircle, BoxSeam, PersonVideo2, Bucket, Telegram, Kanban } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
@@ -160,7 +159,7 @@ function TimeMachine(props) {
         API.setTimeMachine(newdate);
         props.onHide(newdate);
         //Se e' lunedi ricarico la pagina per mostrare i nuovi ordini confermati
-        if (dayjs(date.value).day() == 1 && time.value == "09:00") {
+        if (dayjs(date.value).day() === 1 && time.value === "09:00") {
             window.location.reload(false);
         }
     }

@@ -1,9 +1,7 @@
 import { Col, Row, Container, Form, Button, Toast, ToastContainer, Image } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom'
 import { Modal } from 'react-bootstrap';
 import { useState } from 'react';
 import "./UserLogin.css";
-import API from '../API';
 
 
 function UserLogin(props) {
@@ -45,26 +43,6 @@ function UserLogin(props) {
                 setMessageErrorLogin(err);
                 handleLoginResponseModalShow();
             })
-    }
-
-    /*
-    async function sendRegister(event) {
-        event.preventDefault();
-        let res = await API.userLogin(email, password);
-        if (res.ok){
-            props.setLoggedIn(true);
-        }
-        else{
-            console.log(res);
-            setMessageErrorLogin(res.statusText);
-            handleLoginResponseModalShow();
-          
-        }
-    } */
-
-    let history = useHistory();
-    function handleSignUp() {
-        history.push("/signup")
     }
 
     return (

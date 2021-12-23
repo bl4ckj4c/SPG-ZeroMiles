@@ -1,8 +1,7 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, Container, Modal, Form, Button, Image, Toast, Spinner } from 'react-bootstrap';
+import { Table, Row, Col, Container, Modal, Form, Button, Image, Spinner } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
-import { useLocation } from 'react-router-dom';
 import "./ClientOrders.css";
 import Deliver from "./Deliver.js"
 
@@ -155,7 +154,7 @@ function OrderRow(props) {
                                 </Col>
                             </> : <></>}
 
-                            {props.order.DeliveryDate != '' ? <>
+                            {props.order.DeliveryDate !== '' ? <>
                                 <Col style={{fontSize:'13px'}}>
                                     Delivery requested {props.order.DeliveryDate}
                                 </Col>
@@ -163,7 +162,7 @@ function OrderRow(props) {
 
                             {console.log(props.order)}
 
-                            {props.order.pickupTimestamp != '' ? <> 
+                            {props.order.pickupTimestamp !== '' ? <> 
                                 <Col style={{fontSize:'13px'}}>
                                     Pickup requested {props.order.pickupTimestamp}
                                 </Col>
@@ -200,22 +199,22 @@ function TimeSelect(props) {
     var mercoledi = '', giovedi = '', venerdi = '';
 
     function setDay() {
-        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() == 1) { //lunedi
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 1) { //lunedi
             mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(2, 'day');
             giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(4, 'day');
 
         }
-        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() == 2) { //martedi
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 2) { //martedi
             mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(1, 'day');
             giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(2, 'day');
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
         }
-        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() == 3) { //mercoledi
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 3) { //mercoledi
             giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(1, 'day');
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(2, 'day');
         }
-        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() == 4) { //giovedi
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 4) { //giovedi
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(1, 'day');
         }
     }
@@ -262,9 +261,9 @@ function TimeSelect(props) {
                                 <Form.Label>Date</Form.Label>
                                 <Form.Select onChange={e => setDate({ value: e.target.value })} >
                                     <option>Select a date...</option>
-                                    {mercoledi != '' ? <option value={"1"}>Wednesday {(dayjs(dayjs(mercoledi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
-                                    {giovedi != '' ? <option value={"2"}>Thursday {(dayjs(dayjs(giovedi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
-                                    {venerdi != '' ? <option value={"3"}>Friday {(dayjs(dayjs(venerdi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
+                                    {mercoledi !== '' ? <option value={"1"}>Wednesday {(dayjs(dayjs(mercoledi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
+                                    {giovedi !== '' ? <option value={"2"}>Thursday {(dayjs(dayjs(giovedi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
+                                    {venerdi !== '' ? <option value={"3"}>Friday {(dayjs(dayjs(venerdi, 'MM-DD-YYYY'))).format('DD/MM/YYYY').toString()}</option> : ''}
                                 </Form.Select>
                             </Form.Group>
                         </Col>

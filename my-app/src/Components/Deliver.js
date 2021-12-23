@@ -1,16 +1,10 @@
 import API from '../API';
-import { useState, useEffect, useCallback } from 'react';
-import { Table, Row, Col, Form, ListGroup, Spinner, Card, Modal, Image, Button, Container } from 'react-bootstrap';
-import { PersonCircle, GeoAltFill, MapFill, WalletFill, PersonFill, ClockFill } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { Row, Col, Form, Modal, Button} from 'react-bootstrap';
 import "./ClientView.css";
-import { useLocation } from 'react-router-dom';
 import "./ClientOrders.css";
-import { useDropzone } from 'react-dropzone'
-//import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker';
-
-
 import "react-datepicker/dist/react-datepicker.css";
 
 function Deliver(props) {
@@ -34,8 +28,6 @@ function Deliver(props) {
     }
 
 
-
-
     return (
         <>
             {
@@ -48,16 +40,11 @@ function Deliver(props) {
                         submitDelivery={submitDelivery}
                         show={modalShowProductNew}
                         onHide={() => setModalShowProductNew(false)} />
-
-
-
                 </>
             }
         </>
     );
 }
-
-
 
 
 function ModalDeliveryNew(props) {

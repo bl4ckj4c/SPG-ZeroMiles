@@ -1,7 +1,6 @@
 import API from '../API';
-import { useState, useEffect, useCallback } from 'react';
-import { Table, Row, Col, Form, ListGroup, Spinner, Card, Modal, Button, Container } from 'react-bootstrap';
-import { PersonCircle, GeoAltFill, MapFill, WalletFill } from 'react-bootstrap-icons';
+import { useState, useEffect} from 'react';
+import { Row, Col, Modal, Button, Container, Form } from 'react-bootstrap';
 import "./ClientView.css";
 import { useDropzone } from 'react-dropzone'
 
@@ -11,11 +10,6 @@ function ProductNew(props) {
     const [image, setImage] = useState(undefined);
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
     const [confirmationShow, setConfirmationShow]  = useState(false);
-
-    const handleErrors = (err) => {
-        // setMessage({ msg: err.error, type: 'danger' });
-        console.log(err);
-    }
 
     function handleClose(){
         setModalShowProductNew(false);
@@ -145,6 +139,7 @@ function Previews(props) {
                         width: 'auto',
                         height: '100%'
                     }}
+                    alt=""
                 />
             </Container>
         </Container>

@@ -1,6 +1,6 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, Image, Form, Button, Badge, Collapse, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
+import { Table, Row, Col, ListGroup, Container, Image, Form, Button, Badge, Collapse, Spinner} from 'react-bootstrap';
 import { PersonFill, GeoAltFill } from 'react-bootstrap-icons';
 import Modal from 'react-bootstrap/Modal'
 import { ProductList } from './EmployeeView';
@@ -18,6 +18,7 @@ function Unretrieved(props) {
     const [openWeek, setOpenWeek] = useState(false);
     const [openMonth, setOpenMonth] = useState(false);
     const [modalShow, setModalShow] = useState(false);
+    const [modalErrorShow, setModalErrorShow] = useState(false);
 
     const customparseformat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customparseformat);
@@ -60,6 +61,11 @@ function Unretrieved(props) {
         }
     }
 
+    function showErrorModal() {
+        setModalShow(false);
+        setModalErrorShow(true);
+    }
+
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
         }
@@ -87,7 +93,8 @@ function Unretrieved(props) {
                                 <div className="d-flex justify-content-between">
                                     <h4>Unretrived orders</h4>
                                     <Button size="sm" variant="outline-secondary" className="date-mobile" onClick={setModalShow}>Change date</Button>
-                                    <TimeSelect show={modalShow} onHide={(newdate) => handleClose(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                    <TimeSelect show={modalShow} onHide={(newdate) => handleClose(newdate)} showError={() => showErrorModal()} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                    <ErrorModal show={modalErrorShow} onHide={() => setModalErrorShow(false)}/>
                                 </div>
                             </Col>
                             <Col className='d-none d-sm-block' lg={3}></Col>
@@ -221,8 +228,7 @@ function TimeSelect(props) {
         if ((dayjs(newdate, 'MM-DD-YYYY HH:mm:ss')).isSameOrBefore((dayjs(props.timeMachine(), 'MM-DD-YYYY HH:mm:ss')))) {
             props.onHide(newdate);
         } else {
-            console.log("TUTTO MALE");
-            //APRIRE MODAL DI ERRORE 
+            props.showError();
         }
     }
 
@@ -261,6 +267,24 @@ function TimeSelect(props) {
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="warning" onClick={onSubmit}>Confirm</Button>
+            </Modal.Footer>
+        </Modal>
+    );
+}
+
+function ErrorModal(props) {
+    return (
+        <Modal {...props} size="sm" aria-labelledby="contained-modal-title-vcenter" centered>
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    Error selecting a date
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <p>A date in the future cannot be selected </p>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="danger" onClick={props.onHide}>Close</Button>
             </Modal.Footer>
         </Modal>
     );

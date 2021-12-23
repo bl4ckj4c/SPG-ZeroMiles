@@ -1,13 +1,10 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ListGroup, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
+import { Table, Row, Col, Container, Button, Image, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
-import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
-import Sidebar from "./Sidebar";
 import Modal from 'react-bootstrap/Modal'
-import Deliver from "./Deliver.js"
 
 function EmployeeView(props) {
 
@@ -91,7 +88,7 @@ function OrderRow(props) {
         progressType = "primary";
         buttonstatus = "outline-primary";
         progressRate = 33;
-    } else if (props.order.Status == "pending") {
+    } else if (props.order.Status === "pending") {
         buttonstatus = "outline-warning";
         stat = 'p';
         progressType = "warning";
@@ -150,13 +147,13 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
 
-                            {props.order.DeliveryDate != '' ? <>
+                            {props.order.DeliveryDate !== '' ? <>
                                 <Col style={{ fontSize: '13px' }}>
                                     Delivery requested for {props.order.DeliveryDate}
                                 </Col>
                             </> : <></>}
 
-                            {props.order.pickupTimestamp != '' ? <>
+                            {props.order.pickupTimestamp !== '' ? <>
                                 <Col style={{ fontSize: '13px' }}>
                                     Pickup requested {props.order.pickupTimestamp}
                                 </Col>

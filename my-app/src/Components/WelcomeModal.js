@@ -1,6 +1,6 @@
-import { Table, Row, Col, Container, Modal, Button, Image, InputGroup, FormControl, Card } from 'react-bootstrap';
+import { Row, Col, Container, Modal, Button} from 'react-bootstrap';
 import { WelcomeFarmerModal } from "../Images/WelcomeFarmer";
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import "./WelcomeModal.css";
 
 function WelcomeModal(props) {
