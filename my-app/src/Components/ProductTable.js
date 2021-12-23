@@ -21,7 +21,7 @@ function ProductTable(props) {
     const [welcomeShow, setWelcomeShow] = useState(false);
     const [loading, setLoading] = useState(false);
 
-   
+
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
@@ -52,7 +52,7 @@ function ProductTable(props) {
     }, [update]);
 
     useEffect(() => {
-        if(props.reloadTime)
+        if (props.reloadTime)
             setUpdate(true);
     }, [props.reloadTime])
 
@@ -61,7 +61,7 @@ function ProductTable(props) {
             setWelcomeShow(true);
         else
             setWelcomeShow(false);
-            props.setSideShow(false);
+        props.setSideShow(false);
     }, [props.isLoggedIn]);
 
     return (<>
@@ -98,16 +98,18 @@ function ProductTableWrapped(props) {
     dayjs.extend(customParseFormat);
 
 
-    function CanOrder(){
+    function CanOrder() {
         let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
-        
-        console.log("data passata: "+props.timeMachine()+" data parsata: "+ giorno.toString());
-        console.log("dayt:"+ giorno.day())
-        if( (giorno.day()==0 && giorno.hour()< 23 ) || (giorno.day()==6 && giorno.hour()>8 ) ){
-            return true;
-        }
 
-            return false;
+        console.log("data passata: " + props.timeMachine() + " data parsata: " + giorno.toString());
+        console.log("dayt:" + giorno.day())
+        if ((giorno.day() == 0 && giorno.hour() < 23) || (giorno.day() == 6 && giorno.hour() > 8)) {
+            if (props.user.Role !== "Manager") {
+                console.log(props.user);
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -337,7 +339,7 @@ function CartCheckoutModal(props) {
 
                 {props.prodNum.some(p => p.number > 0) ? "" : "The cart is empty"}
 
-                <Table className="d-flex justify-content-center">
+                <Table className="justify-content-center">
                     <tbody align="center">
                         {props.prodNum.map(p => p.number !== 0 ?
                             <ProductList key={"ord" + p.ProductID + p.FarmerID} product={p} /> : "")}
@@ -511,10 +513,10 @@ function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
         <InputGroup style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px'}} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, -1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, -1)}>
                 -
             </ToggleButton>
-            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background:'white', color:'black'}} value={props.prodNum[i].number} />
+            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background: 'white', color: 'black' }} value={props.prodNum[i].number} />
             <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, +1)} >
                 +
             </ToggleButton>

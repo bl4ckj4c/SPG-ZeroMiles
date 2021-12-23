@@ -15,6 +15,16 @@
     .font-tabella{
       font-size: 12px;
     }
+    .margin-show{
+        margin-left: 48px;
+        margin-top: 2px;
+    }
+    .unretrieved-mobile{
+        margin-left: 10px;
+    }
+    .date-mobile{
+        margin-right: 13px;
+    }
   }
 
   @media (min-width: 1200px) {
@@ -24,6 +34,12 @@
     }
     .font-tabella{
       font-size: 14px;
+    }
+    .margin-show{
+        margin-left: 8px;
+    }
+    .pill-placement{
+        margin-left: 10px;
     }
   }
 

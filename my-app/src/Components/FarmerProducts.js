@@ -174,7 +174,7 @@ function ProductCard(props) {
 
             <Col>
               <Col>
-                <Image onClick={() => setShowPic(true)} src={newSrc} height={"115 px"} rounded />
+                <Image data-testid="product-image-testid" onClick={() => setShowPic(true)} src={newSrc} height={"115 px"} rounded />
               </Col>
             </Col>
 

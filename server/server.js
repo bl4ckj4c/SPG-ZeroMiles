@@ -1105,7 +1105,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
 });
 
 /* GET not retired orders (same month)*/
-app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
+app.get('/api/monthlyNotRetiredOrders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
         console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
@@ -1113,7 +1113,7 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
         return;
     }
 
-    let reqday = dayjs(req.body.timestamp);
+    let reqday = dayjs(req.params.date);
 
     try {
         const orders = await db.collection('Order').where("notRetired","==","true").get();
@@ -1169,7 +1169,7 @@ app.get('/api/monthlyNotRetiredOrders', async (req, res) => {
 });
 
 /* GET not retired orders (previous week)*/
-app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
+app.get('/api/weeklyNotRetiredOrders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
         console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
@@ -1177,7 +1177,7 @@ app.get('/api/weeklyNotRetiredOrders', async (req, res) => {
         return;
     }
 
-    let reqday = dayjs(req.body.timestamp);
+    let reqday = dayjs(req.params.date);
     let reqweekOfYear = reqday.day()==0 ? reqday.week()-1 : reqday.week();
     console.log("reqweek: " + reqweekOfYear)
 

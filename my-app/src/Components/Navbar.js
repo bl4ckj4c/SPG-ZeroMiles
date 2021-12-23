@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { useEffect, useState } from 'react';
 import NavbarCollapse from "react-bootstrap/NavbarCollapse";
 import { useLocation, useHistory } from 'react-router-dom';
-import { House, DoorOpen, Stopwatch, PersonCircle, BoxSeam, PersonVideo2, Bucket, Telegram } from 'react-bootstrap-icons';
+import { House, DoorOpen, Stopwatch, PersonCircle, BoxSeam, PersonVideo2, Bucket, Telegram, Kanban } from 'react-bootstrap-icons';
 import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
 import API from '../API';
@@ -102,7 +102,7 @@ function ZeroNavbar(props) {
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />DeLorean</Button>
+                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
                                         <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
                                 </>}
@@ -118,6 +118,8 @@ function ZeroNavbar(props) {
 
                             {props.user.Role === "Farmer" ? <FarmerSidebar setSideShow={props.setSideShow} /> : <></>}
 
+                            {props.user.Role === "Manager" ? <ManagerSidebar setSideShow={props.setSideShow} /> : <></>}
+
                             <Nav className="justify-content-end flex-grow-1 pe-3 mt-4">
                                 <NavDropdown.Divider />
                                 <Nav.Link className="nav-subtitle" onClick={handleTelegram}><Telegram style={{ marginTop: '-3px', fontSize: '21px' }} /> Join our Telegram channel</Nav.Link>
@@ -127,6 +129,7 @@ function ZeroNavbar(props) {
 
                         {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
                         {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
+                        {props.user.Role === "Manager" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
 
                     </Navbar.Offcanvas>
                 </>}
@@ -283,6 +286,20 @@ function ClientSidebar(props) {
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/profile'); }}>My profile</Nav.Link>
             </Nav>
 
+        </>
+    );
+}
+
+function ManagerSidebar(props) {
+    const history = useHistory();
+    return (
+        <>
+            <Offcanvas.Title className="mt-3 nav-subtitle"><Kanban style={{ marginTop: '-3px' }} /> Managing</Offcanvas.Title>
+            <NavDropdown.Divider />
+
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/manager'); }}>Unretrieved orders</Nav.Link>
+            </Nav>
         </>
     );
 }
