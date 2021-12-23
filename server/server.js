@@ -961,15 +961,16 @@ app.get('/api/clientorders', async (req, res) => {
                         console.log("No matching users for " + order.data().ClientID);
                     }
                     resolve({
-                        OrderID: order.id,  //maybe it's "order.id"
+                        OrderID: order.id,  
                         Status: order.data().Status,
                         ClientID: client.id,
                         Client: client.data(),
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products,
                         DeliveryDate: order.data().DeliveryDate,
-                        DeliveryPlace: order.data().DeliveryPlace
-
+                        DeliveryPlace: order.data().DeliveryPlace,
+                        pickupTimestamp: order.data().pickupTimestamp,
+                        notRetired: order.data().notRetired
                     });
                 }));
             })
@@ -1025,7 +1026,9 @@ app.get('/api/orders', async (req, res) => {
                         Timestamp: order.data().Timestamp,
                         ListOfProducts: order.data().Products,
                         DeliveryDate: order.data().DeliveryDate,
-                        DeliveryPlace: order.data().DeliveryPlace
+                        DeliveryPlace: order.data().DeliveryPlace,
+                        pickupTimestamp: order.data().pickupTimestamp,
+                        notRetired: order.data().notRetired
                     });
                 }));
             })
@@ -1081,7 +1084,9 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
                                 ClientID: client.id,
                                 Client: client.data(),
                                 Timestamp: order.data().Timestamp,
-                                ListOfProducts: order.data().Products
+                                ListOfProducts: order.data().Products,
+                                pickupTimestamp: order.data().pickupTimestamp,
+                                notRetired: order.data().notRetired
                             });
                         }));
                    }

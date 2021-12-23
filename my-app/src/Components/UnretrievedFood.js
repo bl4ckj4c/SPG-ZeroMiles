@@ -34,14 +34,14 @@ function Unretrieved(props) {
         setLoadingMonth(true);
 
         API.getWeeklyNotRetiredOrders(ordersDate.toString())
-            .then(orders => {
-                setWeeklyOrdersList(orders);
+            .then(ordersWeek => {
+                setWeeklyOrdersList(ordersWeek);
                 setLoadingWeek(false);
             }).catch(o => handleErrors(o));
 
         API.getMonthlyNotRetiredOrders(ordersDate.toString())
-            .then(orders => {
-                setMonthlyOrdersList(orders);
+            .then(ordersMonth => {
+                setMonthlyOrdersList(ordersMonth);
                 setLoadingMonth(false);
             }).catch(o => handleErrors(o));
 
@@ -68,85 +68,87 @@ function Unretrieved(props) {
 
     return (
         <>
-            <Row className="justify-content-center mt-3">
-                <Image style={{ marginLeft: '-8px' }} id="logo" src="/images/logo.png" />
-            </Row>
+            {props.user.Role === "Manager" ? <>
+                <Row className="justify-content-center mt-3">
+                    <Image style={{ marginLeft: '-8px' }} id="logo" src="/images/logo.png" />
+                </Row>
 
-            <Row className="mt-1">
-                <h1 style={{ textAlign: 'center' }}>Managing page</h1>
-            </Row>
+                <Row className="mt-1">
+                    <h1 style={{ textAlign: 'center' }}>Managing page</h1>
+                </Row>
 
-            {loadingWeek && loadingMonth ? <> <Row className="justify-content-center mt-5">
-                < Spinner animation="border" size="xl" variant="secondary" />
-            </Row > </> :
-                <>
-                    <Row className="mt-4">
-                        <Col className='d-none d-sm-block' lg={3}></Col>
-                        <Col className="unretrieved-mobile">
-                            <div className="d-flex justify-content-between">
-                                <h4>Unretrived orders</h4>
-                                <Button size="sm" variant="outline-secondary" className="date-mobile" onClick={setModalShow}>Change date</Button>
-                                <TimeSelect show={modalShow} onHide={(newdate) => handleClose(newdate)} />
-                            </div>
-                        </Col>
-                        <Col className='d-none d-sm-block' lg={3}></Col>
-                    </Row>
-
-                    <ListGroup className="mt-3">
-
-                        <Row>
+                {loadingWeek && loadingMonth ? <> <Row className="justify-content-center mt-5">
+                    < Spinner animation="border" size="xl" variant="secondary" />
+                </Row > </> :
+                    <>
+                        <Row className="mt-4">
                             <Col className='d-none d-sm-block' lg={3}></Col>
-                            <Col>
-                                <ListGroup.Item className="d-flex justify-content-between align-items-center">
-                                    <h5 style={{ marginTop: '10px' }}>N° in the week before {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('DD MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{weeklyOrdersList.length}</Badge></h5>
-                                    {weeklyOrdersList.length === 0 ?
-                                        <Button size="sm" variant="warning" className="margin-show" disabled>Show</Button> :
-                                        <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenWeek(!openWeek)} aria-controls="example-collapse-text" aria-expanded={openWeek} >Show</Button>
-                                    }
-                                </ListGroup.Item>
+                            <Col className="unretrieved-mobile">
+                                <div className="d-flex justify-content-between">
+                                    <h4>Unretrived orders</h4>
+                                    <Button size="sm" variant="outline-secondary" className="date-mobile" onClick={setModalShow}>Change date</Button>
+                                    <TimeSelect show={modalShow} onHide={(newdate) => handleClose(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                </div>
                             </Col>
                             <Col className='d-none d-sm-block' lg={3}></Col>
-
-                            <Collapse in={openWeek}>
-                                <div>
-                                    <Table className="d-flex justify-content-center">
-                                        <tbody id="employee-table" align="center">
-                                            {farmerList.map(f =>
-                                                <FarmerRow key={f.FarmerID} farmer={f} ordersList={weeklyOrdersList} />)}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </Collapse>
                         </Row>
 
+                        <ListGroup className="mt-3">
 
-                        <Row>
-                            <Col className='d-none d-sm-block' lg={3}></Col>
-                            <Col>
-                                <ListGroup.Item className="d-flex justify-content-between align-items-center">
-                                    <h5 style={{ marginTop: '10px' }}>N° in the month of {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{monthlyOrdersList.length}</Badge></h5>
-                                    {monthlyOrdersList.length === 0 ?
-                                        <Button size="sm" variant="warning" className="margin-show" disabled>Show</Button> :
-                                        <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenMonth(!openMonth)} aria-controls="example-collapse-text" aria-expanded={openMonth} >Show</Button>
-                                    }
-                                </ListGroup.Item>
-                            </Col>
-                            <Col className='d-none d-sm-block' lg={3}></Col>
+                            <Row>
+                                <Col className='d-none d-sm-block' lg={3}></Col>
+                                <Col>
+                                    <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                                        <h5 style={{ marginTop: '10px' }}>N° in the week before {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('DD MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{weeklyOrdersList.length}</Badge></h5>
+                                        {weeklyOrdersList.length === 0 ?
+                                            <Button size="sm" variant="warning" className="margin-show" disabled>Show</Button> :
+                                            <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenWeek(!openWeek)} aria-controls="example-collapse-text" aria-expanded={openWeek} >Show</Button>
+                                        }
+                                    </ListGroup.Item>
+                                </Col>
+                                <Col className='d-none d-sm-block' lg={3}></Col>
 
-                            <Collapse in={openMonth}>
-                                <div>
-                                    <Table className="d-flex justify-content-center">
-                                        <tbody id="employee-table" align="center">
-                                            {farmerList.map(f =>
-                                                <FarmerRow key={f.FarmerID} farmer={f} ordersList={monthlyOrdersList} />)}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                            </Collapse>
-                        </Row>
-                    </ListGroup>
-                </>
-            }
+                                <Collapse in={openWeek}>
+                                    <div>
+                                        <Table className="d-flex justify-content-center">
+                                            <tbody id="employee-table" align="center">
+                                                {farmerList.map(f =>
+                                                    <FarmerRow key={f.FarmerID} farmer={f} ordersList={weeklyOrdersList} />)}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                </Collapse>
+                            </Row>
+
+
+                            <Row>
+                                <Col className='d-none d-sm-block' lg={3}></Col>
+                                <Col>
+                                    <ListGroup.Item className="d-flex justify-content-between align-items-center">
+                                        <h5 style={{ marginTop: '10px' }}>N° in the month of {(dayjs(dayjs(ordersDate, 'MM-DD-YYYY'))).format('MMMM').toString()}: <Badge bg="secondary" pill className="pill-placement">{monthlyOrdersList.length}</Badge></h5>
+                                        {monthlyOrdersList.length === 0 ?
+                                            <Button size="sm" variant="warning" className="margin-show" disabled>Show</Button> :
+                                            <Button size="sm" variant="warning" className="margin-show" onClick={() => setOpenMonth(!openMonth)} aria-controls="example-collapse-text" aria-expanded={openMonth} >Show</Button>
+                                        }
+                                    </ListGroup.Item>
+                                </Col>
+                                <Col className='d-none d-sm-block' lg={3}></Col>
+
+                                <Collapse in={openMonth}>
+                                    <div>
+                                        <Table className="d-flex justify-content-center">
+                                            <tbody id="employee-table" align="center">
+                                                {farmerList.map(f =>
+                                                    <FarmerRow key={f.FarmerID} farmer={f} ordersList={monthlyOrdersList} />)}
+                                            </tbody>
+                                        </Table>
+                                    </div>
+                                </Collapse>
+                            </Row>
+                        </ListGroup>
+                    </>
+                }
+            </> : ''}
         </>
     );
 }
@@ -199,7 +201,9 @@ function FarmerRow(props) {
 function TimeSelect(props) {
     var dayjs = require('dayjs');
     var customParseFormat = require('dayjs/plugin/customParseFormat');
+    var isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
     dayjs.extend(customParseFormat);
+    dayjs.extend(isSameOrBefore);
 
     const now_time = new Object();
     const now_date = new Object();
@@ -212,8 +216,14 @@ function TimeSelect(props) {
 
 
     function onSubmit() {
-        newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
-        props.onHide(newdate);
+        newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00");
+
+        if ((dayjs(newdate, 'MM-DD-YYYY HH:mm:ss')).isSameOrBefore((dayjs(props.timeMachine(), 'MM-DD-YYYY HH:mm:ss')))) {
+            props.onHide(newdate);
+        } else {
+            console.log("TUTTO MALE");
+            //APRIRE MODAL DI ERRORE 
+        }
     }
 
     return (

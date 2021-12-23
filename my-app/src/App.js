@@ -160,7 +160,7 @@ function App() {
         </Route>
 
         <Route exact path="/myorders">
-          <ClientOrders />
+          <ClientOrders timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
         </Route>
 
         <Route exact path="/deliver">
@@ -176,8 +176,7 @@ function App() {
         </Route>
 
         <Route exact path="/manager">
-          {!loggedIn || user.Role !== "Manager" ? <Redirect to="/" /> : 
-          <Unretrieved timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/> }
+          <Unretrieved timeMachine={ReturnTimeMachine} reloadTime={timeMachine} user={user}/>
         </Route>
 
       </Switch>

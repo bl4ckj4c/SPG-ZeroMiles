@@ -28,20 +28,6 @@ function EmployeeView(props) {
             }).catch(o => handleErrors(o));
     }, []);
 
-    useEffect(() => {
-        if (ordersListUpdated === true) {
-            setLoading(true);
-            API.getOrders()
-                .then(orders => {
-                    setOrdersList(orders);
-                    setFilteredOrdersList(orders);
-                    setOrdersListUpdated(false);
-                    setLoading(false);
-                }).catch(o => handleErrors(o));
-        }
-    }, [ordersListUpdated]);
-
-
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
         }
@@ -164,59 +150,62 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
 
-                            {(props.order.Status === 'pending' && props.order.DeliveryDate === '') ? <>
-                                <Col>
-                                    <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
+                            {props.order.DeliveryDate != '' ? <>
+                                <Col style={{ fontSize: '13px' }}>
+                                    Delivery requested for {props.order.DeliveryDate}
+                                </Col>
                             </> : <></>}
 
-                            {props.order.DeliveryDate != '' ? <>
-                                <Col>
-                                    Delivery requested for {props.order.DeliveryDate}
+                            {props.order.pickupTimestamp != '' ? <>
+                                <Col style={{ fontSize: '13px' }}>
+                                    Pickup requested {props.order.pickupTimestamp}
                                 </Col>
                             </> : <></>}
 
                             <Col>
 
-                                <DropdownButton title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
-
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "open";
-                                        setStat('o');
-                                        API.modifyOrderStatus(props.order);
-                                        progressRate = 10;
-                                        handleShow();
-
-
-                                    }}>Open</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "pending";
-                                        setStat('p');
-                                        progressRate = 49;
-                                        API.modifyOrderStatus(props.order);
-                                        handleShow();
-
-                                    }
-
-                                    }>Pending</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "closed";
-                                        setStat('c');
-                                        progressRate = 99;
-                                        handleShow();
-
-                                        API.modifyOrderStatus(props.order);
-
-                                    }}>Closed</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "cancelled";
-                                        setStat('canc');
-                                        progressRate = 100;
-                                        API.modifyOrderStatus(props.order);
-                                        handleShow();
-                                    }}>Cancelled</Dropdown.Item>
+                                {props.order.Status === "closed" ? <Button size="sm" variant="outline-success">Closed</Button> : ''}
+                                {props.order.Status === "cancelled" ? <Button size="sm" variant="outline-danger">Cancelled</Button> : ''}
+                                {props.order.Status === "closed" || props.order.Status === "cancelled" ? '' : <>
+                                    <DropdownButton title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
+                                        <Dropdown.Item onClick={() => {
+                                            props.order.Status = "open";
+                                            setStat('o');
+                                            API.modifyOrderStatus(props.order);
+                                            progressRate = 10;
+                                            handleShow();
 
 
-                                </DropdownButton >
+                                        }}>Open</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {
+                                            props.order.Status = "pending";
+                                            setStat('p');
+                                            progressRate = 49;
+                                            API.modifyOrderStatus(props.order);
+                                            handleShow();
+
+                                        }
+
+                                        }>Pending</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {
+                                            props.order.Status = "closed";
+                                            setStat('c');
+                                            progressRate = 99;
+                                            handleShow();
+
+                                            API.modifyOrderStatus(props.order);
+
+                                        }}>Closed</Dropdown.Item>
+                                        <Dropdown.Item onClick={() => {
+                                            props.order.Status = "cancelled";
+                                            setStat('canc');
+                                            progressRate = 100;
+                                            API.modifyOrderStatus(props.order);
+                                            handleShow();
+                                        }}>Cancelled</Dropdown.Item>
+                                    </DropdownButton >
+
+                                </>}
                                 <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} >
                                     <Modal.Header closeButton>
                                         <Modal.Title>Status Change!</Modal.Title>

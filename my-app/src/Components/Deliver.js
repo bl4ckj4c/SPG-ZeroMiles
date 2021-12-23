@@ -103,7 +103,7 @@ function ModalDeliveryNew(props) {
 function DeliveryBottom(props) {
     return (
         <>
-            <Button onClick={props.onShow} size="sm" variant="outline-secondary">delivery</Button>
+            <Button onClick={props.onShow} size="sm" variant="outline-secondary">Request Delivery</Button>
         </>
     );
 }
