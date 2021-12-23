@@ -1417,6 +1417,9 @@ app.post('/api/timeMachine',async(req,res)=>{
     let newProductsTriggerDOW = "6";
     let newProductsTriggerHour = "09:00";
 
+    let pickUpProductsTriggerDOW = "5";
+    let pickUpProductsTriggerHour = "19:00";
+
 
     /**** TIME MACHINE - orders processing ****/
 
@@ -1548,7 +1551,47 @@ app.post('/api/timeMachine',async(req,res)=>{
 
     }
 
-})
+    if(dayjs(newdate).day()== pickUpProductsTriggerDOW &&   
+       dayjs(newdate).format("HH:mm") == pickUpProductsTriggerHour){
+
+        try {
+            let orders = await db.collection('Order').where("Status","==","pending").get();
+
+            console.log(orders);
+            let risultato = [];
+
+                orders.forEach(order => {
+                    {
+                        db.collection('Order').doc(order.id).update({Status: "cancelled", notRetired: true});
+                        risultato.push(new Promise(async (resolve, reject) => {
+                        let client= await db.collection('User').doc(order.data().ClientID).get();
+                        console.log(client.data());
+                        let newNotRetired= client.data().NotRetired + 1;
+                        console.log(newNotRetired);
+                        db.collection('User').doc(order.data().ClientID).update({NotRetired : newNotRetired});
+                    resolve("QUANTITYUPDATE");
+
+                
+                }))
+            }})
+            Promise.all(risultato);
+        }catch (error) {
+            console.log(error);
+            res.status(500).json({
+                info: "The server cannot process the request",
+                error: error
+            });
+        }
+    }
+            
+            
+            
+            
+            
+            
+            
+    }
+)
 
 
 //MODIFY ORDER
