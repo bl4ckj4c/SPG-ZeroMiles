@@ -418,7 +418,7 @@ async function getWeeklyNotRetiredOrders(timestamp){
     let data = [];
 
     try {
-        const res = await fetch(BASEURL + "/monthlyNotRetiredOrders/" + timestamp, { method: 'GET' })
+        const res = await fetch(BASEURL + "/weeklyNotRetiredOrders/" + timestamp, { method: 'GET' })
         if(res.status===404){  //there are no entries 
             return [];
         }
