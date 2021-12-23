@@ -1795,7 +1795,23 @@ app.post('/api/deleteProduct', async (req, res) => {
 
 });
 
-
+app.get('/api/notRetiredOrder', async (req, res) => {
+    const user = req.user && req.user.user;
+    let nonRitiri={};
+    try {
+        const client = await db.collection('User').doc(user.userID).get();  //.where("FarmerID","==","JJeuoVa8fpl4wHGLK8FO")
+        nonRitiri.NotRetired = client.data().NotRetired;
+        
+        res.status(200).json(nonRitiri);
+        }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 
 

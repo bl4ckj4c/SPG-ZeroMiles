@@ -448,6 +448,21 @@ async function getWeeklyNotRetiredOrders(timestamp){
     return data.map((o) => new Order(...Object.values(o)));
 }
 
+async function getNotRetiredOrder() {
+    let data ;
+    try {
+        const res = await fetch(BASEURL + '/notRetiredOreder', { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data;
+}
+
+
 const API = {   
    
     getAllProductsByFarmers,
@@ -464,6 +479,7 @@ const API = {
     getOrders,
     modifyOrderStatus,
     modifyWallet,
+    getNotRetiredOrder,
 
     createProduct,
 
