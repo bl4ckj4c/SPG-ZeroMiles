@@ -373,6 +373,22 @@ async function addProduct(product,dayOfWeek){
     return { 'err': 'POST error' };
   }
   
+  async function setPickUpTime(pickupTimestamp){
+
+    const response = await fetch(BASEURL + "/setPickUpTime", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...pickupTimestamp})
+    });  
+  
+    if(response.ok){
+        return { 'msg': 'Order update' };
+    }
+    return { 'err': 'POST error' };
+  }
+  
 
 
   async function setTimeMachine(newdate){
@@ -461,7 +477,7 @@ const API = {
     getClient,
     farmerRegister,
     setTimeMachine,
-
+    setPickUpTime,
     getMonthlyNotRetiredOrders,
     getWeeklyNotRetiredOrders
 };
