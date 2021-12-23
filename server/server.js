@@ -1379,6 +1379,35 @@ app.post('/api/modifyDelivery', async (req, res) => {
 });
 
 
+app.post('/api/setPickUpTime', async (req, res) => {
+
+    try {
+        const order = await db.collection('Order').get();
+        if (order.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+
+                console.log(req.body.pickupTimestamp);
+                let day = dayjs(req.body.pickupTimestamp).format("DD-MM-YYYY HH:mm");
+                console.log(day);
+                await db.collection('Order').doc(req.body.OrderID).update({pickupTimestamp: day});
+            
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+    res.status(201).end();
+
+});
+
+
+
+
 /* POST set Time machine */
 app.post('/api/timeMachine',async(req,res)=>{
     let newdate = req.body.newdate ? req.body.newdate : "";
