@@ -1258,9 +1258,10 @@ app.post('/api/order', async (req, res) => {
     if(dayjs(reqday).day()==0 && dayjs(reqday).hour() <23){
         reqweekOfYear= reqweekOfYear - 1;
     }
-
+    console.log(dayjs(reqday).day())
+    console.log(dayjs(reqday).hour())
    
-    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23:00") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="09:00") ){  //new orders can be placed only from Saturday morning to Sunday evening
+    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="9") ){  //new orders can be placed only from Saturday morning to Sunday evening
         
         try {
             let sameweekorder = 0;
@@ -1321,6 +1322,13 @@ app.post('/api/order', async (req, res) => {
                 newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
                 newOrder.pickupTimestamp = "";
                 newOrder.notRetired = false;
+
+
+                for(let entry of newOrder.Products){
+                    console.log(entry)
+                    entry.Confirmed = ""
+                }
+
                 (async () => {
                     try {
                         //console.log(newOrder);
