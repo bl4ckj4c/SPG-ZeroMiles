@@ -531,6 +531,31 @@ describe('Test for FarmerProducts.js', () => {
         });
     });
 
+    test('Correct render of the component with error in getProductsByFarmer', async () => {
+        mockReturnTimeMachine.mockReturnValue('12-22-2021 11:11:11');
+        mockGetAllProducts.mockResolvedValue(allProducts);
+        mockGetProductsByFarmers.mockRejectedValue(new Error('test error'));
+        mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
+        mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
+
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <FarmerProducts
+                    user={farmer}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}
+                />
+            </Router>
+        );
+
+        await waitFor(() => {
+            getByPlaceholderText('🍳 Choose a product...');
+
+            getByText('Add');
+            getByText('Create new product');
+        });
+    });
+
     test('Test the searchbar', async () => {
         mockReturnTimeMachine.mockReturnValue('12-22-2021 11:11:11');
         mockGetAllProducts.mockResolvedValue(allProducts);
@@ -606,6 +631,83 @@ describe('Test for FarmerProducts.js', () => {
             fireEvent.change(getByDisplayValue('bag'), {target: {value: 'bag'}});
 
             fireEvent.click(getByText('Edit the product'));
+        });
+    });
+
+    test('Add a product', async () => {
+        mockReturnTimeMachine.mockReturnValue('12-22-2021 11:11:11');
+        mockGetAllProducts.mockResolvedValue(allProducts);
+        mockGetProductsByFarmers.mockResolvedValue(productsByFarmers);
+        mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
+        mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue, getByTestId} = render(
+            <Router>
+                <FarmerProducts
+                    user={farmer}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}
+                />
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.change(getByPlaceholderText('🍳 Choose a product...'), {target: {value: 'W'}});
+            fireEvent.click(getByText('Wurstel di suino'));
+            fireEvent.click(getByText('Add'));
+
+            getByText('Enter the price in the 0.00 format');
+            fireEvent.change(getByTestId('price-testid'), {target: {value: '5.5'}});
+
+            getByText('Enter the quantity');
+            fireEvent.change(getByTestId('quantity-testid'), {target: {value: '1'}});
+
+            getByText('Enter the unit of measurement');
+            fireEvent.change(getByTestId('unit-testid'), {target: {value: 'bag'}});
+
+            fireEvent.click(getByText('Add the product'));
+        });
+    });
+
+    test('Add a product with wrong fields', async () => {
+        mockReturnTimeMachine.mockReturnValue('12-22-2021 11:11:11');
+        mockGetAllProducts.mockResolvedValue(allProducts);
+        mockGetProductsByFarmers.mockResolvedValue(productsByFarmers);
+        mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
+        mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue, getByTestId} = render(
+            <Router>
+                <FarmerProducts
+                    user={farmer}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}
+                />
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.change(getByPlaceholderText('🍳 Choose a product...'), {target: {value: 'W'}});
+            fireEvent.click(getByText('Wurstel di suino'));
+            fireEvent.click(getByText('Add'));
+
+            getByText('Enter the price in the 0.00 format');
+            fireEvent.change(getByTestId('price-testid'), {target: {value: '-7'}});
+            fireEvent.click(getByText('Add the product'));
+            getByText('⚠️ Please, enter a valid price');
+
+            getByText('Enter the quantity');
+            fireEvent.change(getByTestId('price-testid'), {target: {value: '5.5'}});
+            fireEvent.change(getByTestId('quantity-testid'), {target: {value: '-7'}});
+            fireEvent.click(getByText('Add the product'));
+            getByText('⚠️ Please, enter a valid quantity');
+
+            getByText('Enter the unit of measurement');
+            fireEvent.change(getByTestId('price-testid'), {target: {value: '5.5'}});
+            fireEvent.change(getByTestId('quantity-testid'), {target: {value: '1'}});
+            fireEvent.change(getByTestId('unit-testid'), {target: {value: ''}});
+            fireEvent.click(getByText('Add the product'));
+            getByText('⚠️ Please, enter the unit');
         });
     });
 
