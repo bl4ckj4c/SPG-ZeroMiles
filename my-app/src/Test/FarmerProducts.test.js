@@ -4,7 +4,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 import FarmerProducts from "../Components/FarmerProducts";
 import API from "../API";
-import ProductTable from "../Components/ProductTable";
 
 describe('Test for FarmerProducts.js', () => {
 
