@@ -1952,7 +1952,8 @@
 			"State": "MI",
 			"Zipcode": "20019",
 			"Role": "Client",
-			"Wallet": 789
+			"Wallet": 789,
+			"NotRetired": 0
 		},
 		{
 			"ID": "fa6ecc89-4a74-4a05-9251-c89f8b0cbf41",
@@ -1966,7 +1967,8 @@
 			"State": "TO",
 			"Zipcode": "10129",
 			"Role": "Client",
-			"Wallet": 100
+			"Wallet": 100,
+			"NotRetired": 0
 		},
 		{
 			"ID": "d01f9dd2-91f4-4bba-a0c8-82b72197c1c8",
@@ -1980,7 +1982,8 @@
 			"State": "TO",
 			"Zipcode": "10129",
 			"Role": "Client",
-			"Wallet": 1000
+			"Wallet": 1000,
+			"NotRetired": 0
 		},
 		{
 			"ID": "213bcac1-f304-42ee-85ad-a6bab6229a11",
@@ -1994,7 +1997,8 @@
 			"State": "TO",
 			"Zipcode": "10141",
 			"Role": "Client",
-			"Wallet": 500
+			"Wallet": 500,
+			"NotRetired": 0
 		},
 		{
 			"ID": "9ba87f26-c850-43dc-addc-f660bde113a9",
@@ -2008,7 +2012,8 @@
 			"State": "CN",
 			"Zipcode": "12100",
 			"Role": "Client",
-			"Wallet": 200
+			"Wallet": 200,
+			"NotRetired": 0
 		},
 		{
 			"ID": "62a85f21-42a9-4370-b258-8aed958b9903",
@@ -2022,7 +2027,8 @@
 			"State": "TO",
 			"Zipcode": "10134",
 			"Role": "Employee",
-			"Wallet": 100
+			"Wallet": 100,
+			"NotRetired": 0
 		},
 		{
 			"ID": "838916f8-2b22-4365-8172-7a40211f2514",
@@ -2036,7 +2042,8 @@
 			"State": "TO",
 			"Zipcode": "10140",
 			"Role": "Employee",
-			"Wallet": 100
+			"Wallet": 100,
+			"NotRetired": 0
 		},
 		{
 			"ID": "2d0c057a-6e0d-4e85-a5ea-a58cb2b54216",
@@ -2050,7 +2057,8 @@
 			"State": "TO",
 			"Zipcode": "10140",
 			"Role": "Client",
-			"Wallet": 100
+			"Wallet": 100,
+			"NotRetired": 0
 		},
 		{
 			"ID": "5057856b-3a5e-4425-a62c-1173742bfbae",
@@ -2064,7 +2072,8 @@
 			"State": "BR",
 			"Zipcode": "72023",
 			"Role": "Client",
-			"Wallet": 50
+			"Wallet": 50,
+			"NotRetired": 0
 		}
 	],
 	"farmers": [
@@ -2082,7 +2091,8 @@
 			"Distance": 3,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		},
 		{
 			"ID": "44e2841a-b652-4615-8fa7-725f49e9ef31",
@@ -2098,7 +2108,8 @@
 			"Distance": 5,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		},
 		{
 			"ID": "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044",
@@ -2114,7 +2125,8 @@
 			"Distance": 1,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		},
 		{
 			"ID": "d542c276-bd4a-4da7-885c-4406d9bf5311",
@@ -2130,7 +2142,8 @@
 			"Distance": 2,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		},
 		{
 			"ID": "b815cb11-6fbe-470d-80fe-8342516c077a",
@@ -2146,7 +2159,8 @@
 			"Distance": 2,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		},
 		{
 			"ID": "16cb0898-d613-4d01-8eee-9e6cc565feef",
@@ -2162,7 +2176,8 @@
 			"Distance": 4,
 			"Password": "test",
 			"Role": "Farmer",
-			"Wallet": 0
+			"Wallet": 0,
+			"NotRetired": 0
 		}
 	],
 	"orders": [
