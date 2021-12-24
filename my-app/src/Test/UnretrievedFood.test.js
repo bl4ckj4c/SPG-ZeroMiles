@@ -4,7 +4,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 import Unretrieved from "../Components/UnretrievedFood";
 import API from "../API";
-import FarmerProducts from "../Components/FarmerProducts";
 
 describe('Test for UnretrievedFood.js', () => {
 
