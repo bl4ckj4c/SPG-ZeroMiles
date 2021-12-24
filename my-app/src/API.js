@@ -463,6 +463,20 @@ async function getNotRetiredOrder() {
 }
 
 
+async function getProductsByOneFarmer(spg_date1) {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/confirmationProduct/'+ spg_date1, { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
 const API = {   
    
     getAllProductsByFarmers,
@@ -480,6 +494,7 @@ const API = {
     modifyOrderStatus,
     modifyWallet,
     getNotRetiredOrder,
+    getProductsByOneFarmer,
 
     createProduct,
 

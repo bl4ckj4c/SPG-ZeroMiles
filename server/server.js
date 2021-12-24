@@ -1837,6 +1837,104 @@ app.get('/api/sessions/current', (req, res) => {
     } else res.status(401).json({error: 'User non authenticated'});
 });
 
+
+
+
+
+
+
+app.get('/api/confirmationProduct/:date', async (req, res) => {
+    const user = req.user && req.user.user;
+    let day2 = dayjs(req.params.date);
+    if(user.Role == "Client"){
+        console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+    try {
+        const orders = await db.collection('Order').orderBy('Timestamp').get();
+        if (orders.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+            let productsByOneFarmer=[];
+            let result = [];
+            orders.forEach(order => {
+                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
+                //console.log(farmer.data());
+
+                result.push(new Promise(async (resolve, reject) => {
+                    const client = await db.collection('User').doc("" + order.data().ClientID).get();
+                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        console.log("No matching users for " + order.data().ClientID);
+                    }
+
+                    if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
+                        order.data().Products.forEach(prodotto =>{
+                        if(prodotto.FarmerID ==user.userID ){
+                            productsByOneFarmer.push(prodotto);
+                        }
+
+                        })
+                        if(productsByOneFarmer.length==0){
+                            resolve({})
+                        }
+                        
+                        
+                        resolve({
+                        OrderID: order.id,  //maybe it's "order.id"
+                        Status: order.data().Status,
+                        ClientID: client.id,
+                        Client: client.data(),
+                        Timestamp: order.data().Timestamp,
+                        ListOfProducts:productsByOneFarmer,
+                        DeliveryDate: order.data().DeliveryDate,
+                        DeliveryPlace: order.data().DeliveryPlace,
+                        pickupTimestamp: order.data().pickupTimestamp,
+                        notRetired: order.data().notRetired
+                      })
+                      productsByOneFarmer=[]
+                    
+                    }else{
+                          resolve({})};
+                }));
+            })
+            const response = Promise.all(result).then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                res.status(200).json(a)})
+                .catch(r => res.status(500).json({
+                    info: "Promises error (get all orders)",
+                    error: error
+                }));
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // POST for store a new product with related image into the server
 
 app.post('/api/newproduct',
