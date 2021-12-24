@@ -245,13 +245,13 @@ function TimeSelect(props) {
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosendate">
                                 <Form.Label>Date</Form.Label>
-                                <Form.Control type="date" defaultValue={date.value.toString()} onChange={e => setDate({ value: e.target.value })} />
+                                <Form.Control data-testid="date-testid" type="date" defaultValue={date.value.toString()} onChange={e => setDate({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
                         <Col lg={3} xl={3} md={3} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosentime">
                                 <Form.Label>Time</Form.Label>
-                                <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
+                                <Form.Control data-testid="time-testid" type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
 
