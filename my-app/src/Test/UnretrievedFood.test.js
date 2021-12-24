@@ -99,6 +99,99 @@ describe('Test for UnretrievedFood.js', () => {
         }
     ];
 
+    const notRetrievedOrders = [
+        {
+            OrderID: "M0HLmwkhMuv5FQ1Bx6Fw",
+            Status: "pending",
+            ClientID: "2d0c057a-6e0d-4e85-a5ea-a58cb2b54216",
+            Phoneno: "1234567890",
+            Email: "testname.testsurname3@polito.it",
+            Zipcode: "10140",
+            State: "TO",
+            Address: "Via Test 42",
+            City: "Torino",
+            Name: "Testname3",
+            Password: "test",
+            Role: "Client",
+            Surname: "Testsurname3",
+            Timestamp: "19-12-2021 22:38:06",
+            ProductInOrder: [
+                {
+                    ImageID: "117ee408-e2ee-d0f1-57b7-9b5ed4de030c",
+                    NameProduct: "TEST",
+                    number: 3,
+                    ProductID: "Mqn5MQEBi5XO7pG0AzZ",
+                    FarmerID: "16cb0898-d613-4d01-8eee-9e6cc565feef",
+                    Price: 4
+                }
+            ],
+            DeliveryDate: "",
+            DeliveryPlace: "",
+            pickupTimestamp: "",
+            notRetired: "true"
+        },
+        {
+            OrderID: "MgpSnzCsDoWHy6d260yp",
+            Status: "pending",
+            ClientID: "2d0c057a-6e0d-4e85-a5ea-a58cb2b54216",
+            Phoneno: "1234567890",
+            Email: "testname.testsurname3@polito.it",
+            Zipcode: "10140",
+            State: "TO",
+            Address: "Via Test 42",
+            City: "Torino",
+            Name: "Testname3",
+            Password: "test",
+            Role: "Client",
+            Surname: "Testsurname3",
+            Timestamp: "19-12-2021 22:42:53",
+            ProductInOrder: [
+                {
+                    number: 3,
+                    ImageID: "117ee408-e2ee-d0f1-57b7-9b5ed4de030c",
+                    NameProduct: "TEST",
+                    ProductID: "Mqn5MQEBi5XO7pG0AzZ",
+                    FarmerID: "16cb0898-d613-4d01-8eee-9e6cc565feef",
+                    Price: 4
+                }
+            ],
+            DeliveryDate: "",
+            DeliveryPlace: "",
+            pickupTimestamp: "",
+            notRetired: "true"
+        },
+        {
+            OrderID: "RquKPooXhDatu6MiKjTg",
+            Status: "pending",
+            ClientID: "2d0c057a-6e0d-4e85-a5ea-a58cb2b54216",
+            Phoneno: "1234567890",
+            Email: "testname.testsurname3@polito.it",
+            Zipcode: "10140",
+            State: "TO",
+            Address: "Via Test 42",
+            City: "Torino",
+            Name: "Testname3",
+            Password: "test",
+            Role: "Client",
+            Surname: "Testsurname3",
+            Timestamp: "19-12-2021 22:41:06",
+            ProductInOrder: [
+                {
+                    ProductID: "Mqn5MQEBi5XO7pG0AzZ",
+                    NameProduct: "TEST",
+                    number: 3,
+                    ImageID: "117ee408-e2ee-d0f1-57b7-9b5ed4de030c",
+                    Price: 4,
+                    FarmerID: "16cb0898-d613-4d01-8eee-9e6cc565feef"
+                }
+            ],
+            DeliveryDate: "",
+            DeliveryPlace: "",
+            pickupTimestamp: "",
+            notRetired: "true"
+        }
+    ];
+
     const mockReturnTimeMachine = jest.fn();
     const mockTimeMachine = '12-22-2021 11:11:11';
     const mockGetFarmer = (API.getFarmer = jest.fn());
@@ -222,6 +315,43 @@ describe('Test for UnretrievedFood.js', () => {
             getByText('Select a date to see the unretrived orders for the week before');
             getByText('or for the month that contains the date');
             fireEvent.click(getByText('Confirm'));
+
+            setTimeout(function(){
+                getByText('Error selecting a date');
+                getByText('A date in the future cannot be selected');
+                fireEvent.click(getByText('Close'));
+            }, 1000);
+        });
+    });
+
+    test('Show unretrieved orders monthly and weekly', async () => {
+        mockReturnTimeMachine.mockReturnValue('12-22-2021 11:11:11');
+        mockGetFarmer.mockResolvedValue(farmers);
+        mockGetWeeklyNotRetiredOrders.mockResolvedValue(notRetrievedOrders);
+        mockGetMonthlyNotRetiredOrders.mockResolvedValue(notRetrievedOrders);
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText} = render(
+            <Router>
+                <Unretrieved
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}
+                    user={manager}/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            getByText('Managing page');
+            getByText('Unretrived orders');
+
+            // Monthly
+            getByText('N° in the week before 22 December:');
+            //fireEvent.click(getAllByText('Show')[0]);
+            //fireEvent.click(getAllByText('Show')[0]);
+
+            // Weekly
+            getByText('N° in the month of December:');
+            //fireEvent.click(getAllByText('Show')[1]);
+            //fireEvent.click(getAllByText('Show')[1]);
         });
     });
 });
