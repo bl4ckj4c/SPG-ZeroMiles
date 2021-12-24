@@ -1020,8 +1020,9 @@ app.get('/api/orders/:date', async (req, res) => {
                     if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
-                    if (day2.isSameOrAfter(order.data().Timestamp)){
-                    resolve({
+
+                    if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
+                        resolve({
                         OrderID: order.id,  //maybe it's "order.id"
                         Status: order.data().Status,
                         ClientID: client.id,
@@ -1032,11 +1033,12 @@ app.get('/api/orders/:date', async (req, res) => {
                         DeliveryPlace: order.data().DeliveryPlace,
                         pickupTimestamp: order.data().pickupTimestamp,
                         notRetired: order.data().notRetired
-                      })}else{resolve({})};
+                      })}else{
+                          resolve({})};
                 }));
             })
-            const response = Promise.all(result)
-                .then(r => res.status(200).json(r))
+            const response = Promise.all(result).then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                res.status(200).json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all orders)",
                     error: error
