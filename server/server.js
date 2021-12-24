@@ -960,6 +960,8 @@ app.get('/api/clientorders', async (req, res) => {
                     if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
+
+
                     resolve({
                         OrderID: order.id,  
                         Status: order.data().Status,
@@ -993,8 +995,9 @@ app.get('/api/clientorders', async (req, res) => {
 })
 
 /* GET all orders of all users */
-app.get('/api/orders', async (req, res) => {
+app.get('/api/orders/:date', async (req, res) => {
     const user = req.user && req.user.user;
+    let day2 = dayjs(req.params.date);
     if(user.Role == "Client"){
         console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
         res.status(401).json({error: "401 Unauthorized"})
@@ -1017,7 +1020,7 @@ app.get('/api/orders', async (req, res) => {
                     if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
-
+                    if (day2.isSameOrAfter(order.data().Timestamp)){
                     resolve({
                         OrderID: order.id,  //maybe it's "order.id"
                         Status: order.data().Status,
@@ -1029,7 +1032,7 @@ app.get('/api/orders', async (req, res) => {
                         DeliveryPlace: order.data().DeliveryPlace,
                         pickupTimestamp: order.data().pickupTimestamp,
                         notRetired: order.data().notRetired
-                    });
+                      })}else{resolve({})};
                 }));
             })
             const response = Promise.all(result)

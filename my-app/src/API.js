@@ -126,10 +126,10 @@ async function getProductByFarmer(counterID) {
     return res;
   }
 
-  async function getOrders() {
+  async function getOrders(spg_date1) {
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/orders', { method: 'GET' });
+        const res = await fetch(BASEURL + '/orders/'+ spg_date1, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
