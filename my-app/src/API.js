@@ -154,11 +154,11 @@ async function getClient(){
     return data[0];
 }
 
-async function getClientOrders(clientid){
+async function getClientOrders(spg_date1){
     let data = [];
 
     try {
-        const res = await fetch(BASEURL + '/clientorders', { method: 'GET' });
+        const res = await fetch(BASEURL + '/clientorders/'+ spg_date1, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }

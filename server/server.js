@@ -939,9 +939,9 @@ app.get('/api/userinfo', async (req, res) => {
 });
 
 /* GET all orders of the authenticated user*/
-app.get('/api/clientorders', async (req, res) => {
+app.get('/api/clientorders/:date', async (req, res) => {
     const user = req.user && req.user.user;
-    
+    let day2 = dayjs(req.params.date);
     
     
     try {
@@ -960,7 +960,7 @@ app.get('/api/clientorders', async (req, res) => {
                     if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
                         console.log("No matching users for " + order.data().ClientID);
                     }
-
+                    if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
 
                     resolve({
                         OrderID: order.id,  
@@ -973,11 +973,12 @@ app.get('/api/clientorders', async (req, res) => {
                         DeliveryPlace: order.data().DeliveryPlace,
                         pickupTimestamp: order.data().pickupTimestamp,
                         notRetired: order.data().notRetired
-                    });
+                    })}else{resolve({})};
                 }));
             })
             const response = Promise.all(result)
-                .then(r => res.status(200).json(r))
+                .then(r => {let a = r.filter(value => JSON.stringify(value) !== '{}')
+                res.status(200).json(a)})
                 .catch(r => res.status(500).json({
                     info: "Promises error (get all client orders)",
                     error: error
