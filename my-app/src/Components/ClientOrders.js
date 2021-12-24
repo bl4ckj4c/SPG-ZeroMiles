@@ -12,7 +12,7 @@ function ClientOrders(props) {
 
     useEffect(() => {
         setLoading(true);
-        API.getClientOrders()
+        API.getClientOrders(props.timeMachine().toString())
             .then(orders => {
                 setOrdersList(orders);
                 setOrdersListUpdated(false);
@@ -23,7 +23,7 @@ function ClientOrders(props) {
     useEffect(() => {
         if (ordersListUpdated === true) {
             setLoading(true);
-            API.getClientOrders()
+            API.getClientOrders(props.timeMachine().toString())
                 .then(orders => {
                     setOrdersList(orders);
                     setOrdersListUpdated(false);
@@ -36,6 +36,11 @@ function ClientOrders(props) {
         {/*setMessage({ msg: err.error, type: 'danger' });*/ }
         console.log(err);
     }
+
+    useEffect(() => {
+        if (props.reloadTime)
+            setOrdersListUpdated(true);
+    }, [props.reloadTime])
 
     return (
         <>

@@ -145,7 +145,7 @@ function App() {
         </Route>
 
         <Route exact path="/orders/:status" render={({ match }) => (
-          <EmployeeView users={userList} status={match.params.status} />)} />
+          <EmployeeView users={userList} status={match.params.status} timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>)} />
 
         <Route exact path="/clients">
           <ClientView users={userList} filterBy={"Client"} triggerUpdate={() => setUserListUpdated(true)} />
