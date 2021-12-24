@@ -16,7 +16,7 @@ function EmployeeView(props) {
 
     useEffect(() => {
         setLoading(true);
-        API.getOrders()
+        API.getOrders(props.timeMachine().toString())
             .then(orders => {
                 setOrdersList(orders);
                 setFilteredOrdersList(orders);
@@ -24,6 +24,24 @@ function EmployeeView(props) {
                 setLoading(false);
             }).catch(o => handleErrors(o));
     }, []);
+
+    useEffect(() => {
+        if (ordersListUpdated === true) {
+            setLoading(true);
+            API.getOrders(props.timeMachine().toString())
+                .then(orders => {
+                    setOrdersList(orders);
+                    setFilteredOrdersList(orders);
+                    setOrdersListUpdated(false);
+                    setLoading(false);
+                }).catch(o => handleErrors(o));
+        }
+    }, [ordersListUpdated]);
+
+    useEffect(() => {
+        if (props.reloadTime)
+            setOrdersListUpdated(true);
+    }, [props.reloadTime])
 
     const handleErrors = (err) => {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
