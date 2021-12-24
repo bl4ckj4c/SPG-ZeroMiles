@@ -39,6 +39,10 @@ const wrongPasswordClient = {
     username: 'testname.testsurname3@polito.it',
     password: 'wrongPassword'
 }
+const manager = {
+    username: 'michele.manager@zeromiles.it',
+    password: 'supersecret4'
+}
 
 describe("GET for /api/users", () => {
     test('Unauthorized request', (done) => {

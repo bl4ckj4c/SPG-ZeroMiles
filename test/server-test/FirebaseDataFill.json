@@ -2074,6 +2074,21 @@
 			"Role": "Client",
 			"Wallet": 50,
 			"NotRetired": 0
+		},
+		{
+			"ID": "2071bd4e-afde-4bb6-b073-b86007bd8e6f",
+			"Name": "Michele",
+			"Surname": "Manager",
+			"Email": "michele.manager@zeromiles.it",
+			"Password": "supersecret4",
+			"Phoneno": "3244589300",
+			"Address": "Via dei cigni 4",
+			"City": "Torino",
+			"State": "TO",
+			"Zipcode": "10141",
+			"Role": "Manager",
+			"Wallet": 0,
+			"NotRetired": 0
 		}
 	],
 	"farmers": [
