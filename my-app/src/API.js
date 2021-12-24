@@ -126,10 +126,10 @@ async function getProductByFarmer(counterID) {
     return res;
   }
 
-  async function getOrders() {
+  async function getOrders(spg_date1) {
     let data = [];
     try {
-        const res = await fetch(BASEURL + '/orders', { method: 'GET' });
+        const res = await fetch(BASEURL + '/orders/'+ spg_date1, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -154,11 +154,11 @@ async function getClient(){
     return data[0];
 }
 
-async function getClientOrders(clientid){
+async function getClientOrders(spg_date1){
     let data = [];
 
     try {
-        const res = await fetch(BASEURL + '/clientorders', { method: 'GET' });
+        const res = await fetch(BASEURL + '/clientorders/'+ spg_date1, { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }
@@ -463,6 +463,20 @@ async function getNotRetiredOrder() {
 }
 
 
+async function getProductsByOneFarmer(spg_date1) {
+    let data = [];
+    try {
+        const res = await fetch(BASEURL + '/confirmationProduct/'+ spg_date1, { method: 'GET' });
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        data = await res.json();
+    } catch (e) {
+        throw new Error(e);
+    }
+    return data.map((o) => new Order(...Object.values(o)));
+}
+
 const API = {   
    
     getAllProductsByFarmers,
@@ -480,6 +494,7 @@ const API = {
     modifyOrderStatus,
     modifyWallet,
     getNotRetiredOrder,
+    getProductsByOneFarmer,
 
     createProduct,
 

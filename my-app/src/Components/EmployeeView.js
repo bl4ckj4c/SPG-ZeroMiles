@@ -10,7 +10,7 @@ function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
     const [filteredOrdersList, setFilteredOrdersList] = useState([]);
-    const [ordersListUpdated, setOrdersListUpdated] = useState(true);
+    const [ordersListUpdated, setOrdersListUpdated] = useState(false);
     const [selectedUser, setSelectedUser] = useState([]);
     const [loading, setLoading] = useState(false);
 
