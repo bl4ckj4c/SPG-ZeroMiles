@@ -7,7 +7,7 @@ import Deliver from "./Deliver.js"
 
 function ClientOrders(props) {
     const [ordersList, setOrdersList] = useState([]);
-    const [ordersListUpdated, setOrdersListUpdated] = useState(true);
+    const [ordersListUpdated, setOrdersListUpdated] = useState(false);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
