@@ -1260,9 +1260,10 @@ app.post('/api/order', async (req, res) => {
     if(dayjs(reqday).day()==0 && dayjs(reqday).hour() <23){
         reqweekOfYear= reqweekOfYear - 1;
     }
-
+    console.log(dayjs(reqday).day())
+    console.log(dayjs(reqday).hour())
    
-    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23:00") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="09:00") ){  //new orders can be placed only from Saturday morning to Sunday evening
+    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="9") ){  //new orders can be placed only from Saturday morning to Sunday evening
         
         try {
             let sameweekorder = 0;
@@ -1323,6 +1324,12 @@ app.post('/api/order', async (req, res) => {
                 newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
                 newOrder.pickupTimestamp = "";
                 newOrder.notRetired = false;
+
+
+                for(let entry of newOrder.Products){
+                    console.log(entry)
+                    entry.Confirmed = ""
+                }
 
                 (async () => {
                     try {
@@ -1495,9 +1502,26 @@ app.post('/api/timeMachine',async(req,res)=>{
                                 if (!client.exists) {
                                     console.log("No matching users for " + entry.data().ClientID);
                                 }
-                                else{
-                                    if(client.data().Wallet > entry.Price){
-                                        let newwallet = client.data().Wallet - entry.Price;
+                                else{  //check each entry of the list of prodcuts and calculate the new price
+                                    let newprice=0;
+                                    for(let productentry of entry.Products){
+                                        if(productentry.Confirmed=="true"){
+                                            newprice += productentry.number * productentry.Price
+                                        }
+                                    }
+                                    
+                                    await db.collection('Order').doc(entry.OrderID).update({Price: newprice});
+                                    
+                                    if(newprice == 0){  //all products are not confirmed (or pending confirmation), so let's cancel the order
+                                        await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
+                                        resolve({
+                                            orderID: entry.OrderID,
+                                            status: "cancelled (no products confirmed)"
+                                        })
+                                    }
+                                    else if(client.data().Wallet >= newprice){  //then check if the clients has enough money
+                                        let newwallet = client.data().Wallet - newprice;
+                                        //await db.collection('Order').doc(entry.OrderID).update({Products: newlist});
                                         await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
                                         await db.collection('User').doc(entry.ClientID).update({Wallet: newwallet});
                                         resolve({
@@ -1509,7 +1533,7 @@ app.post('/api/timeMachine',async(req,res)=>{
                                         await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
                                         resolve({
                                             orderID: entry.OrderID,
-                                            status: "cancelled"
+                                            status: "cancelled (not enough money in the wallet)"
                                         })
                                     }
                                 }
@@ -1598,14 +1622,7 @@ app.post('/api/timeMachine',async(req,res)=>{
         }
     }
             
-            
-            
-            
-            
-            
-            
-    }
-)
+})
 
 
 //MODIFY ORDER

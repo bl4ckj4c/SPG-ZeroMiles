@@ -16,7 +16,7 @@ import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
 import Deliver from './Components/Deliver';
 import Unretrieved from './Components/UnretrievedFood';
-
+import ConfirmProduct from './Components/FarmerConfirmsProduct';
 
 function App() {
   const [user, setUser] = useState({});
@@ -174,6 +174,13 @@ function App() {
         <Route exact path="/manager">
           <Unretrieved timeMachine={ReturnTimeMachine} reloadTime={timeMachine} user={user}/>
         </Route>
+
+
+        <Route exact path="/productconfirm">
+          <ConfirmProduct timeMachine={ReturnTimeMachine} users={userList} />
+        </Route>
+
+
 
       </Switch>
     </Router >

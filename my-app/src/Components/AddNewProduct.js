@@ -10,9 +10,11 @@ function ProductNew(props) {
     const [image, setImage] = useState(undefined);
     const [modalShowProductNew, setModalShowProductNew] = useState(false);
     const [confirmationShow, setConfirmationShow]  = useState(false);
+    const [errMsg, setErrMsg] = useState("");
 
     function handleClose(){
         setModalShowProductNew(false);
+        setErrMsg("");
     }
 
     function handleSuccess(){
@@ -22,8 +24,14 @@ function ProductNew(props) {
     }
 
     async function submitNewProduct() {
-
-        console.log(image);
+        if(name.trim() === ""){
+            setErrMsg("⚠️Please, insert a valid product name");
+            return;
+        }
+        else if(image === undefined){
+            setErrMsg("⚠️Please, upload a .png image");
+            return;
+        }
 
         let object = {
             "Name": name,
@@ -38,7 +46,7 @@ function ProductNew(props) {
     return (
         <>
            <Button className="search-button" onClick={() => setModalShowProductNew(true)} variant="secondary">Create new product</Button>
-            <ModalProductNew
+            <ModalProductNew errMsg={errMsg}
                 setName={setName}
                 setDescription={setDescription}
                 setImage={setImage}
@@ -90,6 +98,8 @@ function ModalProductNew(props) {
                     </Form.Group>
                     <Row className='my-3 my-3'>
                         <Previews setImage={props.setImage} />
+                        {(props.errMsg)}
+
                     </Row>
                     <Button onClick={props.submitNewProduct} variant="success">Create</Button>
                     {' '}{' '}
@@ -104,7 +114,7 @@ function ModalProductNew(props) {
 function Previews(props) {
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
-        accept: 'image/*',
+        accept: 'image/png',
         minFiles: 1,
         maxFiles: 1,
         onDrop: acceptedFiles => {
@@ -173,7 +183,7 @@ function Previews(props) {
                     :
                     <></>
                 }
-                <Row className='justify-content-center m-5'>Drag 'n' drop the image here, or click to select one</Row>
+                <Row className='justify-content-center m-5'>Drag 'n' drop a .png image here, or click to select one</Row>
             </Container>
         </Container>
     );
