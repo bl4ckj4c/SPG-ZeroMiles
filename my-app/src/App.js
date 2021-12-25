@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Toast, ToastContainer } from 'react-bootstrap'
 import API from './API';
 import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
@@ -26,6 +27,8 @@ function App() {
   const [userListUpdated, setUserListUpdated] = useState(true); 
   const [sideShow, setSideShow] = useState(false); //for the sidebar
   const [timeMachine, setTimeMachine] = useState(false); 
+  const [toastPickups, setToastPickups] = useState(false);
+  const toggleToast = () => {setToastPickups(!toastPickups)};
   var dayjs = require('dayjs');
 
   const timedev = true; //set at false to disable the time machine
@@ -76,6 +79,12 @@ function App() {
   }, [loggedIn]);
 
   //Gestione di eventuali errori in risposta alle API
+
+  function HandleToast(){
+    toggleToast();
+
+  }
+
   const handleErrors = (err) => {
     {/*setMessage({ msg: err.error, type: 'danger' });*/ }
     //setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
@@ -85,6 +94,7 @@ function App() {
   const login = async (email, password) => {
     try {
       const user = await API.userLogin(email, password);
+      HandleToast();
       setLoggedIn(true);
     } catch (err) {
       throw err;
@@ -118,9 +128,20 @@ function App() {
         </Toast>
         </ToastContainer> */}
 
-      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
 
-      <Switch>
+
+
+      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
+      <ToastContainer style={{position: "absolute", zIndex: 999}} position="middle-center">
+                    <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} >
+                        <Toast.Header>
+                            <strong className="me-auto">⚠️ Warning</strong>
+                        </Toast.Header>
+                        <Toast.Body>TEST: toast for unretrieved orders</Toast.Body>
+                    </Toast>
+                </ToastContainer>
+
+      <Switch style={{position: "absolute", zIndex: 1}}>
         <Route exact path="/">
             <ProductTable isLoggedIn={loggedIn} user={user} userList={userList} timeMachine={ReturnTimeMachine} setSideShow={setSideShow} reloadTime={timeMachine}/>
         </Route>
