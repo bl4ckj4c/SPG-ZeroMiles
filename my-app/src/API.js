@@ -477,6 +477,18 @@ async function getProductsByOneFarmer(spg_date1) {
     return data.map((o) => new Order(...Object.values(o)));
 }
 
+async function confirmationOfProduct(product) {
+    
+    const response = await fetch(BASEURL + "/confirmation", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({...product})
+    });
+    return response;
+}
+
 const API = {   
    
     getAllProductsByFarmers,
@@ -495,7 +507,7 @@ const API = {
     modifyWallet,
     getNotRetiredOrder,
     getProductsByOneFarmer,
-
+    confirmationOfProduct,
     createProduct,
 
 

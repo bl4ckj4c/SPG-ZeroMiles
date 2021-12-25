@@ -1,9 +1,10 @@
-function ProductInOrder(ProductinorderID, OrderID, ProductbyfarmerID, ProductName, Quantity) {
+function ProductInOrder(ProductinorderID, OrderID, ProductbyfarmerID, ProductName, Quantity, Confirmed) {
     this.ProductinorderID = ProductinorderID;
     this.OrderID = OrderID;
     this.ProductbyfarmerID = ProductbyfarmerID;
     this.ProductName = ProductName;
     this.Quantity = Quantity;
+    this.Confirmed = Confirmed;
    
 }
 

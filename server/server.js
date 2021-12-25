@@ -973,6 +973,7 @@ app.get('/api/clientorders/:date', async (req, res) => {
                         DeliveryPlace: order.data().DeliveryPlace,
                         pickupTimestamp: order.data().pickupTimestamp,
                         notRetired: order.data().notRetired
+
                     })}else{resolve({})};
                 }));
             })
@@ -1033,7 +1034,8 @@ app.get('/api/orders/:date', async (req, res) => {
                         DeliveryDate: order.data().DeliveryDate,
                         DeliveryPlace: order.data().DeliveryPlace,
                         pickupTimestamp: order.data().pickupTimestamp,
-                        notRetired: order.data().notRetired
+                        notRetired: order.data().notRetired,
+                      
                       })}else{
                           resolve({})};
                 }));
@@ -1321,6 +1323,7 @@ app.post('/api/order', async (req, res) => {
                 newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
                 newOrder.pickupTimestamp = "";
                 newOrder.notRetired = false;
+
                 (async () => {
                     try {
                         //console.log(newOrder);
@@ -1924,7 +1927,75 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
 
 
 
+app.post('/api/confirmation', async (req, res) => {
+    const user = req.user && req.user.user;
+    
+   
+    console.log( req.body);
+    if(user.Role == "Client"){
+        console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+    try {
+        const orders = await db.collection('Order').doc("" + req.body.OrderID).get();
+        let entrato=0;
+        let updateProduct=[];
+        let nuovoProdotto = {};
+        let PrezzoDaTogliere=0;
+        let nuovoPrezzo=0;
+        if (orders.empty) {
+            console.log("No matching documents.");
+            res.status(404).json({error: "No entries (Table: Order)"});
+        } else {
+            
+            orders.data().Products.forEach(prodotto =>{
+                console.log(prodotto);
+                console.log(entrato);
+                if(prodotto.FarmerID ==user.userID && prodotto.ProductID == req.body.ProductID && prodotto.number == req.body.number && prodotto.Confirmed =="" && entrato==0 ){
+                    nuovoProdotto.FarmerID=prodotto.FarmerID;
+                    nuovoProdotto.ProductID=prodotto.ProductID;
+                    nuovoProdotto.ImageID=prodotto.ImageID;
+                    nuovoProdotto.NameProduct=prodotto.NameProduct;
+                    nuovoProdotto.Price=prodotto.Price;
+                    nuovoProdotto.number=prodotto.number;
+                    if(req.body.Confirmed==true){
+                    nuovoProdotto.Confirmed= "true";}
+                    else {
+                        nuovoProdotto.Confirmed= "false";
+                        PrezzoDaTogliere=prodotto.Price* prodotto.number;
 
+
+                    }
+                    updateProduct.push(nuovoProdotto);
+                    console.log(nuovoProdotto);
+                    entrato ++;
+                    //PrezzoDaTogliere=prodotto.Price* prodotto.number; per il non convermato
+                }else{
+                    updateProduct.push(prodotto);
+
+                }
+            })
+            if(req.body.Confirmed==true){
+            db.collection("Order").doc("" + req.body.OrderID).update({Products: updateProduct});}
+            else{
+                nuovoPrezzo=orders.data().Price - PrezzoDaTogliere;
+                db.collection("Order").doc("" + req.body.OrderID).update({Products: updateProduct , Price: nuovoPrezzo});
+            }
+            res.status(200).end();
+        
+        }
+//nuovoPrezzo=order.data().Price - PrezzoDaTogliere non confermnato
+//db.collection("Order").doc(req.body.OrderId).update({Products: productsByOneFarmer , Price: nuovoPrezzo}); non confermato
+
+ } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            info: "The server cannot process the request",
+            error: error
+        });
+    }
+});
 
 
 
