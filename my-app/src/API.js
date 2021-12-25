@@ -486,7 +486,9 @@ async function confirmationOfProduct(product) {
         },
         body: JSON.stringify({...product})
     });
-    return response;
+    if( await response.ok)
+        return true;
+    else return false;
 }
 
 const API = {   

@@ -255,6 +255,10 @@ function FarmerSidebar(props) {
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmerview'); }}>My products</Nav.Link>
             </Nav>
 
+            <Nav className="justify-content-end flex-grow-1 pe-3">
+                <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/productconfirm'); }}>Confirm availability</Nav.Link>
+            </Nav>
+
             <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
 

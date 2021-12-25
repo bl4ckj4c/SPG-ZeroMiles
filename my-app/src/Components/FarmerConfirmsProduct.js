@@ -28,13 +28,17 @@ function ConfirmProduct(props) {
 
 
    async function handleChangeConfirm(idO, idP, bol){
-        console.log(bol.toString());
         let ordersListCopy = ordersList;
         ordersListCopy[idO].ProductInOrder[idP].Confirmed = bol.toString();
-        setOrdersList(ordersListCopy)
+        let prod = {   
+            ProductID: ordersListCopy[idO].ProductInOrder[idP].ProductID,
+            OrderID: ordersListCopy[idO].OrderID,
+            number: ordersListCopy[idO].ProductInOrder[idP].number,
+            Confirmed: bol
+        }
 
-        if(true){
-            //API CALL successful
+        if(await API.confirmationOfProduct(prod)){
+            setOrdersList(ordersListCopy)
             return true;
         }
         else {
