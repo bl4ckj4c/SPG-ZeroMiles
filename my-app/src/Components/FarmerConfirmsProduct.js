@@ -1,17 +1,13 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
-import { Table, Row, Col, ToggleButton, Container, FormControl, Form, Button, Image, ButtonGroup, Spinner, Dropdown, DropdownButton, ProgressBar } from 'react-bootstrap';
+import { Table, Row, Col, ToggleButton, Container, Image, ButtonGroup, Spinner } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
-import { useLocation } from 'react-router-dom';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
-import Modal from 'react-bootstrap/Modal'
-import Deliver from "./Deliver.js"
 
 function ConfirmProduct(props) {
 
     const [ordersList, setOrdersList] = useState([]);
-    const [filteredOrdersList, setFilteredOrdersList] = useState([]);
     const [selectedUser, setSelectedUser] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -19,8 +15,7 @@ function ConfirmProduct(props) {
         setLoading(true);
         API.getProductsByOneFarmer(props.timeMachine().toString())
             .then(orders => {
-                setOrdersList(orders);
-                setFilteredOrdersList(orders);
+                setOrdersList(orders.slice(0).reverse());
                 setLoading(false);
             }).catch(o => handleErrors(o));
     }, []);
@@ -29,6 +24,23 @@ function ConfirmProduct(props) {
         {/*setMessage({ msg: err.error, type: 'danger' });*/
         }
         console.log(err);
+    }
+
+
+   async function handleChangeConfirm(idO, idP, bol){
+        console.log(bol.toString());
+        let ordersListCopy = ordersList;
+        ordersListCopy[idO].ProductInOrder[idP].Confirmed = bol.toString();
+        setOrdersList(ordersListCopy)
+
+        if(true){
+            //API CALL successful
+            return true;
+        }
+        else {
+            handleErrors("API error");
+            return false;        
+        }
     }
 
     return (
@@ -48,16 +60,16 @@ function ConfirmProduct(props) {
                             <tbody id="employee-table" align="center">
                                 {ordersList.length > 0 ? <>
                                     {
-                                        ordersList.slice(0).reverse().map(o => {
+                                        ordersList.map( (o, idO) => {
 
                                                 if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 
-                                                    return <OrderRow key={o.OrderID} order={o} />
+                                                    return <OrderRow handleChangeConfirm={handleChangeConfirm} idO={idO} key={o.OrderID} order={o} />
 
                                                 }
                                             }
                                             )
-                                    } </> : <NoOrders message={"There are no" + (props.status === "all" ? "" : " " + props.status) + " orders yet"} />}
+                                    } </> : <NoOrders message={"There are no orders containing your products yet"} />}
                             </tbody>
                         </Table>
                     </Col>
@@ -67,44 +79,9 @@ function ConfirmProduct(props) {
     );
 }
 
-let progressRate = 0;
-let progressType = "success";
 
 
 function OrderRow(props) {
-    let [stat, setStat] = useState(props.order.Status || 'o');
-
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
-    let buttonstatus;
-    // let stat;
-    if (props.order.Status === "open") {
-        stat = 'o';
-        progressType = "primary";
-        buttonstatus = "outline-primary";
-        progressRate = 33;
-    } else if (props.order.Status == "pending") {
-        buttonstatus = "outline-warning";
-        stat = 'p';
-        progressType = "warning";
-        progressRate = 66;
-
-    } else if (props.order.Status === "closed") {
-        buttonstatus = "outline-success";
-        stat = 'c';
-        progressType = "success";
-        progressRate = 100;
-    } else if (props.order.Status === "cancelled") {
-        stat = 'canc'
-        buttonstatus = "outline-danger";
-        progressType = "danger"
-        progressRate = 100;
-    }
-
 
     return (
         <>
@@ -134,82 +111,10 @@ function OrderRow(props) {
                         <Table className="justify-content-center">
                             <tbody align="center">
                                 {props.order.ProductInOrder.map((p, i) => (
-                                    <ProductList confirmed={p.Confirmed} key={p.ProductID+props.order.OrderID+"_"+i} uniqueID={p.ProductID+props.order.OrderID+"_"+i} product={p} />
+                                    <ProductList handleChangeConfirm={props.handleChangeConfirm} idO={props.idO} idP={i} confirmed={p.Confirmed} key={p.ProductID+props.order.OrderID+"_"+i} uniqueID={p.ProductID+props.order.OrderID+"_"+i} product={p} />
                                 ))}
                             </tbody>
                         </Table>
-
-                        <Row className="mt-4 mb-3 align-items-center">
-                            <Col>
-                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
-                            </Col>
-
-                            {(props.order.Status === 'pending' && props.order.DeliveryDate === '') ? <>
-                                <Col>
-                                    <Deliver orderId={props.order.OrderID}></Deliver>                            </Col>
-                            </> : <></>}
-
-                            {props.order.DeliveryDate != '' ? <>
-                                <Col>
-                                    Delivery requested for {props.order.DeliveryDate}
-                                </Col>
-                            </> : <></>}
-
-                            <Col>
-
-                                <DropdownButton title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
-
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "open";
-                                        setStat('o');
-                                        API.modifyOrderStatus(props.order);
-                                        progressRate = 10;
-                                        handleShow();
-
-
-                                    }}>Open</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "pending";
-                                        setStat('p');
-                                        progressRate = 49;
-                                        API.modifyOrderStatus(props.order);
-                                        handleShow();
-
-                                    }
-
-                                    }>Pending</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "closed";
-                                        setStat('c');
-                                        progressRate = 99;
-                                        handleShow();
-
-                                        API.modifyOrderStatus(props.order);
-
-                                    }}>Closed</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => {
-                                        props.order.Status = "cancelled";
-                                        setStat('canc');
-                                        progressRate = 100;
-                                        API.modifyOrderStatus(props.order);
-                                        handleShow();
-                                    }}>Cancelled</Dropdown.Item>
-
-
-                                </DropdownButton >
-                                <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false} >
-                                    <Modal.Header closeButton>
-                                        <Modal.Title>Status Change!</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                        Ther order status has been changed to {props.order.Status}
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose}> Close </Button>
-                                    </Modal.Footer>
-                                </Modal>
-                            </Col>
-                        </Row>
 
                     </Container>
                 </td>
@@ -221,18 +126,19 @@ function OrderRow(props) {
 
 function ProductList(props) {
 
-    function HandleConfirmation(bol){
+    async function HandleConfirmation(bol){
         if (bol){
-            setCheckedTrue(true);
+            if(await props.handleChangeConfirm(props.idO, props.idP, bol))
+                setCheckedTrue(true);
         }else{
-            setCheckedFalse(true);
+            if(await props.handleChangeConfirm(props.idO, props.idP, bol))
+                setCheckedFalse(true);
         }
     }
 
 
     const [checkedTrue, setCheckedTrue] = useState(props.confirmed === "" ? false : props.confirmed === "true" ? true : false);
     const [checkedFalse, setCheckedFalse] = useState(props.confirmed === "" ? false : props.confirmed === "false" ? true : false);
-console.log("confiemd" + props.confirmed)
     return (
         <tr>
             <td>
@@ -248,7 +154,7 @@ console.log("confiemd" + props.confirmed)
                             Price: €{props.product.Price.toFixed(2)}
                         </Col>
                         <Col>
-                            <ConfirmButton log={props.product.Product} uniqueID={props.uniqueID} HandleConfirmation={HandleConfirmation} setCheckedTrue={setCheckedTrue} checkedTrue={checkedTrue} setCheckedFalse={setCheckedFalse} checkedFalse={checkedFalse} /> 
+                            <ConfirmButton idO={props.idO} idP={props.idP} log={props.product.Product} uniqueID={props.uniqueID} HandleConfirmation={HandleConfirmation} setCheckedTrue={setCheckedTrue} checkedTrue={checkedTrue} setCheckedFalse={setCheckedFalse} checkedFalse={checkedFalse} /> 
                         </Col>
                     </Row>
                 </Container>
@@ -278,7 +184,7 @@ function ConfirmButton(props){
         disabled={props.checkedFalse || props.checkedTrue ? true : false  }
         variant="outline-danger"
         checked={props.checkedFalse}
-        onChange={(e) => props.setCheckedFalse(e.currentTarget.checked)} >
+        onChange={(e) => props.HandleConfirmation(false)} >
         ✘
       </ToggleButton>
 
