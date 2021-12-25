@@ -228,11 +228,11 @@ function ProductByFarmerModal(props) {
   }
 
   function Validate(){
-    if(parseFloat(price) < 0 || parseFloat(price) === NaN){
+    if(parseFloat(price) < 0 || isNaN(parseFloat(price)) ){
       setError("⚠️ Please, enter a valid price")
       return false
     }
-    else if(parseInt(quantity) === NaN || parseFloat(quantity)-parseInt(quantity) !== 0 || parseInt(quantity) < 0 ){
+    else if(isNaN(parseInt(quantity)) || parseFloat(quantity)-parseInt(quantity) !== 0 || parseInt(quantity) < 0 ){
       setError("⚠️ Please, enter a valid quantity")
       return false
     }
