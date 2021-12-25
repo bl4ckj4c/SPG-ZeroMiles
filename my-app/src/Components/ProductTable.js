@@ -104,7 +104,7 @@ function ProductTableWrapped(props) {
         console.log("data passata: " + props.timeMachine() + " data parsata: " + giorno.toString());
         console.log("dayt:" + giorno.day())
         if ((giorno.day() == 0 && giorno.hour() < 23) || (giorno.day() == 6 && giorno.hour() > 8)) {
-            if (props.user.Role !== "Manager") {
+            if (props.user.Role === "Employee" || props.user.Role === "Client" ) {
                 console.log(props.user);
                 return true;
             }
