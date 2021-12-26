@@ -1,9 +1,8 @@
-import React from 'react'
+import { React, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Toast, ToastContainer } from 'react-bootstrap'
 import API from './API';
-import { useState, useEffect } from 'react';
 import UserLogin from './Components/UserLogin.js';
 import UserRegister from './Components/UserRegister.js';
 import ProductTable from './Components/ProductTable.js'
@@ -22,7 +21,6 @@ import ConfirmProduct from './Components/FarmerConfirmsProduct';
 function App() {
   const [user, setUser] = useState({});
   const [loggedIn, setLoggedIn] = useState(false);
-  const [message, setMessage] = useState('');
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
   const [sideShow, setSideShow] = useState(false); //for the sidebar
@@ -31,7 +29,7 @@ function App() {
   const toggleToast = () => {setToastPickups(!toastPickups)};
   var dayjs = require('dayjs');
 
-  const timedev = true; //set at false to disable the time machine
+  const timedev = true; 
   useEffect(() => {
     if(timeMachine)
     console.log(timeMachine);
@@ -58,8 +56,8 @@ function App() {
 
     if (timeMachine)
       return timeMachine;
-      else
-      return now;
+
+    return now;
   }
 
   useEffect(() => {
@@ -68,7 +66,7 @@ function App() {
         const userinfo = await API.getUserInfo();
         if (userinfo.user) {
           setUser(userinfo.user ? userinfo.user : {});
-          if (!loggedIn) //TODO riguardare
+          if (!loggedIn)
             setLoggedIn(true);
         }
       } catch (error) {
@@ -78,27 +76,19 @@ function App() {
     checkAuth();
   }, [loggedIn]);
 
-  //Gestione di eventuali errori in risposta alle API
 
   function HandleToast(){
     toggleToast();
-
   }
 
-  const handleErrors = (err) => {
-    {/*setMessage({ msg: err.error, type: 'danger' });*/ }
-    //setMessage({ msg: "Dear customer, we are experiencing some technical difficulties. Please come back later.", type: 'danger' });
-    console.log(err);
-  }
 
   const login = async (email, password) => {
-    try {
-      const user = await API.userLogin(email, password);
-      HandleToast();
-      setLoggedIn(true);
-    } catch (err) {
-      throw err;
-    }
+      API.userLogin(email, password).then( () => {
+
+        HandleToast();
+        setLoggedIn(true);  
+      }
+      )
   }
 
   const logout = () => {
@@ -108,29 +98,10 @@ function App() {
     });
   }
 
-  const register = () => {
-    API.userLogout().then(() => {
-      setUser({});
-      setLoggedIn(false);
-    });
-  }
 
 
   return (
     <Router>
-      {/* Visualizzazione di eventuali errori gestiti dalla funzione handleErrors*/}
-      {/*ToastContainer className="p-3" position="middle-center">
-        <Toast bg="warning" onClose={() => setMessage('')} delay={3000} autohide>
-          <Toast.Header closeButton={false}>
-            <strong className="me-auto">Error :(</strong>
-          </Toast.Header>
-          <Toast.Body>{message?.msg}</Toast.Body>
-        </Toast>
-        </ToastContainer> */}
-
-
-
-
       <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
       <ToastContainer style={{position: "absolute", zIndex: 999}} position="middle-center">
                     <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} >
@@ -155,12 +126,10 @@ function App() {
           {loggedIn ? <Redirect to="/" /> : <UserLogin login={login} setLoggedIn={setLoggedIn} />}
         </Route>
 
-          {/* Signup by user */}
         <Route exact path="/signupClient">
           <UserRegister registerFarmer={false} setLoggedIn={setLoggedIn} user={user} loggedIn={loggedIn} triggerUpdate={() => setUserListUpdated(true)} />
         </Route>
 
-        { /* Signup by employee (allow create farmer and user with wallet asignation)*/}
         <Route exact path="/signupEmployee">
         <UserRegister registerFarmer={true} setLoggedIn={setLoggedIn} user={user} loggedIn={loggedIn} triggerUpdate={() => setUserListUpdated(true)}/>
         </Route>
