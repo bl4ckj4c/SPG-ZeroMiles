@@ -451,7 +451,7 @@ async function getWeeklyNotRetiredOrders(timestamp){
 async function getNotRetiredOrder() {
     let data ;
     try {
-        const res = await fetch(BASEURL + '/notRetiredOreder', { method: 'GET' });
+        const res = await fetch(BASEURL + '/notRetiredOrder', { method: 'GET' });
         if (!res.ok) {
             throw new Error(res.statusText);
         }

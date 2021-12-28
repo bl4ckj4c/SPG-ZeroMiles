@@ -26,6 +26,7 @@ function App() {
   const [sideShow, setSideShow] = useState(false); //for the sidebar
   const [timeMachine, setTimeMachine] = useState(false); 
   const [toastPickups, setToastPickups] = useState(false);
+  const [numUnretrievedOrders, setNumUnretrievedOrders] = useState(-1);
   const toggleToast = () => {setToastPickups(!toastPickups)};
   var dayjs = require('dayjs');
 
@@ -77,19 +78,26 @@ function App() {
   }, [loggedIn]);
 
 
-  function HandleToast(){
-    toggleToast();
+  async function HandleToast(){
+    let number = await API.getNotRetiredOrder()
+    if( await number.NotRetired >= 3 ){
+        setNumUnretrievedOrders(await number.NotRetired)
+        toggleToast();
+    }
   }
 
 
   const login = async (email, password) => {
-      API.userLogin(email, password).then( () => {
+    try {
 
-        HandleToast();
+      const user = await API.userLogin(email, password);        
+        HandleToast(await user);
         setLoggedIn(true);  
       }
-      )
-  }
+      catch (err) {
+        throw err;
+      }
+    }
 
   const logout = () => {
     API.userLogout().then(() => {
@@ -108,7 +116,9 @@ function App() {
                         <Toast.Header>
                             <strong className="me-auto">⚠️ Warning</strong>
                         </Toast.Header>
-                        <Toast.Body>TEST: toast for unretrieved orders</Toast.Body>
+                        <Toast.Body>
+                          You haven't retired {numUnretrievedOrders} orders.<br/>
+                        {numUnretrievedOrders >= 5 ? "You are suspended." : "You'll be suspended after 5."  }</Toast.Body>
                     </Toast>
                 </ToastContainer>
 

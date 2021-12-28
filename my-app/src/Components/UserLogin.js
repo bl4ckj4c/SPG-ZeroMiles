@@ -7,7 +7,6 @@ import "./UserLogin.css";
 function UserLogin(props) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [messageErrorLogin, setMessageErrorLogin] = useState('');
     const [toastEmail, setToastEmail] = useState(false);
     const [toastPassword, setToastPassword] = useState(false);
     const [toastPasswordAndEmail, setToastPasswordAndEmail] = useState(false);
@@ -39,8 +38,6 @@ function UserLogin(props) {
         event.preventDefault();
         props.login(email, password)
             .catch((err) => {
-                console.log(err);
-                setMessageErrorLogin(err);
                 handleLoginResponseModalShow();
             })
     }
@@ -86,7 +83,7 @@ function UserLogin(props) {
                         <Image style={{ marginLeft: '-3px' }} id="logo" src="/images/logo.png" />
                         <h2 className="mt-1" style={{ textAlign: 'center' }}>We missed you!</h2>
                     </Row>
-                    <LoginResponseModal messageErrorLogin={messageErrorLogin} loginResponseModal={loginResponseModal} handleLoginResponseModalClose={handleLoginResponseModalClose} />
+                    <LoginResponseModal loginResponseModal={loginResponseModal} handleLoginResponseModalClose={handleLoginResponseModalClose} />
                     <Form onSubmit={(e) => validform(e)}>
                         <Form.Group className="mb-4 distanza" controlId="formBasicEmail">
                             <Form.Label>Email</Form.Label>
@@ -111,12 +108,12 @@ function UserLogin(props) {
 
 function LoginResponseModal(props) {
     return (
-        <Modal show={props.loginResponseModal} onHide={props.handleLoginResponseModalClose} autoFocus={true} size="md" centered>
+        <Modal show={props.loginResponseModal} onHide={props.handleLoginResponseModalClose} autoFocus={true} size="sm" centered>
             <Modal.Header closeButton>
-                <Modal.Title>Error login</Modal.Title>
+                <Modal.Title>⚠️Login error</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                {props.messageErrorLogin}
+               Wrong username or password
             </Modal.Body>
             <Modal.Footer>
                 <Col style={{ textAlign: 'center' }}>
