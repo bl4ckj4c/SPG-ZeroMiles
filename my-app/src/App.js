@@ -91,7 +91,7 @@ function App() {
     try {
 
       const user = await API.userLogin(email, password);        
-        HandleToast(await user);
+        HandleToast();
         setLoggedIn(true);  
       }
       catch (err) {
@@ -112,7 +112,7 @@ function App() {
     <Router>
       <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
       <ToastContainer style={{position: "absolute", zIndex: 999}} position="middle-center">
-                    <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} >
+                    <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} delay={7000} autohide >
                         <Toast.Header>
                             <strong className="me-auto">⚠️ Warning</strong>
                         </Toast.Header>
