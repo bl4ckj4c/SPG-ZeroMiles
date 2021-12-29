@@ -7,6 +7,11 @@ import { WelcomeFarmerSidebar } from "../Images/WelcomeFarmer.js";
 import DeLorean from "../Images/DeLorean.js";
 import API from '../API';
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+
 function ZeroNavbar(props) {
     const [modalShow, setModalShow] = useState(false); //for the time machine
     const handleOpenSide = () => props.setSideShow(true);
@@ -115,7 +120,7 @@ function ZeroNavbar(props) {
 
                             {props.user.Role === "Client" ? <ClientSidebar setSideShow={props.setSideShow} /> : <></>}
 
-                            {props.user.Role === "Farmer" ? <FarmerSidebar setSideShow={props.setSideShow} /> : <></>}
+                            {props.user.Role === "Farmer" ? <FarmerSidebar ReturnTimeMachine={props.ReturnTimeMachine} setSideShow={props.setSideShow} /> : <></>}
 
                             {props.user.Role === "Manager" ? <ManagerSidebar setSideShow={props.setSideShow} /> : <></>}
 
@@ -140,9 +145,6 @@ function ZeroNavbar(props) {
 };
 
 function TimeMachine(props) {
-    var dayjs = require('dayjs');
-    var customParseFormat = require('dayjs/plugin/customParseFormat');
-    dayjs.extend(customParseFormat);
 
     const now_time = new Object();
     const now_date = new Object();
@@ -246,6 +248,9 @@ function EmployeeSidebar(props) {
 }
 function FarmerSidebar(props) {
     const history = useHistory();
+    let giorno = dayjs(props.ReturnTimeMachine(), "MM-DD-YYYY HH:mm:ss");
+    let confirmable = (giorno.day() == 0 && giorno.hour() >= 23) || (giorno.day() == 1 && giorno.hour() < 9)
+
     return (
         <>
             <Offcanvas.Title className="mt-3 nav-subtitle"><Bucket style={{ marginTop: '-5px' }} />  PRODUCTS</Offcanvas.Title>
@@ -254,10 +259,10 @@ function FarmerSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmerview'); }}>My products</Nav.Link>
             </Nav>
-
-            <Nav className="justify-content-end flex-grow-1 pe-3">
+{confirmable ? <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/productconfirm'); }}>Confirm availability</Nav.Link>
-            </Nav>
+            </Nav> : "" }
+            
 
             <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
