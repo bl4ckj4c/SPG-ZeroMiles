@@ -122,8 +122,7 @@ async function getProductByFarmer(counterID) {
     if(response.ok){
         return { 'msg': 'Order succesfully added' };
     }
-    let res = await response.json();
-    return res;
+    return  { 'err': 'Error while placing the order' };
   }
 
   async function getOrders(spg_date1) {

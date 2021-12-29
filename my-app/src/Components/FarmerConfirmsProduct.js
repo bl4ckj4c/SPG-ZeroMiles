@@ -5,6 +5,11 @@ import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+
 function ConfirmProduct(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -47,6 +52,11 @@ function ConfirmProduct(props) {
         }
     }
 
+    let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
+    let confirmable = (giorno.day() == 0 && giorno.hour() >= 23) || (giorno.day() == 1 && giorno.hour() < 9)
+
+    if(!confirmable)
+        return (<NoOrders message="Come back Sunday at 11pm" />)
     return (
         <>
             <Container>

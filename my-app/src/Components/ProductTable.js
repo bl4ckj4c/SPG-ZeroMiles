@@ -1,7 +1,6 @@
-import { Container, Row, Col, Table, ButtonGroup, ToggleButton } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, TypeH1, Collection, Bag, Cash, CartCheckFill, Cart4 } from 'react-bootstrap-icons';
-import { Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Spinner, Modal } from 'react-bootstrap';
-import { useState, useEffect } from 'react';
+import { Container, Row, Col, Table, ToggleButton, Image, Card, ListGroup, InputGroup, FormControl, Form, Button, Spinner, Modal } from 'react-bootstrap';
+import { PersonFill, GeoAltFill, Collection, Bag, Cash, Cart4 } from 'react-bootstrap-icons';
+import { useState, useEffect, useRef } from 'react';
 import 'react-bootstrap-typeahead/css/Typeahead.css';
 import "./ProductTable.css";
 import API from '../API';
@@ -52,6 +51,7 @@ function ProductTable(props) {
     }, [update]);
 
     useEffect(() => {
+        console.log("provz")
         if (props.reloadTime)
             setUpdate(true);
     }, [props.reloadTime])
@@ -91,42 +91,48 @@ function ProductTableWrapped(props) {
     const handleCartCheckoutModalShow = () => setCartCheckoutModal(true);
     const handleCartCheckoutModalClose = () => setCartCheckoutModal(false);
     const [walletAndTotal, setWalletAndTotal] = useState({ Wallet: 0, Money: 0 });
-    const [showMoneyError, setShowMoneyError] = useState(false);
+    const mounted = useRef(false);
 
     var dayjs = require('dayjs');
     var customParseFormat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customParseFormat);
 
+    
 
     function CanOrder() {
         let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
 
-        console.log("data passata: " + props.timeMachine() + " data parsata: " + giorno.toString());
-        console.log("dayt:" + giorno.day())
-        if ((giorno.day() == 0 && giorno.hour() < 23) || (giorno.day() == 6 && giorno.hour() > 8)) {
+        if ((giorno.day() === 0 && giorno.hour() < 23) || (giorno.day() === 6 && giorno.hour() > 8)) {
             if (props.user.Role === "Employee" || props.user.Role === "Client" ) {
-                console.log(props.user);
                 return true;
             }
         }
         return false;
     }
 
+  useEffect(() => {
+    mounted.current = true
+    return () => {
+        mounted.current = false
+    }
+  }, [])
+
 
     useEffect(() => {
-        if (props.user.Role !== "Employee") {
-            API.clientCheck({ ClientID: props.user.userID }).then(w => {
-                setWalletAndTotal(w);
-            }).catch(err => console.log(err));
-        }
-        else if (selectedUser.length === 0)
-            setWalletAndTotal({ Wallet: 0, Money: 0 });
-        else {
-            API.clientCheck({ ClientID: selectedUser[0].UserID }).then(w => {
-                setWalletAndTotal(w);
-            }).catch(err => console.log(err));
-        }
-
+        if(mounted.current){
+            if (props.user.Role === "Client") {
+                API.clientCheck({ ClientID: props.user.userID }).then(w => {
+                    setWalletAndTotal(w);
+                }).catch(err => console.log(err));
+            }
+            else if (selectedUser.length === 0)
+                setWalletAndTotal({ Wallet: 0, Money: 0 });
+            else {
+                API.clientCheck({ ClientID: selectedUser[0].UserID }).then(w => {
+                    setWalletAndTotal(w);
+                }).catch(err => console.log(err));
+            }
+    }
 
     }, [cartCheckoutModal, selectedUser, showConfirm]);
 
@@ -143,9 +149,7 @@ function ProductTableWrapped(props) {
         return tmp;
     }
 
-    //this function updates the number in the array, also allows to display the current number in the counter
     function UpdateNumber(i, sign) {
-        // let i = props.productByFarmer.findIndex(p => (p.ProductID === ProductID && p.FarmerID === FarmerID))
         let prodNumCopy = [...prodNum];
         if (i === -1)
             return;
@@ -198,11 +202,15 @@ function ProductTableWrapped(props) {
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
+                if(await res){ //TODO VALIDATION
                 handleCartCheckoutModalClose();
-                handleShowConfirm(); //show the modal
+                handleShowConfirm(); 
+                }else{
+                    console.log("server order error");
+                }
             }
             else {
-                handleShowError(); //Se non ho selezionato alcun prodotto o cliente
+                handleShowError(); 
             }
         }
         catch (err) {
@@ -234,7 +242,7 @@ function ProductTableWrapped(props) {
                     : ""}
                 <OrderConfirmedModal user={props.user} walletAndTotal={walletAndTotal} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} order={insertedOrder} showConfirm={showConfirm} handleCloseConfirm={handleCloseConfirm} />
                 <ErrorModal showError={showError} handleCloseError={handleCloseError} />
-                <CartCheckoutModal walletAndTotal={walletAndTotal} showMoneyError={() => setShowMoneyError(true)} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
+                <CartCheckoutModal walletAndTotal={walletAndTotal} user={props.user} isLoggedIn={props.isLoggedIn} selectedUser={selectedUser} prodNum={prodNum} submitOrder={submitOrder} order={insertedOrder} cartCheckoutModal={cartCheckoutModal} handleCartCheckoutModalClose={handleCartCheckoutModalClose} />
             </Container>
 
             <Col className="justify-content-center">
@@ -310,18 +318,6 @@ function OrderConfirmedModal(props) {
         </Modal>);
 }
 
-/* function NotEnoughMoneyModal(props) {
-
-    return (
-        <Modal show={props.show} onHide={props.close} autoFocus={true} size="sm" centered>
-            <Modal.Header closeButton>
-                <Modal.Title>⚠️ You don't have enough money in your wallet </Modal.Title>
-            </Modal.Header>
-            <Modal.Body>Your wallet is: €{props.wallet}!
-            </Modal.Body>
-        </Modal>);
-}
- */
 
 
 
@@ -432,7 +428,6 @@ function FarmerRow(props) {
 };
 
 function ProductCard(props) {
-    const [open, setOpen] = useState(false);
 
     const [showDesc, setShowDesc] = useState(false);
     const handleCloseDesc = () => setShowDesc(false);
@@ -464,7 +459,6 @@ function ProductCard(props) {
             <Card.Footer>
                 <Row>
                     <Col> <Button variant="outline-warning"
-                        onClick={() => setOpen(!open)}
                         style={{ fontSize: 14, color: "black" }}
                         onClick={handleShowDesc}>
                         See Description
