@@ -11,7 +11,7 @@ import ZeroNavbar from './Components/Navbar';
 import { EmployeeView } from './Components/EmployeeView';
 import ClientView from './Components/ClientView';
 import Welcome from './Components/Welcome';
-import ClientOrders from './Components/ClientOrders'
+import {ClientOrders} from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
 import Deliver from './Components/Deliver';

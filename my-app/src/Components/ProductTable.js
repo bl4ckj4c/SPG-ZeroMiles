@@ -24,9 +24,6 @@ function ProductTable(props) {
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
-
-            console.log(props.reloadTime);
-
             setLoading(true);
 
             setProductByFarmerListUpdated(true);
@@ -44,14 +41,11 @@ function ProductTable(props) {
                     setFarmerList(farmer);
                     setFarmerListUpdated(false);
                 }).catch(f => console.log(f));
-
-            console.log("numero chiamate");
             setUpdate(false);
         }
     }, [update]);
 
     useEffect(() => {
-        console.log("provz")
         if (props.reloadTime)
             setUpdate(true);
     }, [props.reloadTime])
@@ -97,42 +91,38 @@ function ProductTableWrapped(props) {
     var customParseFormat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customParseFormat);
 
-    
+
 
     function CanOrder() {
         let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
 
         if ((giorno.day() === 0 && giorno.hour() < 23) || (giorno.day() === 6 && giorno.hour() > 8)) {
-            if (props.user.Role === "Employee" || props.user.Role === "Client" ) {
+            if (props.user.Role === "Employee" || props.user.Role === "Client") {
                 return true;
             }
         }
         return false;
     }
 
-  useEffect(() => {
-    mounted.current = true
-    return () => {
-        mounted.current = false
-    }
-  }, [])
-
-
     useEffect(() => {
-        if(mounted.current){
-            if (props.user.Role === "Client") {
-                API.clientCheck({ ClientID: props.user.userID }).then(w => {
+        mounted.current = true;
+        if (props.user.Role === "Client") {
+            API.clientCheck({ ClientID: props.user.userID }).then(w => {
+                if (mounted.current) {
                     setWalletAndTotal(w);
-                }).catch(err => console.log(err));
-            }
-            else if (selectedUser.length === 0)
-                setWalletAndTotal({ Wallet: 0, Money: 0 });
-            else {
-                API.clientCheck({ ClientID: selectedUser[0].UserID }).then(w => {
+                }
+            }).catch(err => console.log(err));
+        }
+        else if (selectedUser.length === 0 && mounted.current)
+            setWalletAndTotal({ Wallet: 0, Money: 0 });
+        else {
+            API.clientCheck({ ClientID: selectedUser[0].UserID }).then(w => {
+                if (mounted.current) {
                     setWalletAndTotal(w);
-                }).catch(err => console.log(err));
-            }
-    }
+                }
+            }).catch(err => console.log(err));
+        }
+        return () => { mounted.current = false };
 
     }, [cartCheckoutModal, selectedUser, showConfirm]);
 
@@ -160,13 +150,9 @@ function ProductTableWrapped(props) {
     }
     function UpdateNumberInput(i, num, product) {
         let prodNumCopy = [...prodNum];
-        console.log("upd " + num);
         let input = parseInt(num);
         if (isNaN(input) || input < 0) {
-
             prodNumCopy[i].number = 0;
-            console.log("updN " + input + prodNumCopy[i].number);
-
         } else {
             if (input > product.Quantity)
                 prodNumCopy[i].number = product.Quantity;
@@ -202,15 +188,15 @@ function ProductTableWrapped(props) {
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
-                if(await res){ //TODO VALIDATION
-                handleCartCheckoutModalClose();
-                handleShowConfirm(); 
-                }else{
+                if (await res) { //TODO VALIDATION
+                    handleCartCheckoutModalClose();
+                    handleShowConfirm();
+                } else {
                     console.log("server order error");
                 }
             }
             else {
-                handleShowError(); 
+                handleShowError();
             }
         }
         catch (err) {
@@ -309,7 +295,7 @@ function OrderConfirmedModal(props) {
                 <Modal.Title>Order submitted! 🎉</Modal.Title>
             </Modal.Header>
             <Modal.Body>Total of your "open" orders: €{(props.walletAndTotal.Money)}</Modal.Body>
-            <Modal.Body>Your wallet amount: €{(props.walletAndTotal.Wallet)}</Modal.Body>
+            <Modal.Body>Wallet amount: €{(props.walletAndTotal.Wallet)}</Modal.Body>
             <Modal.Footer>
                 <Button variant="warning" onClick={props.handleCloseConfirm}>
                     Close
@@ -428,10 +414,34 @@ function FarmerRow(props) {
 };
 
 function ProductCard(props) {
-
+    const [available, setAvailable] = useState(props.prodottoDelFarmer.Quantity);
     const [showDesc, setShowDesc] = useState(false);
     const handleCloseDesc = () => setShowDesc(false);
     const handleShowDesc = () => setShowDesc(true);
+
+    function addAvail() {
+        if (available > 0) {
+            setAvailable(available - 1);
+        }
+    }
+
+    function removeAvail() {
+        if (available < props.prodottoDelFarmer.Quantity) {
+            setAvailable(available + 1);
+        }
+    }
+
+    function handleNum(num) {
+        if (num === '') {
+            setAvailable(parseInt(props.prodottoDelFarmer.Quantity));
+        }
+        if (parseInt(parseInt(num)) > parseInt(props.prodottoDelFarmer.Quantity)) {
+            setAvailable(0);
+        }
+        if (parseInt(props.prodottoDelFarmer.Quantity) >= parseInt(num)) {
+            setAvailable(parseInt(props.prodottoDelFarmer.Quantity) - parseInt(num));
+        }
+    }
 
     //let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
     let newSrc = "/images/" + props.prodottoDelFarmer.ImageID + ".png"
@@ -451,7 +461,7 @@ function ProductCard(props) {
                     <Col><Cash /></Col>
                 </Row>
                 <Row className="mb-4">
-                    <Col>Available: {props.prodottoDelFarmer.Quantity}</Col>
+                    <Col>Available: {available}</Col>
                     <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
                     <Col>€{props.prodottoDelFarmer.Price}</Col>
                 </Row>
@@ -463,7 +473,7 @@ function ProductCard(props) {
                         onClick={handleShowDesc}>
                         See Description
                     </Button></Col>
-                    {props.isLoggedIn && props.CanOrder() ? <Col><ProductsCounter unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
+                    {props.isLoggedIn && props.CanOrder() ? <Col><ProductsCounter addAvail={addAvail} removeAvail={removeAvail} handleNum={(num) => handleNum(num)} unfilteredProductByFarmer={props.unfilteredProductByFarmer} UpdateNumberInput={props.UpdateNumberInput} UpdateNumber={props.UpdateNumber} prodNum={props.prodNum} productByFarmer={props.productByFarmer} prodottoDelFarmer={props.prodottoDelFarmer} Quantity={props.prodottoDelFarmer.Quantity} ProductID={props.prodottoDelFarmer.ProductID} FarmerID={props.prodottoDelFarmer.FarmerID} /></Col> : ""}
                 </Row>
                 <Modal show={showDesc} onHide={handleCloseDesc} centered size="lg">
                     <DescriptionModal handleCloseDesc={handleCloseDesc} prodotto={props.prodottoDelFarmer} imgProd={newSrc} />
@@ -507,11 +517,11 @@ function ProductsCounter(props) {
     let i = props.unfilteredProductByFarmer.findIndex(p => (p.ProductID === props.prodottoDelFarmer.ProductID && p.FarmerID === props.prodottoDelFarmer.FarmerID))
     return (
         <InputGroup style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, -1)}>
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15, borderTopLeftRadius: '4px', borderBottomLeftRadius: '4px' }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => { props.UpdateNumber(i, -1); props.removeAvail() }}>
                 -
             </ToggleButton>
-            <FormControl onChange={(event) => props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer)} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background: 'white', color: 'black' }} value={props.prodNum[i].number} />
-            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => props.UpdateNumber(i, +1)} >
+            <FormControl onChange={(event) => { props.UpdateNumberInput(i, event.target.value, props.prodottoDelFarmer); props.handleNum(event.target.value); }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} style={{ textAlign: "center", maxHeight: "2.3rem", fontSize: 14, maxWidth: "2.7rem", background: 'white', color: 'black' }} value={props.prodNum[i].number} />
+            <ToggleButton style={{ maxHeight: "2.2rem", fontSize: 15 }} disabled={props.prodottoDelFarmer.Quantity === 0 ? true : false} variant="outline-secondary" onClick={() => { props.UpdateNumber(i, +1); props.addAvail() }} >
                 +
             </ToggleButton>
         </InputGroup >
