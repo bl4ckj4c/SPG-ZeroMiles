@@ -145,13 +145,13 @@ function OrderRow(props) {
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
 
-                            {(props.order.Status === 'pending' && props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
+                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
                                 <Col>
                                     <Deliver orderId={props.order.OrderID}></Deliver>
                                 </Col>
                             </> : <></>}
 
-                            {(props.order.Status === 'pending' && props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
+                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
                                 <Col>
                                     <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
                                     <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleClose(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
@@ -164,8 +164,6 @@ function OrderRow(props) {
                                     Delivery requested {props.order.DeliveryDate}
                                 </Col>
                             </> : <></>}
-
-                            {console.log(props.order)}
 
                             {props.order.pickupTimestamp !== '' ? <> 
                                 <Col style={{fontSize:'13px'}}>
@@ -344,4 +342,4 @@ function NoOrders() {
     );
 }
 
-export default ClientOrders;
+export {ClientOrders, TimeSelect, ErrorModal};

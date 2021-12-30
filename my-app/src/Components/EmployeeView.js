@@ -5,6 +5,7 @@ import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 import Modal from 'react-bootstrap/Modal'
+import {TimeSelect, ErrorModal} from './ClientOrders.js'
 
 function EmployeeView(props) {
 
@@ -71,7 +72,7 @@ function EmployeeView(props) {
 
                                                 if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 
-                                                    return <OrderRow order={o} />
+                                                    return <OrderRow order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
 
                                                 }
                                             }
@@ -92,12 +93,33 @@ let progressType = "success";
 
 function OrderRow(props) {
     let [stat, setStat] = useState(props.order.Status || 'o');
-
-
+    const [modalShow, setModalShow] = useState(false);
+    const [modalErrorShow, setModalErrorShow] = useState(false);
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+    async function handleCloseTime(newdate) {
+        setModalShow(false);
+        if (newdate) {
+            try {
+                let object = {
+                    "pickupTimestamp": newdate.toString(),
+                    "OrderID": props.order.OrderID
+                }
+                let res = await API.setPickUpTime(object);
+            } catch (err) {
+                console.log(err);
+            }
+            props.reloadOrders();
+        }
+    }
+
+    function showErrorModal() {
+        setModalShow(false);
+        setModalErrorShow(true);
+    }
 
     let buttonstatus;
     // let stat;
@@ -164,6 +186,14 @@ function OrderRow(props) {
                             <Col>
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
                             </Col>
+
+                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
+                                <Col>
+                                    <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
+                                    <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleCloseTime(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                    <ErrorModal show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
+                                </Col>
+                            </> : <></>}
 
                             {props.order.DeliveryDate !== '' ? <>
                                 <Col style={{ fontSize: '13px' }}>
