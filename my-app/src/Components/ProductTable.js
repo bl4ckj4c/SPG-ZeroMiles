@@ -24,9 +24,6 @@ function ProductTable(props) {
     useEffect(() => {
         //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
-
-            console.log(props.reloadTime);
-
             setLoading(true);
 
             setProductByFarmerListUpdated(true);
