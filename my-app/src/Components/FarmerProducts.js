@@ -145,7 +145,7 @@ function ProductCard(props) {
   const [show, setShow] = useState(false);
   const [showPic, setShowPic] = useState(false);
 
-  let newSrc = "http://localhost:3001/images/" + props.p.ImageID + ".png"
+  let newSrc = "/images/" + props.p.ImageID + ".png"
 
 
   //TODO: see if we can make the image responsive using className="img-fluid"
