@@ -1052,6 +1052,132 @@ describe("POST for /api/deleteProduct", () => {
 });
 
 
+
+
+// POST place an order in the database
+describe("POST for /api/order", () => {
+    test('Add new order', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/order')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "UserID": '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216',
+                        "items": [],
+                        "timestamp": '12-25-2021 09:00'
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+
+                        // Remove the new product by farmer from firebase
+                        console.log(res.body.productByFarmerID);
+
+                        done();
+                    });
+            });
+    });
+
+});
+
+// POST checkClient
+describe("POST for /api/checkClient", () => {
+    test('check client', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/checkClient')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "ClientID": '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216'
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
+
+
+
+
+// POST modify order
+describe("POST for /api/modifyorder", () => {
+    test('modify order status', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/modifyorder')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "id": "mouPNoMx2OOvkR10c8Jp",
+                        "Status": "closed"
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
+
+
+
+
+// POST modify Delivery
+describe("POST for /api/modifyDelivery", () => {
+    test('Modify delivery', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/modifyDelivery')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "OrderID": "mouPNoMx2OOvkR10c8Jp",
+                        "DeliveryPlace": "Via Test",
+                        "DeliveryDate": "31-12-2021"
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
 /*// POST for store a new product with related image into the server
 describe("POST for /api/newproduct", () => {
     test('Create new product', (done) => {
