@@ -194,12 +194,17 @@ function TimeMachine(props) {
                                 <Form.Control type="time" defaultValue={time.value.toString()} onChange={e => setTime({ value: e.target.value })} />
                             </Form.Group>
                         </Col>
-
-                        <Row className="justify-content-center mt-3" style={{fontSize:'12px'}}>
-                            Set Monday at 09:00 to confirm available products.
+                        <Row className="justify-content-center mt-3" style={{ fontSize: '12px' }}>
+                            • Set from Saturday at 09:00 to Sunday 23:00 to place an order.
                         </Row>
-                        <Row className="justify-content-center mt-1" style={{fontSize:'12px'}}>
-                            Set Saturday at 09:00 to send Telegram notification.
+                        <Row className="justify-content-center mt-1" style={{ fontSize: '12px' }}>
+                            • Set from Sunday at 23:00 to Monday 09:00 to confirm products as a Farmer.
+                        </Row>
+                        <Row className="justify-content-center mt-1" style={{ fontSize: '12px' }}>
+                            • Set Saturday at 09:00 to send Telegram notifications.
+                        </Row>
+                        <Row className="justify-content-center mt-1" style={{ fontSize: '12px' }}>
+                            • Set Monday at 09:00 to process open orders to pending.
                         </Row>
                     </Row>
 
@@ -259,10 +264,10 @@ function FarmerSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmerview'); }}>My products</Nav.Link>
             </Nav>
-{confirmable ? <Nav className="justify-content-end flex-grow-1 pe-3">
+            {confirmable ? <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/productconfirm'); }}>Confirm availability</Nav.Link>
-            </Nav> : "" }
-            
+            </Nav> : ""}
+
 
             <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
