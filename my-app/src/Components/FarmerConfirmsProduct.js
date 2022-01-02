@@ -61,7 +61,7 @@ function ConfirmProduct(props) {
         <>
             <Container>
                 <Row className="mt-3 margine-cerca-desktop">
-                    <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                    <UserDropdown privacy={true} users={props.users.filter( u => ordersList.some(ord => ord.ClientID === u.UserID))} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
                 </Row>
             </Container>
 
@@ -112,13 +112,11 @@ function OrderRow(props) {
                             <Row>
                                 <Col><PersonFill /></Col>
                                 <Col><ClockFill /></Col>
-                                <Col><GeoAltFill /></Col>
                             </Row>
 
                             <Row className="mb-1">
                                 <Col className="ridotto-mobile">{props.order.Name} {props.order.Surname}</Col>
                                 <Col className="ridotto-mobile">{props.order.Timestamp}</Col>
-                                <Col className="ridotto-mobile">{props.order.Address}, {props.order.State}</Col>
                             </Row>
                         </Row>
 

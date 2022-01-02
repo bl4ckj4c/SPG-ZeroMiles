@@ -4,6 +4,11 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 
 function UserDropdown(props) {
     const filterByFields = ['Name', 'Surname'];
+    let privacy;
+    if (props.privacy)
+        privacy = true;
+        else
+        privacy = false;
     return (
         <>
             <Form.Group>
@@ -18,9 +23,11 @@ function UserDropdown(props) {
                     renderMenuItemChildren={(option) => (
                         <div>
                             {option.Name + " " + option.Surname}
+                            {privacy ? "" : 
                             <div>
                                 <small>{option.Address + " - " + option.City + ", " + option.State + " " + option.Zipcode} </small>
                             </div>
+                    }
                         </div>
                     )}
                 />

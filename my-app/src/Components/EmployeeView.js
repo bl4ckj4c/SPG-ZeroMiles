@@ -10,21 +10,9 @@ import {TimeSelect, ErrorModal} from './ClientOrders.js'
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
-    const [filteredOrdersList, setFilteredOrdersList] = useState([]);
-    const [ordersListUpdated, setOrdersListUpdated] = useState(false);
+    const [ordersListUpdated, setOrdersListUpdated] = useState(true);
     const [selectedUser, setSelectedUser] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    useEffect(() => {
-        setLoading(true);
-        API.getOrders(props.timeMachine().toString())
-            .then(orders => {
-                setOrdersList(orders);
-                setFilteredOrdersList(orders);
-                setOrdersListUpdated(false);
-                setLoading(false);
-            }).catch(o => handleErrors(o));
-    }, []);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         if (ordersListUpdated === true) {
@@ -32,7 +20,6 @@ function EmployeeView(props) {
             API.getOrders(props.timeMachine().toString())
                 .then(orders => {
                     setOrdersList(orders);
-                    setFilteredOrdersList(orders);
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -184,10 +171,13 @@ function OrderRow(props) {
 
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { return sum + parseInt(p.number) * parseInt(p.Price) }, 0)}</h1>
+                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { if(p.Confirmed !== "false") 
+                                return (sum + parseInt(p.number) * parseInt(p.Price))
+                                else 
+                                return (sum + 0) }, 0)}</h1>
                             </Col>
 
-                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '') ? <>
+                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '' && props.order.Status !== "cancelled") ? <>
                                 <Col>
                                     <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
                                     <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleCloseTime(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
@@ -281,11 +271,12 @@ function ProductList(props) {
         <tr>
             <td>
                 <Container>
-                    <Row className="mb-2 align-items-center font-tabella">
+                    <Row className="mb-2 align-items-center font-tabella" style={{textDecoration : props.product.Confirmed === "false" ? "line-through" : "none" }}>
                         <Col>
                             <Image src={newSrc} height={"50 px"} rounded />
                         </Col>
-                        <Col>
+                        
+                        <Col >
                             <center>{props.product.NameProduct}</center>
                         </Col>
                         <Col>
