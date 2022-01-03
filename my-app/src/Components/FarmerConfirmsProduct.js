@@ -20,7 +20,7 @@ function ConfirmProduct(props) {
         setLoading(true);
         API.getProductsByOneFarmer(props.timeMachine().toString())
             .then(orders => {
-                setOrdersList(orders.slice(0).reverse());
+                setOrdersList(orders.sort((b,a) => (dayjs(a.Timestamp, "DD-MM-YYYY HH:mm:ss").isAfter(dayjs(b.Timestamp, "DD-MM-YYYY HH:mm:ss")) ? 1 : -1)  )   )
                 setLoading(false);
             }).catch(o => handleErrors(o));
     }, []);

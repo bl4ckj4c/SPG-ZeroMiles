@@ -7,6 +7,11 @@ import UserDropdown from "./CustomerSearchBar"
 import Modal from 'react-bootstrap/Modal'
 import {TimeSelect, ErrorModal} from './ClientOrders.js'
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -19,7 +24,7 @@ function EmployeeView(props) {
             setLoading(true);
             API.getOrders(props.timeMachine().toString())
                 .then(orders => {
-                    setOrdersList(orders);
+                    setOrdersList(orders.sort((b,a) => (dayjs(a.Timestamp, "DD-MM-YYYY HH:mm:ss").isAfter(dayjs(b.Timestamp, "DD-MM-YYYY HH:mm:ss")) ? 1 : -1)  )   )
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -55,7 +60,7 @@ function EmployeeView(props) {
                                 {ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 ? <>
                                     {
                                         ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 && selectedUser.length > 0 && !ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).some(ord => ord.ClientID === selectedUser[0].UserID) ? <NoOrders message={"There are no" + (props.status === "all" ? "" : " " + props.status) + " orders for the selected user"} /> :
-                                            ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).slice(0).reverse().map(o => {
+                                            ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).map(o => {
 
                                                 if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 

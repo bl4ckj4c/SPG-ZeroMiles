@@ -5,6 +5,13 @@ import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import "./ClientOrders.css";
 import Deliver from "./Deliver.js"
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+var isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrBefore);
+
+
 function ClientOrders(props) {
     const [ordersList, setOrdersList] = useState([]);
     const [ordersListUpdated, setOrdersListUpdated] = useState(true);
@@ -16,7 +23,7 @@ function ClientOrders(props) {
             setLoading(true);
             API.getClientOrders(props.timeMachine().toString())
                 .then(orders => {
-                    setOrdersList(orders);
+                    setOrdersList(orders.sort((b,a) => (dayjs(a.Timestamp, "DD-MM-YYYY HH:mm:ss").isAfter(dayjs(b.Timestamp, "DD-MM-YYYY HH:mm:ss")) ? 1 : -1)  )   )
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -44,7 +51,7 @@ function ClientOrders(props) {
                             <Table className="d-flex justify-content-center">
                                 <tbody id="employee-table" align="center">
 
-                                    {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o =>
+                                    {ordersList.length > 0 ? ordersList.map(o =>
                                         <OrderRow key={o.OrderID} order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
                                     ) : <NoOrders />
                                     }
@@ -178,11 +185,6 @@ function OrderRow(props) {
 }
 
 function TimeSelect(props) {
-    var dayjs = require('dayjs');
-    var customParseFormat = require('dayjs/plugin/customParseFormat');
-    var isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
-    dayjs.extend(customParseFormat);
-    dayjs.extend(isSameOrBefore);
 
     const now_time = new Object();
     const now_date = new Object();
