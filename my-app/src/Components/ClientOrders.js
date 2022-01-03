@@ -45,7 +45,7 @@ function ClientOrders(props) {
                                 <tbody id="employee-table" align="center">
 
                                     {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o =>
-                                        <OrderRow order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
+                                        <OrderRow key={o.OrderID} order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
                                     ) : <NoOrders />
                                     }
 
@@ -127,8 +127,8 @@ function OrderRow(props) {
                             </Row>
                         </Row>
 
-                        {props.order.ProductInOrder.map(p => (
-                            <ProductList product={p} />
+                        {props.order.ProductInOrder.map( (p, idx) => (
+                            <ProductList key={p.ProductID+"+"+props.order.OrderID+idx} product={p} />
                         ))}
 
                         <Row className="mt-4 mb-3 align-items-center">
