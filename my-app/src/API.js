@@ -1,13 +1,9 @@
 import { Product, ProductByFarmer, ProductByFarmerLITE, Farmer } from './Products/Products.js';
 import { ProductInOrder, Order, User } from './Orders/Orders.js';
 
-/**
- * All the API calls
- */
  const BASEURL = '/api';
 
 
-//get all products by all farmers
 async function getProductInOrder() {
     let data = [];
     try {
@@ -37,7 +33,6 @@ async function getAllProductsByFarmers(spg_date) {
 }
 
 
-//get products by a single farmer
 async function getProductsByFarmer(spg_date1){
     let data = [];
     try {
@@ -96,18 +91,6 @@ async function getAllProducts() {
     return data.map((f) => new Product(...Object.values(f)));
 }
 
-/*
-async function getProductByFarmer(counterID) {
-    const response = await fetch(BASEURL + '/productByFarmer');
-    const responseBody = await response.json();
-    if (response.ok) {
-        return responseBody;
-        ;
-    }
-    else {
-        throw responseBody;
-    }
-} */
 
   async function addOrder(order){
 
@@ -181,17 +164,7 @@ async function userRegister(name, surname, email, address, phone, city, password
     return response;
 }
 
-/*
-async function userLogin(username, password) {
-    const response = await fetch(BASEURL + "/login", {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: username, password: password})
-    }); 
-    return response;
-}*/
+
 
 async function userLogin(username, password) {
     let response = await fetch(BASEURL + "/login", {
@@ -232,10 +205,9 @@ async function getUserInfo() {
     const response = await fetch('/api/sessions/current');
     const userInfo = await response.json();
     if (response.ok) {
-        //console.log(userInfo);
         return userInfo;
     } else {
-      return {};  // an object with the error coming from the server
+      return {}; 
     }
   }
 
@@ -416,7 +388,7 @@ async function getMonthlyNotRetiredOrders(timestamp){
 
         const res = await fetch(BASEURL + "/monthlyNotRetiredOrders/" + timestamp, { method: 'GET' })
 
-        if(res.status===404){  //there are no entries 
+        if(res.status===404){  
             return [];
         }
         if (!res.ok) {
@@ -434,7 +406,7 @@ async function getWeeklyNotRetiredOrders(timestamp){
 
     try {
         const res = await fetch(BASEURL + "/weeklyNotRetiredOrders/" + timestamp, { method: 'GET' })
-        if(res.status===404){  //there are no entries 
+        if(res.status===404){  
             return [];
         }
         if (!res.ok) {

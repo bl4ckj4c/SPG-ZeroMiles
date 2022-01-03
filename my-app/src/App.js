@@ -23,7 +23,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
-  const [sideShow, setSideShow] = useState(false); //for the sidebar
+  const [sideShow, setSideShow] = useState(false); 
   const [timeMachine, setTimeMachine] = useState(false); 
   const [toastPickups, setToastPickups] = useState(false);
   const [numUnretrievedOrders, setNumUnretrievedOrders] = useState(-1);
