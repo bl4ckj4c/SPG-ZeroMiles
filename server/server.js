@@ -1890,7 +1890,7 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
                         console.log("No matching users for " + order.data().ClientID);
                     }
 
-                    if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
+                    if (day2.week() === dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() ){
                         order.data().Products.forEach(prodotto =>{
                         if(prodotto.FarmerID ==user.userID ){
                             productsByOneFarmer.push(prodotto);
