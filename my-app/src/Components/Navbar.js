@@ -13,7 +13,7 @@ dayjs.extend(customParseFormat);
 
 
 function ZeroNavbar(props) {
-    const [modalShow, setModalShow] = useState(false); //for the time machine
+    const [modalShow, setModalShow] = useState(false); 
     const handleOpenSide = () => props.setSideShow(true);
     const handleCloseSide = () => props.setSideShow(false);
 
@@ -160,7 +160,7 @@ function TimeMachine(props) {
         newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
         API.setTimeMachine(newdate);
         props.onHide(newdate);
-        //Se e' lunedi ricarico la pagina per mostrare i nuovi ordini confermati
+
         if (dayjs(date.value).day() === 1 && time.value === "09:00") {
             window.location.reload(false);
         }

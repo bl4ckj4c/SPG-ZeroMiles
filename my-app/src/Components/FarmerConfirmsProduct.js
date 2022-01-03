@@ -26,8 +26,6 @@ function ConfirmProduct(props) {
     }, []);
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/
-        }
         console.log(err);
     }
 

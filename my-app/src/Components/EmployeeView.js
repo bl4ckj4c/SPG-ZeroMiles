@@ -37,8 +37,7 @@ function EmployeeView(props) {
     }, [props.reloadTime])
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/
-        }
+
         console.log(err);
     }
 
@@ -114,7 +113,6 @@ function OrderRow(props) {
     }
 
     let buttonstatus;
-    // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
         progressType = "primary";
