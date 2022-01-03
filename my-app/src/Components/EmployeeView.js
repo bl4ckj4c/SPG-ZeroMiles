@@ -59,7 +59,7 @@ function EmployeeView(props) {
 
                                                 if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 
-                                                    return <OrderRow order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
+                                                    return <OrderRow key={o.OrderID} order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
 
                                                 }
                                             }
@@ -161,8 +161,8 @@ function OrderRow(props) {
 
                         <Table className="justify-content-center">
                             <tbody align="center">
-                                {props.order.ProductInOrder.map(p => (
-                                    <ProductList product={p} />
+                                {props.order.ProductInOrder.map( (p, i)  => (
+                                    <ProductList key={props.order.OrderID+"+"+p.ProductID+i} product={p} />
                                 ))}
                             </tbody>
                         </Table>
