@@ -188,7 +188,7 @@ function ProductTableWrapped(props) {
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
-                if (await res) { //TODO VALIDATION
+                if (await ! res['err']) { //TODO VALIDATION
                     handleCartCheckoutModalClose();
                     handleShowConfirm();
                 } else {

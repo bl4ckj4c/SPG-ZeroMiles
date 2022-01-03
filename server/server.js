@@ -1277,16 +1277,17 @@ app.post('/api/order', async (req, res) => {
 
             //for each product in the order
             let quantity = 0;
-            req.body.items.forEach(product => {
+            for (const product of req.body.items){
                 quantity = quantity + product.number * product.Price;
-                productByFarmer.forEach(prodfarm => {
+                console.log(productByFarmer);
+                    for (let prodfarm of productByFarmer.docs){
                     if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity && prodfarm.data().Week == reqweekOfYear) { //check if there are enough unities for the product requested
                         console.log("Not enough products (" + product.NameProduct + ")");
                         res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
+                        return;
                     }
-                })
-            })
-
+                }
+            }
             const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).where("Status","==","open").get()  //get all open orders by that client
             if(!orders.empty){  //if the client has an open order, add products to that order
                 orders.forEach(order => {
