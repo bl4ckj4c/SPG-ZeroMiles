@@ -216,6 +216,8 @@ function TimeSelect(props) {
         if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 4) { //giovedi
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(1, 'day');
         }
+
+        return "" 
     }
 
     function onSubmit() {
