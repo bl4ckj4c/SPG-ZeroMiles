@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { Table, Row, Col, Container, Modal, Form, Button, Image, Spinner } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import "./ClientOrders.css";
-import Deliver from "./Deliver.js"
 
 var dayjs = require('dayjs');
 var customParseFormat = require('dayjs/plugin/customParseFormat');

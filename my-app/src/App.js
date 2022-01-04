@@ -14,7 +14,6 @@ import Welcome from './Components/Welcome';
 import {ClientOrders} from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
-import Deliver from './Components/Deliver';
 import Unretrieved from './Components/UnretrievedFood';
 import ConfirmProduct from './Components/FarmerConfirmsProduct';
 
@@ -157,10 +156,6 @@ function App() {
 
         <Route exact path="/myorders">
           <ClientOrders timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
-        </Route>
-
-        <Route exact path="/deliver">
-          <Deliver />
         </Route>
 
         <Route exact path="/profile">
