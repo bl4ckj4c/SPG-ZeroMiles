@@ -322,7 +322,7 @@ describe('Test for FarmerProducts.js', () => {
         });
     });
 
-    test('Change order status open -> closed', async () => {
+    /*test('Change order status open -> closed', async () => {
         mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
         mockGetOrders.mockResolvedValue(orders);
         mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
@@ -370,5 +370,5 @@ describe('Test for FarmerProducts.js', () => {
             getByText('Ther order status has been changed to cancelled');
             fireEvent.click(getByText('Close'))
         });
-    });
+    });*/
 });
