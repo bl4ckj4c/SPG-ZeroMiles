@@ -7,21 +7,6 @@ import API from "../API";
 
 describe('Test for ClientOrders.js', () => {
 
-    const user = {
-        userID: "2d0c057a-6e0d-4e85-a5ea-a58cb2b54216",
-        Password: "test",
-        City: "Torino",
-        Address: "Via Test 42",
-        Wallet: 10,
-        Phoneno: "1234567890",
-        Email: "testname.testsurname3@polito.it",
-        Name: "Testname3",
-        Role: "Client",
-        Zipcode: "10140",
-        State: "TO",
-        Surname: "Testsurname3"
-    };
-
     const userList = [
         {
             Name: "Barbara",
