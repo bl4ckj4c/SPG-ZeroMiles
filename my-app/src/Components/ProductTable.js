@@ -459,9 +459,9 @@ function ProductCard(props) {
                     <Col><Cash /></Col>
                 </Row>
                 <Row className="mb-4">
-                    <Col>Available: {available}</Col>
-                    <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
-                    <Col>€{props.prodottoDelFarmer.Price}</Col>
+                    <Col style={{fontSize : "13px"}}>Available: {available}</Col>
+                    <Col style={{fontSize : "13px"}}>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
+                    <Col style={{fontSize : "13px"}}>€{props.prodottoDelFarmer.Price}</Col>
                 </Row>
             </Container>
             <Card.Footer>
