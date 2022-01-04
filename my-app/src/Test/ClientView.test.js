@@ -2,10 +2,10 @@ import * as React from "react";
 import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
-import UserDropdown from "../Components/CustomerSearchBar";
+import ClientView from "../Components/ClientView";
 import API from "../API";
 
-describe('Test for ClientOrders.js', () => {
+describe('Test for ClientView.js', () => {
 
     const userList = [
         {
@@ -204,53 +204,195 @@ describe('Test for ClientOrders.js', () => {
         }
     ];
 
-    const mockSetSelectedUser = jest.fn();
+    const farmers = [
+        {
+            Name: "Sara",
+            Surname: "Verdi",
+            Company: "Azienda Agricola Sara Verdi",
+            FarmerID: "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044",
+            Email: "sara.verdi@hotmail.it",
+            Phoneno: "1264857963",
+            Address: "Corso Ferrucci 92",
+            State: "TO",
+            Zipcode: "30100",
+            Distance: 1
+        },
+        {
+            Name: "Marco",
+            Surname: "Rossi",
+            Company: "L'orto del gallo",
+            FarmerID: "b815cb11-6fbe-470d-80fe-8342516c077a",
+            Email: "marco.rossi@gmail.com",
+            Phoneno: "0321469758",
+            Address: "Corso Rossini 101",
+            State: "TO",
+            Zipcode: "10138",
+            Distance: 2
+        },
+        {
+            Name: "Mara",
+            Surname: "Maionchi",
+            Company: "Societa' Agricola La Cascina Del Mulino",
+            FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+            Email: "mara.maionchi@hotmail.com",
+            Phoneno: "9874515888",
+            Address: "Via Giuseppe Verdi 33",
+            State: "TO",
+            Zipcode: "10138",
+            Distance: 2
+        },
+        {
+            Name: "Giovanna",
+            Surname: "Bianchi",
+            Company: "Cascina Roseleto Di Giovanna Bianchi",
+            FarmerID: "de9c414f-c624-4b59-a6e8-c8b6ac1f2072",
+            Email: "giovanna.bianchi@gmail.com",
+            Phoneno: "1254796832",
+            Address: "Via Chiffi",
+            State: "TO",
+            Zipcode: "20100",
+            Distance: 3
+        },
+        {
+            Name: "Barbara",
+            Surname: "D'Urso",
+            Company: "Liriodendro Soc. Agr. Coop.",
+            FarmerID: "16cb0898-d613-4d01-8eee-9e6cc565feef",
+            Email: "barbara.durso@hotmail.it",
+            Phoneno: "3400987654",
+            Address: "Via Riva",
+            State: "TO",
+            Zipcode: "87023",
+            Distance: 4
+        },
+        {
+            Name: "Gerry",
+            Surname: "Scotti",
+            Company: "Il Cortile Delle Delizie",
+            FarmerID: "44e2841a-b652-4615-8fa7-725f49e9ef31",
+            Email: "gerry.scotti@hotmail.com",
+            Phoneno: "4125364789",
+            Address: "Via Armando Diaz",
+            State: "TO",
+            Zipcode: "01578",
+            Distance: 5
+        }
+    ];
 
-    test('Correct render of the component with privacy', async () => {
+    const mockSetUserListUpdated = jest.fn();
+    const mockGetFarmer = (API.getFarmer = jest.fn());
+    const mockModifyWallet = (API.modifyWallet = jest.fn());
+
+    test('Correct render of component for clients', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
+                <ClientView
                     users={userList}
-                    selectedUser={[]}
-                    privacy={true}
-                    setSelectedUser={mockSetSelectedUser}/>
+                    filterBy={"Client"}
+                    triggerUpdate={mockSetUserListUpdated}/>
             </Router>
         );
 
         await waitFor(() => {
-            getByPlaceholderText('👤 Choose a customer...');
+            getByText('Jon Snow');
         });
     });
 
-    test('Correct render of the component without privacy', async () => {
+    test('No clients found', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
-                    users={userList}
-                    selectedUser={[]}
-                    privacy={false}
-                    setSelectedUser={mockSetSelectedUser}/>
+                <ClientView
+                    users={[]}
+                    filterBy={"Client"}
+                    triggerUpdate={mockSetUserListUpdated}/>
             </Router>
         );
 
         await waitFor(() => {
-            getByPlaceholderText('👤 Choose a customer...');
+            getByText('No clients found');
         });
     });
 
-    test('Select a user', async () => {
+    test('Correct render of component for farmers', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
+                <ClientView
                     users={userList}
-                    selectedUser={[]}
-                    setSelectedUser={mockSetSelectedUser}/>
+                    filterBy={"Farmer"}
+                    triggerUpdate={mockSetUserListUpdated}/>
             </Router>
         );
 
         await waitFor(() => {
-            fireEvent.change(getByPlaceholderText('👤 Choose a customer...'), {target: {value: 'Jon'}});
-            fireEvent.click(getByText('Jon Snow'));
+            getByText('Liriodendro Soc. Agr. Coop.');
+        });
+    });
+
+    test('Update balance successfully button', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+        mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText} = render(
+            <Router>
+                <ClientView
+                    users={userList}
+                    filterBy={"Client"}
+                    triggerUpdate={mockSetUserListUpdated}/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.click(getAllByText('Update Balance')[0]);
+            fireEvent.click(getByText('+'));
+            fireEvent.click(getByText('+'));
+            fireEvent.click(getByText('-'));
+            getByText('Add €1');
+        });
+    });
+
+    test('Update balance successfully input', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+        mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+            <Router>
+                <ClientView
+                    users={userList}
+                    filterBy={"Client"}
+                    triggerUpdate={mockSetUserListUpdated}/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.click(getAllByText('Update Balance')[0]);
+            fireEvent.change(getByDisplayValue('315.5'), {target: {value: 320.5}});
+            getByText('Add €5');
+        });
+    });
+
+    test('Update balance wrong input', async () => {
+        mockGetFarmer.mockResolvedValue(farmers);
+        mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
+        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+            <Router>
+                <ClientView
+                    users={userList}
+                    filterBy={"Client"}
+                    triggerUpdate={mockSetUserListUpdated}/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.click(getAllByText('Update Balance')[0]);
+            fireEvent.change(getByDisplayValue('315.5'), {target: {value: -50}});
+            getByText('Update balance');
         });
     });
 });

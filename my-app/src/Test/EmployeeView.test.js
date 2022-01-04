@@ -2,10 +2,10 @@ import * as React from "react";
 import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
-import UserDropdown from "../Components/CustomerSearchBar";
+import {EmployeeView} from "../Components/EmployeeView";
 import API from "../API";
 
-describe('Test for ClientOrders.js', () => {
+describe('Test for FarmerProducts.js', () => {
 
     const userList = [
         {
@@ -204,53 +204,171 @@ describe('Test for ClientOrders.js', () => {
         }
     ];
 
-    const mockSetSelectedUser = jest.fn();
+    const orders = [{
+        OrderID: "wBGvIF45zhSvGcYe4pWk",
+        Status: "open",
+        ClientID: "d01f9dd2-91f4-4bba-a0c8-82b72197c1c8",
+        Phoneno: "2907654356",
+        Email: "eva.jobs@apple.com",
+        Zipcode: "10129",
+        State: "TO",
+        Address: "Via Nizza 40",
+        City: "Turin",
+        Name: "Eva",
+        Password: "supersecret3",
+        Role: "Client",
+        Surname: "Jobs",
+        Timestamp: "08-01-2022 14:14:00",
+        ProductInOrder: [
+            {
+                ImageID: "d00e6d5b-7f12-403b-bf81-3f825c1d5393",
+                NameProduct: "Finocchio",
+                Confirmed: "",
+                ProductID: "Mqn59ZJN1Q8cyrj3oGj",
+                FarmerID: "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044",
+                Price: 8,
+                number: 2
+            },
+            {
+                ProductID: "Mqn4HUlBrmA7gRw2Bly",
+                NameProduct: "Wurstel di suino",
+                FarmerID: "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044",
+                Price: 3,
+                ImageID: "3a1e9e73-1df7-43ed-95ee-9b224e4f3a25",
+                number: 1
+            },
+            {
+                number: 1,
+                Price: 8,
+                ProductID: "Mqn5Fe57EePWUW6WeoI",
+                FarmerID: "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044",
+                ImageID: "6fd5e5df-5fd3-4f15-98b3-8a75824ae14a",
+                NameProduct: "Costine"
+            }
+        ],
+        DeliveryDate: "",
+        DeliveryPlace: "",
+        pickupTimestamp: "",
+        notRetired: "false"
+    }];
 
-    test('Correct render of the component with privacy', async () => {
+    const mockReturnTimeMachine = jest.fn();
+    const mockTimeMachine = '01-08-2022 15:15:15';
+    const mockGetOrders = (API.getOrders = jest.fn());
+    const mockModifyOrderStatus = (API.modifyOrderStatus = jest.fn());
+
+    test('Correct render of the component with orders', async () => {
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockGetOrders.mockResolvedValue(orders);
+        mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
+                <EmployeeView
                     users={userList}
-                    selectedUser={[]}
-                    privacy={true}
-                    setSelectedUser={mockSetSelectedUser}/>
+                    status={'open'}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}/>)} />
             </Router>
         );
 
         await waitFor(() => {
-            getByPlaceholderText('👤 Choose a customer...');
+            getByText('Order #wBGvIF45zhSvGcYe4pWk');
         });
     });
 
-    test('Correct render of the component without privacy', async () => {
+    test('Correct render of the component without orders', async () => {
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockGetOrders.mockResolvedValue([]);
+        mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
+                <EmployeeView
                     users={userList}
-                    selectedUser={[]}
-                    privacy={false}
-                    setSelectedUser={mockSetSelectedUser}/>
+                    status={'open'}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}/>)} />
             </Router>
         );
 
         await waitFor(() => {
-            getByPlaceholderText('👤 Choose a customer...');
+            getByText('There are no open orders yet');
         });
     });
 
-    test('Select a user', async () => {
+    test('Change order status open -> pending', async () => {
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockGetOrders.mockResolvedValue(orders);
+        mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
-                <UserDropdown
+                <EmployeeView
                     users={userList}
-                    selectedUser={[]}
-                    setSelectedUser={mockSetSelectedUser}/>
+                    status={'open'}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}/>)} />
             </Router>
         );
 
         await waitFor(() => {
-            fireEvent.change(getByPlaceholderText('👤 Choose a customer...'), {target: {value: 'Jon'}});
-            fireEvent.click(getByText('Jon Snow'));
+            fireEvent.click(getByText('Open'));
+            fireEvent.click(getByText('Pending'));
+
+            getByText('Status Change!');
+            getByText('Ther order status has been changed to pending');
+            fireEvent.click(getByText('Close'));
         });
     });
+
+    /*test('Change order status open -> closed', async () => {
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockGetOrders.mockResolvedValue(orders);
+        mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <EmployeeView
+                    users={userList}
+                    status={'open'}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}/>)} />
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.click(getByText('Open'));
+            fireEvent.click(getByText('Closed'));
+
+            getByText('Status Change!');
+            getByText('Ther order status has been changed to closed');
+            fireEvent.click(getByText('Close'))
+        });
+    });
+
+    test('Change order status open -> cancelled', async () => {
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockGetOrders.mockResolvedValue(orders);
+        mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
+
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <EmployeeView
+                    users={userList}
+                    status={'open'}
+                    timeMachine={mockReturnTimeMachine}
+                    reloadTime={mockTimeMachine}/>)} />
+            </Router>
+        );
+
+        await waitFor(() => {
+            fireEvent.click(getByText('Open'));
+            fireEvent.click(getByText('Cancelled'));
+
+            getByText('Status Change!');
+            getByText('Ther order status has been changed to cancelled');
+            fireEvent.click(getByText('Close'))
+        });
+    });*/
 });

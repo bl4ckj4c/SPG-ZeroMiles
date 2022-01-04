@@ -31,5 +31,33 @@ describe('Test for Welcome.js', () => {
         });
     });
 
+    test('Login', async () => {
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <Welcome/>
+            </Router>
+        );
 
+        await waitFor(() => {
+            getByText('Your next');
+            getByText('ingredient is');
+            getByText('ZeroMiles away');
+            fireEvent.click(getByText('Login'));
+        });
+    });
+
+    test('Sign Up', async () => {
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <Welcome/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            getByText('Your next');
+            getByText('ingredient is');
+            getByText('ZeroMiles away');
+            fireEvent.click(getByText('Sign Up'));
+        });
+    });
 });
