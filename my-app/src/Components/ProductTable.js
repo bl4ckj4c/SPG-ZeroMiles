@@ -453,7 +453,7 @@ function ProductCard(props) {
                 </Card.Text>
             </Card.Body>
             <Container>
-                <Row>
+                <Row style={{marginTop:'-0.8em'}}>
                     <Col><Collection /></Col>
                     <Col><Bag /></Col>
                     <Col><Cash /></Col>
