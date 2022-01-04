@@ -110,7 +110,7 @@ function App() {
 
   return (
     <Router>
-      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} ReturnTimeMachine={ReturnTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
+      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} timeMachine={timeMachine} ReturnTimeMachine={ReturnTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
       <ToastContainer style={{position: "absolute", zIndex: 999}} position="middle-center">
                     <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} delay={7000} autohide >
                         <Toast.Header>

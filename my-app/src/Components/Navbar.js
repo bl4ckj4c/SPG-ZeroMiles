@@ -92,9 +92,11 @@ function ZeroNavbar(props) {
                                 </Row>
                             </Container>
 
+
                         </Offcanvas.Header>
 
                         <Offcanvas.Body>
+
                             <Row style={{ textAlign: 'center' }} className="mt-3">
 
                                 {location.pathname === '/' ? <></> : <>
@@ -106,7 +108,7 @@ function ZeroNavbar(props) {
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
+                                        <Button className="logout-button" variant={props.timeMachine ? "success" :  "warning" } size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
                                         <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
                                 </>}
@@ -114,6 +116,8 @@ function ZeroNavbar(props) {
                                 <Col>
                                     <Button className="logout-button" variant="warning" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
                                 </Col>
+                                {props.timeMachine ? "TimeMachine is ON: "+props.timeMachine : "" }
+
                             </Row>
 
                             {props.user.Role === "Employee" ? <EmployeeSidebar setSideShow={props.setSideShow} /> : <></>}
@@ -130,6 +134,8 @@ function ZeroNavbar(props) {
                             </Nav>
 
                         </Offcanvas.Body>
+
+
 
                         {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
                         {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
