@@ -91,10 +91,11 @@ function OrderRow(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    async function handleCloseTime(newdate) {
+    async function handleCloseTime(newdate, address) {
         setModalShow(false);
         if (newdate) {
             try {
+                console.log(address + ": if returned is false everything is okay")
                 let object = {
                     "pickupTimestamp": newdate.toString(),
                     "OrderID": props.order.OrderID
@@ -105,6 +106,7 @@ function OrderRow(props) {
             }
             props.reloadOrders();
         }
+
     }
 
     function showErrorModal() {
@@ -183,8 +185,8 @@ function OrderRow(props) {
                             {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '' && props.order.Status !== "cancelled") ? <>
                                 <Col>
                                     <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
-                                    <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleCloseTime(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
-                                    <ErrorModal show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
+                                    <TimeSelect deliveryMode={false} show={modalShow} showError={() => showErrorModal()} onHide={handleCloseTime} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                    <ErrorModal deliveryMode={false} show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
                                 </Col>
                             </> : <></>}
 
