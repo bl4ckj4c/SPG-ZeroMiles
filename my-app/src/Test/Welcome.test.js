@@ -13,4 +13,23 @@ describe('Test for Welcome.js', () => {
             </Router>
         );
     });
+
+
+    test('Modal show', async () => {
+        const {getByText, getByLabelText, getByPlaceholderText} = render(
+            <Router>
+                <Welcome/>
+            </Router>
+        );
+
+        await waitFor(() => {
+            getByText('Your next');
+            getByText('ingredient is');
+            getByText('ZeroMiles away');
+            getByText('Login');
+            getByText('Sign Up');
+        });
+    });
+
+
 });
