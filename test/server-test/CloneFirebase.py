@@ -13,6 +13,9 @@ credBackup2 = credentials.Certificate(
 credBackup3 = credentials.Certificate(
     "./polito-se2-21-01-spg-backup-3-firebase-adminsdk-kn5e2-979f8d4105.json"
 )
+credTest = credentials.Certificate(
+    "./polito-se2-21-01-spg-test-firebase-adminsdk-r0o33-6fb9897bce.json"
+)
 
 appBackup2 = firebase_admin.initialize_app(credBackup2, {
     'projectId': 'polito-se2-21-01-spg-backup-2'
@@ -22,8 +25,13 @@ appBackup3 = firebase_admin.initialize_app(credBackup3, {
     'projectId': 'polito-se2-21-01-spg-backup-3'
 }, "Backup3")
 
+appTest = firebase_admin.initialize_app(credTest, {
+    'projectId': 'polito-se2-21-01-spg-test'
+}, "Test")
+
 dbBackup2 = firestore.client(appBackup2)
 dbBackup3 = firestore.client(appBackup3)
+dbTest = firestore.client(appTest)
 
 # Remove old data from backup2 and backup3
 def cleanBackup2And3():
@@ -174,9 +182,9 @@ def makeLocalCopyOfFirebase(sourceDB=1):
 
 def updateWeek(week=1):
     # Product by Farmers
-    docs = dbBackup3.collection(u'Product by Farmers').get()
+    docs = dbTest.collection(u'Product by Farmers').get()
     for doc in docs:
-        dbBackup3.collection(u'Product by Farmers').document(doc.id).update({u'Week': week})
+        dbTest.collection(u'Product by Farmers').document(doc.id).update({u'Week': week})
 
 
 # Read data from backup firebase,
@@ -186,7 +194,7 @@ if __name__ == '__main__':
     #cleanBackup2And3()
     #copyDataFromBackupTo2And3PlusLocal()
 
-    updateWeek()
+    updateWeek(week=2)
 
     #makeLocalCopyOfFirebase(sourceDB=2)
 
