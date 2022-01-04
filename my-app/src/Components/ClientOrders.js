@@ -198,6 +198,21 @@ function TimeSelect(props) {
     var mercoledi = '', giovedi = '', venerdi = '';
 
     function setDay() {
+
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 6) { //sabato
+            mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(4, 'day');
+            giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(5, 'day');
+            venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(6, 'day');
+
+        }
+
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 0) { //domenica
+            mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
+            giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(4, 'day');
+            venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(5, 'day');
+
+        }
+
         if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 1) { //lunedi
             mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(2, 'day');
             giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
