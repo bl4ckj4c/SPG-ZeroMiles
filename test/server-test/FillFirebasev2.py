@@ -24,7 +24,7 @@ appTest = firebase_admin.initialize_app(credTest, {
     'projectId': 'polito-se2-21-01-spg-test'
 }, 'Test')
 
-db = firestore.client(appTest)
+db = firestore.client(appBackup3)
 
 # Global variables for products, users and farmers
 global JSONData
@@ -176,7 +176,7 @@ def loadProductsByFarmers():
                 'Quantity': quantity,
                 'Unitofmeasurement': unit,
                 'Price': price,
-                'Week': 51
+                'Week': 2
             }
             #print(json.dumps(data, indent=4))
             db.collection(u'Product by Farmers').add(data)
@@ -211,14 +211,14 @@ if __name__ == '__main__':
     #cleanFirebase()
     #print('Cleaning done')
 
-    #loadUsers()
+    loadUsers()
 
-    #loadFarmers()
+    loadFarmers()
 
-    #loadProducts()
+    loadProducts()
 
-    #loadProductsByFarmers()
+    loadProductsByFarmers()
 
-    loadOrders()
+    #loadOrders()
 
     print('DONE')
