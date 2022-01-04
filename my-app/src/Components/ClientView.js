@@ -18,7 +18,7 @@ function ClientView(props) {
                     setFarmerList(farmer);
                     setLoading(false);
                 }).catch(f => console.log(f));
-        }else{ //in this case I show all clients
+        }else{
             setLoading(false);
         }
 

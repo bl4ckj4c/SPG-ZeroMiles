@@ -75,7 +75,7 @@ function UserRegister(props) {
             setToast(true);
             setToastMessage("Please enter your Email")
             return false;
-        } else if (!company.trim() && props.registerFarmer === true) { //TODO
+        } else if (!company.trim() && props.registerFarmer === true) {
             setToast(true);
             setToastMessage("Please enter your company name")
             return false;
@@ -273,6 +273,5 @@ function UserRegister(props) {
         </Container>
     );
 
-    // TODO: Catch the server response to show a message with the status   
 }
 export default UserRegister;

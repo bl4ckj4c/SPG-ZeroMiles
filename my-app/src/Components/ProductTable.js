@@ -12,8 +12,8 @@ import WelcomeModal from './WelcomeModal'
 function ProductTable(props) {
 
     const [productByFarmerList, setProductByFarmerList] = useState([]);
-    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-    const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); 
+    const [farmerListUpdated, setFarmerListUpdated] = useState(true); 
     const [farmerList, setFarmerList] = useState([]);
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
@@ -22,7 +22,6 @@ function ProductTable(props) {
 
 
     useEffect(() => {
-        //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
             setLoading(true);
 
@@ -188,7 +187,7 @@ function ProductTableWrapped(props) {
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
-                if (await res) { //TODO VALIDATION
+                if (await ! res['err']) { 
                     handleCartCheckoutModalClose();
                     handleShowConfirm();
                 } else {
@@ -443,7 +442,6 @@ function ProductCard(props) {
         }
     }
 
-    //let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
     let newSrc = "/images/" + props.prodottoDelFarmer.ImageID + ".png"
 
     return (

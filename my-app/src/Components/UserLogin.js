@@ -21,17 +21,13 @@ function UserLogin(props) {
         event.preventDefault();
         if (!password && password.length <= 0 && !email && email.length <= 0) {
             setToastPasswordAndEmail(true);
-            // return false;
         } else if (!password && password.length <= 0) {
             setToastPassword(true);
-            // return false;
         } else if (!email && email.length <= 0) {
             setToastEmail(true);
-            // return false;
         } else {
             sendRegister(event);
         }
-        // return true;
     }
 
     async function sendRegister(event) {
@@ -143,6 +139,5 @@ function SubmitButton(props) {
 
 
 
-// TODO: Catch the server response to show a message with the status   
 
 export default UserLogin;

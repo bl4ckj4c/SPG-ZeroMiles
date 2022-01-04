@@ -122,7 +122,6 @@ function Previews(props) {
                 preview: URL.createObjectURL(file)
             })));
 
-            // Add the first element of the array as the image
             props.setImage(acceptedFiles[0]);
         }
     });
@@ -156,7 +155,6 @@ function Previews(props) {
     ));
 
     useEffect(() => () => {
-        // Make sure to revoke the data uris to avoid memory leaks
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [files]);
 
