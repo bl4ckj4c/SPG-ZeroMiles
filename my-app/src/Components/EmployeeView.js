@@ -7,6 +7,11 @@ import UserDropdown from "./CustomerSearchBar"
 import Modal from 'react-bootstrap/Modal'
 import {TimeSelect, ErrorModal} from './ClientOrders.js'
 
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
+
+
 function EmployeeView(props) {
 
     const [ordersList, setOrdersList] = useState([]);
@@ -19,7 +24,7 @@ function EmployeeView(props) {
             setLoading(true);
             API.getOrders(props.timeMachine().toString())
                 .then(orders => {
-                    setOrdersList(orders);
+                    setOrdersList(orders.sort((b,a) => (dayjs(a.Timestamp, "DD-MM-YYYY HH:mm:ss").isAfter(dayjs(b.Timestamp, "DD-MM-YYYY HH:mm:ss")) ? 1 : -1)  )   )
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -32,8 +37,7 @@ function EmployeeView(props) {
     }, [props.reloadTime])
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/
-        }
+
         console.log(err);
     }
 
@@ -55,11 +59,11 @@ function EmployeeView(props) {
                                 {ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 ? <>
                                     {
                                         ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).length > 0 && selectedUser.length > 0 && !ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).some(ord => ord.ClientID === selectedUser[0].UserID) ? <NoOrders message={"There are no" + (props.status === "all" ? "" : " " + props.status) + " orders for the selected user"} /> :
-                                            ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).slice(0).reverse().map(o => {
+                                            ordersList.filter(ol => props.status === "all" ? true : ol.Status === props.status).map(o => {
 
                                                 if (selectedUser.length > 0 && o.ClientID === selectedUser[0].UserID || selectedUser.length === 0) {
 
-                                                    return <OrderRow order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
+                                                    return <OrderRow key={o.OrderID} order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
 
                                                 }
                                             }
@@ -87,10 +91,11 @@ function OrderRow(props) {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
-    async function handleCloseTime(newdate) {
+    async function handleCloseTime(newdate, address) {
         setModalShow(false);
         if (newdate) {
             try {
+                console.log(address + ": if returned is false everything is okay")
                 let object = {
                     "pickupTimestamp": newdate.toString(),
                     "OrderID": props.order.OrderID
@@ -101,6 +106,7 @@ function OrderRow(props) {
             }
             props.reloadOrders();
         }
+
     }
 
     function showErrorModal() {
@@ -109,7 +115,6 @@ function OrderRow(props) {
     }
 
     let buttonstatus;
-    // let stat;
     if (props.order.Status === "open") {
         stat = 'o';
         progressType = "primary";
@@ -161,8 +166,8 @@ function OrderRow(props) {
 
                         <Table className="justify-content-center">
                             <tbody align="center">
-                                {props.order.ProductInOrder.map(p => (
-                                    <ProductList product={p} />
+                                {props.order.ProductInOrder.map( (p, i)  => (
+                                    <ProductList key={props.order.OrderID+"+"+p.ProductID+i} product={p} />
                                 ))}
                             </tbody>
                         </Table>
@@ -180,8 +185,8 @@ function OrderRow(props) {
                             {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '' && props.order.Status !== "cancelled") ? <>
                                 <Col>
                                     <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
-                                    <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleCloseTime(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
-                                    <ErrorModal show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
+                                    <TimeSelect deliveryMode={false} show={modalShow} showError={() => showErrorModal()} onHide={handleCloseTime} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                                    <ErrorModal deliveryMode={false} show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
                                 </Col>
                             </> : <></>}
 

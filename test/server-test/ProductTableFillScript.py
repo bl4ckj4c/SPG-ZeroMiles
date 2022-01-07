@@ -11,9 +11,9 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 cred = credentials.Certificate(
-    "./polito-se2-21-01-spg-backup-firebase-adminsdk-toolm-860caeccd2.json")
+    "./polito-se2-21-01-spg-backup-3-firebase-adminsdk-kn5e2-979f8d4105.json")
 firebase_admin.initialize_app(cred, {
-    'projectId': 'polito-se2-21-01-spg-backup'
+    'projectId': 'polito-se2-21-01-spg-backup-3'
 })
 db = firestore.client()
 
@@ -278,7 +278,8 @@ def loadProductsFarmersAndProductsByFarmers(delete=False):
                 'ProductID': ProductsIDByFirebase[randomProductIndex],
                 'Quantity': quantity,
                 'Unitofmeasurement': unit,
-                'Price': price
+                'Price': price,
+                'Week': 2
             }
             #print(json.dumps(data, indent=4))
             db.collection(u'Product by Farmers').add(data)
@@ -294,11 +295,11 @@ def loadProductsFarmersAndProductsByFarmers(delete=False):
 
 if __name__ == '__main__':
     # deleteProducts()
-    # loadProductsToFirebase()
+    loadProductsToFirebase()
     # deleteProductByFarmersTuples()
-    # insertProductByFarmersTuples()
+    insertProductByFarmersTuples()
     # deleteOrdersTuples()
     # insertOrdersTuples()
-    # loadUsers()
+    loadUsers()
     loadProductsFarmersAndProductsByFarmers(delete=True)
     print('DONE')

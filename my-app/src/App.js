@@ -14,7 +14,6 @@ import Welcome from './Components/Welcome';
 import {ClientOrders} from './Components/ClientOrders'
 import Profile from './Components/Profile'
 import FarmerProducts from './Components/FarmerProducts';
-import Deliver from './Components/Deliver';
 import Unretrieved from './Components/UnretrievedFood';
 import ConfirmProduct from './Components/FarmerConfirmsProduct';
 
@@ -23,7 +22,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userList, setUserList] = useState([]);
   const [userListUpdated, setUserListUpdated] = useState(true); 
-  const [sideShow, setSideShow] = useState(false); //for the sidebar
+  const [sideShow, setSideShow] = useState(false); 
   const [timeMachine, setTimeMachine] = useState(false); 
   const [toastPickups, setToastPickups] = useState(false);
   const [numUnretrievedOrders, setNumUnretrievedOrders] = useState(-1);
@@ -110,7 +109,7 @@ function App() {
 
   return (
     <Router>
-      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} ReturnTimeMachine={ReturnTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
+      <ZeroNavbar isLoggedIn={loggedIn} user={user} logout={logout} timedev={timedev} setTimeMachine={setTimeMachine} timeMachine={timeMachine} ReturnTimeMachine={ReturnTimeMachine} setSideShow={setSideShow} sideShow={sideShow}/>
       <ToastContainer style={{position: "absolute", zIndex: 999}} position="middle-center">
                     <Toast bg="light" onClose={() => toggleToast()} show={toastPickups} delay={7000} autohide >
                         <Toast.Header>
@@ -157,10 +156,6 @@ function App() {
 
         <Route exact path="/myorders">
           <ClientOrders timeMachine={ReturnTimeMachine} reloadTime={timeMachine}/>
-        </Route>
-
-        <Route exact path="/deliver">
-          <Deliver />
         </Route>
 
         <Route exact path="/profile">

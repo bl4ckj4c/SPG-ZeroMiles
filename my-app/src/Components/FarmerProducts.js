@@ -40,7 +40,7 @@ function FarmerProducts(props) {
       if (await !result.hasOwnProperty('productByFarmerID'))
         throw ({ "err": "errore" });
 
-      if (prod.productByFarmerID !== false) { //if the product is EDITED
+      if (prod.productByFarmerID !== false) {
         let copy = JSON.parse(JSON.stringify(productsByFarmer));
         let index = copy.findIndex(p => p.ProdByFarmerID === prod.productByFarmerID)
         updatedPrd.ProdByFarmerID = await result.productByFarmerID;
@@ -58,7 +58,6 @@ function FarmerProducts(props) {
     }
     catch (err) {
       console.log(err);
-      //TODO Error message
     }
   }
 
@@ -78,7 +77,6 @@ function FarmerProducts(props) {
     }
     catch (err) {
       console.log(err);
-      //TODO Error message
     }
   }
 
@@ -86,7 +84,6 @@ function FarmerProducts(props) {
     if (updateProducts) {
       API.getAllProducts()
         .then(p => {
-          // filter the products that are already present in ProductByFarmer table
           setProducts(p);
           setUpdated(true);
           setUpdateProducts(false);
@@ -147,8 +144,6 @@ function ProductCard(props) {
 
   let newSrc = "/images/" + props.p.ImageID + ".png"
 
-
-  //TODO: see if we can make the image responsive using className="img-fluid"
 
   return (
     <>

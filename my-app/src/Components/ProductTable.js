@@ -12,8 +12,8 @@ import WelcomeModal from './WelcomeModal'
 function ProductTable(props) {
 
     const [productByFarmerList, setProductByFarmerList] = useState([]);
-    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
-    const [farmerListUpdated, setFarmerListUpdated] = useState(true); //all'inizio la lista deve essere aggiornata
+    const [productByFarmerListUpdated, setProductByFarmerListUpdated] = useState(true); 
+    const [farmerListUpdated, setFarmerListUpdated] = useState(true); 
     const [farmerList, setFarmerList] = useState([]);
     const [update, setUpdate] = useState(true);
     const triggerUpdate = () => setUpdate(true);
@@ -22,7 +22,6 @@ function ProductTable(props) {
 
 
     useEffect(() => {
-        //prima di chiamare le API avvio l'animazione di caricamento
         if (update === true) {
             setLoading(true);
 
@@ -188,7 +187,7 @@ function ProductTableWrapped(props) {
                 }
                 setInsertedOrder(object);
                 let res = await API.addOrder(object);
-                if (await res) { //TODO VALIDATION
+                if (await ! res['err']) { 
                     handleCartCheckoutModalClose();
                     handleShowConfirm();
                 } else {
@@ -443,7 +442,6 @@ function ProductCard(props) {
         }
     }
 
-    //let newSrc = "https://filer.cdn-thefoodassembly.com/photo/" + props.prodottoDelFarmer.ImageID + "/view/large"
     let newSrc = "/images/" + props.prodottoDelFarmer.ImageID + ".png"
 
     return (
@@ -455,15 +453,15 @@ function ProductCard(props) {
                 </Card.Text>
             </Card.Body>
             <Container>
-                <Row>
+                <Row style={{marginTop:'-0.8em'}}>
                     <Col><Collection /></Col>
                     <Col><Bag /></Col>
                     <Col><Cash /></Col>
                 </Row>
                 <Row className="mb-4">
-                    <Col>Available: {available}</Col>
-                    <Col>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
-                    <Col>€{props.prodottoDelFarmer.Price}</Col>
+                    <Col style={{fontSize : "13px"}}>Available: {available}</Col>
+                    <Col style={{fontSize : "13px"}}>Unit: {props.prodottoDelFarmer.UnitOfMeasurement}</Col>
+                    <Col style={{fontSize : "13px"}}>€{props.prodottoDelFarmer.Price}</Col>
                 </Row>
             </Container>
             <Card.Footer>

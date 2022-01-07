@@ -3,7 +3,13 @@ import { useState, useEffect } from 'react';
 import { Table, Row, Col, Container, Modal, Form, Button, Image, Spinner } from 'react-bootstrap';
 import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
 import "./ClientOrders.css";
-import Deliver from "./Deliver.js"
+
+var dayjs = require('dayjs');
+var customParseFormat = require('dayjs/plugin/customParseFormat');
+var isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
+dayjs.extend(customParseFormat);
+dayjs.extend(isSameOrBefore);
+
 
 function ClientOrders(props) {
     const [ordersList, setOrdersList] = useState([]);
@@ -16,7 +22,7 @@ function ClientOrders(props) {
             setLoading(true);
             API.getClientOrders(props.timeMachine().toString())
                 .then(orders => {
-                    setOrdersList(orders);
+                    setOrdersList(orders.sort((b, a) => (dayjs(a.Timestamp, "DD-MM-YYYY HH:mm:ss").isAfter(dayjs(b.Timestamp, "DD-MM-YYYY HH:mm:ss")) ? 1 : -1)))
                     setOrdersListUpdated(false);
                     setLoading(false);
                 }).catch(o => handleErrors(o));
@@ -44,8 +50,8 @@ function ClientOrders(props) {
                             <Table className="d-flex justify-content-center">
                                 <tbody id="employee-table" align="center">
 
-                                    {ordersList.length > 0 ? ordersList.slice(0).reverse().map(o =>
-                                        <OrderRow order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)}/>
+                                    {ordersList.length > 0 ? ordersList.map(o =>
+                                        <OrderRow key={o.OrderID} order={o} timeMachine={props.timeMachine} reloadOrders={() => setOrdersListUpdated(true)} />
                                     ) : <NoOrders />
                                     }
 
@@ -68,20 +74,48 @@ const ostat = {
 
 function OrderRow(props) {
     const [modalShow, setModalShow] = useState(false);
+    const [deliveryMode, setDeliveryMode] = useState(false);
     const [modalErrorShow, setModalErrorShow] = useState(false);
 
-    async function handleClose(newdate) {
+    const toggleModalPickup = () => {
+        setModalShow(!modalShow);
+        setDeliveryMode(false);
+    }
+
+    const toggleModalDelivery = () => {
+        setModalShow(!modalShow);
+        setDeliveryMode(true);
+    }
+
+
+    async function handleClose(newdate, address) {
         setModalShow(false);
         if (newdate) {
-            try {
-                let object = {
-                    "pickupTimestamp": newdate.toString(),
-                    "OrderID": props.order.OrderID
+            if (address) {
+                try {
+                    let objectDelivery = {
+                        "OrderID": props.order.OrderID,
+                        "DeliveryPlace": address,
+                        "DeliveryDate": newdate.toString()
+                    }
+                    let resDelivery = await API.modifyDelivery(objectDelivery);
+                } catch (err) {
+                    console.log(err);
                 }
-                let res = await API.setPickUpTime(object);
-            } catch (err) {
-                console.log(err);
+
             }
+            else {
+                try {
+                    let object = {
+                        "pickupTimestamp": newdate.toString(),
+                        "OrderID": props.order.OrderID
+                    }
+                    let res = await API.setPickUpTime(object);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+
             props.reloadOrders();
         }
     }
@@ -127,40 +161,40 @@ function OrderRow(props) {
                             </Row>
                         </Row>
 
-                        {props.order.ProductInOrder.map(p => (
-                            <ProductList product={p} />
+                        {props.order.ProductInOrder.map((p, idx) => (
+                            <ProductList key={p.ProductID + "+" + props.order.OrderID + idx} product={p} />
                         ))}
 
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
-                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { if(p.Confirmed !== "false") 
-                                return (sum + parseInt(p.number) * parseInt(p.Price))
-                                else 
-                                return (sum + 0) }, 0)}</h1>
+                                <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {
+                                    if (p.Confirmed !== "false")
+                                        return (sum + parseInt(p.number) * parseInt(p.Price))
+                                    else
+                                        return (sum + 0)
+                                }, 0)}</h1>
                             </Col>
 
-                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === ''  && props.order.Status !== "cancelled") ? <>
+                            {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '' && props.order.Status !== "cancelled") ? <>
                                 <Col>
-                                    <Deliver orderId={props.order.OrderID}></Deliver>
+                                <Button variant="outline-secondary" size="sm" onClick={toggleModalDelivery} >Request Delivery</Button>
                                 </Col>
                             </> : <></>}
 
                             {(props.order.DeliveryDate === '' && props.order.pickupTimestamp === '' && props.order.Status !== "cancelled") ? <>
                                 <Col>
-                                    <Button variant="outline-secondary" size="sm" onClick={setModalShow} >Request Pickup</Button>
-                                    <TimeSelect show={modalShow} showError={() => showErrorModal()} onHide={(newdate) => handleClose(newdate)} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
-                                    <ErrorModal show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
+                                    <Button variant="outline-secondary" size="sm" onClick={toggleModalPickup} >Request Pickup</Button>
                                 </Col>
                             </> : <></>}
 
                             {props.order.DeliveryDate !== '' ? <>
-                                <Col style={{fontSize:'13px'}}>
+                                <Col style={{ fontSize: '13px' }}>
                                     Delivery requested {props.order.DeliveryDate}
                                 </Col>
                             </> : <></>}
 
-                            {props.order.pickupTimestamp !== '' ? <> 
-                                <Col style={{fontSize:'13px'}}>
+                            {props.order.pickupTimestamp !== '' ? <>
+                                <Col style={{ fontSize: '13px' }}>
                                     Pickup requested {props.order.pickupTimestamp}
                                 </Col>
                             </> : <></>}
@@ -168,6 +202,9 @@ function OrderRow(props) {
                             <Col>
                                 <Button variant={buttonstatus} size="sm" disabled> {props.order.Status} </Button>
                             </Col>
+                            <TimeSelect deliveryMode={deliveryMode} show={modalShow} showError={() => showErrorModal()} onHide={handleClose} timeMachine={props.timeMachine} getTime={props.timeMachine()} />
+                            <ErrorModal deliveryMode={deliveryMode} show={modalErrorShow} onHide={() => setModalErrorShow(false)} />
+
                         </Row>
 
                     </Container>
@@ -178,11 +215,6 @@ function OrderRow(props) {
 }
 
 function TimeSelect(props) {
-    var dayjs = require('dayjs');
-    var customParseFormat = require('dayjs/plugin/customParseFormat');
-    var isSameOrBefore = require('dayjs/plugin/isSameOrBefore');
-    dayjs.extend(customParseFormat);
-    dayjs.extend(isSameOrBefore);
 
     const now_time = new Object();
     const now_date = new Object();
@@ -192,10 +224,26 @@ function TimeSelect(props) {
 
     const [time, setTime] = useState(now_time);
     const [date, setDate] = useState("");
+    const [address, setAddress] = useState("");
 
     var mercoledi = '', giovedi = '', venerdi = '';
 
     function setDay() {
+
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 6) { //sabato
+            mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(4, 'day');
+            giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(5, 'day');
+            venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(6, 'day');
+
+        }
+
+        if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 0) { //domenica
+            mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
+            giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(4, 'day');
+            venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(5, 'day');
+
+        }
+
         if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 1) { //lunedi
             mercoledi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(2, 'day');
             giovedi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(3, 'day');
@@ -214,6 +262,8 @@ function TimeSelect(props) {
         if (dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).day() === 4) { //giovedi
             venerdi = dayjs(dayjs(props.timeMachine(), 'MM-DD-YYYY')).add(1, 'day');
         }
+
+        return ""
     }
 
     function onSubmit() {
@@ -221,22 +271,25 @@ function TimeSelect(props) {
         if (time.value > "19:00" || time.value < "09:00" || date === "") {
             props.showError();
         }
-        if (date.value === "1") {
-            if(time.value < "19:00" && time.value > "09:00"){
+        else if (props.deliveryMode && address === "") {
+            props.showError();
+        }
+        else if (date.value === "1") {
+            if (time.value < "19:00" && time.value > "09:00") {
                 newdate = (dayjs(mercoledi).format('MM-DD-YYYY') + " " + time.value + ":00");
-                props.onHide(newdate);
+                props.deliveryMode ? props.onHide(newdate, address) : props.onHide(newdate, false) 
             }
         }
-        if (date.value === "2") {
-            if(time.value < "19:00" && time.value > "09:00"){
+        else if (date.value === "2") {
+            if (time.value < "19:00" && time.value > "09:00") {
                 newdate = (dayjs(giovedi).format('MM-DD-YYYY') + " " + time.value + ":00");
-                props.onHide(newdate);
+                props.deliveryMode ? props.onHide(newdate, address) : props.onHide(newdate, false) 
             }
         }
-        if (date.value === "3") {
-            if(time.value < "19:00" && time.value > "09:00"){
+        else if (date.value === "3") {
+            if (time.value < "19:00" && time.value > "09:00") {
                 newdate = (dayjs(venerdi).format('MM-DD-YYYY') + " " + time.value + ":00");
-                props.onHide(newdate);
+                props.deliveryMode ? props.onHide(newdate, address) : props.onHide(newdate, false) 
             }
         }
 
@@ -246,12 +299,22 @@ function TimeSelect(props) {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Select a date for pickup on-site
+                    Select a date for {props.deliveryMode ? "home delivery" : "pickup on-site"}
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {setDay()}
-                <Form>
+                <Form onSubmit={(event) => event.preventDefault()}>
+                    {props.deliveryMode ?
+                        <Row className="justify-content-center">
+                            <Col lg={7} xl={7} md={7} sm={10} xs={10}>
+                                <Form.Group className="mt-2">
+                                    <Form.Label>Delivery address</Form.Label>
+                                    <Form.Control type="text" defaultValue="" onChange={e => setAddress({ value: e.target.value })} />
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        : ""}
                     <Row className="justify-content-center">
                         <Col lg={4} xl={4} md={4} sm={6} xs={6}>
                             <Form.Group className="mt-2" controlId="chosendate">
@@ -272,7 +335,7 @@ function TimeSelect(props) {
                         </Col>
 
                         <Row className="justify-content-center mt-3" style={{ fontSize: '17px' }}>
-                            Select a pickup date from Wednesday to Friday in 09:00-19:00 range
+                            Select a {props.deliveryMode ? "delivery" : "pickup"} date from Wednesday to Friday in 09:00-19:00 range
                         </Row>
                     </Row>
 
@@ -292,8 +355,8 @@ function ProductList(props) {
 
     return (
 
-        <Row className="mb-2 align-items-center" style={{textDecoration : props.product.Confirmed === "false" ? "line-through" : "none" }}>
-        <Col>
+        <Row className="mb-2 align-items-center" style={{ textDecoration: props.product.Confirmed === "false" ? "line-through" : "none" }}>
+            <Col>
                 <Image src={newSrc} height={"60 px"} rounded />
             </Col>
             <Col>
@@ -313,11 +376,12 @@ function ErrorModal(props) {
         <Modal {...props} size="sm" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    Error requesting pickup
+                    {props.deliveryMode? "Error requesting delivery" : "Error requesting pickup"}
+
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <p>Make sure you have selected a date or chosen a correct time range (09:00-19:00)</p>
+            {props.deliveryMode? <p>Make sure you have selected a date, chosen a correct time range (09:00-19:00) or entered a valid address</p> : <p>Make sure you have selected a date or chosen a correct time range (09:00-19:00)</p>}                
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="danger" onClick={props.onHide}>Close</Button>
@@ -336,4 +400,4 @@ function NoOrders() {
     );
 }
 
-export {ClientOrders, TimeSelect, ErrorModal};
+export { ClientOrders, TimeSelect, ErrorModal };

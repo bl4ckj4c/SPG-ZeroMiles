@@ -13,7 +13,7 @@ dayjs.extend(customParseFormat);
 
 
 function ZeroNavbar(props) {
-    const [modalShow, setModalShow] = useState(false); //for the time machine
+    const [modalShow, setModalShow] = useState(false); 
     const handleOpenSide = () => props.setSideShow(true);
     const handleCloseSide = () => props.setSideShow(false);
 
@@ -92,9 +92,11 @@ function ZeroNavbar(props) {
                                 </Row>
                             </Container>
 
+
                         </Offcanvas.Header>
 
                         <Offcanvas.Body>
+
                             <Row style={{ textAlign: 'center' }} className="mt-3">
 
                                 {location.pathname === '/' ? <></> : <>
@@ -106,7 +108,7 @@ function ZeroNavbar(props) {
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
+                                        <Button className="logout-button" variant={props.timeMachine ? "success" :  "warning" } size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
                                         <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
                                 </>}
@@ -114,6 +116,8 @@ function ZeroNavbar(props) {
                                 <Col>
                                     <Button className="logout-button" variant="warning" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
                                 </Col>
+                                {props.timeMachine ? "TimeMachine is ON: "+props.timeMachine : "" }
+
                             </Row>
 
                             {props.user.Role === "Employee" ? <EmployeeSidebar setSideShow={props.setSideShow} /> : <></>}
@@ -130,6 +134,8 @@ function ZeroNavbar(props) {
                             </Nav>
 
                         </Offcanvas.Body>
+
+
 
                         {props.user.Role === "Client" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
                         {props.user.Role === "Farmer" ? <WelcomeFarmerSidebar className="mt-4 side-farmer" /> : <></>}
@@ -160,7 +166,7 @@ function TimeMachine(props) {
         newdate = (dayjs(date.value).format('MM-DD-YYYY') + " " + time.value + ":00").toString();
         API.setTimeMachine(newdate);
         props.onHide(newdate);
-        //Se e' lunedi ricarico la pagina per mostrare i nuovi ordini confermati
+
         if (dayjs(date.value).day() === 1 && time.value === "09:00") {
             window.location.reload(false);
         }
