@@ -1757,6 +1757,11 @@ app.post('/api/checkClient', async (req, res) => {
 app.post('/api/addProduct', async (req, res) => {
     const user = req.user && req.user.user;
     console.log(user);
+    if(user.Role != "Farmer"){
+        console.log("GET all orders - 401 Unauthorized (Maybe you are not a Farmer)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
     
     let day2 = dayjs(req.body.date);
     let weekOfYear=0;
@@ -1808,6 +1813,12 @@ app.post('/api/deleteProduct', async (req, res) => {
     
     const user = req.user && req.user.user;
     console.log(user);
+    if(user.Role != "Farmer"){
+        console.log("GET all orders - 401 Unauthorized (Maybe you are not a Farmer)")
+        res.status(401).json({error: "401 Unauthorized"})
+        return;
+    }
+    
     try {
 
         

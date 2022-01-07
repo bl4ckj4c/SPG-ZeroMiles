@@ -37,7 +37,7 @@
 
     - **description**: get informations about a single user (the authenticated one)
 
-- GET `/api/clientorders`
+- GET `/api/clientorders/:date`
     - **Authenticated**
 
     - **description**: get all orders by a user (the authenticated one)
@@ -117,20 +117,55 @@
       }
       ```
     
-- GET `/api/productsByFarmer`
+- GET `/api/productsByFarmer/:date`
     - **Authenticated** - Authorized only by a Farmer
 
     - **description**: get all products by only one farmer (the authenticated one)
 
-- GET `/api/orders`
+- GET `/api/orders/:date`
     - **Authenticated** - Unauthorized by a Client
 
-    - **description**: get all orders by all users
+    - **description**: get all orders of all users
+
+- GET `/api/cancelledorders/:date`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**: get all cancelled orders of this week of all users
+
+- GET `/api/monthlyNotRetiredOrders/:date`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**: get not retired orders (same month)
+
+- GET `/api/weeklyNotRetiredOrders/:date`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**: get not retired orders (previous week)
+
+- GET `/api/notRetiredOrder`
+    - **Authenticated** 
+
+    - **description**: 
+
+- GET `/api/confirmationProduct/:date`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**:
 
 - POST `/api/order`
     - **Authenticated** 
 
     - **description**: insert a new order into the database
+
+- POST `/api/modifyDelivery`
+    - **Authenticated** 
+
+    - **description**: update delivery informations
+
+- POST `/api/setPickUpTime`
+    - **Authenticated** 
+
+    - **description**: update pickup informations   
 
 - POST `/api/register`
   - **Not Authenticated** 
@@ -218,9 +253,47 @@
           ]
       }
       ```
-   
-      
-  
+ 
+- POST `/api/timeMachine`
+    - **Authenticated** 
+
+    - **description**: activate time machine and trigger events (orders processing and telegram notification)
+
+- POST `/api/modifyorder`
+    - **Authenticated** 
+
+    - **description**: 
+
+- POST `/api/modifywallet`
+    - **Authenticated** 
+
+    - **description**: 
+
+- POST `/api/checkClient`
+    - **Authenticated** 
+
+    - **description**:
+
+- POST `/api/addProduct`
+    - **Authenticated** - Authorized only by a Farmer
+
+    - **description**: add a new product (by farmer) in the database
+
+- POST `/api/deleteProduct`
+    - **Authenticated** - Authorized only by a Farmer
+
+    - **description**: delete a product (by farmer) in the database
+
+- POST `/api/confirmation`
+    - **Authenticated** - Unauthorized by a Client
+
+    - **description**: 
+
+- POST `/api/newproduct`
+    - **Authenticated** -
+
+    - **description**: store a new product with related image into the server
+
 ## Database Tables
 - Table `Farmer` is used to store farmer information and it contains the following fields and data:
 
