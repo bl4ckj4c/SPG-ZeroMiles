@@ -113,16 +113,19 @@ describe('Test for ClientOrders.js', () => {
         await waitFor(() => {
             fireEvent.click(getByText('Request Delivery'));
 
-            getByText('Schedule delivery');
-            getByText('Address');
-            getByText('Date for delivery');
+            getByText('Delivery address');
+            getByText('Date');
+            getByText('Time');
 
-            fireEvent.click(getByText('Close'));
+            fireEvent.click(getByText('Confirm'));
         });
     });
 
+
+
+
     test('Request pickup wrong', async () => {
-        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockReturnTimeMachine.mockReturnValue('01-08-2022 07:00:15');
         mockGetClientOrders.mockResolvedValue(clientOrders);
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
@@ -132,13 +135,19 @@ describe('Test for ClientOrders.js', () => {
             </Router>
         );
 
-        await waitFor(() => {
+        await waitFor(async () => {
             fireEvent.click(getByText('Request Pickup'));
 
             getByText('Select a date for pickup on-site');
             getByText('Date');
             getByText('Time');
             fireEvent.click(getByText('Confirm'));
+
+            await waitFor(() => {
+                getByText('Error requesting pickup');
+            });
+
+            fireEvent.click(getByText('Close'));
         });
     });
 });
