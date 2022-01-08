@@ -163,7 +163,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -312,10 +312,10 @@ describe("GET for /api/products", () => {
 });
 
 //9 GET all orders of the authenticated user
-describe("GET for /api/clientorders", () => {
+describe("GET for /api/clientorders/spg_date1", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
-            .get('/api/clientorders')
+            .get('/api/clientorders/08-01-2022 14:14:00')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -335,7 +335,7 @@ describe("GET for /api/clientorders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/clientorders')
+                    .get('/api/clientorders/19-12-2021 22:43:22')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -351,7 +351,7 @@ describe("GET for /api/clientorders", () => {
 });
 
 //10 GET all orders of all users
-describe("GET for /api/orders", () => {
+describe("GET for /api/orders/08-01-2022 14:14:00", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
             .get('/api/orders')
@@ -374,7 +374,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -396,7 +396,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -723,11 +723,7 @@ describe("POST for /api/register", () => {
                 // Check that the response status is 201
                 expect(res.status).to.be.equal(201);
 
-                // Remove the new user from firebase
-                const users = await db.collection("User").where("Email", "==", 'abcdef.polito@polito.it').get();
-                users.forEach(user => {
-                    db.collection('User').doc('' + user.id).delete();
-                });
+
                 done();
             });
     });
@@ -814,7 +810,7 @@ describe("POST for /api/farmerRegister", () => {
             .send(JSON.stringify({
                 name: 'testName',
                 surname: 'testSurname',
-                email: 'abcdef2.polito@polito.it',
+                email: 'abcdef.polito@polito.it',
                 address: 'Via Test 42',
                 company: 'Company Test',
                 phone: '0123456789',
@@ -830,9 +826,10 @@ describe("POST for /api/farmerRegister", () => {
                 expect(res.status).to.be.equal(201);
 
                 // Remove the new user from firebase
+
                 const users = await db.collection("User").where("Email", "==", 'abcdef.polito@polito.it').get();
                 users.forEach(user => {
-                    db.collection('User').doc('' + user.id).delete();
+                    db.collection('User').doc('' + user.get().id).delete();
                 });
 
                 // Remove the new farmer from firebase
@@ -1203,7 +1200,7 @@ describe("POST for /api/order", () => {
                         // We should not have error
                         expect(err).to.be.null;
                         // Check that the response status is 200
-                        expect(res.status).to.be.equal(200);
+                        expect(res.status).to.be.equal(201);
 
                         // Remove the new product by farmer from firebase
                         console.log(res.body.productByFarmerID);
