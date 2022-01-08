@@ -206,8 +206,7 @@ function OrderRow(props) {
                             <Col>
 
                                 {props.order.Status === "closed" ? <Button size="sm" variant="outline-success">Closed</Button> : ''}
-                                {props.order.Status === "cancelled" ? <Button size="sm" variant="outline-danger">Cancelled</Button> : ''}
-                                {props.order.Status === "closed" || props.order.Status === "cancelled" ? '' : <>
+                                {props.order.Status === "closed" ? '' : <>
                                     <DropdownButton title={props.order.Status.charAt(0).toUpperCase() + props.order.Status.slice(1)} variant={buttonstatus} size="sm">
                                         <Dropdown.Item onClick={() => {
                                             props.order.Status = "open";
@@ -215,9 +214,10 @@ function OrderRow(props) {
                                             API.modifyOrderStatus(props.order);
                                             progressRate = 10;
                                             handleShow();
-
-
                                         }}>Open</Dropdown.Item>
+
+                                        {props.order.Status !== "cancelled" ? <>
+                                    
                                         <Dropdown.Item onClick={() => {
                                             props.order.Status = "pending";
                                             setStat('p');
@@ -244,6 +244,8 @@ function OrderRow(props) {
                                             API.modifyOrderStatus(props.order);
                                             handleShow();
                                         }}>Cancelled</Dropdown.Item>
+
+                                        </> : '' }
                                     </DropdownButton >
 
                                 </>}
