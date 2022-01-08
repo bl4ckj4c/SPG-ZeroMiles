@@ -108,7 +108,7 @@ function ZeroNavbar(props) {
 
                                 {!props.timedev ? <></> : <>
                                     <Col>
-                                        <Button className="logout-button" variant={props.timeMachine ? "success" :  "warning" } size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
+                                        <Button className="logout-button" variant="warning" size="sm" onClick={handleTime}><Stopwatch style={{ marginTop: '-4px', marginRight: '4px' }} />Set Time</Button>
                                         <TimeMachine show={modalShow} onHide={(newdate) => handleClose(newdate)} />
                                     </Col>
                                 </>}
@@ -116,7 +116,11 @@ function ZeroNavbar(props) {
                                 <Col>
                                     <Button className="logout-button" variant="warning" size="sm" onClick={handleLogout}><DoorOpen style={{ marginTop: '-4px', marginRight: '4px' }} />Logout</Button>
                                 </Col>
-                                {props.timeMachine ? "TimeMachine is ON: "+props.timeMachine : "" }
+
+                                <Row style={{marginLeft:'0.2em', marginTop:'0.3em'}}>
+                                    {props.timeMachine ? "TimeMachine set: "+ props.timeMachine : "" }
+                                </Row>
+                                
 
                             </Row>
 
@@ -217,7 +221,7 @@ function TimeMachine(props) {
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="warning" onClick={onSubmit}>Gigawatts!?</Button>
+                <Button variant="warning" onClick={onSubmit}>Set Time</Button>
             </Modal.Footer>
         </Modal>
     );
@@ -270,10 +274,10 @@ function FarmerSidebar(props) {
             <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/farmerview'); }}>My products</Nav.Link>
             </Nav>
-            {confirmable ? <Nav className="justify-content-end flex-grow-1 pe-3">
+            
+            <Nav className="justify-content-end flex-grow-1 pe-3">
                 <Nav.Link className="sidebar-text" onClick={() => { props.setSideShow(false); history.push('/productconfirm'); }}>Confirm availability</Nav.Link>
-            </Nav> : ""}
-
+            </Nav> 
 
             <Offcanvas.Title className="mt-3 nav-subtitle"><PersonVideo2 style={{ marginTop: '-3px' }} />  PROFILE</Offcanvas.Title>
             <NavDropdown.Divider />
