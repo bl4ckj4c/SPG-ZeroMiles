@@ -7,7 +7,7 @@ import API from "../API";
 
 describe('Test for AddNewProduct.js', () => {
     test('Correct render of the component', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ProductNew/>
             </Router>
@@ -16,7 +16,7 @@ describe('Test for AddNewProduct.js', () => {
     });
 
     test('Modal show', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <ProductNew/>
             </Router>
@@ -36,7 +36,7 @@ describe('Test for AddNewProduct.js', () => {
     });
 
     test('Modal close', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ProductNew/>
             </Router>
@@ -52,7 +52,7 @@ describe('Test for AddNewProduct.js', () => {
 
     test('Product submit error name', async () => {
         mockNewProduct.mockReturnValueOnce({ok: true});
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ProductNew UpdateProdList={mockUpdateProdList}/>
             </Router>
@@ -70,7 +70,7 @@ describe('Test for AddNewProduct.js', () => {
 
     test('Product submit error image', async () => {
         mockNewProduct.mockReturnValueOnce({ok: true});
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <ProductNew UpdateProdList={mockUpdateProdList}/>
             </Router>

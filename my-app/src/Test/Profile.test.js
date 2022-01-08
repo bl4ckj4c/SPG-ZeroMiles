@@ -29,7 +29,7 @@ describe('Test for Profile.js', () => {
             Money: 27
         });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Profile user={user} />
             </Router>

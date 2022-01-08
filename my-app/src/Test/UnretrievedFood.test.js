@@ -203,7 +203,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockResolvedValue([]);
         mockGetMonthlyNotRetiredOrders.mockResolvedValue([]);
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}
@@ -224,7 +224,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockResolvedValue([]);
         mockGetMonthlyNotRetiredOrders.mockResolvedValue([]);
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}
@@ -245,7 +245,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockRejectedValue(new Error('test error'));
         mockGetMonthlyNotRetiredOrders.mockRejectedValue(new Error('test error'));
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}
@@ -265,7 +265,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockResolvedValue([]);
         mockGetMonthlyNotRetiredOrders.mockResolvedValue([]);
 
-        const {getByText, getByLabelText, getByPlaceholderText, getByTestId} = render(
+        const {getByText, getByTestId} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}
@@ -294,7 +294,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockResolvedValue([]);
         mockGetMonthlyNotRetiredOrders.mockResolvedValue([]);
 
-        const {getByText, getByLabelText, getByPlaceholderText, getByTestId} = render(
+        const {getByText, getByTestId} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}
@@ -329,7 +329,7 @@ describe('Test for UnretrievedFood.js', () => {
         mockGetWeeklyNotRetiredOrders.mockResolvedValue(notRetrievedOrders);
         mockGetMonthlyNotRetiredOrders.mockResolvedValue(notRetrievedOrders);
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText} = render(
+        const {getByText} = render(
             <Router>
                 <Unretrieved
                     timeMachine={mockReturnTimeMachine}

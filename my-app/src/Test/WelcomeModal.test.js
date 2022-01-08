@@ -4,9 +4,6 @@ import {BrowserRouter as Router} from "react-router-dom";
 
 import WelcomeModal from "../Components/WelcomeModal";
 
-import API from "../API";
-import Welcome from "../Components/Welcome";
-
 describe('Test for WelcomeModal.js', () => {
 
     const mockSetWelcomeShow = jest.fn();
@@ -22,7 +19,7 @@ describe('Test for WelcomeModal.js', () => {
     });
 
     test('Login', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <WelcomeModal
                     show={true}
@@ -36,7 +33,7 @@ describe('Test for WelcomeModal.js', () => {
     });
 
     test('Sign Up', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <WelcomeModal
                     show={true}
@@ -50,7 +47,7 @@ describe('Test for WelcomeModal.js', () => {
     });
 
     test('Take a quick look', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <WelcomeModal
                     show={true}

@@ -3,7 +3,6 @@ import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
 import UserDropdown from "../Components/CustomerSearchBar";
-import API from "../API";
 
 describe('Test for ClientOrders.js', () => {
 
@@ -207,7 +206,7 @@ describe('Test for ClientOrders.js', () => {
     const mockSetSelectedUser = jest.fn();
 
     test('Correct render of the component with privacy', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByPlaceholderText} = render(
             <Router>
                 <UserDropdown
                     users={userList}
@@ -223,7 +222,7 @@ describe('Test for ClientOrders.js', () => {
     });
 
     test('Correct render of the component without privacy', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByPlaceholderText} = render(
             <Router>
                 <UserDropdown
                     users={userList}
@@ -239,7 +238,7 @@ describe('Test for ClientOrders.js', () => {
     });
 
     test('Select a user', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <UserDropdown
                     users={userList}

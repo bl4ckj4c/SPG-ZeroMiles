@@ -55,7 +55,7 @@ describe('Test for ClientOrders.js', () => {
     test('Correct render of the component without orders', async () => {
         mockReturnTimeMachine.mockReturnValue('12-12-2021 11:11:11');
         mockGetClientOrders.mockResolvedValue([]);
-        const {getByText, getAllByText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -100,7 +100,7 @@ describe('Test for ClientOrders.js', () => {
     test('Request delivery open and close modal', async () => {
         mockReturnTimeMachine.mockReturnValue('');
         mockGetClientOrders.mockResolvedValue(clientOrders);
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -128,7 +128,7 @@ describe('Test for ClientOrders.js', () => {
     test('Request pickup correct', async () => {
         mockReturnTimeMachine.mockReturnValue('01-12-2022 15:15');
         mockGetClientOrders.mockResolvedValue(clientOrders);
-        const {getByText, getAllByText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -151,7 +151,7 @@ describe('Test for ClientOrders.js', () => {
     test('Request pickup wrong', async () => {
         mockReturnTimeMachine.mockReturnValue('01-12-2022 07:00:15');
         mockGetClientOrders.mockResolvedValue(clientOrders);
-        const {getByText, getAllByText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
