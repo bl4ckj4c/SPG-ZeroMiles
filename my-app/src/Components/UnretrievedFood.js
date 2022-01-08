@@ -190,8 +190,8 @@ function FarmerRow(props) {
 
                     <Table className="justify-content-center">
                         <tbody align="center">
-                            {product.map(p => (
-                                <ProductList key={p.ProductID} product={p} />))}
+                            {product.map(p => ( 
+                                p.Confirmed === "false" ? '' : <ProductList key={p.ProductID} product={p} />))}
                         </tbody>
                     </Table>
 

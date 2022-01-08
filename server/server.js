@@ -121,7 +121,7 @@ const firebaseappTest = firebaseTest.initializeApp({
 //var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
 //var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
 //var db_test = firebaseTest.firestore(firebaseappTest);
-var db = firebaseBackup3.firestore(firebaseappBackup3);
+var db = firebaseBackup2.firestore(firebaseappBackup2);
 
 //use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
 //BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
@@ -355,6 +355,7 @@ app.post('/api/register',
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
+            newUser.NotRetired = 0;
             newUser.Wallet = 0;
 
             (async () => {
@@ -1324,7 +1325,7 @@ app.post('/api/order', async (req, res) => {
                 newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
                 newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
                 newOrder.pickupTimestamp = "";
-                newOrder.notRetired = false;
+                newOrder.notRetired = "false";
 
 
                 for(let entry of newOrder.Products){
@@ -1601,7 +1602,7 @@ app.post('/api/timeMachine',async(req,res)=>{
 
                 orders.forEach(order => {
                     {
-                        db.collection('Order').doc(order.id).update({Status: "cancelled", notRetired: true});
+                        db.collection('Order').doc(order.id).update({Status: "cancelled", notRetired: "true"});
                         risultato.push(new Promise(async (resolve, reject) => {
                         let client= await db.collection('User').doc(order.data().ClientID).get();
                         console.log(client.data());
@@ -1646,7 +1647,7 @@ app.post('/api/modifyorder', async (req, res) => {
                 console.log(id);
                 user = await db.collection('User').doc(id).get();
                 console.log(user);
-                new_Quantity = user.data().Wallet - order.data().Price;
+                new_Quantity = (user.data().Wallet - order.data().Price).toFixed(2);
                 console.log(new_Quantity);
                 if (new_Quantity < 0) {
                     res.status(500).json({
