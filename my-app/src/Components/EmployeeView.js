@@ -43,16 +43,17 @@ function EmployeeView(props) {
 
     return (
         <>
-            <Container>
-                <Row className="mt-3 margine-cerca-desktop">
-                    <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-                </Row>
-            </Container>
+
 
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
-            </Row > </> :
-                <>
+            </Row > </> : props.user.Role !== "Employee" ? "" :
+                <>           
+                <Container>
+                    <Row className="mt-3 margine-cerca-desktop">
+                        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                    </Row>
+                </Container>
                     <Col>
                         <Table className="d-flex justify-content-center">
                             <tbody id="employee-table" align="center">
@@ -177,7 +178,7 @@ function OrderRow(props) {
                         <Row className="mt-4 mb-3 align-items-center">
                             <Col>
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => { if(p.Confirmed !== "false") 
-                                return (sum + parseInt(p.number) * parseInt(p.Price))
+                                return (sum + parseInt(p.number) * parseFloat(p.Price))
                                 else 
                                 return (sum + 0) }, 0)}</h1>
                             </Col>
@@ -251,7 +252,7 @@ function OrderRow(props) {
                                         <Modal.Title>Status Change!</Modal.Title>
                                     </Modal.Header>
                                     <Modal.Body>
-                                        Ther order status has been changed to {props.order.Status}
+                                        The order status has been changed to {props.order.Status}
                                     </Modal.Body>
                                     <Modal.Footer>
                                         <Button variant="secondary" onClick={handleClose}> Close </Button>
