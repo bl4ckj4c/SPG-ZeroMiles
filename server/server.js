@@ -121,7 +121,7 @@ const firebaseappTest = firebaseTest.initializeApp({
 //var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
 //var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
 //var db_test = firebaseTest.firestore(firebaseappTest);
-var db = firebaseBackup2.firestore(firebaseappBackup2);
+var db = firebaseBackup3.firestore(firebaseappBackup3);
 
 //use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
 //BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
