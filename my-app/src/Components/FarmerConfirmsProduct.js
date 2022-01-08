@@ -1,7 +1,7 @@
 import API from '../API';
 import { useState, useEffect } from 'react';
 import { Table, Row, Col, ToggleButton, Container, Image, ButtonGroup, Spinner } from 'react-bootstrap';
-import { PersonFill, GeoAltFill, ClockFill } from 'react-bootstrap-icons';
+import { PersonFill, ClockFill } from 'react-bootstrap-icons';
 import "./EmployeeView.css";
 import UserDropdown from "./CustomerSearchBar"
 

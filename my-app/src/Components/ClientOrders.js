@@ -30,7 +30,6 @@ function ClientOrders(props) {
     }, [ordersListUpdated]);
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/ }
         console.log(err);
     }
 
