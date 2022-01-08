@@ -5,8 +5,8 @@ const chaiHttp = require('chai-http');
 
 let app = require('../server');
 
-const firebaseBackup = require('firebase-admin');
-var db = firebaseBackup.firestore(app.firebase);
+const firebaseTest = require('firebase-admin');
+var db = firebaseTest.firestore(app.firebase);
 
 chai.use(chaiHttp);
 
@@ -38,6 +38,10 @@ const fakeClient = {
 const wrongPasswordClient = {
     username: 'testname.testsurname3@polito.it',
     password: 'wrongPassword'
+}
+const manager = {
+    username: 'michele.manager@zeromiles.it',
+    password: 'supersecret4'
 }
 
 describe("GET for /api/users", () => {
@@ -159,7 +163,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -190,11 +194,11 @@ describe("GET for /api/productinorder", () => {
     });
 });
 
-//6 GET products of the authenticated farmer
-describe("GET for /api/productsByFarmer", () => {
+//6 GET products of the authenticated farmer by date
+describe("GET for /api/productsByFarmer/:date", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
-            .get('/api/productsByFarmer')
+            .get('/api/productsByFarmer/2021-12-08%11:11')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -214,7 +218,7 @@ describe("GET for /api/productsByFarmer", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/productsByFarmer')
+                    .get('/api/productsByFarmer/2021-12-08%11:11')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -236,7 +240,7 @@ describe("GET for /api/productsByFarmer", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/productsByFarmer')
+                    .get('/api/productsByFarmer/2021-12-16%11:11')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -308,10 +312,10 @@ describe("GET for /api/products", () => {
 });
 
 //9 GET all orders of the authenticated user
-describe("GET for /api/clientorders", () => {
+describe("GET for /api/clientorders/spg_date1", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
-            .get('/api/clientorders')
+            .get('/api/clientorders/08-01-2022 14:14:00')
             .end((err, res) => {
                 // We should not have error
                 expect(err).to.be.null;
@@ -331,7 +335,7 @@ describe("GET for /api/clientorders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/clientorders')
+                    .get('/api/clientorders/19-12-2021 22:43:22')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -347,7 +351,7 @@ describe("GET for /api/clientorders", () => {
 });
 
 //10 GET all orders of all users
-describe("GET for /api/orders", () => {
+describe("GET for /api/orders/08-01-2022 14:14:00", () => {
     test('Unauthorized request', (done) => {
         chai.request(app)
             .get('/api/orders')
@@ -370,7 +374,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -392,7 +396,7 @@ describe("GET for /api/orders", () => {
             .end((err, res) => {
                 // Now that we are authenticated we send the actual GET
                 chai.request(app)
-                    .get('/api/orders')
+                    .get('/api/orders/08-01-2022 14:14:00')
                     .set('Cookie', res.header['set-cookie'][0])
                     .end((err, res) => {
                         // We should not have error
@@ -442,6 +446,190 @@ describe("GET for /api/sessions/current", () => {
                     });
             });
     });
+});
+
+// GET not retired orders (previous week)
+describe("GET for /api/weeklyNotRetiredOrders/:date", () => {
+
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/weeklyNotRetiredOrders/2021-12-22 11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        // The body received should be an array
+                        expect(res.body).to.be.an("array");
+                        done();
+                    });
+            });
+    });
+
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/weeklyNotRetiredOrders/2021-12-08%11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+    test('Wrong role request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/weeklyNotRetiredOrders/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(401);
+                        done();
+                    });
+            });
+
+    });
+});
+
+
+// GET not retired orders (same month)
+describe("GET for /api/monthlyNotRetiredOrders/:date", () => {
+
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/monthlyNotRetiredOrders/2021-12-08 11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        // The body received should be an array
+                        expect(res.body).to.be.an("array");
+                        done();
+                    });
+            });
+    });
+
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/monthlyNotRetiredOrders/2021-12-08%11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+    test('Wrong role request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/monthlyNotRetiredOrders/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(401);
+                        done();
+                    });
+            });
+
+    });
+});
+
+
+// GET all products by farmers by date
+describe("GET for /api/allProductsByFarmers/:date", () => {
+    test('Get all products by farmers by date', (done) => {
+        chai.request(app)
+            .get('/api/allProductsByFarmers/2021-12-08 11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 200
+                expect(res.status).to.be.equal(200);
+                // The body received should be an array
+                expect(res.body).to.be.an("array");
+                done();
+            });
+    });
+});
+
+
+// GET cancelledorders by date
+describe("GET for /api/cancelledorders/:date", () => {
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/cancelledorders/2021-12-08%11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+    test('Wrong role request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/cancelledorders/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(401);
+                        done();
+                    });
+            });
+    });
+
+// Authorized request
+
+
 });
 
 // POST for login
@@ -644,6 +832,7 @@ describe("POST for /api/farmerRegister", () => {
                 // Remove the new user from firebase
                 const users = await db.collection("User").where("Email", "==", 'abcdef.polito@polito.it').get();
                 users.forEach(user => {
+                    console.log(user)
                     db.collection('User').doc('' + user.id).delete();
                 });
 
@@ -732,6 +921,57 @@ describe("POST for /api/farmerRegister", () => {
     });
 });
 
+// POST set Time Machine
+describe("POST for /api/timeMachine", () => {
+    test('Set the time machine on Monday', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/timeMachine')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        newdate: '12-20-2021 09:00'
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+
+    test('Set the time machine on Saturday', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/timeMachine')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        newdate: '12-25-2021 09:00'
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+});
+
 /*// POST place an order in the database
 describe("POST for /api/order", () => {
     test('Create an order', (done) => {
@@ -774,26 +1014,33 @@ describe("POST for /api/modifyorder", () => {
     });
 });*/
 
-/*// POST modify wallet of a user
+// POST modify wallet of a user
 describe("POST for /api/modifywallet", () => {
     test('Modify a wallet', (done) => {
         chai.request(app)
-            .post('/api/modifywallet')
+            .post('/api/login')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify(employee))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
-                done();
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/modifywallet')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        ClientID: '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216',
+                        Wallet: 10
+                    }))
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
             });
     });
-});*/
+});
 
 /*// POST check a user
 describe("POST for /api/checkClient", () => {
@@ -821,7 +1068,7 @@ describe("POST for /api/checkClient", () => {
     });
 });*/
 
-/*// POST add a product
+// POST add a product
 describe("POST for /api/addProduct", () => {
     test('Add new product', (done) => {
         chai.request(app)
@@ -832,40 +1079,32 @@ describe("POST for /api/addProduct", () => {
                 // Now that we are authenticated we send the actual POST
                 chai.request(app)
                     .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
                     .type('application/json')
                     .send(JSON.stringify({
-                        FarmerID: '9RSQKtDkcfB949GDA3SX',
-                        ProductID: 'kkSdM82lggnu24e7d24w',
+                        date: "2021-12-18 11:11",
+                        productByFarmerID: false,
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn50IEZa0jIngRbT5E",
                         Price: 5.5,
                         Quantity: 1,
-                        Unitofmeasurement: 'bag'
+                        UnitOfMeasurement: "bag"
                     }))
-                    .end((err, res) => {
+                    .end(async (err, res) => {
                         // We should not have error
                         expect(err).to.be.null;
                         // Check that the response status is 201
                         expect(res.status).to.be.equal(201);
 
                         // Remove the new product by farmer from firebase
-                        chai.request(app)
-                            .post('/api/deleteProduct')
-                            .type('application/json')
-                            .send(JSON.stringify({
-                                productByFarmerID: ''
-                            }))
-                            .end((err, res) => {
-                                // We should not have error
-                                expect(err).to.be.null;
-                                // Check that the response status is 200
-                                expect(res.status).to.be.equal(200);
-                                done();
-                            });
+                        console.log(res.body.productByFarmerID);
+                        const productsByFarmers = await db.collection("Product by Farmers").doc(res.body.productByFarmerID).delete();
                         done();
                     });
             });
     });
 
-    test('Add old product', (done) => {
+    test('Modify old product', (done) => {
         chai.request(app)
             .post('/api/login')
             .type('application/json')
@@ -874,63 +1113,198 @@ describe("POST for /api/addProduct", () => {
                 // Now that we are authenticated we send the actual POST
                 chai.request(app)
                     .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
                     .type('application/json')
                     .send(JSON.stringify({
-                        productByFarmerID: 'Mca7G4FzXqxVSOmmKcVU',
-                        FarmerID: '9RSQKtDkcfB949GDA3SX',
-                        ProductID: 'kkSdM82lggnu24e7d24w',
+                        date: "18-12-2021 11:11",
+                        productByFarmerID: "OGwux1b1SShh4iBeN59f",
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn5HZlthFUAqri5HDT",
                         Price: 5.5,
                         Quantity: 1,
-                        Unitofmeasurement: 'bag'
+                        UnitOfMeasurement: "bag"
                     }))
                     .end((err, res) => {
                         // We should not have error
                         expect(err).to.be.null;
                         // Check that the response status is 201
                         expect(res.status).to.be.equal(201);
-
-                        // Remove the new product by farmer from firebase
-                        chai.request(app)
-                            .post('/api/deleteProduct')
-                            .type('application/json')
-                            .send(JSON.stringify({
-                                productByFarmerID: 'Mca7G4FzXqxVSOmmKcVU'
-                            }))
-                            .end((err, res) => {
-                                // We should not have error
-                                expect(err).to.be.null;
-                                // Check that the response status is 200
-                                expect(res.status).to.be.equal(200);
-                                done();
-                            });
                         done();
                     });
             });
     });
-});*/
+});
 
-/*// POST delete a product
+// POST delete a product
 describe("POST for /api/deleteProduct", () => {
-    test('Delete a product', (done) => {
+    test('Delete a product product', (done) => {
         chai.request(app)
-            .post('/api/deleteProduct')
+            .post('/api/login')
             .type('application/json')
-            .send(JSON.stringify({}))
+            .send(JSON.stringify(farmer))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
-                done();
+                const cookie = res.header['set-cookie'][0];
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/addProduct')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        date: "2021-12-18 11:11",
+                        productByFarmerID: false,
+                        FarmerID: "d542c276-bd4a-4da7-885c-4406d9bf5311",
+                        ProductID: "Mqn50IEZa0jIngRbT5E",
+                        Price: 5.5,
+                        Quantity: 1,
+                        UnitOfMeasurement: "bag"
+                    }))
+                    .end(async (err, res) => {
+                        chai.request(app)
+                            .post('/api/deleteProduct')
+                            .set('Cookie', cookie)
+                            .type('application/json')
+                            .send(JSON.stringify({
+                                productByFarmerID: res.body.productByFarmerID
+                            }))
+                            .end(async (err, res) => {
+                                // We should not have error
+                                expect(err).to.be.null;
+                                // Check that the response status is 201
+                                expect(res.status).to.be.equal(201);
+                                done();
+                            });
+                    });
             });
     });
-});*/
+});
 
 
+
+
+// POST place an order in the database
+describe("POST for /api/order", () => {
+    test('Add new order', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/order')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "UserID": '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216',
+                        "items": [],
+                        "timestamp": '12-25-2021 09:00'
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(201);
+
+                        // Remove the new product by farmer from firebase
+                        console.log(res.body.productByFarmerID);
+
+                        done();
+                    });
+            });
+    });
+
+});
+
+// POST checkClient
+describe("POST for /api/checkClient", () => {
+    test('check client', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/checkClient')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "ClientID": '2d0c057a-6e0d-4e85-a5ea-a58cb2b54216'
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
+
+
+
+
+// POST modify order
+describe("POST for /api/modifyorder", () => {
+    test('modify order status', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/modifyorder')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "id": "mouPNoMx2OOvkR10c8Jp",
+                        "Status": "closed"
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
+
+
+
+
+// POST modify Delivery
+describe("POST for /api/modifyDelivery", () => {
+    test('Modify delivery', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/modifyDelivery')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        "OrderID": "mouPNoMx2OOvkR10c8Jp",
+                        "DeliveryPlace": "Via Test",
+                        "DeliveryDate": "31-12-2021"
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+                        done();
+                    });
+            });
+    });
+});
 /*// POST for store a new product with related image into the server
 describe("POST for /api/newproduct", () => {
     test('Create new product', (done) => {
