@@ -56,13 +56,13 @@ describe('Test for ClientOrders.js', () => {
     }];
 
     const mockReturnTimeMachine = jest.fn();
-    const mockTimeMachine = '01-04-2022 11:11:11';
+    const mockTimeMachine = '';
     const mockGetClientOrders = (API.getClientOrders = jest.fn());
 
     test('Correct render of the component without orders', async () => {
-        mockReturnTimeMachine.mockReturnValue('01-04-2022 11:11:11');
+        mockReturnTimeMachine.mockReturnValue('12-12-2021 11:11:11');
         mockGetClientOrders.mockResolvedValue([]);
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -78,7 +78,7 @@ describe('Test for ClientOrders.js', () => {
     test('Correct render of the component with orders', async () => {
         mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
         mockGetClientOrders.mockResolvedValue(clientOrders);
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -92,25 +92,30 @@ describe('Test for ClientOrders.js', () => {
             getByText('08-01-2022 14:14:00');
             getByText('Via Nizza 40, TO');
             getByText('Finocchio');
+            getAllByText('Quantity: 2');
+            getAllByText('Price: €8.00');
             getByText('Wurstel di suino');
-            getByText('Costine');
-            getByText('Total: €27');
+            getAllByText('Quantity: 1');
+            getAllByText('Price: €3.00');
+            getByText('Total: €19');
+            getByText('Request Delivery')
+            getByText('Request Pickup')
             getByText('open');
         });
     });
 
     test('Request delivery open and close modal', async () => {
-        mockReturnTimeMachine.mockReturnValue('01-08-2022 15:15:15');
+        mockReturnTimeMachine.mockReturnValue('');
         mockGetClientOrders.mockResolvedValue(clientOrders);
         const {getByText, getByLabelText, getByPlaceholderText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
-                    reloadTime={'01-08-2022 15:15:15'}/>
+                    reloadTime={'01-12-2022 15:15:00'}/>
             </Router>
         );
 
-        await waitFor(() => {
+        await waitFor(async () => {
             fireEvent.click(getByText('Request Delivery'));
 
             getByText('Delivery address');
@@ -118,6 +123,9 @@ describe('Test for ClientOrders.js', () => {
             getByText('Time');
 
             fireEvent.click(getByText('Confirm'));
+
+
+
         });
     });
 
@@ -125,9 +133,9 @@ describe('Test for ClientOrders.js', () => {
 
 
     test('Request pickup wrong', async () => {
-        mockReturnTimeMachine.mockReturnValue('01-08-2022 07:00:15');
+        mockReturnTimeMachine.mockReturnValue('01-12-2022 07:00:15');
         mockGetClientOrders.mockResolvedValue(clientOrders);
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientOrders
                     timeMachine={mockReturnTimeMachine}
@@ -145,6 +153,7 @@ describe('Test for ClientOrders.js', () => {
 
             await waitFor(() => {
                 getByText('Error requesting pickup');
+                getByText('Make sure you have selected a date or chosen a correct time range (09:00-19:00)')
             });
 
             fireEvent.click(getByText('Close'));
