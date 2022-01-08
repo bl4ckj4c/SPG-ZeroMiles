@@ -43,16 +43,17 @@ function EmployeeView(props) {
 
     return (
         <>
-            <Container>
-                <Row className="mt-3 margine-cerca-desktop">
-                    <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
-                </Row>
-            </Container>
+
 
             {loading ? <> <Row className="justify-content-center mt-5">
                 < Spinner animation="border" size="xl" variant="secondary" />
-            </Row > </> :
-                <>
+            </Row > </> : props.user.Role !== "Employee" ? "" :
+                <>           
+                <Container>
+                    <Row className="mt-3 margine-cerca-desktop">
+                        <UserDropdown users={props.users} selectedUser={selectedUser} setSelectedUser={setSelectedUser} />
+                    </Row>
+                </Container>
                     <Col>
                         <Table className="d-flex justify-content-center">
                             <tbody id="employee-table" align="center">
