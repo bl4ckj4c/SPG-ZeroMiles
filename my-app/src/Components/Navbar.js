@@ -180,12 +180,12 @@ function TimeMachine(props) {
         <Modal {...props} size="lg" aria-labelledby="contained-modal-title-vcenter" centered>
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
-                    "Wait a minute, Doc."
+                    Wait a minute, Doc.
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <h6 style={{ textAlign: 'center' }}>
-                    “Are you telling me you built a time machine...out of a DeLorean?”
+                    Are you telling me you built a time machine...out of a DeLorean?
                 </h6>
                 <Form>
                     <Row className="mt-3">
@@ -216,8 +216,10 @@ function TimeMachine(props) {
                         <Row className="justify-content-center mt-1" style={{ fontSize: '12px' }}>
                             • Set Monday at 09:00 to process open orders to pending.
                         </Row>
+                        <Row className="justify-content-center mt-1" style={{ fontSize: '12px' }}>
+                            • Set Friday at 19:00 to process uncollected orders and close them.
+                        </Row>
                     </Row>
-
                 </Form>
             </Modal.Body>
             <Modal.Footer>
@@ -264,7 +266,7 @@ function EmployeeSidebar(props) {
 function FarmerSidebar(props) {
     const history = useHistory();
     let giorno = dayjs(props.ReturnTimeMachine(), "MM-DD-YYYY HH:mm:ss");
-    let confirmable = (giorno.day() == 0 && giorno.hour() >= 23) || (giorno.day() == 1 && giorno.hour() < 9)
+    let confirmable = (giorno.day() === 0 && giorno.hour() >= 23) || (giorno.day() === 1 && giorno.hour() < 9)
 
     return (
         <>
