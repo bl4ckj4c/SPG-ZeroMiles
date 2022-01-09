@@ -690,6 +690,67 @@ describe("GET for /api/cancelledorders/:date", () => {
     });
 });
 
+/**/
+// GET confirmationProduct by date
+describe("GET for /api/confirmationProduct/:date", () => {
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/confirmationProduct/2021-12-08%11:11')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+    test('Wrong role request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/confirmationProduct/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(401);
+                        done();
+                    });
+            });
+    });
+
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/confirmationProduct/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 500
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+});
+/**/
+
+
 // POST for login
 describe("POST for /api/login", () => {
     test('User not found', (done) => {
