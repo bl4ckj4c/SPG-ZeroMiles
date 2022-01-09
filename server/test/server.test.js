@@ -448,6 +448,46 @@ describe("GET for /api/sessions/current", () => {
     });
 });
 
+// GET not retired orders
+describe("GET for /api/notRetiredOrder", () => {
+
+    test('Unauthorized request', (done) => {
+        chai.request(app)
+            .get('/api/notRetiredOrder')
+            .end((err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 401
+                expect(res.status).to.be.equal(401);
+                done();
+            });
+    });
+
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/notRetiredOrder')
+                    .set('Cookie', res.header['set-cookie'][0])
+
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+                        done();
+                    });
+            });
+    });
+
+
+});
+
 // GET not retired orders (previous week)
 describe("GET for /api/weeklyNotRetiredOrders/:date", () => {
 
@@ -627,9 +667,27 @@ describe("GET for /api/cancelledorders/:date", () => {
             });
     });
 
-// Authorized request
+    test('Authorized request', (done) => {
+        //const requester = chai.request(app).keepOpen();
 
-
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/cancelledorders/2021-12-08%11:11')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 500
+                        expect(res.status).to.be.equal(500);
+                        done();
+                    });
+            });
+    });
 });
 
 // POST for login
@@ -709,7 +767,7 @@ describe("POST for /api/register", () => {
             .send(JSON.stringify({
                 name: 'testName',
                 surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
+                email: 'abcdefg.polito@polito.it',
                 address: 'Via Test 42',
                 phone: '0123456789',
                 city: 'Torino',
@@ -723,7 +781,11 @@ describe("POST for /api/register", () => {
                 // Check that the response status is 201
                 expect(res.status).to.be.equal(201);
 
-
+                // Remove the new user from firebase
+                const users = await db.collection("User").where("Email", "==", 'abcdefg.polito@polito.it').get();
+                users.forEach(user => {
+                    db.collection('User').doc('' + user.id).delete();
+                });
                 done();
             });
     });
@@ -776,19 +838,112 @@ describe("POST for /api/register", () => {
             });
     });
 
-    test('Create a new user with wrong fields', (done) => {
+    test('Create a new user with wrong name', (done) => {
         chai.request(app)
             .post('/api/register')
             .type('application/json')
             .send(JSON.stringify({
                 name: '123',
-                surname: '456',
-                email: 'wrongEmail',
-                address: 'x',
-                phone: 'a',
-                city: '123',
-                password: '',
-                zipcode: 'asd',
+                surname: 'correctSurname',
+                email: 'correctEmail@test.com',
+                address: 'Via test 40',
+                phone: '3215558774',
+                city: 'Test',
+                password: 'test',
+                zipcode: '10136',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+
+    test('Create a new user with wrong email', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'correctName',
+                surname: 'correctSurname',
+                email: 'incorrectEmail',
+                address: 'Via test 40',
+                phone: '3215558774',
+                city: 'Test',
+                password: 'test',
+                zipcode: '10136',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new user with wrong adress', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'correctName',
+                surname: 'correctSurname',
+                email: 'test@tes.com',
+                address: '123',
+                phone: '3215558774',
+                city: 'Test',
+                password: 'test',
+                zipcode: '10136',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new user with wrong phone', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'correctName',
+                surname: 'correctSurname',
+                email: 'test@tes.com',
+                address: 'Via test 40',
+                phone: 'phonenumber',
+                city: 'Test',
+                password: 'test',
+                zipcode: '10136',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new user with wrong city', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'correctName',
+                surname: 'correctSurname',
+                email: 'test@tes.com',
+                address: 'Via test 40',
+                phone: '3215558774',
+                city: '4',
+                password: 'test',
+                zipcode: '10136',
                 stateCaps: 'TO'
             }))
             .end(async (err, res) => {
@@ -826,10 +981,10 @@ describe("POST for /api/farmerRegister", () => {
                 expect(res.status).to.be.equal(201);
 
                 // Remove the new user from firebase
-
                 const users = await db.collection("User").where("Email", "==", 'abcdef.polito@polito.it').get();
                 users.forEach(user => {
-                    db.collection('User').doc('' + user.get().id).delete();
+                    console.log(user)
+                    db.collection('User').doc('' + user.id).delete();
                 });
 
                 // Remove the new farmer from firebase
@@ -891,20 +1046,116 @@ describe("POST for /api/farmerRegister", () => {
             });
     });
 
-    test('Create a new farmer with wrong fields', (done) => {
+    test('Create a new farmer with wrong surname', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'testName',
+                surname: '456',
+                email: 'email@mail.com',
+                address: 'Via test 56',
+                company: 'test',
+                phone: '2244555123',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '10112',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new farmer with one wrong mail', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'test',
+                surname: 'testSurname',
+                email: 'abcpolito.it',
+                address: 'Via Test 42',
+                company: 'Company Test',
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new farmer with one wrong address', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: 'test',
+                surname: 'testSurname',
+                email: 'abcdef.polito@polito.it',
+                address: '777',
+                company: 'Company Test',
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new farmer with one with empty password', (done) => {
         chai.request(app)
             .post('/api/register')
             .type('application/json')
             .send(JSON.stringify({
                 name: '123',
-                surname: '456',
-                email: 'wrongEmail',
-                address: 'x',
-                company: '',
-                phone: 'qwerty',
-                city: 'Torino',
+                surname: 'testSurname',
+                email: 'abcdef.polito@polito.it',
+                address: 'Via Test 42',
+                company: 'Company Test',
+                phone: '0123456789',
+                city: '4',
                 password: '',
-                zipcode: 'efg',
+                zipcode: '11223',
+                stateCaps: 'TO'
+            }))
+            .end(async (err, res) => {
+                // We should not have error
+                expect(err).to.be.null;
+                // Check that the response status is 400
+                expect(res.status).to.be.equal(400);
+                done();
+            });
+    });
+    test('Create a new farmer with one wrong zipcode', (done) => {
+        chai.request(app)
+            .post('/api/register')
+            .type('application/json')
+            .send(JSON.stringify({
+                name: '123',
+                surname: 'testSurname',
+                email: 'abcdef.polito@polito.it',
+                address: 'Via Test 42',
+                company: 'Company Test',
+                phone: '0123456789',
+                city: 'Torino',
+                password: 'test',
+                zipcode: '1',
                 stateCaps: 'TO'
             }))
             .end(async (err, res) => {
@@ -943,29 +1194,6 @@ describe("POST for /api/timeMachine", () => {
             });
     });
 
-    test('Set the time machine on Saturday', (done) => {
-        chai.request(app)
-            .post('/api/login')
-            .type('application/json')
-            .send(JSON.stringify(employee))
-            .end((err, res) => {
-                // Now that we are authenticated we send the actual POST
-                chai.request(app)
-                    .post('/api/timeMachine')
-                    .set('Cookie', res.header['set-cookie'][0])
-                    .type('application/json')
-                    .send(JSON.stringify({
-                        newdate: '12-25-2021 09:00'
-                    }))
-                    .end((err, res) => {
-                        // We should not have error
-                        expect(err).to.be.null;
-                        // Check that the response status is 200
-                        expect(res.status).to.be.equal(200);
-                        done();
-                    });
-            });
-    });
 });
 
 /*// POST place an order in the database
