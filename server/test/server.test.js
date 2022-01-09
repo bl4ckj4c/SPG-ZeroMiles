@@ -1592,27 +1592,136 @@ describe("POST for /api/modifyDelivery", () => {
 });
 /*// POST for store a new product with related image into the server
 describe("POST for /api/newproduct", () => {
-    test('Create new product', (done) => {
+
+    test('Authorized request', (done) => {
         chai.request(app)
-            .post('/api/newproduct')
-            .field({
-                productJson: JSON.stringify({
-                    Name: 'testProduct',
-                    Description: 'testDescription'
-                }),
-                newproductimage: ''
-            })
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(farmer))
             .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 201
-                expect(res.status).to.be.equal(201);
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .post('/api/newproduct')
+                    .field({
+                        productJson: JSON.stringify({
+                            Name: 'testProduct',
+                            Description: 'testDescription'
+                        }),
+                        newproductimage: ''
 
-                // Remove the new product from firebase
-                let imageId = JSON.parse(res.body).split('-> ')[1];
+                    })
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 201
+                        expect(res.status).to.be.equal(201);
+
+                        // Remove the new product from firebase
+                        let imageId = JSON.parse(res.body).split('-> ')[1];
 
 
-                done();
+                        done();
+                    });
             });
     });
+
+    test('restricted page accroding to role', (done) => {
+        //const requester = chai.request(app).keepOpen();
+
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .get('/api/newproduct')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(404);
+                        done();
+                    });
+            });
+
+    });
 });*/
+// POST confirmation
+describe("POST for /api/confirmation", () => {
+    test('Wrong role request', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(client))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual GET
+                chai.request(app)
+                    .post('/api/confirmation')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .end((err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 401
+                        expect(res.status).to.be.equal(401);
+                        done();
+                    });
+            });
+    });
+    test('confirmation authorized req', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/confirmation')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        ProductID: 'Mqn5MQEBi5XO7pG0AzZ',
+                        OrderID: 'FBexCZqkcVSTLr324gcl',
+                        number: '3',
+                        Confirmed: true
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 200
+                        expect(res.status).to.be.equal(200);
+
+                       done();
+                    });
+            });
+    });
+    test(' server cannot process the request ', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual POST
+                chai.request(app)
+                    .post('/api/confirmation')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        ProductID: 'Mqn5MQEB44i5XO7pG0AzZ',
+                        OrderID: 'FBexCZqkcV44STLr324gcl',
+                        number: '3',
+                        Confirmed: true
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 500
+                        expect(res.status).to.be.equal(500);
+
+                        done();
+                    });
+            });
+    });
+    
+});
