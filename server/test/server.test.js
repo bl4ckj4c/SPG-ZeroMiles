@@ -1015,18 +1015,20 @@ describe("POST for /api/register", () => {
                 done();
             });
     });
+
+
 });
 
 // POST farmer registration (add user to database)
 describe("POST for /api/farmerRegister", () => {
     test('Create a new farmer', (done) => {
         chai.request(app)
-            .post('/api/register')
+            .post('/api/farmerRegister')
             .type('application/json')
             .send(JSON.stringify({
                 name: 'testName',
                 surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
+                email: 'abcdefarmer.polito@polito.it',
                 address: 'Via Test 42',
                 company: 'Company Test',
                 phone: '0123456789',
@@ -1056,10 +1058,11 @@ describe("POST for /api/farmerRegister", () => {
                 done();
             });
     });
+});
 
     test('Create a new farmer with an email already used', (done) => {
         chai.request(app)
-            .post('/api/register')
+            .post('/api/farmerRegister')
             .type('application/json')
             .send(JSON.stringify({
                 name: 'testName',
@@ -1084,7 +1087,7 @@ describe("POST for /api/farmerRegister", () => {
 
     test('Create a new farmer with one wrong field', (done) => {
         chai.request(app)
-            .post('/api/register')
+            .post('/api/farmerRegister')
             .type('application/json')
             .send(JSON.stringify({
                 name: '123',
@@ -1107,127 +1110,8 @@ describe("POST for /api/farmerRegister", () => {
             });
     });
 
-    test('Create a new farmer with wrong surname', (done) => {
-        chai.request(app)
-            .post('/api/register')
-            .type('application/json')
-            .send(JSON.stringify({
-                name: 'testName',
-                surname: '456',
-                email: 'email@mail.com',
-                address: 'Via test 56',
-                company: 'test',
-                phone: '2244555123',
-                city: 'Torino',
-                password: 'test',
-                zipcode: '10112',
-                stateCaps: 'TO'
-            }))
-            .end(async (err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 400
-                expect(res.status).to.be.equal(400);
-                done();
-            });
-    });
-    test('Create a new farmer with one wrong mail', (done) => {
-        chai.request(app)
-            .post('/api/register')
-            .type('application/json')
-            .send(JSON.stringify({
-                name: 'test',
-                surname: 'testSurname',
-                email: 'abcpolito.it',
-                address: 'Via Test 42',
-                company: 'Company Test',
-                phone: '0123456789',
-                city: 'Torino',
-                password: 'test',
-                zipcode: '11223',
-                stateCaps: 'TO'
-            }))
-            .end(async (err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 400
-                expect(res.status).to.be.equal(400);
-                done();
-            });
-    });
-    test('Create a new farmer with one wrong address', (done) => {
-        chai.request(app)
-            .post('/api/register')
-            .type('application/json')
-            .send(JSON.stringify({
-                name: 'test',
-                surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
-                address: '777',
-                company: 'Company Test',
-                phone: '0123456789',
-                city: 'Torino',
-                password: 'test',
-                zipcode: '11223',
-                stateCaps: 'TO'
-            }))
-            .end(async (err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 400
-                expect(res.status).to.be.equal(400);
-                done();
-            });
-    });
-    test('Create a new farmer with one with empty password', (done) => {
-        chai.request(app)
-            .post('/api/register')
-            .type('application/json')
-            .send(JSON.stringify({
-                name: '123',
-                surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
-                address: 'Via Test 42',
-                company: 'Company Test',
-                phone: '0123456789',
-                city: '4',
-                password: '',
-                zipcode: '11223',
-                stateCaps: 'TO'
-            }))
-            .end(async (err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 400
-                expect(res.status).to.be.equal(400);
-                done();
-            });
-    });
-    test('Create a new farmer with one wrong zipcode', (done) => {
-        chai.request(app)
-            .post('/api/register')
-            .type('application/json')
-            .send(JSON.stringify({
-                name: '123',
-                surname: 'testSurname',
-                email: 'abcdef.polito@polito.it',
-                address: 'Via Test 42',
-                company: 'Company Test',
-                phone: '0123456789',
-                city: 'Torino',
-                password: 'test',
-                zipcode: '1',
-                stateCaps: 'TO'
-            }))
-            .end(async (err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 400
-                expect(res.status).to.be.equal(400);
-                done();
-            });
-    });
-});
+
+
 
 // POST set Time Machine
 describe("POST for /api/timeMachine", () => {
@@ -1723,5 +1607,5 @@ describe("POST for /api/confirmation", () => {
                     });
             });
     });
-    
+
 });
