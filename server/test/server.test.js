@@ -1162,27 +1162,6 @@ describe("POST for /api/order", () => {
     });
 });*/
 
-/*// POST modify an order in the database
-describe("POST for /api/modifyorder", () => {
-    test('Modify an order', (done) => {
-        chai.request(app)
-            .post('/api/modifyorder')
-            .type('application/json')
-            .send(JSON.stringify({}))
-            .end((err, res) => {
-                // We should not have error
-                expect(err).to.be.null;
-                // Check that the response status is 200
-                expect(res.status).to.be.equal(200);
-
-                // Remove the new farmer from firebase
-
-
-                done();
-            });
-    });
-});*/
-
 // POST modify wallet of a user
 describe("POST for /api/modifywallet", () => {
     test('Modify a wallet', (done) => {
@@ -1441,6 +1420,32 @@ describe("POST for /api/modifyorder", () => {
                     });
             });
     });
+    /**/
+    test('modify order status as pending cause of wallet balance', (done) => {
+        chai.request(app)
+            .post('/api/login')
+            .type('application/json')
+            .send(JSON.stringify(employee))
+            .end((err, res) => {
+                // Now that we are authenticated we send the actual
+                chai.request(app)
+                    .post('/api/modifyorder')
+                    .set('Cookie', res.header['set-cookie'][0])
+                    .type('application/json')
+                    .send(JSON.stringify({
+                        id: "FBexCZqkcVSTLr324gcl",
+                        Status: "pending"
+                    }))
+                    .end(async (err, res) => {
+                        // We should not have error
+                        expect(err).to.be.null;
+                        // Check that the response status is 500
+                        expect(res.status).to.be.equal(500);
+                        done();
+                    });
+            });
+    });
+
 });
 
 
