@@ -286,7 +286,7 @@ describe('Test for ClientView.js', () => {
     test('Correct render of component for clients', async () => {
         mockGetFarmer.mockResolvedValue(farmers);
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientView
                     users={userList}
@@ -303,7 +303,7 @@ describe('Test for ClientView.js', () => {
     test('No clients found', async () => {
         mockGetFarmer.mockResolvedValue(farmers);
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientView
                     users={[]}
@@ -320,7 +320,7 @@ describe('Test for ClientView.js', () => {
     test('Correct render of component for farmers', async () => {
         mockGetFarmer.mockResolvedValue(farmers);
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <ClientView
                     users={userList}
@@ -338,7 +338,7 @@ describe('Test for ClientView.js', () => {
         mockGetFarmer.mockResolvedValue(farmers);
         mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ClientView
                     users={userList}
@@ -360,7 +360,7 @@ describe('Test for ClientView.js', () => {
         mockGetFarmer.mockResolvedValue(farmers);
         mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+        const {getByText, getAllByText, getByDisplayValue} = render(
             <Router>
                 <ClientView
                     users={userList}
@@ -380,7 +380,7 @@ describe('Test for ClientView.js', () => {
         mockGetFarmer.mockResolvedValue(farmers);
         mockModifyWallet.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+        const {getByText, getAllByText, getByDisplayValue} = render(
             <Router>
                 <ClientView
                     users={userList}

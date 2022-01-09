@@ -3,7 +3,6 @@ import {render, fireEvent, waitFor} from '@testing-library/react';
 import {BrowserRouter as Router} from "react-router-dom";
 
 import Welcome from "../Components/Welcome";
-import API from "../API";
 
 describe('Test for Welcome.js', () => {
     test('Correct render of the component', async () => {
@@ -16,7 +15,7 @@ describe('Test for Welcome.js', () => {
 
 
     test('Modal show', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Welcome/>
             </Router>
@@ -32,7 +31,7 @@ describe('Test for Welcome.js', () => {
     });
 
     test('Login', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Welcome/>
             </Router>
@@ -47,7 +46,7 @@ describe('Test for Welcome.js', () => {
     });
 
     test('Sign Up', async () => {
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <Welcome/>
             </Router>

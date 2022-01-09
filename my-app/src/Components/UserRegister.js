@@ -97,7 +97,6 @@ function UserRegister(props) {
                 else
                 sendRegisterClient(event);
 
-            // handleShowConfirm();
         }
     }
 
@@ -121,7 +120,6 @@ function UserRegister(props) {
             console.log("HERE response",farmer);
             console.log("HERE response",res.json());
             if (res.ok){
-                //props.setLoggedIn(true);
                 handleShowConfirm();
             }
             else{
@@ -139,7 +137,6 @@ function UserRegister(props) {
         try {
             let res = await API.userRegister(name, surname, email, address, phone, city, password, zipcode, stateCaps);
             if (res.ok){
-                //props.setLoggedIn(true);
                 handleShowConfirm();
             }
             else{
@@ -162,11 +159,6 @@ function UserRegister(props) {
                     <Modal.Body>
                     {props.messageErrorRegister}
                     </Modal.Body>
-                    {/* <Modal.Footer>
-                        <Col style={{ textAlign: 'center'}}>
-                        
-                        </Col>
-                    </Modal.Footer> */}
                 </Modal>
             );
     }

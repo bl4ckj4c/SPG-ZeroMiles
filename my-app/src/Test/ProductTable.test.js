@@ -1013,7 +1013,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1050,7 +1050,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1088,7 +1088,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByPlaceholderText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1114,7 +1114,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getAllByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1142,7 +1142,7 @@ describe('Test for ProductTable.js', () => {
         });
         mockAddOrder.mockResolvedValue({'msg': 'Order succesfully added'});
 
-        const {getByText, getAllByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1170,7 +1170,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getAllByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getAllByText} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}
@@ -1198,7 +1198,7 @@ describe('Test for ProductTable.js', () => {
             "Money": 0
         });
 
-        const {getByText, getAllByText, getByLabelText, getByPlaceholderText, getAllByDisplayValue} = render(
+        const {getAllByText, getAllByDisplayValue} = render(
             <Router>
                 <ProductTable
                     isLoggedIn={true}

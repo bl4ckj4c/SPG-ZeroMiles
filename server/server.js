@@ -244,6 +244,7 @@ app.post('/api/register',
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
+            newUser.NotRetired = 0;
             newUser.Wallet = 0;
 
             (async () => {
@@ -1437,7 +1438,7 @@ app.post('/api/modifyorder', async (req, res) => {
                 console.log(id);
                 user = await db.collection('User').doc(id).get();
                 console.log(user);
-                new_Quantity = user.data().Wallet - order.data().Price;
+                new_Quantity = (user.data().Wallet - order.data().Price).toFixed(2);
                 console.log(new_Quantity);
                 if (new_Quantity < 0) {
                     res.status(500).json({

@@ -484,7 +484,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -512,7 +512,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -537,7 +537,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -562,7 +562,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText, getByPlaceholderText} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -585,7 +585,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getAllByTestId} = render(
+        const {getAllByTestId} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -607,7 +607,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+        const {getByText, getAllByText, getByDisplayValue} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -640,7 +640,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue, getByTestId} = render(
+        const {getByText, getByPlaceholderText, getByTestId} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -675,7 +675,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue, getByTestId} = render(
+        const {getByText, getByPlaceholderText, getByTestId} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}
@@ -717,7 +717,7 @@ describe('Test for FarmerProducts.js', () => {
         mockAddProduct.mockResolvedValue({productByFarmerID: 'OGwux1b1SShh4iBeN59f'});
         mockDeleteProduct.mockResolvedValue({ msg: 'Product succesfully deleted' });
 
-        const {getByText, getByLabelText, getByPlaceholderText, getAllByText, getByDisplayValue} = render(
+        const {getAllByText} = render(
             <Router>
                 <FarmerProducts
                     user={farmer}

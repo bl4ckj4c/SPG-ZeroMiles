@@ -30,7 +30,6 @@ function ClientOrders(props) {
     }, [ordersListUpdated]);
 
     const handleErrors = (err) => {
-        {/*setMessage({ msg: err.error, type: 'danger' });*/ }
         console.log(err);
     }
 
@@ -169,7 +168,7 @@ function OrderRow(props) {
                             <Col>
                                 <h1 style={{ fontSize: 15, marginTop: 10 }}>Total: €{props.order.ProductInOrder.reduce((sum, p) => {
                                     if (p.Confirmed !== "false")
-                                        return (sum + parseInt(p.number) * parseInt(p.Price))
+                                        return (sum + parseInt(p.number) * parseFloat(p.Price))
                                     else
                                         return (sum + 0)
                                 }, 0)}</h1>

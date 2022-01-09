@@ -262,7 +262,7 @@ describe('Test for FarmerProducts.js', () => {
         mockGetOrders.mockResolvedValue(orders);
         mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <EmployeeView
                     users={userList}
@@ -282,7 +282,7 @@ describe('Test for FarmerProducts.js', () => {
         mockGetOrders.mockResolvedValue([]);
         mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <EmployeeView
                     users={userList}
@@ -302,7 +302,7 @@ describe('Test for FarmerProducts.js', () => {
         mockGetOrders.mockResolvedValue(orders);
         mockModifyOrderStatus.mockResolvedValue({ 'msg': 'Order status succesfully changed' });
 
-        const {getByText, getByLabelText, getByPlaceholderText} = render(
+        const {getByText} = render(
             <Router>
                 <EmployeeView
                     users={userList}
