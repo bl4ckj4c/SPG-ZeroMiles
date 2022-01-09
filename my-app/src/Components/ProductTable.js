@@ -90,7 +90,8 @@ function ProductTableWrapped(props) {
     var customParseFormat = require('dayjs/plugin/customParseFormat');
     dayjs.extend(customParseFormat);
 
-
+    var isoWeek = require('dayjs/plugin/isoWeek');
+    dayjs.extend(isoWeek);
 
     function CanOrder() {
         let giorno = dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss");
@@ -209,6 +210,15 @@ function ProductTableWrapped(props) {
             <Container >
 
                 <Row className="mt-3 margine-cerca-desktop">
+                    <h3>Products orderable from&nbsp;
+                        {dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").day() === 0 ?  dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").add(-1, 'day').format("dddd D").toString() : dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").startOf('week').add(6, 'day').format("dddd D").toString()}
+                        &nbsp;to&nbsp;
+                        {dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").day() === 0 ?  dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").format("dddd D MMMM").toString() : dayjs(props.timeMachine(), "MM-DD-YYYY HH:mm:ss").startOf('week').add(7, 'day').format("dddd D MMMM").toString()}</h3>
+                </Row>
+
+
+
+                <Row className="mt-1 mb-3 margine-cerca-desktop">
                     <SearchBar setFilteredProducts={setFilteredProducts} productByFarmer={props.productByFarmer} searchParameter={searchParameter} setSearchParameter={setSearchParameter} />
                 </Row>
 
