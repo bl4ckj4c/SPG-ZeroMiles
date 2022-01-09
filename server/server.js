@@ -20,11 +20,11 @@ const userDao = require('./userDAO');
 const {body, param, validationResult, sanitizeBody, sanitizeParam} = require('express-validator');
 const express = require('express');
 const cors = require('cors');
-const morgan = require('morgan'); // logging middleware
+const morgan = require('morgan'); 
 const jwt = require('express-jwt');
 const jsonwebtoken = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
-const {toJSON} = require("express-session/session/cookie"); // module for accessing the exams in the DB
+const {toJSON} = require("express-session/session/cookie"); 
 const dayjs = require("dayjs");
 const isSameOrAfter = require('dayjs/plugin/isSameOrAfter')
 const customparseformat = require('dayjs/plugin/customParseFormat')
@@ -36,9 +36,7 @@ dayjs.extend(weekOfYear)
 dayjs.extend(customparseformat)
 
 const {v4: uuidv4} = require('uuid');
-//const { convertMultiFactorInfoToServerFormat } = require('firebase-admin/lib/auth/user-import-builder');
 
-// Upload new image handler
 const fs = require("fs");
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -51,37 +49,24 @@ const storage = multer.diskStorage({
 })
 const upload = multer({storage: storage,
     limits: {
-        fileSize: 8000000 // Compliant: 8MB
+        fileSize: 8000000 
      }
 });
 
-//jwt parameters
-const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
-const expireTime = 1200; //seconds
 
-// init express
+const jwtSecret = '6xvL4xkAAbG49hcXf5GIYSvkDICiUAR6EdR5dLdwW7hMzUjjMUe9t6M5kSAYxsvX';
+const expireTime = 1200; 
+
+
 const app = express();
 const port = 3001;
-//app.use(cors({origin: true}));
 
-// set-up the middlewares
+
 app.use(morgan('dev'));
 app.use(express.json());
 
 
-/*const formData = require('express-form-data');
-app.use(formData.parse());*/
-
-
-// Set-up middleware for managing the images
 app.use('/images', express.static('images'));
-
-// *********************
-// ***** FIREBASE  *****
-// *********************
-
-
-/* init firebase app */
 
 const firebaseapp = firebase.initializeApp({
     credential: firebase.credential.cert(firebaseconf),
@@ -115,74 +100,8 @@ const firebaseappTest = firebaseTest.initializeApp({
 }, "firebase_test");
 
 
-/* get reference a reference to the firestore database */
-//var db = firebase.firestore();
-//var db_backup = firebaseBackup.firestore(firebaseappBackup);
-//var db_backup_2 = firebaseBackup2.firestore(firebaseappBackup2);
-//var db_backup_3 = firebaseBackup3.firestore(firebaseappBackup3);
-//var db_test = firebaseTest.firestore(firebaseappTest);
-var db = firebaseBackup2.firestore(firebaseappBackup2);
+var db = firebaseBackup3.firestore(firebaseappBackup3);
 
-//use this code to clone db_backup into db_backup_2 and db_backup_3. ATTENTION: it works per-table
-//BE CAREFUL: DON'T UNCOMMENT THIS CODE IF YOU DON'T KNOW WHAT TO DO
-/*
-(async()=>{
-    let entries = await db.collection("User").get()
-    if(!entries.empty){
-        entries.forEach(entry => {
-            db_backup_3.collection("User").doc(entry.id).create(entry.data());
-        })
-    }
-})()
-*/
-
-/*
-const bucket = firebase.storage().bucket();
-
-//scarica dallo storage di firebase un file. ".file(<firebase_storage_path>)" localizza il file e ".download(<options_json>)" lo scarica
-bucket.file('395100.png').download({
-    destination: "./newfile.png"  //supporta path relativi; SPECIFICARE IL NOME DEL FILE SCARICATO COME ULTIMA STRINGA DEL PATH
-},function(err){
-    console.log(err);
-})
-
-
-//carica sullo storage di firebase un file. Prende come parametro il path del file locale e un json di opzioni, tra cui la destinazione
-bucket.upload('./newfile.png',{
-    destination: "bar.png"  //destinazione nello storage di firebase; si possono specificare anche delle directory (es. foo/store/bar.png) che, se non esistenti, verranno create
-}).then(()=>{
-    console.log("file uploaded successfully");
-}).catch(err => {
-    console.error("ERROR: ", err);
-})
-
-//ritorna un JSON con tutti i file presenti nello storage di firebase -> ne stampo i nomi
-bucket.getFiles(function(err,files){
-    if(!err){
-        files.forEach(file =>{
-            console.log(file.name)
-        })
-    }
-})
-*/
-
-/* firebase debug */
-
-// const firebaseApp = firebase.apps[0];
-// console.log(JSON.stringify(firebaseApp.options, null, 2));
-
-
-
-/* Telegram bot - only if you are using node-telegram-bot-api */
-//const bot = new TelegramBot(telegramToken, {polling: true});
-
-
-
-// *********************
-// ***** API *****
-// *********************
-
-/* Authentication endpoint */
 
 app.post('/api/login', async (req, res) => {
 
@@ -198,14 +117,13 @@ app.post('/api/login', async (req, res) => {
         if (user.empty) {
             res.status(404).json({info: "Authentication error", error: "User not found (Table: User)"});
         } else {
-            user.forEach(user => {  //because user is a query snapshot
+            user.forEach(user => { 
                 if (!userDao.checkPassword(user.data(), password)) {
                     res.status(401).json({info: "Authentication error", error: "wrong password"});
                 } else {
-                    //AUTHENTICATION SUCCESS
                     console.log("Authentication succeeded!" + user.id);
-                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret); //for expiration time, add {expiresIn: expireTime} to jwt sign operation
-                    res.cookie('token', token, {httpOnly: true, sameSite: true});  //for expiration time: add parameter 'maxAge: 1000 * expireTime' to the JSON
+                    const token = jsonwebtoken.sign({user: {userID: user.id, ...user.data()}}, jwtSecret); 
+                    res.cookie('token', token, {httpOnly: true, sameSite: true});  
                     res.status(200).end();
                 }
             })
@@ -229,105 +147,77 @@ app.post('/api/logout', (req, res) => {
 });
 
 
-/* POST user registration (add user to database) */
+
 app.post('/api/register',
     body('name')
-        // Check if the name parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the name parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the name parameter is a string
         .isString()
-        // Check if the name parameter contains only letters
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z]+$/);
             return regex.test(value);
         }),
     body('surname')
-        // Check if the lastName parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the lastName parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the lastName parameter is a string
         .isString()
-        // Check if the lastName parameter contains only letters
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z\']+$/);
             return regex.test(value);
         }),
     body('email')
-        // Check if the email parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the email parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the email parameter is a string
         .isString()
-        // Check if the email parameter is a valid email
         .custom((value, req) => {
             let regex = new RegExp(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/);
             return regex.test(value);
         }),
     body('address')
-        // Check if the address parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the address parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the address parameter is a string
         .isString()
-        // Check if the address parameter is a valid address
         .custom((value, req) => {
             let regex = new RegExp(/^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$/);
             return regex.test(value);
         }),
     body('phone')
-        // Check if the phone parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the phone parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the phone parameter is a string
         .isString()
-        // Check if the phone parameter is a valid phone number
         .custom((value, req) => {
             let regex = new RegExp(/^(\+(\([0-9]{1,2}\))?)?[0-9]+$/);
             return regex.test(value);
         }),
     body('city')
-        // Check if the city parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the city parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the city parameter is a string
         .isString()
-        // Check if the city parameter is a valid city
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z]+$/);
             return regex.test(value);
         }),
     body('password')
-        // Check if the password parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the password parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the password parameter is a string
         .isString(),
     (req, res) => {
         const result = validationResult(req);
 
-        // Validation error
         if (!result.isEmpty()) {
             let jsonArray = [];
             for (let item of result.array())
@@ -341,7 +231,6 @@ app.post('/api/register',
                 errors: jsonArray
             });
         }
-        // No error in validation
         else {
             const newUUid = uuidv4()
             let newUser = {}
@@ -351,7 +240,7 @@ app.post('/api/register',
             newUser.Address = req.body.address;
             newUser.Phoneno = req.body.phone;
             newUser.City = req.body.city;
-            newUser.Password = req.body.password;  //userDao.hashOfPassword(req.body.password)
+            newUser.Password = req.body.password;  
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Client";
@@ -381,111 +270,80 @@ app.post('/api/register',
 
 app.post('/api/farmerRegister',
     body('name')
-        // Check if the name parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the name parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the name parameter is a string
         .isString()
-        // Check if the name parameter contains only letters
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z]+$/);
             return regex.test(value);
         }),
     body('surname')
-        // Check if the lastName parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the lastName parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the lastName parameter is a string
         .isString()
-        // Check if the lastName parameter contains only letters
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z\']+$/);
             return regex.test(value);
         }),
     body('email')
-        // Check if the email parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the email parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the email parameter is a string
         .isString()
-        // Check if the email parameter is a valid email
         .custom((value, req) => {
             let regex = new RegExp(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/);
             return regex.test(value);
         }),
     body('address')
-        // Check if the address parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the address parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the address parameter is a string
         .isString()
-        // Check if the address parameter is a valid address
         .custom((value, req) => {
             let regex = new RegExp(/^(via|Via|corso|Corso|piazza|Piazza)\s[a-zA-Z\s\']+(\s+|\,\s*)([1-9][0-9]*)$/);
             return regex.test(value);
         }),
     body('phone')
-        // Check if the phone parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the phone parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the phone parameter is a string
         .isString()
-        // Check if the phone parameter is a valid phone number
         .custom((value, req) => {
             let regex = new RegExp(/^(\+(\([0-9]{1,2}\))?)?[0-9]+$/);
             return regex.test(value);
         }),
     body('city')
-        // Check if the city parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the city parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the city parameter is a string
         .isString()
-        // Check if the city parameter is a valid city
         .custom((value, req) => {
             let regex = new RegExp(/^[a-zA-Z]+$/);
             return regex.test(value);
         }),
         body('company')
-        // Check if the city parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the city parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the city parameter is a string
         .isString(),
     body('password')
-        // Check if the password parameter is not null
         .exists({checkNull: true})
         .bail()
-        // Check if the password parameter is not empty
         .notEmpty()
         .bail()
-        // Check if the password parameter is a string
         .isString(),
     (req, res) => {
         const result = validationResult(req);
 
-        // Validation error
         if (!result.isEmpty()) {
             let jsonArray = [];
             for (let item of result.array())
@@ -499,7 +357,6 @@ app.post('/api/farmerRegister',
                 errors: jsonArray
             });
         }
-        // No error in validation
         else {
             const newUUid = uuidv4()
             let newUser = {}
@@ -510,7 +367,7 @@ app.post('/api/farmerRegister',
             newUser.Company = req.body.company;
             newUser.Phoneno = req.body.phone;
             newUser.City = req.body.city;
-            newUser.Password = req.body.password;  //userDao.hashOfPassword(req.body.password)
+            newUser.Password = req.body.password; 
             newUser.Zipcode = req.body.zipcode;
             newUser.State = req.body.stateCaps;
             newUser.Role = "Farmer";
@@ -551,7 +408,7 @@ app.post('/api/farmerRegister',
         }
     });
 
-/* GET all products */
+
 app.get('/api/products', async (req, res) => {
     try {
         const products = await db.collection('Product').get();
@@ -586,7 +443,7 @@ app.get('/api/products', async (req, res) => {
     }
 });
 
-/* GET all products by farmers */
+
   app.get('/api/allProductsByFarmers/:date', async (req, res) => {
     let weekOfYear=0;
 
@@ -602,38 +459,33 @@ app.get('/api/products', async (req, res) => {
     
 
     try {
-        const productbyfarmer = await db.collection('Product by Farmers').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const productbyfarmer = await db.collection('Product by Farmers').get();  
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: product by farmers)"});
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
-                //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
-                const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
+                const productid = prodfarm.data().ProductID;  
                 const farmerid = prodfarm.data().FarmerID;
-                //console.log("Querying for " + productid + " and " + farmerid);
 
                 result.push(new Promise(async (resolve, reject) => {
                     const product = await db.collection('Product').doc("" + productid).get();
                     const farmer = await db.collection('Farmer').doc("" + farmerid).get();
-                    if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!product.exists) {  
                         console.log("No matching products for " + productid);
                     }
                     if (!farmer.exists) {
                         console.log("No matching farmers for" + farmerid);
                     }
                     if (prodfarm.data().Week != weekOfYear){
-                        //console.log("No Settimana");
                         resolve({
                     });
 
                     
                         
                  }else {
-                        //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
-                            // Farmer
                             FarmerID: prodfarm.data().FarmerID,
                             Name: farmer.data().Name,
                             Surname: farmer.data().Surname,
@@ -643,21 +495,15 @@ app.get('/api/products', async (req, res) => {
                             Address: farmer.data().Address,
                             State: farmer.data().State,
                             Zipcode: farmer.data().Zipcode,
-                            //Distance: farmer.data().Distance
-                            // Product
                             ProductID: prodfarm.data().ProductID,
                             NameProduct: product.data().Name,
                             Description: product.data().Description,
                             ImageID: product.data().ImageID,
-                            // Product by farmer
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
                             Price: prodfarm.data().Price
                         });
 
-                        //  console.log(farmer.data().Name + " offers " +
-                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " +
-                        //           product.data().Name);
                     }
                 }));
             });
@@ -678,18 +524,16 @@ app.get('/api/products', async (req, res) => {
     }
    });
 
-/* GET all farmers */
+
 app.get('/api/farmers', async (req, res) => {
     try {
-        const farmers = await db.collection('Farmer').orderBy("Distance").get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const farmers = await db.collection('Farmer').orderBy("Distance").get();  
         if (farmers.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: Farmer)"});
         } else {
             let result = [];
             farmers.forEach(farmer => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
                 result.push(new Promise(async (resolve, reject) => {
                     resolve({
                         Name: farmer.data().Name,
@@ -721,21 +565,9 @@ app.get('/api/farmers', async (req, res) => {
     }
 });
 
-/*
- * ********************************************
- * ******** AUTHENTICATED APIs: ***************
- * ********************************************
- * 
- * ALL APIs AFTER app.use(jwt(...)) WILL GIVE 
- * BACK 401 (UnauthorizedError: No authorization 
- * token was found) IF THE REQUEST DOES NOT 
- * TRANSPORT ANY TOKEN
- * 
- * 
- */
 
 app.use(jwt({
-        algorithms: ['HS256'],  //prevents downgrade attacks -> HS256 used for the session
+        algorithms: ['HS256'], 
         secret: jwtSecret,
         getToken: req => req.cookies.token
     })
@@ -748,7 +580,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-/* GET products by the authenticated farmer (one farmer) */
+
 app.get('/api/productsByFarmer/:date', async (req, res) => {
     const user = req.user && req.user.user;
     let day2 = dayjs(req.params.date);
@@ -769,22 +601,20 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
     }
 
     try {
-        const productbyfarmer = await db.collection('Product by Farmers').where("FarmerID", "==", "" + user.userID).get();  //.where("FarmerID","==","JJeuoVa8fpl4wHGLK8FO")
+        const productbyfarmer = await db.collection('Product by Farmers').where("FarmerID", "==", "" + user.userID).get();  
         if (productbyfarmer.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: product by farmers)"});
         } else {
             let result = [];
             productbyfarmer.forEach((prodfarm) => {
-                //for each product by farmer, i need to retrieve complete informations about the product (from ProductID) and the farmer (from FarmerID)
-                const productid = prodfarm.data().ProductID;  //since prodfarm.dat() is a JSON, i can access its fields with "."
+                const productid = prodfarm.data().ProductID;  
                 const farmerid = prodfarm.data().FarmerID;
-                //console.log("Querying for " + productid + " and " + farmerid);
 
                 result.push(new Promise(async (resolve, reject) => {
                     const product = await db.collection('Product').doc("" + productid).get();
                     const farmer = await db.collection('Farmer').doc("" + farmerid).get();
-                    if (!product.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!product.exists) {  
                         console.log("No matching products for " + productid);
                     }
                     if (!farmer.exists) {
@@ -792,42 +622,19 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
                     }
                     
                     if (prodfarm.data().Week != weekOfYear){
-                        //console.log("No Settimana");
                         resolve({});
 
                     
                  } else {
-                        //do something, e.g. create a JSON like productbyfarmer but with "Product" and "Farmer" entries instead of "ProductID" and "FarmerID"
                         resolve({
-                            // Farmer
-                        /*  FarmerID: prodfarm.data().FarmerID,
-
-                             
-                            Name: farmer.data().Name,
-                            Surname: farmer.data().Surname,
-                            Company: farmer.data().Company,
-                            Email: farmer.data().Email,
-                            Phoneno: farmer.data().Phoneno,
-                            Address: farmer.data().Address,
-                            State: farmer.data().State,
-                            Zipcode: farmer.data().Zipcode,
- */                            //Distance: farmer.data().Distance
-                            // Product
                             ProdByFarmerID: prodfarm.id,
                             ProductID: prodfarm.data().ProductID,
                             NameProduct: product.data().Name,
-/*                             Description: product.data().Description,
-                          */  
-                            // Product by farmer
                             Quantity: prodfarm.data().Quantity,
                             UnitOfMeasurement: prodfarm.data().Unitofmeasurement,
                             Price: prodfarm.data().Price,
                             ImageID: product.data().ImageID
                         });
-
-                        //  console.log(farmer.data().Name + " offers " +
-                        //             prodfarm.data().Quantity + " " + prodfarm.data().Unitofmeasurement + " of " +
-                        //           product.data().Name);
                     }
                 }));
             });
@@ -848,7 +655,7 @@ app.get('/api/productsByFarmer/:date', async (req, res) => {
     }
 });
 
-/* GET all users */
+
 app.get('/api/users', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -858,15 +665,13 @@ app.get('/api/users', async (req, res) => {
     }
 
     try {
-        const users = await db.collection('User').get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const users = await db.collection('User').get(); 
         if (users.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: Users)"});
         } else {
             let result = [];
             users.forEach(user => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(users.data());
                 result.push(new Promise(async (resolve, reject) => {
                     resolve({
                         Name: user.data().Name,
@@ -896,19 +701,17 @@ app.get('/api/users', async (req, res) => {
     }
 });
 
-/* GET informations about the authenticated user*/
+
 app.get('/api/userinfo', async (req, res) => {
     const user = req.user && req.user.user;
     try {
-        const users = await db.collection('User').where("Email", "==", "" + user.Email).get();  //products is a query snapshot (= container that can be empty (no matching document) or full with some kind of data (not a JSON))
+        const users = await db.collection('User').where("Email", "==", "" + user.Email).get();  
         if (users.empty) {
             console.log("No matching documents.");
             res.status(404).json({error: "No entries (Table: Users)"});
         } else {
             let result = [];
             users.forEach(user => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(users.data());
                 result.push(new Promise(async (resolve, reject) => {
                     resolve({
                         Name: user.data().Name,
@@ -938,7 +741,7 @@ app.get('/api/userinfo', async (req, res) => {
     }
 });
 
-/* GET all orders of the authenticated user*/
+
 app.get('/api/clientorders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     let day2 = dayjs(req.params.date);
@@ -952,12 +755,10 @@ app.get('/api/clientorders/:date', async (req, res) => {
         } else {
             let result = [];
             orders.forEach(order => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
 
                 result.push(new Promise(async (resolve, reject) => {
                     const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!client.exists) {  
                         console.log("No matching users for " + order.data().ClientID);
                     }
                     if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
@@ -984,8 +785,6 @@ app.get('/api/clientorders/:date', async (req, res) => {
                     info: "Promises error (get all client orders)",
                     error: error
                 }));
-            //console.log(orders);
-            //orders.forEach(order => {console.log(order.data())})
         }
     } catch (error) {
         console.log(error);
@@ -996,7 +795,7 @@ app.get('/api/clientorders/:date', async (req, res) => {
     }
 })
 
-/* GET all orders of all users */
+
 app.get('/api/orders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     let day2 = dayjs(req.params.date);
@@ -1014,18 +813,16 @@ app.get('/api/orders/:date', async (req, res) => {
 
             let result = [];
             orders.forEach(order => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
 
                 result.push(new Promise(async (resolve, reject) => {
                     const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!client.exists) { 
                         console.log("No matching users for " + order.data().ClientID);
                     }
 
                     if (day2.isSameOrAfter(dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss'))){
                         resolve({
-                        OrderID: order.id,  //maybe it's "order.id"
+                        OrderID: order.id,  
                         Status: order.data().Status,
                         ClientID: client.id,
                         Client: client.data(),
@@ -1056,7 +853,7 @@ app.get('/api/orders/:date', async (req, res) => {
     }
 });
 
-/* GET all cancelled orders of this week of all users */
+
 app.get('/api/cancelledorders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -1073,7 +870,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
         } else {
             let result = [];
             orders.forEach(order => {
-                let parsedorderdate = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss')  //parse order format from dd:mm:yyyy to mm:dd:yyyy
+                let parsedorderdate = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss')  
                 
                 if(parsedorderdate.week() == date.week() && 
                     parsedorderdate.day() >= 1 && 
@@ -1083,7 +880,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
                         
                         result.push(new Promise(async (resolve, reject) => {
                             const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                            if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                            if (!client.exists) {  
                                 console.log("No matching users for " + order.data().ClientID);
                             }
                             resolve({
@@ -1117,7 +914,7 @@ app.get('/api/cancelledorders/:date', async (req, res) => {
     }
 });
 
-/* GET not retired orders (same month)*/
+
 app.get('/api/monthlyNotRetiredOrders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -1142,12 +939,12 @@ app.get('/api/monthlyNotRetiredOrders/:date', async (req, res) => {
                 if(orderdate.month() == reqday.month()){
                     result.push(new Promise(async (resolve, reject) => {
                         const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        if (!client.exists) {  
                             console.log("No matching users for " + order.data().ClientID);
                         }
 
                         resolve({
-                            OrderID: order.id,  //maybe it's "order.id"
+                            OrderID: order.id,  
                             Status: order.data().Status,
                             ClientID: client.id,
                             Client: client.data(),
@@ -1181,7 +978,7 @@ app.get('/api/monthlyNotRetiredOrders/:date', async (req, res) => {
     }
 });
 
-/* GET not retired orders (previous week)*/
+
 app.get('/api/weeklyNotRetiredOrders/:date', async (req, res) => {
     const user = req.user && req.user.user;
     if(user.Role == "Client"){
@@ -1212,12 +1009,12 @@ app.get('/api/weeklyNotRetiredOrders/:date', async (req, res) => {
                 if(reqweekOfYear == orderweekOfYear+1){
                     result.push(new Promise(async (resolve, reject) => {
                         const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                        if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                        if (!client.exists) {  
                             console.log("No matching users for " + order.data().ClientID);
                         }
 
                         resolve({
-                            OrderID: order.id,  //maybe it's "order.id"
+                            OrderID: order.id,  
                             Status: order.data().Status,
                             ClientID: client.id,
                             Client: client.data(),
@@ -1252,7 +1049,7 @@ app.get('/api/weeklyNotRetiredOrders/:date', async (req, res) => {
 });
 
 
-/* POST place an order in the database */
+
 app.post('/api/order', async (req, res) => {
 
     let reqday = dayjs(req.body.timestamp);
@@ -1263,44 +1060,47 @@ app.post('/api/order', async (req, res) => {
     console.log(dayjs(reqday).day())
     console.log(dayjs(reqday).hour())
    
-    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="9") ){  //new orders can be placed only from Saturday morning to Sunday evening
+    if( (dayjs(reqday).day()==0 && dayjs(reqday).hour()<="23") || (dayjs(reqday).day()==6 && dayjs(reqday).hour()>="9") ){  
         
         try {
             let sameweekorder = 0;
             let result = [];
             let productByFarmer = await db.collection('Product by Farmers').get()
-            //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
             if (productByFarmer.empty) {
                 console.log("No entries (Table: product by farmers)");
                 res.status(404).json({error: "No entries (Table: product by farmers)"});
             }
 
-            //for each product in the order
+            
             let quantity = 0;
             for (const product of req.body.items){
                 quantity = quantity + product.number * product.Price;
                 console.log(productByFarmer);
                     for (let prodfarm of productByFarmer.docs){
-                    if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity && prodfarm.data().Week == reqweekOfYear) { //check if there are enough unities for the product requested
+                    if (product.ProductID == prodfarm.data().ProductID && product.number > prodfarm.data().Quantity && prodfarm.data().Week == reqweekOfYear) {
                         console.log("Not enough products (" + product.NameProduct + ")");
                         res.status(404).json({error: "Not enough products (" + product.NameProduct + ")"});
                         return;
                     }
                 }
             }
-            const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).where("Status","==","open").get()  //get all open orders by that client
-            if(!orders.empty){  //if the client has an open order, add products to that order
+            const orders = await db.collection("Order").where("ClientID","==",""+req.body.UserID).where("Status","==","open").get()  
+            if(!orders.empty){  
                 orders.forEach(order => {
                     let orderday = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss');
                     let orderweekOfYear = dayjs(orderday).week();
                     if(dayjs(orderday).day()==0 && dayjs(orderday).hour() <23){
                         orderweekOfYear= orderweekOfYear - 1;
                     }
-                    if(orderweekOfYear == reqweekOfYear){ //if it's the order of current week, update it (actually, if i selected previously all "open" orders, they must belong to the current week)
+                    if(orderweekOfYear == reqweekOfYear){ 
                         sameweekorder = 1;
+                        let newproducts = req.body.items
+                        newproducts.forEach(newproduct => {
+                            newproduct.Confirmed = ""
+                        })
                         let newlist = [
                             ...order.data().Products,
-                            ...req.body.items
+                            ...newproducts
                         ]
                         let newprice = order.data().Price + quantity
                         
@@ -1324,7 +1124,7 @@ app.post('/api/order', async (req, res) => {
                 newOrder.DeliveryDate = req.body.DeliveryDate ? req.body.DeliveryDate : "";
                 newOrder.DeliveryPlace = req.body.DeliveryPlace ? req.body.DeliveryPlace : "";
                 newOrder.pickupTimestamp = "";
-                newOrder.notRetired = false;
+                newOrder.notRetired = "false";
 
 
                 for(let entry of newOrder.Products){
@@ -1334,7 +1134,6 @@ app.post('/api/order', async (req, res) => {
 
                 (async () => {
                     try {
-                        //console.log(newOrder);
                         await db.collection("Order").add(newOrder);
                     } catch (error) {
                         console.log(error);
@@ -1430,7 +1229,7 @@ app.post('/api/setPickUpTime', async (req, res) => {
 
 
 
-/* POST set Time machine */
+
 app.post('/api/timeMachine',async(req,res)=>{
     let newdate = req.body.newdate ? req.body.newdate : "";
     let purchaseTriggerDOW = "1";   
@@ -1443,18 +1242,15 @@ app.post('/api/timeMachine',async(req,res)=>{
     let pickUpProductsTriggerHour = "19:00";
 
 
-    /**** TIME MACHINE - orders processing ****/
-
-    //Logic: i process all open orders (there should be one for each client, at most) -> i fulfill (open -> pending) only orders by clients that have enough money on the wallet
-    //If the client does not have enough money, the order is cancelled
+   
     
     if(dayjs(newdate).day()==purchaseTriggerDOW &&   
-       dayjs(newdate).format("HH:mm") == purchaseTriggerHour){  //if the new date is after Monday 9:00 am (of that week) 
+       dayjs(newdate).format("HH:mm") == purchaseTriggerHour){  
 
         console.log("******TRIGGER - Orders processing*****");
 
         try {
-            const orders = await db.collection('Order').where("Status","==","open").get();  //take all "open" orders
+            const orders = await db.collection('Order').where("Status","==","open").get(); 
             if (orders.empty) {
                 console.log("No matching documents.");
                 res.status(404).json({error: "No entries (Table: Order)"});
@@ -1464,12 +1260,11 @@ app.post('/api/timeMachine',async(req,res)=>{
                     let orderdate = dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss');
                     let orderweekOfYear = dayjs(orderdate).week();
                     if(dayjs(orderdate).day()==0 && dayjs(orderdate).hour() <23){
-                        //console.log("Order " + order.id + " " + dayjs(orderdate).day() + " " + dayjs(orderdate).hour() + " is on sunday but before 23")
                         orderweekOfYear= orderweekOfYear - 1;
                     }
 
                     if(order.data().Products.length > 0){  
-                        if(orderweekOfYear == dayjs(newdate).week()-1){  //if it's an open order of the previous week
+                        if(orderweekOfYear == dayjs(newdate).week()-1){  
                             result.push(new Promise(async (resolve, reject) => {
                                 resolve({
                                     OrderID: order.id,
@@ -1478,7 +1273,7 @@ app.post('/api/timeMachine',async(req,res)=>{
                             }));
                         }
                     }
-                    else{  //if the order does not have any products
+                    else{  
                         try {
                             console.log("Deleting from database order " + order.id + " due to empty list of products of the order.")
                             db.collection('Order').doc("" + order.id).delete();
@@ -1503,7 +1298,7 @@ app.post('/api/timeMachine',async(req,res)=>{
                                 if (!client.exists) {
                                     console.log("No matching users for " + entry.data().ClientID);
                                 }
-                                else{  //check each entry of the list of prodcuts and calculate the new price
+                                else{  
                                     let newprice=0;
                                     for(let productentry of entry.Products){
                                         if(productentry.Confirmed=="true"){
@@ -1513,16 +1308,15 @@ app.post('/api/timeMachine',async(req,res)=>{
                                     
                                     await db.collection('Order').doc(entry.OrderID).update({Price: newprice});
                                     
-                                    if(newprice == 0){  //all products are not confirmed (or pending confirmation), so let's cancel the order
+                                    if(newprice == 0){ 
                                         await db.collection('Order').doc(entry.OrderID).update({Status: "cancelled"});
                                         resolve({
                                             orderID: entry.OrderID,
                                             status: "cancelled (no products confirmed)"
                                         })
                                     }
-                                    else if(client.data().Wallet >= newprice){  //then check if the clients has enough money
+                                    else if(client.data().Wallet >= newprice){ 
                                         let newwallet = client.data().Wallet - newprice;
-                                        //await db.collection('Order').doc(entry.OrderID).update({Products: newlist});
                                         await db.collection('Order').doc(entry.OrderID).update({Status: "pending"});
                                         await db.collection('User').doc(entry.ClientID).update({Wallet: newwallet});
                                         resolve({
@@ -1564,7 +1358,7 @@ app.post('/api/timeMachine',async(req,res)=>{
         }
     }
 
-     /**** TIME MACHINE - send notification message on telegram ****/
+    
 
     if(dayjs(newdate).day() == newProductsTriggerDOW &&
     dayjs(newdate).format("HH:mm") == newProductsTriggerHour){
@@ -1585,9 +1379,6 @@ app.post('/api/timeMachine',async(req,res)=>{
         }
 
 
-        /* Another way to do the same thing */
-        //bot.sendMessage(chatID, "New Products are online! Come and have a look.", {parse_mode: 'Markdown'});
-
     }
 
     if(dayjs(newdate).day()== pickUpProductsTriggerDOW &&   
@@ -1601,7 +1392,7 @@ app.post('/api/timeMachine',async(req,res)=>{
 
                 orders.forEach(order => {
                     {
-                        db.collection('Order').doc(order.id).update({Status: "cancelled", notRetired: true});
+                        db.collection('Order').doc(order.id).update({Status: "cancelled", notRetired: "true"});
                         risultato.push(new Promise(async (resolve, reject) => {
                         let client= await db.collection('User').doc(order.data().ClientID).get();
                         console.log(client.data());
@@ -1626,7 +1417,7 @@ app.post('/api/timeMachine',async(req,res)=>{
 })
 
 
-//MODIFY ORDER
+
 app.post('/api/modifyorder', async (req, res) => {
     let result = [];
     let risultato = [];
@@ -1725,21 +1516,19 @@ app.post('/api/checkClient', async (req, res) => {
             }
 
             let order = await db.collection('Order').get()
-            //where("ProductID", "==", ""+req.body.ProductID).where("FarmerID", "=", ""+req.body.FarmerID).get();
 
             if (order.empty) {
                 console.log("No entries (Table: order)");
                 res.status(404).json({error: "No entries (Table: order)"});
             }
 
-            //for each product in the orde
+           
             order.forEach(order => {
-                if (order.data().ClientID == req.body.ClientID && order.data().Status == "open") { //check if there are enough unities for the product requested
+                if (order.data().ClientID == req.body.ClientID && order.data().Status == "open") { 
                     soldi_spesi = soldi_spesi + order.data().Price
                 }
             })
 
-            //console.log(client);
             ritorno.Wallet = client.data().Wallet;
             ritorno.Money = soldi_spesi;
             res.status(201).json(ritorno);
@@ -1797,7 +1586,6 @@ app.post('/api/addProduct', async (req, res) => {
 
         }
         res.status(201).json({ productByFarmerID : PrdId }).end();
-        //console.log(returned);
 
     } catch (error) {
         console.log(error);
@@ -1842,7 +1630,7 @@ app.get('/api/notRetiredOrder', async (req, res) => {
     const user = req.user && req.user.user;
     let nonRitiri={};
     try {
-        const client = await db.collection('User').doc(user.userID).get();  //.where("FarmerID","==","JJeuoVa8fpl4wHGLK8FO")
+        const client = await db.collection('User').doc(user.userID).get();  
         nonRitiri.NotRetired = client.data().NotRetired;
         
         res.status(200).json(nonRitiri);
@@ -1892,12 +1680,10 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
             let productsByOneFarmer=[];
             let result = [];
             orders.forEach(order => {
-                //do something, e.g. accumulate them into a single JSON to be given back to the frontend
-                //console.log(farmer.data());
 
                 result.push(new Promise(async (resolve, reject) => {
                     const client = await db.collection('User').doc("" + order.data().ClientID).get();
-                    if (!client.exists) {  //for queries check query.empty, for documents (like this case, in which you are sure that at most 1 document is returned) check document.exists
+                    if (!client.exists) {  
                         console.log("No matching users for " + order.data().ClientID);
                     }
 
@@ -1914,7 +1700,7 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
                         
                         
                         resolve({
-                        OrderID: order.id,  //maybe it's "order.id"
+                        OrderID: order.id, 
                         Status: order.data().Status,
                         ClientID: client.id,
                         Client: client.data(),
@@ -1999,7 +1785,6 @@ app.post('/api/confirmation', async (req, res) => {
                     updateProduct.push(nuovoProdotto);
                     console.log(nuovoProdotto);
                     entrato ++;
-                    //PrezzoDaTogliere=prodotto.Price* prodotto.number; per il non convermato
                 }else{
                     updateProduct.push(prodotto);
 
@@ -2014,8 +1799,6 @@ app.post('/api/confirmation', async (req, res) => {
             res.status(200).end();
         
         }
-//nuovoPrezzo=order.data().Price - PrezzoDaTogliere non confermnato
-//db.collection("Order").doc(req.body.OrderId).update({Products: productsByOneFarmer , Price: nuovoPrezzo}); non confermato
 
  } catch (error) {
         console.log(error);
@@ -2027,56 +1810,35 @@ app.post('/api/confirmation', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
-
-// POST for store a new product with related image into the server
-
 app.post('/api/newproduct',
     upload.single('newproductimage'),
     async (req, res) => {
 
-        //console.log(req)
-        //console.log(req.body.newProduct)
-
-
         const newProduct = JSON.parse(req.body.productJson);
         const newImage = req.file;
 
-        // Generate a new random id for the new image
         let guid = () => {
             let s4 = () => {
                 return Math.floor((1 + Math.random()) * 0x10000)
                     .toString(16)
                     .substring(1);
             }
-            //return id of format 'aaaaaaaa'-'aaaa'-'aaaa'-'aaaa'-'aaaaaaaaaaaa'
             return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
         }
 
-        //const newRandomId = guid();
 
         let whileExit = false;
         let newRandomId;
         do {
             newRandomId = guid();
-            // Check if the imageId is not already present in the server
             try {
                 const fileStat = fs.lstatSync('images/' + newRandomId + '.png');
             } catch (error) {
-                // If there is an error, it means that the file is not present in the server
                 whileExit = true;
-                // Otherwise the file already exists, so a new random id is generated
             }
         } while (!whileExit);
 
 
-        //Insert the new product into Firebase
         const data = {
             Name: newProduct.Name,
             Description: newProduct.Description,
@@ -2084,14 +1846,12 @@ app.post('/api/newproduct',
         }
         await db.collection('Product').doc().create(data);
 
-        // Store the new image into the server
         const renameResult = fs.renameSync('images/tmp/' + newImage.originalname, 'images/' + newRandomId + '.png');
 
         res.status(201).json('Product inserted with ImageID -> ' + newRandomId);
     });
 
 
-// Activate the server
 let server = app.listen(port, () => {
     console.log(`react-score-server listening at http://localhost:${port}`);
 });
@@ -2100,7 +1860,6 @@ function stop() {
     server.close();
 }
 
-//module.exports = app;
 module.exports = server;
 module.exports.stop = stop;
 module.exports.firebase = firebaseappBackup;
