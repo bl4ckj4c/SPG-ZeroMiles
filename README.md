@@ -150,7 +150,7 @@
 - GET `/api/confirmationProduct/:date`
     - **Authenticated** - Unauthorized by a Client
 
-    - **description**:
+    - **description**: get products by one farmer(the authenticated one) ordered in this week
 
 - POST `/api/order`
     - **Authenticated** 
@@ -262,17 +262,17 @@
 - POST `/api/modifyorder`
     - **Authenticated** 
 
-    - **description**: 
+    - **description**: Modify satus of an order manually by employee
 
 - POST `/api/modifywallet`
     - **Authenticated** 
 
-    - **description**: 
+    - **description**: Modify a client wallet 
 
 - POST `/api/checkClient`
     - **Authenticated** 
 
-    - **description**:
+    - **description**: Return money of open order by an autenticated client
 
 - POST `/api/addProduct`
     - **Authenticated** - Authorized only by a Farmer
@@ -287,7 +287,7 @@
 - POST `/api/confirmation`
     - **Authenticated** - Unauthorized by a Client
 
-    - **description**: 
+    - **description**: Confirmation of product by a farmer
 
 - POST `/api/newproduct`
     - **Authenticated** -
@@ -354,3 +354,4 @@
 <img src="./screenshot/ipad_portrait.png" alt="Tablet" width="600"></img>
 <br/>
 <img src="./screenshot/macbookpro13.png" alt="Laptop" width="1000"></img>
+
