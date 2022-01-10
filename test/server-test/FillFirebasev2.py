@@ -10,6 +10,13 @@ import time
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+credBackup2 = credentials.Certificate(
+    './polito-se2-21-01-spg-backup-2-firebase-adminsdk-rdqbs-c08f51d712.json'
+)
+appBackup2 = firebase_admin.initialize_app(credBackup2, {
+    'projectId': 'polito-se2-21-01-spg-backup-2'
+}, 'Backup2')
+
 credBackup3 = credentials.Certificate(
     './polito-se2-21-01-spg-backup-3-firebase-adminsdk-kn5e2-979f8d4105.json'
 )
@@ -24,7 +31,7 @@ appTest = firebase_admin.initialize_app(credTest, {
     'projectId': 'polito-se2-21-01-spg-test'
 }, 'Test')
 
-db = firestore.client(appBackup3)
+db = firestore.client(appBackup2)
 
 # Global variables for products, users and farmers
 global JSONData
@@ -157,9 +164,9 @@ def loadProductsByFarmers():
 
         print('  - Farmer ' + str(indexFarmer) + ': ', end = '')
 
-        for week in range(1,20):
+        for week in range(2,5):
             print('Week ' + str(week) + ': ')
-            for i in range(1, random.choice(range(10, 20))):
+            for i in range(1, 10):
                 # Find a random product not already inserted
                 randomProductIndex = random.choice(range(0, len(JSONProducts)))
                 while randomProductIndex in productsInserted:
@@ -195,7 +202,7 @@ def loadFarmer6():
     farmer = JSONFarmers[6]
 
     print('  - Farmer ' + str(indexFarmer) + ': ', end = '')
-    for week in range(1,20):
+    for week in range(2, 5):
         print('Week ' + str(week) + ': ')
         for i in range(1, random.choice(range(10, 20))):
             # Find a random product not already inserted
@@ -246,19 +253,19 @@ def loadOrders():
     print('Inserted ' + str(count) + ' orders!')
 
 if __name__ == '__main__':
-    #cleanFirebase()
-    #print('Cleaning done')
+    cleanFirebase()
+    print('Cleaning done')
 
-    #loadUsers()
+    loadUsers()
 
-    #loadFarmers()
+    loadFarmers()
 
-    #loadProducts()
+    loadProducts()
 
-    #loadProductsByFarmers()
+    loadProductsByFarmers()
 
     #loadOrders()
 
-    loadFarmer6()
+    #loadFarmer6()
 
     print('DONE')
