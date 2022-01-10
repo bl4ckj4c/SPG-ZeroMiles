@@ -4,6 +4,8 @@ RUN git clone https://github.com/bl4ckj4c/polito-se2-21-P01-SPG
 COPY my-app/firebase-client polito-se2-21-P01-SPG/my-app/firebase-client
 COPY server/firebase-server polito-se2-21-P01-SPG/server/firebase-server
 COPY server/telegram/ polito-se2-21-P01-SPG/server/telegram
+WORKDIR /polito-se2-21-P01-SPG
+RUN git checkout tags/release-2
 
 FROM node:alpine as build
 COPY --from=repo polito-se2-21-P01-SPG/my-app /app/my-app
