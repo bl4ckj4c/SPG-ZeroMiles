@@ -344,14 +344,17 @@
 
    
 
-## Main React Components
+## users who can be used to try the application
 
-- `Placeholder` (in `Placeholder.js`): component to generate a placeholder
+   | Role                 | Username             | Password    |
+   | -------------------- | -------------------- | ----------- | 
+   | Farmer | marco.farmer@gmail.com | supersecret2      | 
+   | Manager | michele.manager@zeromiles.it | supersecret4      | 
+   | Employee | mauro.employee@gmail.com | password0      | 
+   | User | miriam.client@gmail.com | supersecret2      | 
+   | User with 5 not retired orders | matteo.notretired@gmail.com | supersecret2      | 
 
 ## Screenshots
 
-<img src="screenshot/iphonese_portrait.png" alt="Mobile" width="300"></img>
-<img src="./screenshot/ipad_portrait.png" alt="Tablet" width="600"></img>
-<br/>
-<img src="./screenshot/macbookpro13.png" alt="Laptop" width="1000"></img>
+<img src="./screenshot/screenshot1.png" alt="Laptop" width="1000"></img>
 
