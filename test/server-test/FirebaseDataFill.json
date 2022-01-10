@@ -35,6 +35,11 @@
 					"price": 4.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 4.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -66,6 +71,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -111,6 +121,11 @@
 					"price": 11,
 					"quantity": 5,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 11,
+					"quantity": 5,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -142,6 +157,11 @@
 				},
 				{
 					"price": 4,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 4.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -187,6 +207,11 @@
 					"price": 20,
 					"quantity": 500,
 					"unitofmeasurement": "200g"
+				},
+				{
+					"price": 20,
+					"quantity": 500,
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
@@ -218,6 +243,11 @@
 				},
 				{
 					"price": 15,
+					"quantity": 500,
+					"unitofmeasurement": "200g"
+				},
+				{
+					"price": 20,
 					"quantity": 500,
 					"unitofmeasurement": "200g"
 				},
@@ -263,6 +293,11 @@
 					"price": 20,
 					"quantity": 500,
 					"unitofmeasurement": "200g"
+				},
+				{
+					"price": 20,
+					"quantity": 500,
+					"unitofmeasurement": "200g"
 				}
 			]
 		},
@@ -294,6 +329,11 @@
 				},
 				{
 					"price": 7,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -339,6 +379,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -370,6 +415,11 @@
 				},
 				{
 					"price": 15,
+					"quantity": 5,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 20,
 					"quantity": 5,
 					"unitofmeasurement": "1kg"
 				},
@@ -415,6 +465,11 @@
 					"price": 20,
 					"quantity": 5,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 20,
+					"quantity": 5,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -446,6 +501,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 200,
+					"unitofmeasurement": "200g"
+				},
+				{
+					"price": 5.5,
 					"quantity": 200,
 					"unitofmeasurement": "200g"
 				},
@@ -491,6 +551,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -522,6 +587,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -567,6 +637,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -598,6 +673,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -643,6 +723,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -674,6 +759,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -719,6 +809,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -750,6 +845,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -795,6 +895,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -826,6 +931,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -871,6 +981,11 @@
 					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -902,6 +1017,11 @@
 				},
 				{
 					"price": 7,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -947,6 +1067,11 @@
 					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -978,6 +1103,11 @@
 				},
 				{
 					"price": 7,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1023,6 +1153,11 @@
 					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1054,6 +1189,11 @@
 				},
 				{
 					"price": 7,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1099,6 +1239,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1130,6 +1275,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1175,6 +1325,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1206,6 +1361,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1251,6 +1411,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1282,6 +1447,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1327,6 +1497,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1358,6 +1533,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -1403,6 +1583,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1434,6 +1619,11 @@
 				},
 				{
 					"price": 17,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 17.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -1479,6 +1669,11 @@
 					"price": 7.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 7.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1510,6 +1705,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1555,6 +1755,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1586,6 +1791,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1631,6 +1841,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1662,6 +1877,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1707,6 +1927,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1738,6 +1963,11 @@
 				},
 				{
 					"price": 9,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
 				},
@@ -1783,6 +2013,11 @@
 					"price": 9.5,
 					"quantity": 10,
 					"unitofmeasurement": "1kg"
+				},
+				{
+					"price": 9.5,
+					"quantity": 10,
+					"unitofmeasurement": "1kg"
 				}
 			]
 		},
@@ -1814,6 +2049,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -1859,6 +2099,11 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		},
@@ -1890,6 +2135,11 @@
 				},
 				{
 					"price": 5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
 				},
@@ -1935,11 +2185,76 @@
 					"price": 5.5,
 					"quantity": 10,
 					"unitofmeasurement": "1 bag"
+				},
+				{
+					"price": 5.5,
+					"quantity": 10,
+					"unitofmeasurement": "1 bag"
 				}
 			]
 		}
 	],
 	"users": [
+		{
+			"ID": "c57baff3-dafe-4d9b-9d85-6f092168b9db",
+			"Name": "Giovanni",
+			"Surname": "Dent",
+			"Email": "giovanni.client@polito.it",
+			"Password": "supersecret2",
+			"Phoneno": "3455627899",
+			"Address": "Via Volvera 42",
+			"City": "Torino",
+			"State": "TO",
+			"Zipcode": "10139",
+			"Role": "Client",
+			"Wallet": 20,
+			"NotRetired": 5
+		},
+		{
+			"ID": "7eaa1bd3-bf02-4470-ba42-517e2cdc7ed1",
+			"Name": "Mario",
+			"Surname": "Bianchi",
+			"Email": "mario.employee@gmail.com",
+			"Password": "password0",
+			"Phoneno": "",
+			"Address": "Via Verdi 61",
+			"City": "Nichelino",
+			"State": "TO",
+			"Zipcode": "10139",
+			"Role": "Employee",
+			"Wallet": 100,
+			"NotRetired": 5
+		},
+		{
+			"ID": "92704101-3bb7-462c-a7ff-9467e411c5eb",
+			"Name": "Matteo",
+			"Surname": "Giforne",
+			"Email": "matteo.notretired@gmail.com",
+			"Password": "supersecret2",
+			"Phoneno": "3477281900",
+			"Address": "Via Ritiro 5",
+			"City": "Torino",
+			"State": "TO",
+			"Zipcode": "10139",
+			"Role": "Client",
+			"Wallet": 0,
+			"NotRetired": 5
+		},
+		{
+			"ID": "44386ad6-bbef-4adb-a8e6-b7a3b727522d",
+			"Name": "Miriam",
+			"Surname": "Leone",
+			"Email": "miriam.client@gmail.com",
+			"Password": "supersecret2",
+			"Phoneno": "3288983744",
+			"Address": "Via Roma 5",
+			"City": "Torino",
+			"State": "TO",
+			"Zipcode": "10141",
+			"Role": "Client",
+			"Wallet": 40.20,
+			"NotRetired": 0
+		},
 		{
 			"ID": "36581648-5006-4416-aec8-73021b677bb7",
 			"Name": "Maurizio",
@@ -2193,16 +2508,34 @@
 			"Role": "Farmer",
 			"Wallet": 0,
 			"NotRetired": 0
+		},
+		{
+			"ID": "464500df-d613-4749-9f68-56c91bd4fe54",
+			"Name": "Calvin",
+			"Surname": "Hobbes",
+			"Company": "Calvin and the Cauliflowers SRL",
+			"Email": "calvin.farmer@gmail.com",
+			"Phoneno": "3266172899",
+			"Address": "Via melanzana 4",
+			"City": "Asti",
+			"State": "TO",
+			"Zipcode": "14100",
+			"Distance": 3,
+			"Password": "supersecret2",
+			"Role": "Farmer",
+			"Wallet": 0,
+			"NotRetired": 0
 		}
 	],
 	"orders": [
 		{
-			"OrderID": "SfqWm8XXSRPV9aee2vKf",
+			"OrderID": "FON880xX4ONdHG5iRVry",
 			"Status": "open",
-			"ClientID": "fa6ecc89-4a74-4a05-9251-c89f8b0cbf41",
+			"ClientID": "36581648-5006-4416-aec8-73021b677bb7",
 			"Timestamp": "13-12-2021 11:18:00",
 			"ListOfProducts": [
 				{
+					"Confirmed": "",
 					"ProductID": "Mqn5MQEBi5XO7pG0AzZ",
 					"number": 3,
 					"Price": 4,
@@ -2235,7 +2568,7 @@
 					"FarmerID": "3a875cbf-6bb7-44e9-b3c8-cb9b1607a044"
 				}
 			],
-			"Price": 13,
+			"Price": 35,
 			"DeliveryDate": "",
 			"DeliveryPlace": ""
 		},

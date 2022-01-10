@@ -157,31 +157,69 @@ def loadProductsByFarmers():
 
         print('  - Farmer ' + str(indexFarmer) + ': ', end = '')
 
-        for i in range(1, random.choice(range(5, 10))):
+        for week in range(1,20):
+            print('Week ' + str(week) + ': ')
+            for i in range(1, random.choice(range(10, 20))):
+                # Find a random product not already inserted
+                randomProductIndex = random.choice(range(0, len(JSONProducts)))
+                while randomProductIndex in productsInserted:
+                    randomProductIndex = random.choice(range(0, len(JSONProducts)))
+
+                productsInserted.append(randomProductIndex)
+                randomProduct = JSONProducts[randomProductIndex]
+
+                quantity = randomProduct['offers'][indexFarmer]['quantity']
+                unit = randomProduct['offers'][indexFarmer]['unitofmeasurement']
+                price = randomProduct['offers'][indexFarmer]['price']
+
+                data = {
+                    'FarmerID': farmer['ID'],
+                    'ProductID': randomProduct['id'],
+                    'Quantity': quantity,
+                    'Unitofmeasurement': unit,
+                    'Price': price,
+                    'Week': week
+                }
+                #print(json.dumps(data, indent=4))
+                db.collection(u'Product by Farmers').add(data)
+                print('.', end = '')
+            print('\n')
+            productsInserted.clear()
+        print('- Product by Farmers uploaded')
+
+# Load products by farmers inside 'Product by Farmers' table in Firebase
+def loadFarmer6():
+    productsInserted = []
+
+    indexFarmer = 6
+    farmer = JSONFarmers[6]
+
+    print('  - Farmer ' + str(indexFarmer) + ': ', end = '')
+    for week in range(1,20):
+        print('Week ' + str(week) + ': ')
+        for i in range(1, random.choice(range(10, 20))):
             # Find a random product not already inserted
             randomProductIndex = random.choice(range(0, len(JSONProducts)))
             while randomProductIndex in productsInserted:
                 randomProductIndex = random.choice(range(0, len(JSONProducts)))
-
             productsInserted.append(randomProductIndex)
             randomProduct = JSONProducts[randomProductIndex]
-
             quantity = randomProduct['offers'][indexFarmer]['quantity']
             unit = randomProduct['offers'][indexFarmer]['unitofmeasurement']
             price = randomProduct['offers'][indexFarmer]['price']
-
             data = {
                 'FarmerID': farmer['ID'],
                 'ProductID': randomProduct['id'],
                 'Quantity': quantity,
                 'Unitofmeasurement': unit,
                 'Price': price,
-                'Week': 2
+                'Week': week
             }
             #print(json.dumps(data, indent=4))
             db.collection(u'Product by Farmers').add(data)
             print('.', end = '')
         print('\n')
+        productsInserted.clear()
     print('- Product by Farmers uploaded')
 
 # Load orders inside 'Order' table in Firebase
@@ -211,14 +249,16 @@ if __name__ == '__main__':
     #cleanFirebase()
     #print('Cleaning done')
 
-    loadUsers()
+    #loadUsers()
 
-    loadFarmers()
+    #loadFarmers()
 
-    loadProducts()
+    #loadProducts()
 
-    loadProductsByFarmers()
+    #loadProductsByFarmers()
 
     #loadOrders()
+
+    loadFarmer6()
 
     print('DONE')
