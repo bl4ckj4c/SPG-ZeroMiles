@@ -354,5 +354,14 @@
 
 ## Screenshots
 
-<img src="./screenshot/screenshot1.png" alt="Laptop" width="1000"></img>
+Homepage
+<img src="./screenshot/screenshot1.png" alt="desktop_homepage" width="1000"></img>
 
+View of orders by an employee
+<img src="./screenshot/screenshot2.png" alt="desktop_orders" width="1000"></img>
+
+Mobile view of the homepage 
+<img src="./screenshot/screenshot3.png" alt="mobile_homepage" width="1000"></img>
+
+Mobile view of the orders page
+<img src="./screenshot/screenshot4.png" alt="mobile_orders" width="1000"></img>
