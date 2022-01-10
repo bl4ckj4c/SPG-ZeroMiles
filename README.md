@@ -322,11 +322,9 @@
 
    | ID                                   | Name      | Surname    | Email                       | Address                     | Phoneno    | City    | State | Zipcode | Password     |
    | ------------------------------------ | --------- | ---------- | --------------------------- | --------------------------- | ---------- | ------- | ----- | ------- | ------------ |
-   | 2d082c0e-9c43-49fc-bb65-cf8bae607f05 | Mario     | Rossi      | mario.rossi@gmail.com       | Corso Duca degli Abruzzi 24 | 011789675  | Turin   | TO    | 10129   | supersecret1 |
-   | 1BM0UzyOXSs1MqSUDuBs                 | Maurizio  | Costanzo   | maurizio.costanzo@gmail.com | Corso Buenos Aires 33       | 3248967546 | Milan   | MI    | 20019   | supersecret2 |
+   | 1BM0UzyOXSs1MqSUDuBs                 | Miriam  | Leone   | miriam.client@gmail.com | Via Volvera 14       | 3248967546 | Turin   | TO    | 10141   | supersecret2 |
    | 4uiJeIxtoneCS9qJPksH                 | Eva       | Jobs       | eva.jobs@apple.com          | Via Nizza 40                | 2907654356 | Turin   | TO    | 10129   | supersecret3 |
-   | QWTh9AdamnVuHK2YcPgg                 | Guido     | Saracco    | guido.saracco@polito.it     | Corso Nizza 112             | 0171563452 | Cuneo   | CN    | 12100   | supersecret4 |
-   | heeHLjlZzK6GB93tLuhC                 | Cristiano | Malgioglio | cristiano.draghi@governo.it | Via Vinadio 45              | 0987867564 | Mesagne | BR    | 72023   | supersecret5 |
+
    
 - Table `Order` is used to store order information and it contains the following fields and data:
 
@@ -344,7 +342,7 @@
 
    
 
-## users who can be used to try the application
+## Users that can be used to try the application
 
    | Role                 | Username             | Password    |
    | -------------------- | -------------------- | ----------- | 
