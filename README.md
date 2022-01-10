@@ -1,5 +1,7 @@
 # Solidarity Purchasing Group
 
+Web application for the course of Software Engineering 2 at Politecnico di Torino. 
+
 ## React Client Application Routes
 
 - Route `/`: homepage page for the website
@@ -355,13 +357,17 @@
 ## Screenshots
 
 Homepage
+
 <img src="./screenshot/screenshot1.png" alt="desktop_homepage" width="1000"></img>
 
 View of orders by an employee
+
 <img src="./screenshot/screenshot2.png" alt="desktop_orders" width="1000"></img>
 
 Mobile view of the homepage 
-<img src="./screenshot/screenshot3.png" alt="mobile_homepage" width="1000"></img>
+
+<img src="./screenshot/screenshot3.png" alt="mobile_homepage" width="300"></img>
 
 Mobile view of the orders page
-<img src="./screenshot/screenshot4.png" alt="mobile_orders" width="1000"></img>
+
+<img src="./screenshot/screenshot4.png" alt="mobile_orders" width="300"></img>
