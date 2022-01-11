@@ -1303,7 +1303,7 @@ app.post('/api/timeMachine',async(req,res)=>{
                                 else{  
                                     let newprice=0;
                                     for(let productentry of entry.Products){
-                                        if(productentry.Confirmed=="true"){
+                                        if(productentry.Confirmed!="false"){
                                             newprice += productentry.number * productentry.Price
                                         }
                                     }
@@ -1689,7 +1689,7 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
                         console.log("No matching users for " + order.data().ClientID);
                     }
 
-                    if (day2.week() === dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() ){
+                    if (day2.week() -1 === dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() ){
                         order.data().Products.forEach(prodotto =>{
                         if(prodotto.FarmerID ==user.userID ){
                             productsByOneFarmer.push(prodotto);
