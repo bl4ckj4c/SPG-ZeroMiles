@@ -1668,6 +1668,9 @@ app.get('/api/sessions/current', (req, res) => {
 app.get('/api/confirmationProduct/:date', async (req, res) => {
     const user = req.user && req.user.user;
     let day2 = dayjs(req.params.date);
+    let day1;
+    let weekOfYear;
+
     if(user.Role == "Client"){
         console.log("GET all orders - 401 Unauthorized (Maybe you are a Client)")
         res.status(401).json({error: "401 Unauthorized"})
@@ -1689,7 +1692,15 @@ app.get('/api/confirmationProduct/:date', async (req, res) => {
                         console.log("No matching users for " + order.data().ClientID);
                     }
 
-                    if (day2.week() -1 === dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss').week() ){
+                    day1= dayjs(order.data().Timestamp,'DD-MM-YYYY HH:mm:ss');
+                    if(dayjs(day1).day()==0){
+                        weekOfYear=dayjs(day1).week();
+
+                    }else{
+                        weekOfYear= dayjs(day1).week()+1;
+                    }
+
+                    if (day2.week() === weekOfYear ){
                         order.data().Products.forEach(prodotto =>{
                         if(prodotto.FarmerID ==user.userID ){
                             productsByOneFarmer.push(prodotto);
