@@ -350,7 +350,7 @@ Web application for the course of Software Engineering 2 at Politecnico di Torin
    | -------------------- | -------------------- | ----------- | 
    | Farmer | marco.farmer@gmail.com | supersecret2 | 
    | Manager | michele.manager@zeromiles.it | supersecret4 | 
-   | Employee | mauro.employee@gmail.com | password0 | 
+   | Employee | mario.employee@gmail.com | password0 | 
    | User | miriam.client@gmail.com | supersecret2 | 
    | User with 5 not retired orders | matteo.notretired@gmail.com | supersecret2 | 
 
