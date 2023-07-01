@@ -1,6 +1,6 @@
 # Solidarity Purchasing Group
 
-Web application for the course of Software Engineering 2 at Politecnico di Torino. 
+Web application for a solidarity purchasing group that connects farmers and customers. Created in a team of seven people with time management done on YouTrack, code quality handled with SonarCloud, and deployed with Docker. Developed with JavaScript, React, and Bootstrap framework for the course of Software Engineering 2 at Politecnico di Torino.
 
 ## React Client Application Routes
 
